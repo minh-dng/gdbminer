@@ -15,7 +15,7 @@ RUN apt-get update \
     libreadline-gplv2-dev libncursesw5-dev libssl-dev \
     libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev \
     python3-pip python3-venv python3-distutils python3-dev g++ python-dev autotools-dev libicu-dev libbz2-dev libboost-all-dev \
-    python3-software-properties python3-apt texinfo libc6-dbg \
+    python3-software-properties python3-apt texinfo libc6-dbg libcairo2-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -64,12 +64,13 @@ RUN wget https://github.com/Kitware/CMake/releases/download/v3.29.0-rc2/cmake-3.
     ln -s /opt/cmake-3.29.0-rc2-linux-x86_64/bin/ /usr/local/bin
 
 # Compile static libxml
-RUN git clone https://github.com/GNOME/libxml2.git && cd libxml2 && \
-    git checkout v2.12.4 && mkdir build && cd build && \
+RUN wget https://download.gnome.org/sources/libxml2/2.12/libxml2-2.12.4.tar.xz && \
+    tar -xf libxml2-2.12.4.tar.xz && cd libxml2-2.12.4 && mkdir build && cd build && \
     cmake -D LIBXML2_WITH_ZLIB=OFF -D LIBXML2_WITH_LZMA=OFF  -DLIBXML2_WITH_ICONV=OFF -DLIBXML2_WITH_THREADS=OFF -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS="-O0" ..  && \
     make && make install && ldconfig
     
-RUN wget --no-check-certificate https://boostorg.jfrog.io/artifactory/main/release/1.80.0/source/boost_1_80_0.tar.gz && \
+RUN wget -O boost_1_80_0.tar.gz https://archives.boost.io/release/1.80.0/source/boost_1_80_0.tar.gz || \
+    wget -O boost_1_80_0.tar.gz https://sourceforge.net/projects/boost/files/boost/1.80.0/boost_1_80_0.tar.gz/download && \
     tar -xf boost_1_80_0.tar.gz && cd boost_1_80_0 && ./bootstrap.sh --prefix=/usr/local --with-toolset=gcc && \
     ./b2 toolset=gcc && ./b2 install
 
