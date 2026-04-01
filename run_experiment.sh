@@ -42,7 +42,7 @@ done
 
 # Rename the tiny seeds to be consistent
 rename.ul tiny tinyc /mimid/Cmimid/build/tiny*
-mv /output/tiny.20.mimid.execution_duration /output/tinyc.20.mimid.execution_duration
+mv /output/tiny.${NUMBER_OF_SEEDS}.mimid.execution_duration /output/tinyc.${NUMBER_OF_SEEDS}.mimid.execution_duration
 
 #Copy Mimid grammars to output folder
 cp /mimid/Cmimid/build/*-parsing.json /output/
