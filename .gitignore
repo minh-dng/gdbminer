@@ -23,6 +23,7 @@ wheels/
 pip-wheel-metadata/
 share/python-wheels/
 *.egg-info/
+*.egg-info.lowercase.tar
 .installed.cfg
 *.egg
 MANIFEST
@@ -129,5 +130,8 @@ dmypy.json
 
 output
 output_svg*
+
+# Shell redirection artifact from unquoted version constraints.
+=0.8.9
 
 .vscode

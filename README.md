@@ -12,7 +12,7 @@ part of the publication cited above. It will neither be
 maintained nor monitored in any way.
 
 ## Install local 
-    sudo apt install graphviz graphviz-dev gdb
+    sudo apt install gdb graphviz graphviz-dev pkg-config libcairo2-dev python3-dev
     python3 -m venv .venv
     source .venv/bin/activate
     pip install -e .

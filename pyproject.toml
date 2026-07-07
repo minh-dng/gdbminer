@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "GDBMiner"
+version = "0.0.1"
+description = "Debugger-driven Grammar Mining"
+readme = "README.md"
+requires-python = ">=3.9,<3.10"
+license = "AGPL-3.0"
+authors = [
+    { name = "Max Eisele", email = "MaxCamillo.Eisele@bosch.com" },
+]
+dependencies = [
+    "astor",
+    "clang==8.0.1",
+    "fuzzingbook==1.2.2",
+    "ghidra-bridge>=1.0.0",
+    "graphviz",
+    "ipython>=8.10.0",
+    "jupyter",
+    "lark-parser",
+    "markdown",
+    "meson==0.46.1",
+    "networkx>=3.0",
+    "notebook>=6.5.2",
+    "pudb>=2022.1.3",
+    "pygdbmi>=0.11.0.0",
+    "pygraphviz>=1.10,<1.14",
+    "pyserial>=3.5",
+    "tqdm",
+    "wheel",
+]
+
+[project.urls]
+Homepage = "https://link-to-your-project"
+
+[tool.setuptools]
+include-package-data = true
+package-dir = { "" = "src" }
+zip-safe = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+namespaces = true
