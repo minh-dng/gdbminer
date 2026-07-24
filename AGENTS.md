@@ -1,56 +1,112 @@
-# Repository Guidelines
+# AGENTS.md
 
-## Project Structure & Module Organization
+This file applies to the whole repository.
 
-Core Python code lives in `src/`:
+## Project Overview
 
-- `src/tracer/` drives GDB-compatible targets and records input traces.
-- `src/miner/` converts traces into grammars; `mine.py` is the mining entry point.
-- `src/eval/` generates inputs and calculates precision/recall.
-- `src/cmimid/` contains the bundled Cmimid baseline and grammar utilities.
+GDBMiner is a Python 3.9 research prototype for debugger-driven grammar mining. The core workflow is:
 
-Use `example_programs/<target>/` for desktop targets, including `configuration/`, `seeds/`, and `eval/`. Use `example_firmware/` for STM32 examples. Keep generated traces and mined JSON in configured output directories.
+1. Trace seed inputs through a target binary with GDB.
+2. Mine a grammar from the generated trace files.
+3. Evaluate the mined grammar against generated inputs.
 
-## Build, Test, and Development Commands
+The project is script-oriented rather than service-oriented. Most entrypoints live under `src/` and are run directly.
 
-Develop with Python 3.9 (the supported range is `>=3.9,<3.10`):
+## Repository Layout
+
+- `src/tracer/`: GDB tracing implementation and SUT connection/instance abstractions.
+- `src/miner/`: grammar tree construction and generalization logic.
+- `src/cmimid/`: vendored/adapted CMimid grammar-mining helpers.
+- `src/eval/`: input generation and precision/recall evaluation scripts.
+- `example_programs/`: native target programs, grammars, seeds, and configurations.
+- `example_firmware/`: embedded/PlatformIO examples and board configs.
+- `evaluation/` and `output/`: experiment outputs; treat as generated data unless a task explicitly targets them.
+- `Dockerfile` and `run_experiment.sh`: reproducible benchmark environment and multi-target experiment runner.
+
+## Environment
+
+- Python requirement: `>=3.9,<3.10`.
+- Local setup from the README:
+
+  ```bash
+  sudo apt install gdb graphviz graphviz-dev pkg-config libcairo2-dev python3-dev
+  python3 -m venv .venv
+  source .venv/bin/activate
+  pip install -e .
+  ```
+
+- The Dockerfile uses `uv sync --frozen` with `uv.lock`; prefer preserving the lockfile unless dependency changes are intentional.
+- Direct script execution often needs package imports from `src`; use an editable install or set `PYTHONPATH=$PWD/src`.
+- Tracing depends on external tools and target binaries built with debug symbols and without optimization (`-g -O0`).
+
+## Platform Notes
+
+- `linux/arm64`: The Dockerfile maps Docker `arm64` to `aarch64` for the CMake installer, but native toolchain and third-party benchmark behavior may still be less exercised than `amd64`. Prefer the Docker environment for reproducible runs.
+- `windows/amd64`: Native Windows is not a supported runtime for the main workflow. The tracer and experiment scripts assume Linux tools, Bash scripts, POSIX paths, GDB, and Valgrind. Use WSL2 or Docker from Windows.
+
+## Common Commands
+
+Generate evaluation inputs from a grammar:
 
 ```bash
-python3 -m venv .venv && source .venv/bin/activate
-pip install -e .
-./src/tracer/trace.py --config example_programs/json/configuration/configuration.ini
-./src/miner/mine.py --config example_programs/json/configuration/configuration.ini
-./src/eval/precision_recall.py --config example_programs/json/configuration/configuration.ini
+python3 src/eval/generate_inputs.py \
+  --config example_programs/json/configuration/configuration.ini \
+  --grammar example_programs/json/json.grammar \
+  example_programs/json/eval 1000
 ```
 
-Tracing creates `*.trace`; mining writes `parsing_g.json`. For Docker and different arch testing, see `docs/DOCKER.md`.
+Trace then mine for a configured target:
 
-## Coding Style & Naming Conventions
+```bash
+python3 src/tracer/trace.py --config example_programs/json/configuration/configuration.ini
+python3 src/miner/mine.py --config example_programs/json/configuration/configuration.ini
+```
 
-Follow the surrounding Python: four-space indentation, `snake_case` functions and modules, `PascalCase` classes, and concise module-level scripts with `main()`. Preserve existing type hints and logging patterns. Keep target-specific values in INI files rather than hard-coding paths or debugger settings.
+Evaluate precision/recall:
 
-## Testing Guidelines
+```bash
+python3 src/eval/precision_recall.py --config example_programs/json/configuration/configuration.ini
+```
 
-There is no configured automated test suite. Validate with the smallest affected workflow: trace and mine an existing example, then run `precision_recall.py` when grammar output changes. Keep generated results out of source changes unless intentional.
+Build and run the benchmark container:
 
-## Commit & Pull Request Guidelines
+```bash
+docker build . -t gdbminer
+docker run --rm -v "$(pwd)/output:/output/" gdbminer /run_experiment.sh
+```
 
-Use `conventional-commit` for both commits and PR titles. Do small trackable commits. PRs should state the target/configuration, commands run, output changes, and linked issue; add logs or screenshots only when useful.
+Full benchmark runs can take days. Do not start them as a casual validation step.
 
-## Configuration & Hardware
+## Development Guidance
 
-Treat configuration files as the execution contract: set binary paths, seed/output directories, GDB instance, watchpoint details, and entry/exit points there. Desktop targets need debug symbols and no compiler optimization; STM32 work requires the documented ST-Link/GDB-server setup.
+- Prefer small, local changes that match the current script/module style.
+- Follow the surrounding Python: four-space indentation, `snake_case` functions and modules, `PascalCase` classes, and concise module-level scripts with `main()`.
+- Keep existing license headers intact. New source files should use the project license context unless told otherwise.
+- Avoid broad rewrites of `src/cmimid/` unless the task is specifically about the adapted CMimid behavior.
+- Be careful with trace and grammar JSON shapes; downstream scripts expect keys such as `"[grammar]"` and `"[start]"`.
+- Config files are central to behavior. Check the relevant `configuration.ini` before changing tracer, miner, or eval logic.
+- Do not modify generated experiment outputs in `evaluation/`, `output/`, seeds, traces, or mined grammars unless explicitly requested.
+- Avoid committing cache/build artifacts such as `__pycache__/`, egg-info changes, temporary trace output, or local virtualenv files.
+- Use targeted searches. The repository contains large bundled third-party trees and generated outputs, especially under `example_programs/svgcpp/`, `evaluation/`, and `output/`.
 
-## Agent skills
+## Validation
 
-### Issue tracker
+There is no conventional test suite configured in this repository. Choose the narrowest practical validation for the change:
 
-Issues are tracked in GitHub Issues for `minh-dng/gdbminer`. See `docs/agents/issue-tracker.md`.
+- For pure Python utility changes, run the specific script or import path affected.
+- For tracer changes, use a small example target and remember this may require GDB, Valgrind, and compiled debug binaries.
+- For miner changes, run mining against an existing small trace directory when available.
+- For Docker/experiment changes, prefer `docker build . -t gdbminer` before running experiments.
 
-### Triage labels
+If a validation step cannot be run because required native tools, hardware, downloaded examples, or long-running experiments are unavailable, state that clearly in the final response.
 
-Use the default five-label vocabulary. See `docs/agents/triage-labels.md`.
+## Commit and Pull Request Guidelines
 
-### Domain docs
+Use the `conventional-commit` skill for both commits and pull request titles. Keep commits small and trackable. Pull requests should state the target and configuration, commands run, output changes, and linked issue; add logs or screenshots only when useful.
 
-This is a single-context repository. See `docs/agents/domain.md`.
+## Agent Skills
+
+- Issues are tracked in GitHub Issues for `minh-dng/gdbminer`; see `docs/agents/issue-tracker.md`.
+- Use the default five-label vocabulary in `docs/agents/triage-labels.md`.
+- This is a single-context repository; see `docs/agents/domain.md`.
+- For Docker and cross-architecture guidance, see `docs/DOCKER.md`.

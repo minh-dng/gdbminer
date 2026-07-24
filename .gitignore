@@ -144,3 +144,5 @@ graphify-out/memory/query_*
 docs/reviews/
 
 tmp/
+# Local checkout used by the NAUTILUS thesis prototype.
+third_party/nautilus/
