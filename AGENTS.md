@@ -1,0 +1,56 @@
+# Repository Guidelines
+
+## Project Structure & Module Organization
+
+Core Python code lives in `src/`:
+
+- `src/tracer/` drives GDB-compatible targets and records input traces.
+- `src/miner/` converts traces into grammars; `mine.py` is the mining entry point.
+- `src/eval/` generates inputs and calculates precision/recall.
+- `src/cmimid/` contains the bundled Cmimid baseline and grammar utilities.
+
+Use `example_programs/<target>/` for desktop targets, including `configuration/`, `seeds/`, and `eval/`. Use `example_firmware/` for STM32 examples. Keep generated traces and mined JSON in configured output directories.
+
+## Build, Test, and Development Commands
+
+Develop with Python 3.9 (the supported range is `>=3.9,<3.10`):
+
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install -e .
+./src/tracer/trace.py --config example_programs/json/configuration/configuration.ini
+./src/miner/mine.py --config example_programs/json/configuration/configuration.ini
+./src/eval/precision_recall.py --config example_programs/json/configuration/configuration.ini
+```
+
+Tracing creates `*.trace`; mining writes `parsing_g.json`. For Docker and different arch testing, see `docs/DOCKER.md`.
+
+## Coding Style & Naming Conventions
+
+Follow the surrounding Python: four-space indentation, `snake_case` functions and modules, `PascalCase` classes, and concise module-level scripts with `main()`. Preserve existing type hints and logging patterns. Keep target-specific values in INI files rather than hard-coding paths or debugger settings.
+
+## Testing Guidelines
+
+There is no configured automated test suite. Validate with the smallest affected workflow: trace and mine an existing example, then run `precision_recall.py` when grammar output changes. Keep generated results out of source changes unless intentional.
+
+## Commit & Pull Request Guidelines
+
+Use `conventional-commit` for both commits and PR titles. Do small trackable commits. PRs should state the target/configuration, commands run, output changes, and linked issue; add logs or screenshots only when useful.
+
+## Configuration & Hardware
+
+Treat configuration files as the execution contract: set binary paths, seed/output directories, GDB instance, watchpoint details, and entry/exit points there. Desktop targets need debug symbols and no compiler optimization; STM32 work requires the documented ST-Link/GDB-server setup.
+
+## Agent skills
+
+### Issue tracker
+
+Issues are tracked in GitHub Issues for `minh-dng/gdbminer`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Use the default five-label vocabulary. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+This is a single-context repository. See `docs/agents/domain.md`.
