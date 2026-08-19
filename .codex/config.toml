@@ -1,0 +1,4 @@
+# Disable the openai-curated-remote marketplace entirely (trip.com, ibkr,
+# skyscanner, indeed, alpaca, canva, etc. — none needed in this project).
+[marketplaces.openai-curated-remote]
+enabled = false
