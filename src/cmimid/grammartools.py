@@ -342,9 +342,7 @@ def find_reachable_keys(grammar, key, reachable_keys=None, found_so_far=None):
     return found_so_far
 
 
-import pudb
 
-b = pudb.set_trace
 
 
 def reachable_dict(grammar):
