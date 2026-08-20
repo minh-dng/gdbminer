@@ -6,13 +6,11 @@
 
 import sys
 
-import pudb
 
 import cmimid.fuzz as F
 import cmimid.grammartools as G
 from cmimid import util
 
-bp = pudb.set_trace
 import json
 import random
 
