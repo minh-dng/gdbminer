@@ -29,3 +29,13 @@ cp "$mimid_repo"/Cmimid/examples/tiny.c ./example_programs/tinyc/
 cd ./example_programs/tinyc/ && clang -g -O0 -o  tinyc tiny.c && cd ../../
 
 cd ./example_programs/calc && wget -O rdp.c https://raw.githubusercontent.com/fbuihuu/parser/master/rdp.c && patch rdp.c < ./calc.diff && mv rdp.c calc.c && clang -g -O0 -o calc calc.c && cd ../../
+
+# Rebuild checked-in benchmark binaries for the container architecture.
+clang++ -std=c++17 -g -O0 -D_GLIBCXX_DEBUG -o example_programs/calccpp/calccpp example_programs/calccpp/calc.cpp
+clang -g -O0 -o example_programs/cgi_decode/cgi_decode example_programs/cgi_decode/cgi_decode.c
+clang -g -O0 -o example_programs/json/json example_programs/json/json.c
+clang++ -g -O0 -D_GLIBCXX_DEBUG -o example_programs/jsoncpp/jsoncpp example_programs/jsoncpp/json.cpp
+clang -g -O0 -o example_programs/yxml/yxml example_programs/yxml/yxml.c
+clang++ -g -O0 -o example_programs/xmlcpp/xmlcpp example_programs/xmlcpp/xml.cpp
+rustc -g -C opt-level=0 -C target-feature=+crt-static -C overflow-checks=off -o example_programs/calcrs/calcrs example_programs/calcrs/calc.rs
+rustc -g -C opt-level=0 -C target-feature=+crt-static -o example_programs/jsonrs/jsonrs example_programs/jsonrs/json.rs
