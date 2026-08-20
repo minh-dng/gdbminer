@@ -9,35 +9,11 @@ import json
 from configparser import ConfigParser
 from pathlib import Path
 
-from fuzzingbook.GrammarCoverageFuzzer import GrammarCoverageFuzzer
-from fuzzingbook.GrammarMiner import readable
-from fuzzingbook.Grammars import (
-    START_SYMBOL,
-    Grammar,
-    def_used_nonterminals,
-    extend_grammar,
-    unreachable_nonterminals,
-)
-
 from eval import resolve_grammar_file
+from eval.grammar import CoverageFuzzer, trim_grammar
 from tracer.gdb_tracer import GDBTracer
 
 PRECISION_SIZE = 1000
-
-
-def trim_grammar(grammar: Grammar, start_symbol=START_SYMBOL) -> Grammar:
-    """Create a copy of `grammar` where all unused and unreachable nonterminals are removed."""
-    new_grammar = extend_grammar(grammar)
-    defined_nonterminals, used_nonterminals = def_used_nonterminals(grammar, start_symbol)
-    if defined_nonterminals is None or used_nonterminals is None:
-        return new_grammar
-
-    unused = defined_nonterminals - used_nonterminals
-    unreachable = unreachable_nonterminals(grammar, start_symbol)
-    for nonterminal in unused | unreachable:
-        del new_grammar[nonterminal]
-
-    return new_grammar
 
 
 def find_output_directory(output_directory_base: Path) -> Path:
@@ -83,9 +59,8 @@ def main() -> None:
         mined = json.load(f)
     grammar = mined["[grammar]"]
     start = mined["[start]"]
-    # fuzzer = F.LimitFuzzer(grammar)
-    grammar = trim_grammar(readable(grammar), start_symbol=start)
-    fuzzer = GrammarCoverageFuzzer(grammar, start_symbol=start)
+    grammar = trim_grammar(grammar, start)
+    fuzzer = CoverageFuzzer(grammar)
 
     seen = set()
     i = 0
@@ -94,7 +69,7 @@ def main() -> None:
         instance.continue_execution()
 
         while i < args.count:
-            input = fuzzer.fuzz()
+            input = fuzzer.fuzz(start)
             if not input.strip():
                 continue
             if input in seen:
