@@ -11,6 +11,14 @@ docker run --rm -v "$(pwd)/output:/output" gdbminer /run_experiment.sh
 
 Full experiments can run for days. Use a dedicated output directory per trial so results are not overwritten.
 
+For a quick single-target check, reduce the generated inputs and target list:
+
+```bash
+docker run --rm -e NUMBER_OF_SEEDS=1 -e PRECISION_SET_SIZE=3 \
+  -e TARGETS=json -e MIMID_TARGETS=json \
+  -v "$(pwd)/output:/output" gdbminer /run_experiment.sh
+```
+
 ## Different architectures
 
 The Dockerfile supports `linux/amd64` and `linux/arm64`. Build on a native host where possible:
