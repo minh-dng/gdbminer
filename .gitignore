@@ -142,3 +142,5 @@ graphify-out/cache/
 graphify-out/memory/query_*
 
 docs/reviews/
+
+tmp/
