@@ -6,7 +6,6 @@
 
 import sys
 
-
 from cmimid import grammartools
 
 # ulimit -s 100000
@@ -18,7 +17,6 @@ import string
 
 import cmimid.fuzz as F
 from cmimid import util
-
 
 
 def is_nt(token):

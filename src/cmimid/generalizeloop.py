@@ -4,11 +4,9 @@
 # This source code is licensed under The Fuzzing Book License found in the
 # 3rd-party-licenses.txt file in the root directory of this source tree.
 
-import sys
-
-
 import json
 import random
+import sys
 
 from cmimid import util
 
