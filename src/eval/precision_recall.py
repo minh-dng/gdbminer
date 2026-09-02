@@ -127,7 +127,7 @@ def main() -> None:
     rec = parsed_count / eval_set_len
     result = {"precision": prec, "recall": rec}
 
-    result["f1"] = 2 * ((prec * rec) / (prec + rec))
+    result["f1"] = 2 * ((prec * rec) / (prec + rec)) if prec + rec else 0.0
 
     if "[no_tested_inputs]" in mined:
         result["no_tested_inputs"] = mined["[no_tested_inputs]"]
