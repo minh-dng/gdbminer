@@ -11,7 +11,6 @@
 
 import logging
 from configparser import ConfigParser
-from typing import Dict, List, Tuple
 
 from cmimid import util
 from miner.active_learning_utils import (
@@ -26,7 +25,7 @@ from tracer.instance.sut_instance import SUTInstance
 class MethodGeneralizer:
     def __init__(self, config: ConfigParser) -> None:
         self.config = config
-        self.NODE_REGISTER: Dict[str, List[Tuple]] = {}
+        self.NODE_REGISTER: dict[str, list[tuple]] = {}
 
     def can_method_be_deleted(self, pattern, k, instance: SUTInstance):
         xnodes = [xnode for xnode in self.NODE_REGISTER[k] if xnode[-1]["pattern"] == pattern]
@@ -89,8 +88,8 @@ class MethodGeneralizer:
     # of left to right replaceability -- that is, a is replaceable with b
     # but b is not replaceable with a is 10 while full compatibility would
     # be 11 -> 1)
-    def generalize_method_trees(self, tree_list: List[Dict]):
-        my_trees: List[Dict] = []
+    def generalize_method_trees(self, tree_list: list[dict]):
+        my_trees: list[dict] = []
 
         for i, t in enumerate(tree_list):
             tree = util.to_modifiable(t["tree"])  # The tree ds.

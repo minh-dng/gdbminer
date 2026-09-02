@@ -4,7 +4,6 @@
 
 import logging
 from configparser import ConfigParser
-from typing import Dict, List
 
 from pygdbmi import gdbcontroller
 
@@ -114,7 +113,7 @@ class SUTInstance:
 
         return responses
 
-    def get_gdb_responses(self) -> List[Dict]:
+    def get_gdb_responses(self) -> list[dict]:
         return self.gdb_controller.get_gdb_response(timeout_sec=0, raise_error_on_timeout=False)
 
     def send_input(self):

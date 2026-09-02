@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: AGPL-3.0
 
 
-from typing import Dict, List, Set, Tuple, TypeVar
+from typing import TypeVar
 
 import networkx as nx
 
@@ -12,8 +12,8 @@ T = TypeVar("T")
 
 
 def build_control_flow_graphs_from_traces(
-    traces: List[List[Dict]],
-) -> Tuple[nx.DiGraph, Dict[str, str], Dict[str, Set[str]]]:
+    traces: list[list[dict]],
+) -> tuple[nx.DiGraph, dict[str, str], dict[str, set[str]]]:
     """
     Build control flow graphs for each traced function, as well as dictionaries
     for function_names to function entries
@@ -24,10 +24,10 @@ def build_control_flow_graphs_from_traces(
     """
     # Create an edge tuple list from trace
     start_node = "0"
-    edge_trace: List[Tuple[str]] = []
-    function_entries: Dict[str, str] = {}  # from entry address to fname
-    function_scopes: Dict[str, Set[str]] = {}
-    function_stack: List[str] = []
+    edge_trace: list[tuple[str]] = []
+    function_entries: dict[str, str] = {}  # from entry address to fname
+    function_scopes: dict[str, set[str]] = {}
+    function_stack: list[str] = []
 
     for trace in traces:
         previous_node = start_node
@@ -77,8 +77,8 @@ def post_dominator_graph(G: nx.DiGraph, exit_point):
 
 
 # Def. Back Edge: An edge n → d where d dom n
-def all_back_edges(G: nx.DiGraph, start_node: T) -> Set[Tuple[T]]:
-    back_edges: Set[Tuple[T]] = set()
+def all_back_edges(G: nx.DiGraph, start_node: T) -> set[tuple[T]]:
+    back_edges: set[tuple[T]] = set()
 
     # First get pre dominator tree
     dom_tree = pre_dominator_graph(G, start_node)
@@ -92,7 +92,7 @@ def all_back_edges(G: nx.DiGraph, start_node: T) -> Set[Tuple[T]]:
 # The natural loop of a back edge a->b is {b} plus the set of nodes
 # that can reach a without going through b.
 # Two natural loops are either disjoint, identical, or nested
-def natural_loop(G: nx.DiGraph, back_edge: Tuple[T]) -> Set[T]:
+def natural_loop(G: nx.DiGraph, back_edge: tuple[T]) -> set[T]:
     src, dst = back_edge
     nodes_in_loop = set([src, dst])
 
@@ -109,8 +109,8 @@ def natural_loop(G: nx.DiGraph, back_edge: Tuple[T]) -> Set[T]:
 
 
 # Map from entry of loop to a set of all containing loops
-def all_natural_loops(G: nx.DiGraph, start_node: T) -> Dict[T, List[Set[T]]]:
-    loops: Dict[T, List[Set[T]]] = {}
+def all_natural_loops(G: nx.DiGraph, start_node: T) -> dict[T, list[set[T]]]:
+    loops: dict[T, list[set[T]]] = {}
     back_edges = all_back_edges(G, start_node)
 
     for back_edge in back_edges:
@@ -122,7 +122,7 @@ def all_natural_loops(G: nx.DiGraph, start_node: T) -> Dict[T, List[Set[T]]]:
     return loops
 
 
-def if_else_scope(G: nx.DiGraph, entry_point: T, conditional_node: T) -> Set[T]:
+def if_else_scope(G: nx.DiGraph, entry_point: T, conditional_node: T) -> set[T]:
     """Returns a set of all nodes that are within the if/else scope
 
     Args:

@@ -14,12 +14,10 @@ sys.setrecursionlimit(99000)
 
 import json
 from configparser import ConfigParser
-from typing import List, Tuple
 
 import cmimid.grammartools as G
-from cmimid import parsinggrammar
-from cmimid import pta
 import cmimid.util
+from cmimid import parsinggrammar, pta
 from cmimid.treeminer import miner
 from miner.loop_generalizer import LoopGeneralizer
 from miner.method_generalizer import MethodGeneralizer
@@ -62,8 +60,8 @@ def find_output_directory(output_directory_base: pathlib.Path):
 
 
 def squash_consecutive_conditions(
-    tree: Tuple[str, List, int, int],
-) -> Tuple[str, List, int, int]:
+    tree: tuple[str, list, int, int],
+) -> tuple[str, list, int, int]:
     name, childs, id1, id2 = tree
     # Dict[str, Tuple[int, str, List[int]]]
 
@@ -87,8 +85,8 @@ def squash_consecutive_conditions(
 
 
 def move_subtree_to_single_function_call(
-    tree: Tuple[str, List, int, int],
-) -> Tuple[str, List, int, int]:
+    tree: tuple[str, list, int, int],
+) -> tuple[str, list, int, int]:
     name, childs, id1, id2 = tree
 
     if (

@@ -8,7 +8,6 @@ import re
 import time
 from configparser import ConfigParser
 from dataclasses import dataclass
-from typing import Dict, List
 
 from tracer.instance.msp430_instance import MSP430Instance
 from tracer.instance.stm32_instance import STM32Instance
@@ -21,9 +20,9 @@ class GDBTracer:
     class TraceEntry:
         address: str
         function_name: str
-        function_args: List[str]
-        stack: List[str]
-        watchpoint_hits: List[int]
+        function_args: list[str]
+        stack: list[str]
+        watchpoint_hits: list[int]
 
     def __init__(self, config: ConfigParser):
         self.entrypoint = config["GDB"]["entrypoint"]
@@ -35,7 +34,7 @@ class GDBTracer:
         self.config = config
 
     def trace_instruction(
-        self, response: Dict, instance: SUTInstance, execution_trace: List[TraceEntry]
+        self, response: dict, instance: SUTInstance, execution_trace: list[TraceEntry]
     ):
         address = response["payload"]["frame"]["addr"]
         func_name = response["payload"]["frame"]["func"]
@@ -85,13 +84,13 @@ class GDBTracer:
         elif instance == "msp430":
             return MSP430Instance(config, input_file)
 
-    def merge_traces(list1: List[TraceEntry], list2: List[TraceEntry]) -> List[TraceEntry]:
+    def merge_traces(list1: list[TraceEntry], list2: list[TraceEntry]) -> list[TraceEntry]:
         if len(list1) == 0:
             return list2
         elif len(list2) == 0:
             return list1
 
-        result: List[GDBTracer.TraceEntry] = []
+        result: list[GDBTracer.TraceEntry] = []
         for elem1, elem2 in zip(list1, list2):
             assert elem1.address == elem2.address
             new_entry = GDBTracer.TraceEntry(
@@ -105,14 +104,14 @@ class GDBTracer:
             result.append(new_entry)
         return result
 
-    def trace_input(self, filename) -> List[TraceEntry]:
+    def trace_input(self, filename) -> list[TraceEntry]:
         input_len = os.path.getsize(filename)
 
         logging.info(f"Seed length: {input_len}")
 
         watchpoint_window_offset = 0
 
-        merged_trace: List[GDBTracer.TraceEntry] = []
+        merged_trace: list[GDBTracer.TraceEntry] = []
 
         # Sliding window according to watchpoint count
         while watchpoint_window_offset < input_len:
@@ -126,8 +125,8 @@ class GDBTracer:
 
     def trace_input_slice(
         self, instance: SUTInstance, input_len: int, watchpoint_window_offset: int = 0
-    ) -> List[TraceEntry]:
-        instruction_trace_list: List[GDBTracer.TraceEntry] = []
+    ) -> list[TraceEntry]:
+        instruction_trace_list: list[GDBTracer.TraceEntry] = []
         watchpoint_offset = {}
 
         # Set the first breakpoint at entrypoint address
@@ -289,7 +288,7 @@ class GDBTracer:
 
         return instruction_trace_list
 
-    def parse_stacktrace(self, response) -> List[str]:
+    def parse_stacktrace(self, response) -> list[str]:
         stacktrace = []
         # Skip first address on stack trace, because it can be unreliable
         if len(response["payload"]["stack"]) > 0:

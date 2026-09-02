@@ -11,7 +11,6 @@
 
 import copy
 import logging
-from typing import Dict, List, Tuple
 
 from cmimid import util
 from tracer.instance.sut_instance import SUTInstance
@@ -19,7 +18,7 @@ from tracer.instance.sut_instance import SUTInstance
 # Tree = Tuple[]
 # Node = Tuple[str, ]
 
-CACHE: Dict[str, bool] = {}
+CACHE: dict[str, bool] = {}
 
 
 def is_compatible(instance: SUTInstance, a, b) -> bool:
@@ -50,7 +49,7 @@ def is_a_replaceable_with_b(instance: SUTInstance, a, b) -> bool:
         return accepted
 
 
-def register_node(node, tree, input_file, node_register: Dict[str, List[Tuple]]):
+def register_node(node, tree, input_file, node_register: dict[str, list[tuple]]):
     node_name = node[0]
     if node_name not in node_register:
         node_register[node_name] = []
@@ -64,7 +63,7 @@ def register_node(node, tree, input_file, node_register: Dict[str, List[Tuple]])
     return new_elt
 
 
-def get_compatibility_pattern(node, sampled_nodes: List[Tuple], instance: SUTInstance):
+def get_compatibility_pattern(node, sampled_nodes: list[tuple], instance: SUTInstance):
     """Checks if the given node can be interchanged with the given list of nodes
         and returns the results as a bit pattern e.g. 10011.
 
@@ -88,7 +87,7 @@ def get_compatibility_pattern(node, sampled_nodes: List[Tuple], instance: SUTIns
 
 
 def identify_compatibility_patterns(
-    node_name: str, node_register: Dict[str, List[Tuple]], instance: SUTInstance
+    node_name: str, node_register: dict[str, list[tuple]], instance: SUTInstance
 ):
     nodes_with_same_name = node_register[node_name]
     sampled_nodes = util.sample(nodes_with_same_name, util.MAX_PROC_SAMPLES)

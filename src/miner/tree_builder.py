@@ -9,7 +9,6 @@ import os
 import pathlib
 import urllib.parse
 from dataclasses import dataclass
-from typing import Dict, List, Set, Tuple
 
 import networkx as nx
 
@@ -31,7 +30,7 @@ DELAY_WP = os.getenv("DELAY_WP", "0") == "1"
 @dataclass
 class PseudoMethodScope:
     addr: T  # The address where the scope starts
-    scope_addresses: Set[T]  # Addresses belonging to the scope
+    scope_addresses: set[T]  # Addresses belonging to the scope
     method_stack_len: int  # The length of the method stack
     name: str
     id: str  # A unique id
@@ -40,19 +39,19 @@ class PseudoMethodScope:
 class TreeBuilder:
     def __init__(
         self,
-        trace_files: List[pathlib.Path],
-        seeds: List[pathlib.Path],
+        trace_files: list[pathlib.Path],
+        seeds: list[pathlib.Path],
         program_path: str,
     ) -> None:
         # Read trace files
-        self.traces: List[List[Dict]] = []
+        self.traces: list[list[dict]] = []
         for f_name in trace_files:
             with open(f_name, "r") as f:
                 self.traces.append(json.load(f))
 
         # Read seeds
         self.seeds = seeds
-        self.seed_contents: List[bytes] = []
+        self.seed_contents: list[bytes] = []
         for f_name in seeds:
             with open(f_name, "rb") as f:
                 self.seed_contents.append(f.read())
@@ -65,7 +64,7 @@ class TreeBuilder:
         logging.info(f"Functions: {' '.join(self.function_entries.values())}")
         logging.info(f"Using original Mimid algo: {ORIGINAL_MIMID}")
         # Find loops in all functions
-        self.loop_scopes: Dict[T, List[Set[T]]] = {}
+        self.loop_scopes: dict[T, list[set[T]]] = {}
         for entry_addr, fname in self.function_entries.items():
             try:
                 self.loop_scopes.update(all_natural_loops(self.cfg, entry_addr))
@@ -73,9 +72,9 @@ class TreeBuilder:
                 logging.warning(f"Error with function {fname} and entrypoint {entry_addr}")
                 raise e
 
-        self.pseudo_method_names: Dict[str, str] = {}
+        self.pseudo_method_names: dict[str, str] = {}
 
-        self.tree_list: List[Dict] = []
+        self.tree_list: list[dict] = []
 
         # Translate all traces into the Mimid tree list
         for trace, seed_content, seed_file in zip(self.traces, self.seed_contents, self.seeds):
@@ -83,10 +82,10 @@ class TreeBuilder:
 
     def add_to_scope_stack(
         self,
-        scope_stack: List[PseudoMethodScope],
-        method_map: Dict[str, Tuple[int, str, List[int]]],
+        scope_stack: list[PseudoMethodScope],
+        method_map: dict[str, tuple[int, str, list[int]]],
         addr: T,
-        scope_addresses: Set[T],
+        scope_addresses: set[T],
         method_stack_len: int,
         name: str,
     ):
@@ -105,7 +104,7 @@ class TreeBuilder:
     def is_conditional_scope(scope_name: str) -> bool:
         return ":if_" in scope_name or ":while_" in scope_name
 
-    def encode_current_scope_conditions(self, scope_stack: List[PseudoMethodScope]) -> List[str]:
+    def encode_current_scope_conditions(self, scope_stack: list[PseudoMethodScope]) -> list[str]:
         assert scope_stack
         scope = scope_stack[-1]
 
@@ -119,16 +118,16 @@ class TreeBuilder:
         else:
             return []
 
-    def get_curent_function_scope(self, scope_stack: List[PseudoMethodScope]) -> PseudoMethodScope:
+    def get_curent_function_scope(self, scope_stack: list[PseudoMethodScope]) -> PseudoMethodScope:
         for scope in reversed(scope_stack):
             if not TreeBuilder.is_conditional_scope(scope.name):
                 return scope
 
-    def get_curent_function_name(self, scope_stack: List[PseudoMethodScope]) -> str:
+    def get_curent_function_name(self, scope_stack: list[PseudoMethodScope]) -> str:
         return self.get_curent_function_scope(scope_stack).name
 
     def function_args_lookahead(
-        self, trace: List[str], current_trace_index: int, current_method_scope: List[T]
+        self, trace: list[str], current_trace_index: int, current_method_scope: list[T]
     ) -> str:
         # Function arguments can not be retrieved on the entry of a function,
         # but only after the preamble (stack setup, register saving) is finished.
@@ -148,10 +147,10 @@ class TreeBuilder:
 
     # Check in which loop we are by looking
     def loop_lookahead(
-        self, trace: List[str], current_trace_index: int, loop_scopes: List[List[T]]
+        self, trace: list[str], current_trace_index: int, loop_scopes: list[list[T]]
     ) -> int:
         # Add all loops as candidates
-        loop_candidates: Set[int] = set(range(len(loop_scopes)))
+        loop_candidates: set[int] = set(range(len(loop_scopes)))
 
         all_nodes = set()
         for loop in loop_scopes:
@@ -175,7 +174,7 @@ class TreeBuilder:
 
     def add_trace_to_tree_list(
         self,
-        trace: List[dict],
+        trace: list[dict],
         input: bytes,
         input_file_name: str,
         program_file_name: str,
@@ -183,13 +182,13 @@ class TreeBuilder:
         assert len(trace) > 0
 
         # Map with  m_id, m_name, m_children
-        method_map: Dict[str, Tuple[int, str, List[int]]] = {"0": (0, None, [])}
+        method_map: dict[str, tuple[int, str, list[int]]] = {"0": (0, None, [])}
 
         # List with idx, char, mid
-        comparisons: List[Tuple[int, str, int]] = []
+        comparisons: list[tuple[int, str, int]] = []
 
         # Add root node with all addresses of the parsing methods as scope #set().union(*self.function_scopes.values())
-        scope_stack: List[PseudoMethodScope] = [PseudoMethodScope("0", set([]), 0, "0", 0)]
+        scope_stack: list[PseudoMethodScope] = [PseudoMethodScope("0", set([]), 0, "0", 0)]
 
         self.scope_count = 1
 
@@ -352,7 +351,7 @@ class TreeBuilder:
             }
         )
 
-    def get_tree_list(self) -> List[Dict]:
+    def get_tree_list(self) -> list[dict]:
         return self.tree_list
 
     def dump_to_file(self, filename: pathlib.Path):

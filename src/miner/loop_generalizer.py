@@ -11,7 +11,6 @@
 
 import logging
 from configparser import ConfigParser
-from typing import Dict, List, Tuple
 
 from cmimid import util
 from miner.active_learning_utils import (
@@ -26,7 +25,7 @@ from tracer.instance.sut_instance import SUTInstance
 class LoopGeneralizer:
     def __init__(self, config: ConfigParser) -> None:
         self.config = config
-        self.NODE_REGISTER: Dict[str, List[Tuple]] = {}
+        self.NODE_REGISTER: dict[str, list[tuple]] = {}
 
     def can_the_loop_be_deleted(self, pattern, k, instance: SUTInstance):
         xnodes = [xnode for xnode in self.NODE_REGISTER[k] if xnode[-1]["pattern"] == pattern]

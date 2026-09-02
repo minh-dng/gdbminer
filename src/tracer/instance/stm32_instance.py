@@ -6,7 +6,6 @@ import logging
 import subprocess
 import time
 from configparser import ConfigParser
-from typing import Dict, List
 
 from tracer.connection.sut_connection import SUTConnection
 from tracer.instance.sut_instance import SUTInstance
@@ -67,7 +66,7 @@ class STM32Instance(SUTInstance):
             f"-data-read-memory {self.dwt_function_reg} t 4 {self.watchpoint_count} 4"
         )
 
-    def get_gdb_responses(self) -> List[Dict]:
+    def get_gdb_responses(self) -> list[dict]:
         responses = super().get_gdb_responses()
 
         # For Watchpoint workaround

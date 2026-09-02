@@ -13,7 +13,6 @@ import copy
 import logging
 import random
 from configparser import ConfigParser
-from typing import Dict, List, Tuple
 
 import cmimid.fuzz as F
 from cmimid import grammartools, util
@@ -48,7 +47,7 @@ class TokenGeneralizer:
             g_[k] = new_rules
         return g_
 
-    def get_list_of_single_chars(grammar) -> List[Tuple[str, int, int, str]]:
+    def get_list_of_single_chars(grammar) -> list[tuple[str, int, int, str]]:
         lst = []
         for p, key in enumerate(grammar):
             for rule_index, rule in enumerate(grammar[key]):
@@ -231,7 +230,7 @@ class TokenGeneralizer:
             new_g[k] = new_rules
         return new_g
 
-    def generalize_tokens_in_grammar(self, grammar, start) -> Dict:
+    def generalize_tokens_in_grammar(self, grammar, start) -> dict:
         # now, what we want to do is first regularize the grammar by splitting each
         # multi-character tokens into single characters.
         generalized_grammar = TokenGeneralizer.generalize_tokens(grammar)
