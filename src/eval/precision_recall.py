@@ -56,9 +56,9 @@ def main():
     # Add the arguments
     parser.add_argument("--config", required=True, type=str, help="Path to a config file.")
 
-    parser.add_argument("--grammar", required=False, type=str, help="Path to a grammar file.")
+    parser.add_argument("--grammar", type=str, help="Path to a grammar file.")
 
-    parser.add_argument("--out", required=False, type=str, help="Path to an output file.")
+    parser.add_argument("--out", type=str, help="Path to an output file.")
 
     # Execute the parse_args() methode
     args = parser.parse_args()
