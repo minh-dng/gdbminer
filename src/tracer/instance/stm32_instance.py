@@ -83,9 +83,7 @@ class STM32Instance(SUTInstance):
                     if response["payload"]["memory"][i]["data"][0][7] == "1":
                         # Here we have a watchpoint hit.
                         # Translate to 'real' watchpoint message
-                        response["payload"].update(
-                            {"reason": "read-watchpoint-trigger"}
-                        )
+                        response["payload"].update({"reason": "read-watchpoint-trigger"})
                         response["payload"].update({"offset": i})
                         response["message"] = "stopped"
                         response["type"] = "notify"

@@ -21,9 +21,7 @@ class SerialConnection(ConnectionBaseClass):
         self.serial.reset_input_buffer()
         # Do a reset, so that the SUT requests an input now
         self.reset_sut()
-        log.info(
-            f"Established connection with SUT via Serial at port {self.serial.name}"
-        )
+        log.info(f"Established connection with SUT via Serial at port {self.serial.name}")
 
     def wait_for_input_request(self):
         # SUT sends 'A' whenever it requests and input

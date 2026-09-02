@@ -36,9 +36,7 @@ def can_the_loop_be_deleted(pattern, k, executable):
             break
     for xnode in xnodes:
         node0, tree0, executable0, inputfile0, info = xnode
-        method1, ctrl1, cname1, num1, can_empty, cstack1 = util.parse_pseudo_name(
-            node0[0]
-        )
+        method1, ctrl1, cname1, num1, can_empty, cstack1 = util.parse_pseudo_name(node0[0])
         name = util.unparse_pseudo_name(
             method1,
             ctrl1,
@@ -60,9 +58,7 @@ def update_pseudo_name(k_m, my_id):
         )
     elif ctrl == "while":
         assert altid == "0"
-        name = util.unparse_pseudo_name(
-            method, ctrl, cid, my_id, can_empty, method_stack
-        )
+        name = util.unparse_pseudo_name(method, ctrl, cid, my_id, can_empty, method_stack)
     else:
         assert False
     k_m[0] = name

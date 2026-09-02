@@ -130,11 +130,7 @@ class Node:
         return str("(%s, [%s])", (self.item, " ".join([str(i) for i in self.children])))
 
     def to_json(self):
-        s = (
-            ("(%s)" % " ".join(self.item["_"]))
-            if isinstance(self.item, dict)
-            else str(self.item)
-        )
+        s = ("(%s)" % " ".join(self.item["_"])) if isinstance(self.item, dict) else str(self.item)
         return (s, tuple(self.counters), [i.to_json() for i in self.children])
 
     def inc_count(self):

@@ -108,11 +108,7 @@ class LimitFuzzer(Fuzzer):
     def expansion_cost(self, grammar, tokens, seen):
         return (
             max(
-                (
-                    self.symbol_cost(grammar, token, seen)
-                    for token in tokens
-                    if token in grammar
-                ),
+                (self.symbol_cost(grammar, token, seen) for token in tokens if token in grammar),
                 default=0,
             )
             + 1
@@ -140,9 +136,7 @@ class LimitFuzzer(Fuzzer):
             rules = self.grammar[k]
             min_cost = min([self.cost[k][str(r)] for r in rules])
             # grammar[k] = [r for r in grammar[k] if self.cost[k][str(r)] == float('inf')]
-            cheap_grammar[k] = [
-                r for r in self.grammar[k] if self.cost[k][str(r)] == min_cost
-            ]
+            cheap_grammar[k] = [r for r in self.grammar[k] if self.cost[k][str(r)] == min_cost]
 
         root = [key, None]
         queue = [(0, root)]
@@ -175,9 +169,7 @@ class LimitFuzzer(Fuzzer):
             return (key, [])
         if depth > max_depth:
             # return self.gen_key_cheap_iter(key)
-            clst = sorted(
-                [(self.cost[key][str(rule)], rule) for rule in self.grammar[key]]
-            )
+            clst = sorted([(self.cost[key][str(rule)], rule) for rule in self.grammar[key]])
             rules = [r for c, r in clst if c == clst[0][0]]
         else:
             rules = self.grammar[key]

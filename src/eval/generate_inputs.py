@@ -26,9 +26,7 @@ PRECISION_SIZE = 1000
 def trim_grammar(grammar: Grammar, start_symbol=START_SYMBOL) -> Grammar:
     """Create a copy of `grammar` where all unused and unreachable nonterminals are removed."""
     new_grammar = extend_grammar(grammar)
-    defined_nonterminals, used_nonterminals = def_used_nonterminals(
-        grammar, start_symbol
-    )
+    defined_nonterminals, used_nonterminals = def_used_nonterminals(grammar, start_symbol)
     if defined_nonterminals is None or used_nonterminals is None:
         return new_grammar
 
@@ -57,13 +55,9 @@ def main():
     parser = argparse.ArgumentParser(description="Generates inputs from grammar")
 
     # Add the arguments
-    parser.add_argument(
-        "--config", required=True, type=str, help="Path to a config file."
-    )
+    parser.add_argument("--config", required=True, type=str, help="Path to a config file.")
 
-    parser.add_argument(
-        "--grammar", required=False, type=str, help="Path to a grammar file."
-    )
+    parser.add_argument("--grammar", required=False, type=str, help="Path to a grammar file.")
 
     parser.add_argument("out", type=str, help="Path to output folder.")
 

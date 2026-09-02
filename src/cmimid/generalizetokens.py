@@ -251,8 +251,7 @@ def generalize_single_token(grammar, start, k, q, r, command, blacklist):
             tree = None
         if check > MAX_CHECKS:
             print(
-                "Exhausted limit for key:%s, rule:%d, token:%d, char:%s"
-                % (k, q, r, char),
+                "Exhausted limit for key:%s, rule:%d, token:%d, char:%s" % (k, q, r, char),
                 file=sys.stderr,
             )
             blacklist.append((k, q, r, char))

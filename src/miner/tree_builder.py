@@ -70,9 +70,7 @@ class TreeBuilder:
             try:
                 self.loop_scopes.update(all_natural_loops(self.cfg, entry_addr))
             except nx.NetworkXError as e:
-                logging.warning(
-                    f"Error with function {fname} and entrypoint {entry_addr}"
-                )
+                logging.warning(f"Error with function {fname} and entrypoint {entry_addr}")
                 raise e
 
         self.pseudo_method_names: Dict[str, str] = {}
@@ -80,9 +78,7 @@ class TreeBuilder:
         self.tree_list: List[Dict] = []
 
         # Translate all traces into the Mimid tree list
-        for trace, seed_content, seed_file in zip(
-            self.traces, self.seed_contents, self.seeds
-        ):
+        for trace, seed_content, seed_file in zip(self.traces, self.seed_contents, self.seeds):
             self.add_trace_to_tree_list(trace, seed_content, seed_file, program_path)
 
     def add_to_scope_stack(
@@ -109,25 +105,21 @@ class TreeBuilder:
     def is_conditional_scope(scope_name: str) -> bool:
         return ":if_" in scope_name or ":while_" in scope_name
 
-    def encode_current_scope_conditions(
-        self, scope_stack: List[PseudoMethodScope]
-    ) -> List[str]:
+    def encode_current_scope_conditions(self, scope_stack: List[PseudoMethodScope]) -> List[str]:
         assert scope_stack
         scope = scope_stack[-1]
 
         scope_name = scope.name
 
         if TreeBuilder.is_conditional_scope(scope_name):
-            method, ctrl, cid, altid, can_empty, conditional_stack = (
-                cmimid.util.decode_name(scope_name)
+            method, ctrl, cid, altid, can_empty, conditional_stack = cmimid.util.decode_name(
+                scope_name
             )
             return conditional_stack
         else:
             return []
 
-    def get_curent_function_scope(
-        self, scope_stack: List[PseudoMethodScope]
-    ) -> PseudoMethodScope:
+    def get_curent_function_scope(self, scope_stack: List[PseudoMethodScope]) -> PseudoMethodScope:
         for scope in reversed(scope_stack):
             if not TreeBuilder.is_conditional_scope(scope.name):
                 return scope
@@ -197,9 +189,7 @@ class TreeBuilder:
         comparisons: List[Tuple[int, str, int]] = []
 
         # Add root node with all addresses of the parsing methods as scope #set().union(*self.function_scopes.values())
-        scope_stack: List[PseudoMethodScope] = [
-            PseudoMethodScope("0", set([]), 0, "0", 0)
-        ]
+        scope_stack: List[PseudoMethodScope] = [PseudoMethodScope("0", set([]), 0, "0", 0)]
 
         self.scope_count = 1
 
@@ -222,9 +212,7 @@ class TreeBuilder:
                 addr in self.function_scopes.keys()
                 and method_stack_len > scope_stack[-1].method_stack_len
             ):
-                func_args = self.function_args_lookahead(
-                    trace, idx, self.function_scopes[addr]
-                )
+                func_args = self.function_args_lookahead(trace, idx, self.function_scopes[addr])
                 function_name = f"{elem['function_name']}"  # ({func_args})'
                 # Add the node to the scope_stack #TODO add function args
                 self.add_to_scope_stack(
@@ -251,20 +239,13 @@ class TreeBuilder:
                 loop_index = self.loop_lookahead(trace, idx, self.loop_scopes[addr])
                 # Add the node to the scope_stack
                 if loop_index is not None:
-                    conditional_stack = self.encode_current_scope_conditions(
-                        scope_stack
-                    )
+                    conditional_stack = self.encode_current_scope_conditions(scope_stack)
                     loop_id = f"{addr}_{loop_index}"
                     if loop_id not in self.pseudo_method_names:
-                        self.pseudo_method_names[loop_id] = len(
-                            self.pseudo_method_names
-                        )
+                        self.pseudo_method_names[loop_id] = len(self.pseudo_method_names)
 
                     if ORIGINAL_MIMID:
-                        if (
-                            scope_stack[-1].scope_addresses
-                            == self.loop_scopes[addr][loop_index]
-                        ):
+                        if scope_stack[-1].scope_addresses == self.loop_scopes[addr][loop_index]:
                             # We are in another loop iteration
                             conditional_stack[-1] = str(int(conditional_stack[-1]) + 1)
                             scope_stack.pop()
@@ -315,14 +296,10 @@ class TreeBuilder:
                         nodes_in_scope = if_else_scope(self.cfg, entry, addr)
 
                         # Add the node to the scope_stack
-                        conditional_stack = self.encode_current_scope_conditions(
-                            scope_stack
-                        )
+                        conditional_stack = self.encode_current_scope_conditions(scope_stack)
                         conditional_stack.append("-1")
                         if addr not in self.pseudo_method_names:
-                            self.pseudo_method_names[addr] = len(
-                                self.pseudo_method_names
-                            )
+                            self.pseudo_method_names[addr] = len(self.pseudo_method_names)
 
                         scope_name = cmimid.util.encode_name(
                             self.get_curent_function_name(scope_stack),
@@ -348,13 +325,9 @@ class TreeBuilder:
                 if DELAY_WP:
                     if pending_watchpoint >= 0:
                         char = (
-                            chr(input[pending_watchpoint])
-                            .encode("unicode_escape")
-                            .decode("utf-8")
+                            chr(input[pending_watchpoint]).encode("unicode_escape").decode("utf-8")
                         )
-                        comparisons.append(
-                            (pending_watchpoint, char, scope_stack[-1].id)
-                        )
+                        comparisons.append((pending_watchpoint, char, scope_stack[-1].id))
 
                     pending_watchpoint = offset
                 else:
@@ -362,9 +335,7 @@ class TreeBuilder:
                     comparisons.append((offset, char, scope_stack[-1].id))
 
         if DELAY_WP and pending_watchpoint >= 0:
-            char = (
-                chr(input[pending_watchpoint]).encode("unicode_escape").decode("utf-8")
-            )
+            char = chr(input[pending_watchpoint]).encode("unicode_escape").decode("utf-8")
             comparisons.append((pending_watchpoint, char, scope_stack[-1].id))
 
         # Put everything into Mimid format

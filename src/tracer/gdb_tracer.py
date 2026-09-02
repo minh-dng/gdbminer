@@ -30,9 +30,7 @@ class GDBTracer:
         self.exitpoint = config["GDB"]["exitpoint"]
         self.watchpoint_type = config["GDB"]["watchpoint_type"]
         self.input_buffer = config["GDB"]["input_buffer"]
-        self.ignore_functions_regex = config.get(
-            "GDB", "ignore_functions_regex", fallback=""
-        )
+        self.ignore_functions_regex = config.get("GDB", "ignore_functions_regex", fallback="")
         self.watchpoint_count = config.getint("GDB", "watchpoint_count")
         self.config = config
 
@@ -87,9 +85,7 @@ class GDBTracer:
         elif instance == "msp430":
             return MSP430Instance(config, input_file)
 
-    def merge_traces(
-        list1: List[TraceEntry], list2: List[TraceEntry]
-    ) -> List[TraceEntry]:
+    def merge_traces(list1: List[TraceEntry], list2: List[TraceEntry]) -> List[TraceEntry]:
         if len(list1) == 0:
             return list2
         elif len(list2) == 0:
@@ -121,9 +117,7 @@ class GDBTracer:
         # Sliding window according to watchpoint count
         while watchpoint_window_offset < input_len:
             with GDBTracer.open_sut_instance(self.config, filename) as instance:
-                trace = self.trace_input_slice(
-                    instance, input_len, watchpoint_window_offset
-                )
+                trace = self.trace_input_slice(instance, input_len, watchpoint_window_offset)
 
             merged_trace = GDBTracer.merge_traces(merged_trace, trace)
             watchpoint_window_offset += self.watchpoint_count
@@ -261,9 +255,7 @@ class GDBTracer:
                             instance.step_instruction()
 
                         elif "offset" in response["payload"]:
-                            offset = (
-                                watchpoint_window_offset + response["payload"]["offset"]
-                            )
+                            offset = watchpoint_window_offset + response["payload"]["offset"]
                             logging.info(f"Watchpoint triggered: {offset} ")
                             instruction_trace_list[-1].watchpoint_hits.append(offset)
 
@@ -285,16 +277,12 @@ class GDBTracer:
                             self.ignore_functions_regex, func_name
                         ):
                             # Ignore all interruption until stack is back to previous function
-                            ignore_till_stack_len = len(
-                                instruction_trace_list[-1].stack
-                            )
+                            ignore_till_stack_len = len(instruction_trace_list[-1].stack)
                             instance.step_out_of_function()
                         else:
                             assert instruction_trace_list[-1].stack
                             #    logging.warning(f"No stack trace for instruction {instruction_trace_list[-1]} received")
-                            self.trace_instruction(
-                                response, instance, instruction_trace_list
-                            )
+                            self.trace_instruction(response, instance, instruction_trace_list)
                             instance.step_instruction()
                 else:
                     logging.debug(f"Unprocessed GDB message {response}")

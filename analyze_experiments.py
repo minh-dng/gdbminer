@@ -87,24 +87,18 @@ latex_table = []
 preambel = "\\begin{table}[t]\n\\centering\n"
 preambel += f"\\caption{{Timing and seed statistics averaged from {no_trials} runs.}}\n"
 preambel += "\\label{tab:eval_time_seed}\n"
-preambel += (
-    "\\begin{tabular}{l" + "D{;}{{\\color{gray}\\pm}}{5.5}" * (len(miners) + 1) + "}\n"
-)
+preambel += "\\begin{tabular}{l" + "D{;}{{\\color{gray}\\pm}}{5.5}" * (len(miners) + 1) + "}\n"
 latex_table.append(preambel)
 header = (
     "Target & \\multicolumn{1}{c}{ Seed Lengths }  & "
-    + " & ".join(
-        [f"\\multicolumn{{1}}{{c}}{{ {miner.capitalize()} }} " for miner in miners]
-    )
+    + " & ".join([f"\\multicolumn{{1}}{{c}}{{ {miner.capitalize()} }} " for miner in miners])
     + " \\\\ \n\\hline"
 )
 latex_table.append(header)
 for target in targets:
     line = f"{target.replace('_', '')} "
     if seed_lengths[target]:
-        line += (
-            f" & {tmean(seed_lengths[target]):.2f} ; {tstd(seed_lengths[target]):.2f} "
-        )
+        line += f" & {tmean(seed_lengths[target]):.2f} ; {tstd(seed_lengths[target]):.2f} "
 
     metric_df = df[(df["metric"] == "duration") & (df["target"] == target)]
     for miner in miners:
@@ -172,15 +166,11 @@ for metric in ["precision", "recall", "f1"]:
     preambel = "\\begin{table}[t]\n\\centering\n"
     preambel += f"\\caption{{{metric.capitalize()}-scores in percentage averaged from {no_trials} runs. Bold values show significant improvement to second-best approach (excluding Mimid).}}\n"
     preambel += f"\\label{{tab:eval_{metric}}}\n"
-    preambel += (
-        "\\begin{tabular}{l" + "D{:}{{\\color{gray}\\pm}}{5.5}" * len(miners) + "}\n"
-    )
+    preambel += "\\begin{tabular}{l" + "D{:}{{\\color{gray}\\pm}}{5.5}" * len(miners) + "}\n"
     latex_table.append(preambel)
     header = (
         "Target & "
-        + " & ".join(
-            [f"\\multicolumn{{1}}{{c}}{{ {miner.capitalize()} }} " for miner in miners]
-        )
+        + " & ".join([f"\\multicolumn{{1}}{{c}}{{ {miner.capitalize()} }} " for miner in miners])
         + " \\\\ \n\\hline"
     )
     latex_table.append(header)
@@ -189,9 +179,7 @@ for metric in ["precision", "recall", "f1"]:
         row = [target.replace("_", "")]
         for miner in miners:
             values = df[
-                (df["metric"] == metric)
-                & (df["target"] == target)
-                & (df["miner"] == miner)
+                (df["metric"] == metric) & (df["target"] == target) & (df["miner"] == miner)
             ]["value"]
             mean_value = values.mean()
             std_value = values.std()

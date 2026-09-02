@@ -69,11 +69,9 @@ def squash_consecutive_conditions(
 
     if name and ":if_" in name and len(childs) == 1 and ":if_" in childs[0][0]:
         child_name, child_childs, child_id1, child_id2 = childs[0]
-        method, ctrl, cid, altid, can_empty, method_stack = cmimid.util.decode_name(
-            name[1:-1]
-        )
-        method_c, ctrl_c, cid_c, altid_c, can_empty_c, method_stack_c = (
-            cmimid.util.decode_name(child_name[1:-1])
+        method, ctrl, cid, altid, can_empty, method_stack = cmimid.util.decode_name(name[1:-1])
+        method_c, ctrl_c, cid_c, altid_c, can_empty_c, method_stack_c = cmimid.util.decode_name(
+            child_name[1:-1]
         )
         # TODO maybe just use cid_c ?
         new_name = cmimid.util.unparse_pseudo_name(
@@ -259,9 +257,7 @@ def main():
     parser = argparse.ArgumentParser(description="Generate a context free grammar")
 
     # Add the arguments
-    parser.add_argument(
-        "--config", required=True, type=str, help="Path to a config file."
-    )
+    parser.add_argument("--config", required=True, type=str, help="Path to a config file.")
 
     # Execute the parse_args() methode
     config_file_path = parser.parse_args().config
@@ -274,9 +270,7 @@ def main():
     config = ConfigParser()
     config.read(config_file_path)
 
-    output_directory = find_output_directory(
-        pathlib.Path(config["BASIC"]["output_directory"])
-    )
+    output_directory = find_output_directory(pathlib.Path(config["BASIC"]["output_directory"]))
     seed_directory = config["BASIC"]["seed_directory"]
 
     loglevel = config["LOGS"]["log_level"]

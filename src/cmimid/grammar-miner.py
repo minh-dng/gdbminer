@@ -181,11 +181,7 @@ def main(args):
     g = G.grammar_gc(g, start_symbol)  # garbage collect
     # check_grammar(g, start_symbol, cmd)
     # with open('g4_.json', 'w+') as f: json.dump(g, f)
-    print(
-        json.dumps(
-            {"[start]": start_symbol, "[grammar]": g, "[command]": cmd}, indent=4
-        )
-    )
+    print(json.dumps({"[start]": start_symbol, "[grammar]": g, "[command]": cmd}, indent=4))
 
 
 if __name__ == "__main__":

@@ -25,14 +25,10 @@ class SUTConnection:
         self.responses = mp.Queue()
         self.connection = self.init_connection(config, sut_reset_method)
 
-    def init_connection(
-        self, config: ConfigParser, sut_reset_method
-    ) -> ConnectionBaseClass:
+    def init_connection(self, config: ConfigParser, sut_reset_method) -> ConnectionBaseClass:
         sut_connection_type = config["Connection"]["input_channel"]
         if sut_connection_type == "serial":
-            connection = SerialConnection(
-                config, self.inputs, self.responses, sut_reset_method
-            )
+            connection = SerialConnection(config, self.inputs, self.responses, sut_reset_method)
         else:
             # Here we can add other connection types
             pass
@@ -53,9 +49,7 @@ class SUTConnection:
                 logging.warn("Connection timeout!")
                 # return False
                 self.disconnect()
-                self.connection = self.init_connection(
-                    self.config, self.sut_reset_method
-                )
+                self.connection = self.init_connection(self.config, self.sut_reset_method)
 
     def disconnect(self):
         assert self.connection.pid is not None

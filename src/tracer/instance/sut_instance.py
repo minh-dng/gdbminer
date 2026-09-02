@@ -63,9 +63,7 @@ class SUTInstance:
         self.send_gdb_command(f"-break-delete {breakpoint_id}")
 
     def execute_find(self, ram_begin_address, ram_end_address, find_string):
-        self.send_gdb_command(
-            f'find {ram_begin_address}, {ram_end_address}, "{find_string}"'
-        )
+        self.send_gdb_command(f'find {ram_begin_address}, {ram_end_address}, "{find_string}"')
 
     def read_memory_bytes(self, address, size):
         self.send_gdb_command(f"-data-read-memory-bytes {address} {size}")
@@ -117,9 +115,7 @@ class SUTInstance:
         return responses
 
     def get_gdb_responses(self) -> List[Dict]:
-        return self.gdb_controller.get_gdb_response(
-            timeout_sec=0, raise_error_on_timeout=False
-        )
+        return self.gdb_controller.get_gdb_response(timeout_sec=0, raise_error_on_timeout=False)
 
     def send_input(self):
         pass

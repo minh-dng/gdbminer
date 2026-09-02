@@ -29,16 +29,12 @@ class MethodGeneralizer:
         self.NODE_REGISTER: Dict[str, List[Tuple]] = {}
 
     def can_method_be_deleted(self, pattern, k, instance: SUTInstance):
-        xnodes = [
-            xnode for xnode in self.NODE_REGISTER[k] if xnode[-1]["pattern"] == pattern
-        ]
+        xnodes = [xnode for xnode in self.NODE_REGISTER[k] if xnode[-1]["pattern"] == pattern]
         can_be_deleted = True
         for xnode in xnodes:
             node0, tree0, inputfile0, _info = xnode
 
-            a = is_a_replaceable_with_b(
-                instance, (node0, "", tree0), (["", [], 0, 0], "", tree0)
-            )
+            a = is_a_replaceable_with_b(instance, (node0, "", tree0), (["", [], 0, 0], "", tree0))
             if not a:
                 can_be_deleted = False
                 break
@@ -119,9 +115,7 @@ class MethodGeneralizer:
                     self.can_method_be_deleted(patterns[p], k, instance)
 
             self.number_of_tested_inputs = instance.number_of_tested_inputs
-        logging.info(
-            f"Used {self.number_of_tested_inputs} requests to generalize methods"
-        )
+        logging.info(f"Used {self.number_of_tested_inputs} requests to generalize methods")
         # finally, update the original names.
         for i, k in enumerate(self.NODE_REGISTER):
             logging.info("update: %s %d/%d" % (k, i, len(self.NODE_REGISTER)))

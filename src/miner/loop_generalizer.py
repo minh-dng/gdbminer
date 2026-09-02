@@ -29,24 +29,18 @@ class LoopGeneralizer:
         self.NODE_REGISTER: Dict[str, List[Tuple]] = {}
 
     def can_the_loop_be_deleted(self, pattern, k, instance: SUTInstance):
-        xnodes = [
-            xnode for xnode in self.NODE_REGISTER[k] if xnode[-1]["pattern"] == pattern
-        ]
+        xnodes = [xnode for xnode in self.NODE_REGISTER[k] if xnode[-1]["pattern"] == pattern]
         can_be_deleted = True
         for xnode in xnodes:
             node0, tree0, inputfile0, _info = xnode
 
-            a = is_a_replaceable_with_b(
-                instance, (node0, "", tree0), (["", [], 0, 0], "", tree0)
-            )
+            a = is_a_replaceable_with_b(instance, (node0, "", tree0), (["", [], 0, 0], "", tree0))
             if not a:
                 can_be_deleted = False
                 break
         for xnode in xnodes:
             node0, tree0, inputfile0, info = xnode
-            method1, ctrl1, cname1, num1, can_empty, cstack1 = util.parse_pseudo_name(
-                node0[0]
-            )
+            method1, ctrl1, cname1, num1, can_empty, cstack1 = util.parse_pseudo_name(node0[0])
             name = util.unparse_pseudo_name(
                 method1,
                 ctrl1,
@@ -60,18 +54,14 @@ class LoopGeneralizer:
     def update_pseudo_name(self, k_m, my_id):
         # fixup k_m with what is in my_id
         original = k_m[0]
-        method, ctrl, cid, altid, can_empty, method_stack = util.parse_pseudo_name(
-            original
-        )
+        method, ctrl, cid, altid, can_empty, method_stack = util.parse_pseudo_name(original)
         if ctrl == "if":
             name = util.unparse_pseudo_name(
                 method, ctrl, cid, "%s.%d" % (altid, my_id), can_empty, method_stack
             )
         elif ctrl == "while":
             assert altid == "0"
-            name = util.unparse_pseudo_name(
-                method, ctrl, cid, my_id, can_empty, method_stack
-            )
+            name = util.unparse_pseudo_name(method, ctrl, cid, my_id, can_empty, method_stack)
         else:
             assert False
         k_m[0] = name
@@ -110,16 +100,12 @@ class LoopGeneralizer:
             instance.continue_execution()
             for i, k in enumerate(self.NODE_REGISTER):
                 logging.info("compat: %s %d/%d" % (k, i, len(self.NODE_REGISTER)))
-                patterns = identify_compatibility_patterns(
-                    k, self.NODE_REGISTER, instance
-                )
+                patterns = identify_compatibility_patterns(k, self.NODE_REGISTER, instance)
                 for p in patterns:
                     self.can_the_loop_be_deleted(patterns[p], k, instance)
 
             self.number_of_tested_inputs = instance.number_of_tested_inputs
-        logging.info(
-            f"Used {self.number_of_tested_inputs} requests to generalize loops"
-        )
+        logging.info(f"Used {self.number_of_tested_inputs} requests to generalize loops")
         # finally, update the original names.
         for i, k in enumerate(self.NODE_REGISTER):
             if k == "<START>":

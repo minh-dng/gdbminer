@@ -79,9 +79,7 @@ def main(args):
 
     g = enhance_grammar(grammar)
 
-    print(
-        json.dumps({"[start]": start, "[grammar]": g, "[command]": command}, indent=4)
-    )
+    print(json.dumps({"[start]": start, "[grammar]": g, "[command]": command}, indent=4))
 
 
 if __name__ == "__main__":

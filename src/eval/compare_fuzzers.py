@@ -56,13 +56,9 @@ def main():
     )
 
     # Add the arguments
-    parser.add_argument(
-        "--config", required=True, type=str, help="Path to a config file."
-    )
+    parser.add_argument("--config", required=True, type=str, help="Path to a config file.")
 
-    parser.add_argument(
-        "--grammar", required=False, type=str, help="Path to a grammar file."
-    )
+    parser.add_argument("--grammar", required=False, type=str, help="Path to a grammar file.")
 
     # Execute the parse_args() methode
     args = parser.parse_args()
@@ -76,9 +72,7 @@ def main():
     config = ConfigParser()
     config.read(config_file_path)
 
-    output_directory = find_output_directory(
-        pathlib.Path(config["BASIC"]["output_directory"])
-    )
+    output_directory = find_output_directory(pathlib.Path(config["BASIC"]["output_directory"]))
 
     loglevel = config["LOGS"]["log_level"]
     setup_logging(output_directory=output_directory, loglevel=loglevel)

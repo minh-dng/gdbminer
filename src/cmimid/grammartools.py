@@ -232,9 +232,7 @@ def remove_single_alts(grammar, start_symbol):
     child_parent_map = get_parents_of_tokens(grammar, start_symbol)
     assert len(child_parent_map) < len(grammar)
 
-    single_refs = {
-        p: child_parent_map[p] for p in single_alts if len(child_parent_map[p]) <= 1
-    }
+    single_refs = {p: child_parent_map[p] for p in single_alts if len(child_parent_map[p]) <= 1}
 
     ordered = order_by_length_to_start(single_refs, child_parent_map, start_symbol)
 
@@ -285,9 +283,7 @@ def len_to_start(item, parents, start_symbol, seen=None):
     if item == start_symbol:
         return 0
     else:
-        return 1 + min(
-            len_to_start(p, parents, start_symbol, seen) for p in parents[item]
-        )
+        return 1 + min(len_to_start(p, parents, start_symbol, seen) for p in parents[item])
 
 
 def order_by_length_to_start(items, parent_map, start_symbol):

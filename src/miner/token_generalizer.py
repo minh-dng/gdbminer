@@ -95,9 +95,7 @@ class TokenGeneralizer:
                 child_nodes = [[] for c in children]
                 new_node = [name, child_nodes]
                 filled_node.extend(new_node)
-                to_fill = [
-                    (c, child_nodes[i]) for i, c in enumerate(children)
-                ] + to_fill
+                to_fill = [(c, child_nodes[i]) for i, c in enumerate(children)] + to_fill
         return my_node, filled_tree
 
     def replaceable_with_kind(stree, orig, parent, gk, instance: SUTInstance):
@@ -267,14 +265,10 @@ class TokenGeneralizer:
                     logging.info(f"Blacklisted: {bl}")
                     blacklist.extend(bl)
                 if new_token:
-                    list_of_generalizations.append(
-                        (key, rule_index, token_index, new_token)
-                    )
+                    list_of_generalizations.append((key, rule_index, token_index, new_token))
 
             self.number_of_tested_inputs = instance.number_of_tested_inputs
-        logging.info(
-            f"Used {self.number_of_tested_inputs} requests to generalize tokens"
-        )
+        logging.info(f"Used {self.number_of_tested_inputs} requests to generalize tokens")
 
         for key, rule_index, token_index, new_token in list_of_generalizations:
             g_[key][rule_index][token_index] = new_token
