@@ -13,7 +13,7 @@ from os import path
 import fuzzingbook.Parser as P
 
 import cmimid.fuzz as F
-import cmimid.util as util
+from cmimid import util
 from tracer.gdb_tracer import GDBTracer
 
 PRECISION_SIZE = 1000

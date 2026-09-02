@@ -17,8 +17,8 @@ from configparser import ConfigParser
 from typing import List, Tuple
 
 import cmimid.grammartools as G
-import cmimid.parsinggrammar as parsinggrammar
-import cmimid.pta as pta
+from cmimid import parsinggrammar
+from cmimid import pta
 import cmimid.util
 from cmimid.treeminer import miner
 from miner.loop_generalizer import LoopGeneralizer

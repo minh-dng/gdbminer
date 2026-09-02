@@ -16,8 +16,8 @@ from configparser import ConfigParser
 from typing import Dict, List, Tuple
 
 import cmimid.fuzz as F
-import cmimid.grammartools as grammartools
-import cmimid.util as util
+from cmimid import grammartools
+from cmimid import util
 from cmimid.fuzz import ASCII_MAP, CHARACTER_PARENT_MAP
 from miner.active_learning_utils import is_a_replaceable_with_b
 from tracer.gdb_tracer import GDBTracer

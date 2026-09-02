@@ -10,7 +10,7 @@ import os.path
 import sys
 from operator import itemgetter
 
-import cmimid.util as util
+from cmimid import util
 
 
 def reconstruct_method_tree(method_map):

@@ -13,7 +13,7 @@ import copy
 import logging
 from typing import Dict, List, Tuple
 
-import cmimid.util as util
+from cmimid import util
 from tracer.instance.sut_instance import SUTInstance
 
 # Tree = Tuple[]

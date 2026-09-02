@@ -9,7 +9,7 @@ import sys
 sys.setrecursionlimit(99000)
 import json
 
-import cmimid.grammartools as grammartools
+from cmimid import grammartools
 
 
 def usage():

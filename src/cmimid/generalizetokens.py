@@ -8,7 +8,7 @@ import sys
 
 import pudb
 
-import cmimid.grammartools as grammartools
+from cmimid import grammartools
 
 # ulimit -s 100000
 sys.setrecursionlimit(99000)
@@ -18,7 +18,7 @@ import random
 import string
 
 import cmimid.fuzz as F
-import cmimid.util as util
+from cmimid import util
 
 b = pudb.set_trace
 

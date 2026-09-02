@@ -12,7 +12,7 @@ bp = pudb.set_trace
 import json
 import random
 
-import cmimid.util as util
+from cmimid import util
 
 random.seed(0)
 

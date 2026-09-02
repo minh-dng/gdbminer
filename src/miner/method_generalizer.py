@@ -13,7 +13,7 @@ import logging
 from configparser import ConfigParser
 from typing import Dict, List, Tuple
 
-import cmimid.util as util
+from cmimid import util
 from miner.active_learning_utils import (
     identify_compatibility_patterns,
     is_a_replaceable_with_b,

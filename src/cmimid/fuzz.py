@@ -14,7 +14,7 @@ import string
 import sys
 
 import cmimid.grammartools as G
-import cmimid.util as util
+from cmimid import util
 
 # string.whitespace A string containing all ASCII characters that are considered whitespace. This includes the characters space, tab, linefeed, return, formfeed, and vertical tab.
 # string.digits The string '0123456789'.
