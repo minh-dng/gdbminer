@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # This source code is from Mimid
 #   https://github.com/vrthra/mimid/
 # Copyright (c) 2018-2020 Saarland University, CISPA, authors, and contributors

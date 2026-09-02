@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # This code contains the main logic for the grammar mining step
 # Copyright (c) 2023 Robert Bosch GmbH
 # SPDX-License-Identifier: AGPL-3.0

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # This code compares mutational against grammar-based fuzzing
 # Copyright (c) 2023 Robert Bosch GmbH
 # SPDX-License-Identifier: AGPL-3.0

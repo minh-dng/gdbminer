@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # This code can generate calculate precision and recall values from a grammar
 # Copyright (c) 2023 Robert Bosch GmbH
 # SPDX-License-Identifier: AGPL-3.0

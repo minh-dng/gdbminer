@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 # This script analyzes experiment runs and does statistical tests.
 # Copyright (c) 2023 Robert Bosch GmbH
 # SPDX-License-Identifier: AGPL-3.0
