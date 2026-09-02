@@ -1,26 +1,32 @@
-#!/usr/bin/env python3
 # This source code is from Mimid
 #   https://github.com/vrthra/mimid/
 # Copyright (c) 2018-2020 Saarland University, CISPA, authors, and contributors
 # This source code is licensed under The Fuzzing Book License found in the
 # 3rd-party-licenses.txt file in the root directory of this source tree.
 
-import sys
 import json
+import sys
+
 import cmimid.fuzz as F
 import cmimid.grammartools as G
+
 
 def asciimap_to_nt(key):
     # convert '[__DIGIT__]' to '<__DIGIT__>'
     # convert '[__DIGIT__]+' to '<__DIGIT_s__>'
-    if key[-1] == '+':
+    if key[-1] == "+":
         orig = key[3:-4]
-        return ('+', "<__%s_s__>" % orig)
+        return ("+", f"<__{orig}_s__>")
     else:
         orig = key[3:-3]
-        return ('', "<__%s__>" % orig)
+        return ("", f"<__{orig}__>")
+
+
 import pudb
+
 b = pudb.set_trace
+
+
 def enhance_grammar(g):
     # convert '[__DIGIT__]' to '<__DIGIT__>'
     # convert '[__DIGIT__]+' to '<__DIGIT_s__>'
@@ -43,32 +49,38 @@ def enhance_grammar(g):
                 else:
                     new_rule.append(token)
     for rep, nk, token in added:
-        if rep == '+':
+        if rep == "+":
             r, key = asciimap_to_nt(token[0:-1])
             g_[nk] = [[key], [key, nk]]
             g_[key] = [[k] for k in F.ASCII_MAP[token[0:-1]]]
         else:
             g_[nk] = [[k] for k in F.ASCII_MAP[token]]
     return g_
+
+
 def usage():
-    print('''
+    print("""
 parsinggrammar.py <json grammar>
     Given a grammar in ebnf format, convert it to the fuzzingbook
     canonical grammar format
-            ''')
+            """)
     sys.exit(0)
+
+
 def main(args):
-    if not args or args[0] == '-h': usage()
+    if not args or args[0] == "-h":
+        usage()
     gfname = args[0]
     with open(gfname) as f:
         gf = json.load(fp=f)
-    grammar = gf['[grammar]']
-    start = gf['[start]']
-    command = gf['[command]']
+    grammar = gf["[grammar]"]
+    start = gf["[start]"]
+    command = gf["[command]"]
 
     g = enhance_grammar(grammar)
 
-    print(json.dumps({'[start]': start, '[grammar]':g, '[command]': command}, indent=4))
+    print(json.dumps({"[start]": start, "[grammar]": g, "[command]": command}, indent=4))
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main(sys.argv[1:])

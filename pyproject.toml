@@ -44,3 +44,32 @@ zip-safe = true
 [tool.setuptools.packages.find]
 where = ["src"]
 namespaces = true
+
+[tool.ruff]
+extend-exclude = ["example_programs"]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+ignore = [
+    "LOG015",
+    "TRY002",
+    "RUF059", # unused unpacked variable
+    "F841", # unused variable
+    "T100",
+    "SIM102", # nested ifs
+    "E722", # bare except
+    "BLE001", # blind exception
+    "SIM905", # Consider using a list literal instead of `str.split`
+]
+
+[tool.basedpyright]
+include = ["src", "analyze_experiments.py"]
+pythonVersion = "3.9"
+typeCheckingMode = "off"
+
+[dependency-groups]
+dev = [
+    "basedpyright>=1.39.6",
+    "ruff>=0.13.0",
+]

@@ -4,13 +4,14 @@
 # This source code is licensed under The Fuzzing Book License found in the
 # 3rd-party-licenses.txt file in the root directory of this source tree.
 
-import sys
+import itertools as it
 import json
 import os.path
-import itertools as it
-
+import sys
 from operator import itemgetter
-import cmimid.util as util
+
+from cmimid import util
+
 
 def reconstruct_method_tree(method_map):
     first_id = None
@@ -21,13 +22,18 @@ def reconstruct_method_tree(method_map):
         if m_id in tree_map:
             # just update the name and children
             assert not tree_map[m_id]
-            tree_map[m_id]['id'] = m_id
-            tree_map[m_id]['name'] = m_name
-            tree_map[m_id]['indexes'] = []
-            tree_map[m_id]['children'] = children
+            tree_map[m_id]["id"] = m_id
+            tree_map[m_id]["name"] = m_name
+            tree_map[m_id]["indexes"] = []
+            tree_map[m_id]["children"] = children
         else:
             assert first_id is None
-            tree_map[m_id] = {'id': m_id, 'name': m_name, 'children': children, 'indexes': []}
+            tree_map[m_id] = {
+                "id": m_id,
+                "name": m_name,
+                "children": children,
+                "indexes": [],
+            }
             first_id = m_id
 
         for c in m_children:
@@ -39,6 +45,8 @@ def reconstruct_method_tree(method_map):
 
 
 LAST_COMPARISON_HEURISTIC = True
+
+
 def last_comparisons(comparisons):
     LAST_COMPARISON_HEURISTIC = True
     last_cmp_only = {}
@@ -49,8 +57,7 @@ def last_comparisons(comparisons):
     # was accessed in that method invocation last.
     for idx, char, mid in comparisons:
         if mid in last_idx:
-            if idx > last_idx[mid]:
-                last_idx[mid] = idx
+            last_idx[mid] = max(last_idx[mid], idx)
         else:
             last_idx[mid] = idx
 
@@ -74,14 +81,14 @@ def last_comparisons(comparisons):
 def attach_comparisons(method_tree, comparisons):
     for idx in comparisons:
         mid = comparisons[idx]
-        method_tree[mid]['indexes'].append(idx)
+        method_tree[mid]["indexes"].append(idx)
 
 
 def to_node(idxes, my_str):
     assert len(idxes) == idxes[-1] - idxes[0] + 1
     assert min(idxes) == idxes[0]
     assert max(idxes) == idxes[-1]
-    return my_str[idxes[0]:idxes[-1] + 1], [], idxes[0], idxes[-1]
+    return my_str[idxes[0] : idxes[-1] + 1], [], idxes[0], idxes[-1]
 
 
 def indexes_to_children(indexes, my_str):
@@ -92,19 +99,24 @@ def indexes_to_children(indexes, my_str):
 
     return [to_node(n, my_str) for n in lst]
 
+
 def does_item_overlap(r, r_):
     (s, e), (s_, e_) = r, r_
     return (s_ >= s and s_ <= e) or (e_ >= s and e_ <= e) or (s_ <= s and e_ >= e)
 
+
 def is_second_item_included(r, r_):
     (s, e), (s_, e_) = r, r_
-    return (s_ >= s and e_ <= e)
+    return s_ >= s and e_ <= e
+
 
 def has_overlap(ranges, r_):
     return {r for r in ranges if does_item_overlap(r, r_)}
 
+
 def is_included(ranges, r_):
     return {r for r in ranges if is_second_item_included(r, r_)}
+
 
 def remove_overlap_from(original_node, orange):
     node, children, start, end = original_node
@@ -116,19 +128,22 @@ def remove_overlap_from(original_node, orange):
     for child in children:
         if does_item_overlap(child[2:4], orange):
             new_child = remove_overlap_from(child, orange)
-            if new_child: # and new_child[1]:
-                if start == -1: start = new_child[2]
+            if new_child:  # and new_child[1]:
+                if start == -1:
+                    start = new_child[2]
                 new_children.append(new_child)
                 end = new_child[3]
         else:
             new_children.append(child)
-            if start == -1: start = child[2]
+            if start == -1:
+                start = child[2]
             end = child[3]
     if not new_children:
         return None
     assert start != -1
     assert end != -1
     return (node, new_children, start, end)
+
 
 def no_overlap(arr):
     my_ranges = {}
@@ -147,7 +162,7 @@ def no_overlap(arr):
                 # remove any ranges that overlap with the current one from the
                 # overlapped range.
                 # assert len(overlaps) == 1
-                #oitem = list(overlaps)[0]
+                # oitem = list(overlaps)[0]
                 for oitem in overlaps:
                     v = remove_overlap_from(my_ranges[oitem], r)
                     del my_ranges[oitem]
@@ -161,13 +176,15 @@ def no_overlap(arr):
     s = sorted(res, key=lambda x: x[2])
     return s
 
+
 def to_tree(node, my_str):
-    method_name = ("<%s>" % node['name']) if node['name'] is not None else '<START>'
-    indexes = node['indexes']
+    method_name = ("<{}>".format(node["name"])) if node["name"] is not None else "<START>"
+    indexes = node["indexes"]
     node_children = []
-    for c in node.get('children', []):
+    for c in node.get("children", []):
         t = to_tree(c, my_str)
-        if t is None: continue
+        if t is None:
+            continue
         node_children.append(t)
     idx_children = indexes_to_children(indexes, my_str)
     children = no_overlap(node_children + idx_children)
@@ -181,7 +198,7 @@ def to_tree(node, my_str):
     # instruction.
     for c in children:
         if c[2] != si:
-            sbs = my_str[si: c[2]]
+            sbs = my_str[si : c[2]]
             my_children.append((sbs, [], si, c[2] - 1))
         my_children.append(c)
         si = c[3] + 1
@@ -189,74 +206,97 @@ def to_tree(node, my_str):
     m = (method_name, my_children, start_idx, end_idx)
     return m
 
+
 def wrap_terminals(node):
     # the idea is to wrap any children that are directly terminal nodes
     # with a nonterminal with the name prefix.
     method_name, my_children, start_idx, end_idx = node
-    mprefix, *rest = method_name[1:-1].split(':')
-    prefix = "%s_%s" % (mprefix, util.hashit("token" + ''.join(rest)))
+    mprefix, *rest = method_name[1:-1].split(":")
+    prefix = "{}_{}".format(mprefix, util.hashit("token" + "".join(rest)))
     my_c = []
-    for i,c in enumerate(my_children):
-       cmethod_name, cmy_children, cstart_idx, cend_idx = c
-       if (cmethod_name[0], cmethod_name[-1]) != ('<', '>'):
-           my_c.append(("<%s>" % (prefix + str(i)), [(cmethod_name, cmy_children, cstart_idx, cend_idx)], cstart_idx, cend_idx))
-       else:
-           my_c.append(wrap_terminals(c))
+    for i, c in enumerate(my_children):
+        cmethod_name, cmy_children, cstart_idx, cend_idx = c
+        if (cmethod_name[0], cmethod_name[-1]) != ("<", ">"):
+            my_c.append(
+                (
+                    "<%s>" % (prefix + str(i)),
+                    [(cmethod_name, cmy_children, cstart_idx, cend_idx)],
+                    cstart_idx,
+                    cend_idx,
+                )
+            )
+        else:
+            my_c.append(wrap_terminals(c))
     return (method_name, my_c, start_idx, end_idx)
-
 
 
 def miner(call_traces):
     my_trees = []
     for call_trace in call_traces:
-        method_map = call_trace['method_map']
+        method_map = call_trace["method_map"]
 
         first, method_tree = reconstruct_method_tree(method_map)
-        comparisons = call_trace['comparisons']
+        comparisons = call_trace["comparisons"]
         attach_comparisons(method_tree, last_comparisons(comparisons))
 
-        my_str = call_trace['inputstr']
+        my_str = call_trace["inputstr"]
 
-        #print(f"INPUT: {my_str.encode('unicode-escape')}")
+        # print(f"INPUT: {my_str.encode('unicode-escape')}")
         tree = to_tree(method_tree[first], my_str)
         tree_ = wrap_terminals(tree)
-        #print(f"RECONSTRUCTED INPUT from {call_trace['arg']}: {util.tree_to_str(tree).encode('unicode-escape')}", file=sys.stderr)
-        my_tree = {'tree': tree_, 'original': call_trace['original'], 'arg': call_trace['arg']}
+        # print(f"RECONSTRUCTED INPUT from {call_trace['arg']}: {util.tree_to_str(tree).encode('unicode-escape')}", file=sys.stderr)
+        my_tree = {
+            "tree": tree_,
+            "original": call_trace["original"],
+            "arg": call_trace["arg"],
+        }
         assert util.tree_to_str(tree) in my_str
         my_trees.append(my_tree)
     return my_trees
 
-def tree_to_pstr(tree, op_='', _cl=''):
+
+def tree_to_pstr(tree, op_="", _cl=""):
     symbol, children, *_ = tree
     if children:
-        return "%s%s%s" % (op_, ''.join(tree_to_pstr(c, op_, _cl) for c in children), _cl)
+        return "{}{}{}".format(
+            op_,
+            "".join(tree_to_pstr(c, op_, _cl) for c in children),
+            _cl,
+        )
     else:
         # TODO: assert symbol is terminal
         # TODO: check if we need to parenthesize this too. We probably
         # need this if the terminal symbols are more than one char wide.
-        return "%s%s%s" % (op_, symbol, _cl)
+        return f"{op_}{symbol}{_cl}"
+
 
 def usage():
-    print('''
+    print("""
 treeminer.py <cmimid tracefile>
     From the <cmimid tracefile> provided, recover the parse tree.
     Output is the parse tree in JSON format.
-    ''')
+    """)
     sys.exit(0)
+
+
 import os
+
+
 def main(args):
-    if not args or args[0] == '-h': usage()
+    if not args or args[0] == "-h":
+        usage()
     tracefile = args[0]
     with open(tracefile) as f:
         my_trace = json.load(f)
     mined_trees = miner(my_trace)
-    if os.environ.get('PARSE') is not None:
-        print(tree_to_pstr(mined_trees[0]['tree'], '{', '}'))
+    if os.environ.get("PARSE") is not None:
+        print(tree_to_pstr(mined_trees[0]["tree"], "{", "}"))
     else:
-        #for tree in mined_trees:
+        # for tree in mined_trees:
         #    with open(tree['arg'] + '.tree', 'w+') as f:
         #        print(json.dumps(tree, indent=4), file=f)
         print(json.dumps(mined_trees, indent=4))
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main(sys.argv[1:])
