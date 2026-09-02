@@ -16,10 +16,10 @@ def asciimap_to_nt(key):
     # convert '[__DIGIT__]+' to '<__DIGIT_s__>'
     if key[-1] == "+":
         orig = key[3:-4]
-        return ("+", "<__%s_s__>" % orig)
+        return ("+", f"<__{orig}_s__>")
     else:
         orig = key[3:-3]
-        return ("", "<__%s__>" % orig)
+        return ("", f"<__{orig}__>")
 
 
 import pudb

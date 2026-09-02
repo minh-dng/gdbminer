@@ -179,7 +179,7 @@ def no_overlap(arr):
 
 
 def to_tree(node, my_str):
-    method_name = ("<%s>" % node["name"]) if node["name"] is not None else "<START>"
+    method_name = ("<{}>".format(node["name"])) if node["name"] is not None else "<START>"
     indexes = node["indexes"]
     node_children = []
     for c in node.get("children", []):
@@ -213,7 +213,7 @@ def wrap_terminals(node):
     # with a nonterminal with the name prefix.
     method_name, my_children, start_idx, end_idx = node
     mprefix, *rest = method_name[1:-1].split(":")
-    prefix = "%s_%s" % (mprefix, util.hashit("token" + "".join(rest)))
+    prefix = "{}_{}".format(mprefix, util.hashit("token" + "".join(rest)))
     my_c = []
     for i, c in enumerate(my_children):
         cmethod_name, cmy_children, cstart_idx, cend_idx = c
@@ -259,7 +259,7 @@ def miner(call_traces):
 def tree_to_pstr(tree, op_="", _cl=""):
     symbol, children, *_ = tree
     if children:
-        return "%s%s%s" % (
+        return "{}{}{}".format(
             op_,
             "".join(tree_to_pstr(c, op_, _cl) for c in children),
             _cl,
@@ -268,7 +268,7 @@ def tree_to_pstr(tree, op_="", _cl=""):
         # TODO: assert symbol is terminal
         # TODO: check if we need to parenthesize this too. We probably
         # need this if the terminal symbols are more than one char wide.
-        return "%s%s%s" % (op_, symbol, _cl)
+        return f"{op_}{symbol}{_cl}"
 
 
 def usage():

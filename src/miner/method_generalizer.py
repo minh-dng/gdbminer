@@ -96,7 +96,7 @@ class MethodGeneralizer:
             tree = util.to_modifiable(t["tree"])  # The tree ds.
             executable = t["original"]
             inputfile = t["arg"]
-            logging.info("progress: %s %d/%d" % (inputfile, i, len(tree_list)))
+            logging.info(f"progress: {inputfile} {i}/{len(tree_list)}")
             # we skip START
             node_name, children, *rest = tree
             assert node_name == "<START>"
@@ -107,7 +107,7 @@ class MethodGeneralizer:
         with GDBTracer.open_sut_instance(self.config) as instance:
             instance.continue_execution()
             for i, k in enumerate(self.NODE_REGISTER):
-                logging.info("compat: %s %d/%d" % (k, i, len(self.NODE_REGISTER)))
+                logging.info(f"compat: {k} {i}/{len(self.NODE_REGISTER)}")
                 patterns = identify_compatibility_patterns(
                     k, self.NODE_REGISTER, instance
                 )  # XTODO: switch to identify_buckets
@@ -118,7 +118,7 @@ class MethodGeneralizer:
         logging.info(f"Used {self.number_of_tested_inputs} requests to generalize methods")
         # finally, update the original names.
         for i, k in enumerate(self.NODE_REGISTER):
-            logging.info("update: %s %d/%d" % (k, i, len(self.NODE_REGISTER)))
+            logging.info(f"update: {k} {i}/{len(self.NODE_REGISTER)}")
             if k == "<START>":
                 continue
             self.update_original_method_names(k)

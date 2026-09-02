@@ -368,7 +368,7 @@ def get_insertable_positions(rule, fkey, reachable):
 
 
 def focused_key(key):
-    return "<+%s>" % key[1:-1]
+    return f"<+{key[1:-1]}>"
 
 
 def find_focused_rules(grammar, key, fsym, reachable):

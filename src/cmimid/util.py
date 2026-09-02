@@ -67,7 +67,7 @@ class O:
 
 
 def init_log(prefix, var, module):
-    with open("%s.log" % module, "a+") as f:
+    with open(f"{module}.log", "a+") as f:
         print(prefix, ":==============", var, file=f)
 
 
@@ -152,11 +152,11 @@ def check_lowcost(o, x, e, ut, module, sa1, sa2):
     s = tree_to_str(ut)
     if s in EXEC_MAP:
         return EXEC_MAP[s]
-    tn = "%s_test.csv" % module
+    tn = f"{module}_test.csv"
     with open(tn, "w+") as f:
         print(s, file=f, end="")
     result = do([module, tn])
-    with open("%s.log" % module, "a+") as f:
+    with open(f"{module}.log", "a+") as f:
         print("------------------", file=f)
         print("original:", repr(o), file=f)
         print("updated:", repr(s), file=f)
@@ -178,7 +178,7 @@ def check_accurate(o, x, e, ut, module, sa1, sa2):
     if s in EXEC_MAP:
         return EXEC_MAP[s]
     updated_ps = tree_to_pstr(ut, op_="{", _cl="}")
-    tn = "%s_test.csv" % module
+    tn = f"{module}_test.csv"
     with open(tn, "w+") as f:
         print(s, file=f, end="")
 
@@ -193,9 +193,9 @@ def check_accurate(o, x, e, ut, module, sa1, sa2):
         parsed_ps = "ERROR"
         v = False
 
-    with open("%s.log" % module, "a+") as f:
+    with open(f"{module}.log", "a+") as f:
         print("------------------", file=f)
-        print(" ".join(["python3", "build/%s" % module, s]), file=f)
+        print(" ".join(["python3", f"build/{module}", s]), file=f)
         print("Checking:", e, file=f)
         print("original:", repr(o), file=f)
         print("tmpl:", repr(x), file=f)
@@ -322,9 +322,7 @@ def is_node_pseudo(node):
         return False
     if ":if_" in node_name:
         return True
-    if ":while_" in node_name:
-        return True
-    return False
+    return ":while_" in node_name
 
 
 def parse_pseudo_name(node_name):
@@ -347,19 +345,12 @@ def decode_name(node_name_stack):
 
 
 def unparse_pseudo_name(method, ctrl, ctrl_id, alt_num, can_empty, cstack):
-    return "<%s>" % encode_name(method, ctrl, ctrl_id, alt_num, can_empty, cstack)
+    return f"<{encode_name(method, ctrl, ctrl_id, alt_num, can_empty, cstack)}>"
 
 
 def encode_name(method, ctrl, ctrl_id, alt_num, can_empty, stack):
     assert ctrl in {"while", "if"}
-    return "%s:%s_%s,%s %s#%s" % (
-        method,
-        ctrl,
-        ctrl_id,
-        alt_num,
-        can_empty,
-        json.dumps(stack),
-    )
+    return f"{method}:{ctrl}_{ctrl_id},{alt_num} {can_empty}#{json.dumps(stack)}"
 
 
 def encode_method_name(name, my_args):
@@ -370,7 +361,7 @@ def encode_method_name(name, my_args):
     if not my_args:
         return name
     else:
-        return "%s(%s)" % (
+        return "{}({})".format(
             name,
             urllib.parse.quote("_".join([str(i) for i in my_args])),
         )
@@ -387,7 +378,7 @@ def parse_method_name(mname):
 
 
 def unparse_method_name(mname, my_id):
-    return "<%s.%s>" % (mname, my_id)
+    return f"<{mname}.{my_id}>"
 
 
 def sample(elts, pop_len):

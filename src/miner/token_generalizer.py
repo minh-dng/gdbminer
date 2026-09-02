@@ -16,8 +16,7 @@ from configparser import ConfigParser
 from typing import Dict, List, Tuple
 
 import cmimid.fuzz as F
-from cmimid import grammartools
-from cmimid import util
+from cmimid import grammartools, util
 from cmimid.fuzz import ASCII_MAP, CHARACTER_PARENT_MAP
 from miner.active_learning_utils import is_a_replaceable_with_b
 from tracer.gdb_tracer import GDBTracer
@@ -107,10 +106,7 @@ class TokenGeneralizer:
         if parent == orig:
             aX = ((gk, [[orig, []]]), "", tree0)
             val = is_a_replaceable_with_b(instance, a1, aX)
-            if val:
-                return True
-            else:
-                return False
+            return bool(val)
         else:
             for pval in ASCII_MAP[parent]:
                 aX = ((gk, [[pval, []]]), "", tree0)
@@ -194,8 +190,8 @@ class TokenGeneralizer:
                 tree = None
             if check > TokenGeneralizer.MAX_CHECKS:
                 logging.info(
-                    "Exhausted limit for key:%s, rule:%d, token:%d, char:%s"
-                    % (key, rule_index, token_index, char)
+                    f"Exhausted limit for key:{key}, rule:{rule_index}, "
+                    f"token:{token_index}, char:{char}"
                 )
                 blacklist.append((key, rule_index, token_index, char))
                 # raise "Exhausted limit for key:%s, rule:%d, token:%d, char:%s" % (k, q, r, char)

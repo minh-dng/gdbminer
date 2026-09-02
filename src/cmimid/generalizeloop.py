@@ -54,7 +54,7 @@ def update_pseudo_name(k_m, my_id):
     method, ctrl, cid, altid, can_empty, method_stack = util.parse_pseudo_name(original)
     if ctrl == "if":
         name = util.unparse_pseudo_name(
-            method, ctrl, cid, "%s.%d" % (altid, my_id), can_empty, method_stack
+            method, ctrl, cid, f"{altid}.{my_id}", can_empty, method_stack
         )
     elif ctrl == "while":
         assert altid == "0"

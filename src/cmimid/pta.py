@@ -130,7 +130,11 @@ class Node:
         return str("(%s, [%s])", (self.item, " ".join([str(i) for i in self.children])))
 
     def to_json(self):
-        s = ("(%s)" % " ".join(self.item["_"])) if isinstance(self.item, dict) else str(self.item)
+        s = (
+            ("({})".format(" ".join(self.item["_"])))
+            if isinstance(self.item, dict)
+            else str(self.item)
+        )
         return (s, tuple(self.counters), [i.to_json() for i in self.children])
 
     def inc_count(self):
@@ -169,7 +173,7 @@ def get_star(node, key):
     if isinstance(node.item, dict):
         # take care of counters
         elements = node.item["_"]
-        my_key = "<%s-%d-s>" % (key, node.uid)
+        my_key = f"<{key}-{node.uid}-s>"
 
         alts = []
         if len(node.counters) == 1:  # no repetition
@@ -190,9 +194,9 @@ def node_to_grammar(node, grammar, key):
     rule = []
     alts = [rule]
     if node.uid == 0:
-        my_key = "<%s>" % key
+        my_key = f"<{key}>"
     else:
-        my_key = "<%s-%d>" % (key, node.uid)
+        my_key = f"<{key}-{node.uid}>"
     grammar[my_key] = alts
     if node.item is not None:
         mk, g = get_star(node, key)
@@ -210,11 +214,11 @@ def node_to_grammar(node, grammar, key):
 
     if node.children:
         if len(node.children) > 1:
-            my_ckey = "<%s-%d-c>" % (key, node.uid)
+            my_ckey = f"<{key}-{node.uid}-c>"
             rule.append(my_ckey)
-            grammar[my_ckey] = [["<%s-%d>" % (key, c.uid)] for c in node.children]
+            grammar[my_ckey] = [[f"<{key}-{c.uid}>"] for c in node.children]
         else:
-            my_ckey = "<%s-%d>" % (key, node.children[0].uid)
+            my_ckey = f"<{key}-{node.children[0].uid}>"
             rule.append(my_ckey)
     else:
         pass

@@ -57,7 +57,7 @@ class LoopGeneralizer:
         method, ctrl, cid, altid, can_empty, method_stack = util.parse_pseudo_name(original)
         if ctrl == "if":
             name = util.unparse_pseudo_name(
-                method, ctrl, cid, "%s.%d" % (altid, my_id), can_empty, method_stack
+                method, ctrl, cid, f"{altid}.{my_id}", can_empty, method_stack
             )
         elif ctrl == "while":
             assert altid == "0"
@@ -99,7 +99,7 @@ class LoopGeneralizer:
         with GDBTracer.open_sut_instance(self.config) as instance:
             instance.continue_execution()
             for i, k in enumerate(self.NODE_REGISTER):
-                logging.info("compat: %s %d/%d" % (k, i, len(self.NODE_REGISTER)))
+                logging.info(f"compat: {k} {i}/{len(self.NODE_REGISTER)}")
                 patterns = identify_compatibility_patterns(k, self.NODE_REGISTER, instance)
                 for p in patterns:
                     self.can_the_loop_be_deleted(patterns[p], k, instance)
@@ -110,6 +110,6 @@ class LoopGeneralizer:
         for i, k in enumerate(self.NODE_REGISTER):
             if k == "<START>":
                 continue
-            logging.info("update: %s %d/%d" % (k, i, len(self.NODE_REGISTER)))
+            logging.info(f"update: {k} {i}/{len(self.NODE_REGISTER)}")
             self.update_original_pseudo_names(k)
         return my_trees

@@ -177,7 +177,7 @@ def generalize_method_trees(jtrees, log=False):
         executable = j["original"]
         inputfile = j["arg"]
         print(
-            "progress: %s %d/%d" % (inputfile, i, len(jtrees)),
+            f"progress: {inputfile} {i}/{len(jtrees)}",
             file=sys.stderr,
             flush=True,
         )
@@ -189,12 +189,12 @@ def generalize_method_trees(jtrees, log=False):
         my_trees.append({"tree": tree, "original": executable, "arg": inputfile})
 
     for i, k in enumerate(NODE_REGISTER):
-        print("compat: %s %d/%d" % (k, i, len(NODE_REGISTER)), file=sys.stderr, flush=True)
+        print(f"compat: {k} {i}/{len(NODE_REGISTER)}", file=sys.stderr, flush=True)
         identify_compatibility_patterns(k)  # XTODO: switch to identify_buckets
 
     # finally, update the original names.
     for i, k in enumerate(NODE_REGISTER):
-        print("update: %s %d/%d" % (k, i, len(NODE_REGISTER)), file=sys.stderr, flush=True)
+        print(f"update: {k} {i}/{len(NODE_REGISTER)}", file=sys.stderr, flush=True)
         if k == "<START>":
             continue
         update_original_method_names(k)

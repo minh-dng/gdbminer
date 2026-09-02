@@ -128,7 +128,7 @@ def check_key(g, gk, start, command):
         val = util.check(
             "",
             "",
-            "<__MINE_CHECK__(%d/%d)>" % (check, MAX_CHECKS),
+            f"<__MINE_CHECK__({check}/{MAX_CHECKS})>",
             tree,
             command,
             "",
@@ -138,7 +138,7 @@ def check_key(g, gk, start, command):
         if not val:
             tree = None
         if check > MAX_CHECKS:
-            print("Exhausted limit for key:%s" % gk, file=sys.stderr)
+            print(f"Exhausted limit for key:{gk}", file=sys.stderr)
             return
 
 

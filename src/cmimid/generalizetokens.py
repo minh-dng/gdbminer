@@ -104,10 +104,7 @@ def replaceable_with_kind(stree, orig, parent, gk, command):
     if parent == orig:
         aX = ((gk, [[orig, []]]), "", tree0)
         val = util.is_a_replaceable_with_b(a1, aX, command)
-        if val:
-            return True
-        else:
-            return False
+        return bool(val)
     else:
         for pval in ASCII_MAP[parent]:
             aX = ((gk, [[pval, []]]), "", tree0)
@@ -240,7 +237,7 @@ def generalize_single_token(grammar, start, k, q, r, command, blacklist):
         val = util.check(
             char,
             char,
-            "<__CHECK__(%d/%d)>" % (check, MAX_CHECKS),
+            f"<__CHECK__({check}/{MAX_CHECKS})>",
             tree,
             command,
             char,
@@ -251,7 +248,7 @@ def generalize_single_token(grammar, start, k, q, r, command, blacklist):
             tree = None
         if check > MAX_CHECKS:
             print(
-                "Exhausted limit for key:%s, rule:%d, token:%d, char:%s" % (k, q, r, char),
+                f"Exhausted limit for key:{k}, rule:{q}, token:{r}, char:{char}",
                 file=sys.stderr,
             )
             blacklist.append((k, q, r, char))
