@@ -69,7 +69,7 @@ class ValgrindInstance(SUTInstance):
             except subprocess.CalledProcessError:
                 accepted = False
             except subprocess.TimeoutExpired:
-                logging.warn(f"Timeout for input <{input}> ")
+                logging.warning(f"Timeout for input <{input}> ")
                 accepted = True  # Debatable, whether that is accepted or rejected
             logging.debug(f"Test {input} : {accepted=}")
         return accepted

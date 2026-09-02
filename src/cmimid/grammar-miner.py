@@ -27,7 +27,7 @@ def to_grammar(tree, grammar):
         return grammar
     tokens = []
     if node not in grammar:
-        grammar[node] = list()
+        grammar[node] = []
     for c in children:
         tokens.append(c[0])
         to_grammar(c, grammar)
@@ -102,8 +102,8 @@ def convert_spaces_in_keys(grammar):
         for rule in grammar[key]:
             new_rule = []
             for t in rule:
-                for k in keys:
-                    t = t.replace(k, keys[k])
+                for k, value in keys.items():
+                    t = t.replace(k, value)
                 new_rule.append(t)
             new_alt.append(new_rule)
         new_grammar[keys[key]] = new_alt
@@ -160,9 +160,9 @@ def main(args):
     cmds = {src for starts, src, arg in ret}
     starts = {starts for starts, src, arg in ret}
     assert len(cmds) == 1
-    cmd = list(cmds)[0]
+    cmd = next(iter(cmds))
     assert len(starts) == 1
-    start_symbol = list(starts)[0]
+    start_symbol = next(iter(starts))
     g = G.grammar_gc(g, start_symbol)  # garbage collect
     # check_grammar(g, start_symbol, cmd)
     # with open('g1_.json', 'w+') as f: json.dump(g, f)

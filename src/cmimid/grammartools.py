@@ -205,7 +205,7 @@ def remove_duplicate_rules_in_a_key(g):
     g_ = {}
     for k in g:
         s = {str(r): r for r in g[k]}
-        g_[k] = list(sorted(list(s.values())))
+        g_[k] = sorted(s.values())
     return g_
 
 
@@ -360,9 +360,7 @@ def get_insertable_positions(rule, fkey, reachable):
     for i, token in enumerate(rule):
         if not is_nt(token):
             continue
-        if fkey in reachable[token]:
-            positions.append(i)
-        elif fkey == token:
+        if fkey in reachable[token] or fkey == token:
             positions.append(i)
     return positions
 

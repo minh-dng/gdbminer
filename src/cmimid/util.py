@@ -382,8 +382,7 @@ def unparse_method_name(mname, my_id):
 
 
 def sample(elts, pop_len):
-    if len(elts) < pop_len:
-        pop_len = len(elts)
+    pop_len = min(pop_len, len(elts))
     if pop_len == -1:
         return elts
     return random.sample(elts, pop_len)

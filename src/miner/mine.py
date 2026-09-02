@@ -24,7 +24,6 @@ from miner.method_generalizer import MethodGeneralizer
 from miner.token_generalizer import TokenGeneralizer
 
 # If we stick to original mimid structure
-from miner.tree_builder import ORIGINAL_MIMID as ORIGINAL_MIMID
 from miner.tree_builder import TreeBuilder
 
 
@@ -50,11 +49,10 @@ def setup_logging(output_directory, loglevel):
 def find_output_directory(output_directory_base: pathlib.Path):
     # Find last 'trial-*' folder
     return next(
-        reversed(
-            sorted(
-                output_directory_base.glob("trial-*"),
-                key=lambda x: int(x.name.split("-")[1]),
-            )
+        sorted(
+            output_directory_base.glob("trial-*"),
+            key=lambda x: int(x.name.split("-")[1]),
+            reverse=True,
         )
     )
 
@@ -106,7 +104,7 @@ def to_grammar(tree, grammar):
         return grammar
     tokens = []
     if node not in grammar:
-        grammar[node] = list()
+        grammar[node] = []
     for c in children:
         tokens.append(c[0])
         to_grammar(c, grammar)
@@ -192,25 +190,25 @@ def check_empty_rules(grammar):
     while True:  # Remove epsilon productions
         # Find epsilon production rules
         epsilon_variables = set()
-        for k in new_grammar:
+        for k, rules in new_grammar.items():
             keep_rules = []
-            for rule in new_grammar[k]:
+            for rule in rules:
                 if len(rule) == 0:
                     epsilon_variables.add(k)
                 else:
                     keep_rules.append(rule)
-            new_grammar[k].clear()
-            new_grammar[k].extend(keep_rules)
+            rules.clear()
+            rules.extend(keep_rules)
 
         if not epsilon_variables:
             break
 
         # Add rules without epsilon variables
-        for k in new_grammar:
-            for rule in new_grammar[k]:
+        for k, rules in new_grammar.items():
+            for rule in rules:
                 new_rule = [p for p in rule if p not in epsilon_variables]
                 if len(new_rule) < len(rule) and len(new_rule) > 0:
-                    new_grammar[k].append(new_rule)
+                    rules.append(new_rule)
 
     return new_grammar
 
@@ -241,8 +239,8 @@ def convert_spaces_in_keys(grammar):
         for rule in grammar[key]:
             new_rule = []
             for t in rule:
-                for k in keys:
-                    t = t.replace(k, keys[k])
+                for k, value in keys.items():
+                    t = t.replace(k, value)
                 new_rule.append(t)
             new_alt.append(new_rule)
         new_grammar[keys[key]] = new_alt
@@ -274,8 +272,8 @@ def main():
     loglevel = config["LOGS"]["log_level"]
     setup_logging(output_directory=output_directory, loglevel=loglevel)
 
-    trace_files = list(sorted(pathlib.Path(output_directory).glob("*.trace")))
-    seed_files = list(sorted(pathlib.Path(seed_directory).glob("*")))
+    trace_files = sorted(pathlib.Path(output_directory).glob("*.trace"))
+    seed_files = sorted(pathlib.Path(seed_directory).glob("*"))
 
     builder = TreeBuilder(trace_files, seed_files, config["BASIC"]["binary_file"])
 
@@ -315,10 +313,10 @@ def main():
     cmds = {src for starts, src, arg in ret}
     starts = {starts for starts, src, arg in ret}
     assert len(cmds) == 1
-    cmd = list(cmds)[0]
+    cmd = next(iter(cmds))
     starts = {starts for starts, src, arg in ret}
     assert len(starts) == 1
-    start_symbol = list(starts)[0]
+    start_symbol = next(iter(starts))
     g = G.grammar_gc(g, start_symbol)  # garbage collect
 
     g = check_empty_rules(g)  # add optional rules

@@ -94,7 +94,7 @@ def all_back_edges(G: nx.DiGraph, start_node: T) -> set[tuple[T]]:
 # Two natural loops are either disjoint, identical, or nested
 def natural_loop(G: nx.DiGraph, back_edge: tuple[T]) -> set[T]:
     src, dst = back_edge
-    nodes_in_loop = set([src, dst])
+    nodes_in_loop = {src, dst}
 
     # Single instruction loop
     if src == dst:

@@ -51,18 +51,15 @@ class ConnectionBaseClass(mp.Process):
 
         Returns True if input was accepted
         """
-        ...
 
     @abstractmethod
     def wait_for_input_request(self):
         """Blocks until SUT can receive input"""
-        ...
 
     def disconnect(self):
         """[Optional], free connection resources
         Example: Close TCP socket.
         """
-        ...
 
     def terminate(self):
         self.running = False

@@ -21,11 +21,10 @@ PRECISION_SIZE = 1000
 def find_output_directory(output_directory_base: pathlib.Path):
     # Find last 'trial-*' folder
     return next(
-        reversed(
-            sorted(
-                output_directory_base.glob("trial-*"),
-                key=lambda x: int(x.name.split("-")[1]),
-            )
+        sorted(
+            output_directory_base.glob("trial-*"),
+            key=lambda x: int(x.name.split("-")[1]),
+            reverse=True,
         )
     )
 
@@ -118,7 +117,7 @@ def main():
             if accepted:
                 grammar_accepted_count += 1.0
             else:
-                logging.info(f"Generated non accepting input: {repr(input)}")
+                logging.info(f"Generated non accepting input: {input!r}")
 
     logging.info(
         f"Accepted inputs MutationFuzzer: {mutation_accepted_count}, GrammarFuzzer: {grammar_accepted_count} "

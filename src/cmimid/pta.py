@@ -180,7 +180,7 @@ def get_star(node, key):
             # without repetition, we do not have enough information to
             # say whether the given number of items are necessary or there
             # can be more or less
-            alts = [elements * list(node.counters)[0]]
+            alts = [elements * next(iter(node.counters))]
         elif len(node.counters) > 1:  # repetition
             alts = [elements, elements + [my_key]]
         else:

@@ -194,7 +194,7 @@ class GDBTracer:
 
                         # Delete watchpoints and stop tracing
                         run = False
-                        for wp_id in watchpoint_offset.keys():
+                        for wp_id in watchpoint_offset:
                             instance.delete_breakpoint(wp_id)
                         instance.continue_execution()
 
@@ -229,7 +229,7 @@ class GDBTracer:
                     ):
                         # Delete watchpoints and stop tracing
                         run = False
-                        for wp_id in watchpoint_offset.keys():
+                        for wp_id in watchpoint_offset:
                             instance.delete_breakpoint(wp_id)
                         instance.continue_execution()
 

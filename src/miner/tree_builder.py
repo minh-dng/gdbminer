@@ -68,9 +68,9 @@ class TreeBuilder:
         for entry_addr, fname in self.function_entries.items():
             try:
                 self.loop_scopes.update(all_natural_loops(self.cfg, entry_addr))
-            except nx.NetworkXError as e:
+            except nx.NetworkXError:
                 logging.warning(f"Error with function {fname} and entrypoint {entry_addr}")
-                raise e
+                raise
 
         self.pseudo_method_names: dict[str, str] = {}
 
@@ -188,7 +188,7 @@ class TreeBuilder:
         comparisons: list[tuple[int, str, int]] = []
 
         # Add root node with all addresses of the parsing methods as scope #set().union(*self.function_scopes.values())
-        scope_stack: list[PseudoMethodScope] = [PseudoMethodScope("0", set([]), 0, "0", 0)]
+        scope_stack: list[PseudoMethodScope] = [PseudoMethodScope("0", set(), 0, "0", 0)]
 
         self.scope_count = 1
 
@@ -207,10 +207,7 @@ class TreeBuilder:
                 break
 
             # First we check if the node opens a new 'method' scope.
-            if (
-                addr in self.function_scopes.keys()
-                and method_stack_len > scope_stack[-1].method_stack_len
-            ):
+            if addr in self.function_scopes and method_stack_len > scope_stack[-1].method_stack_len:
                 func_args = self.function_args_lookahead(trace, idx, self.function_scopes[addr])
                 function_name = f"{elem['function_name']}"  # ({func_args})'
                 # Add the node to the scope_stack #TODO add function args
@@ -234,7 +231,7 @@ class TreeBuilder:
             # Check if node opens a new 'loop' scope
             # That is the case, if we are at the beginning of a 'natural loop',
             # and the loop is not already the current scope
-            if addr in self.loop_scopes.keys():
+            if addr in self.loop_scopes:
                 loop_index = self.loop_lookahead(trace, idx, self.loop_scopes[addr])
                 # Add the node to the scope_stack
                 if loop_index is not None:
@@ -273,7 +270,7 @@ class TreeBuilder:
                         scope_name,
                     )
                 else:
-                    logging.warn(f"No suitable loop for addr {addr}")
+                    logging.warning(f"No suitable loop for addr {addr}")
 
             # Check if node opens a new 'if' scope
             # Thats the case, when node has multiple successors,

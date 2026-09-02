@@ -22,11 +22,10 @@ PRECISION_SIZE = 1000
 def find_output_directory(output_directory_base: pathlib.Path):
     # Find last 'trial-*' folder
     return next(
-        reversed(
-            sorted(
-                output_directory_base.glob("trial-*"),
-                key=lambda x: int(x.name.split("-")[1]),
-            )
+        sorted(
+            output_directory_base.glob("trial-*"),
+            key=lambda x: int(x.name.split("-")[1]),
+            reverse=True,
         )
     )
 
@@ -103,7 +102,7 @@ def main():
             if accepted:
                 accepted_count += 1.0
             else:
-                logging.info(f"Generated non accepting input: {repr(input)}")
+                logging.info(f"Generated non accepting input: {input!r}")
 
     def handler(signum, frame):
         raise TimeoutError()
@@ -121,12 +120,12 @@ def main():
             try:
                 signal.alarm(10)
                 result = parser.parse(eval_string)
-                if not any([eval_string != util.tree_to_str(tree) for tree in result]):
+                if not any(eval_string != util.tree_to_str(tree) for tree in result):
                     # s = util.tree_to_str(tree)
                     # if s == eval_string:
                     parsed_count += 1.0
             except (SyntaxError, TimeoutError):
-                logging.warning(f"Can not parse {repr(eval_string)}")
+                logging.warning(f"Can not parse {eval_string!r}")
             finally:
                 signal.alarm(0)
     prec = accepted_count / PRECISION_SIZE

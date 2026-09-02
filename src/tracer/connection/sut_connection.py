@@ -46,7 +46,7 @@ class SUTConnection:
             try:
                 return self.responses.get(block=True, timeout=self.timeout)
             except Exception:
-                logging.warn("Connection timeout!")
+                logging.warning("Connection timeout!")
                 # return False
                 self.disconnect()
                 self.connection = self.init_connection(self.config, self.sut_reset_method)

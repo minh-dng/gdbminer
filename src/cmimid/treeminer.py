@@ -57,8 +57,7 @@ def last_comparisons(comparisons):
     # was accessed in that method invocation last.
     for idx, char, mid in comparisons:
         if mid in last_idx:
-            if idx > last_idx[mid]:
-                last_idx[mid] = idx
+            last_idx[mid] = max(last_idx[mid], idx)
         else:
             last_idx[mid] = idx
 

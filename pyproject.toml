@@ -51,8 +51,17 @@ line-length = 100
 target-version = "py39"
 
 [tool.ruff.lint]
-select = ["E4", "E7", "E9", "F", "I"]
-ignore = ["E402", "E722", "E741", "E742", "F841"]
+ignore = [
+    "LOG015",
+    "TRY002",
+    "RUF059", # unused unpacked variable
+    "F841", # unused variable
+    "T100",
+    "SIM102", # nested ifs
+    "E722", # bare except
+    "BLE001", # blind exception
+    "SIM905", # Consider using a list literal instead of `str.split`
+]
 
 [tool.basedpyright]
 include = ["src", "analyze_experiments.py"]
