@@ -19,6 +19,7 @@ from tracer.gdb_tracer import GDBTracer
 
 PRECISION_SIZE = int(os.environ.get("PRECISION_SET_SIZE", "1000"))
 
+
 def find_output_directory(output_directory_base: Path) -> Path:
     # Find last 'trial-*' folder
     return next(

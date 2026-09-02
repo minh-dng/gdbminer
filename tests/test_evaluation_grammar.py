@@ -23,9 +23,7 @@ class EvaluationGrammarTest(unittest.TestCase):
 
     def test_fuzzer_only_generates_members(self):
         random.seed(1)
-        grammar = trim_grammar(
-            self.grammar_file["[grammar]"], self.grammar_file["[start]"]
-        )
+        grammar = trim_grammar(self.grammar_file["[grammar]"], self.grammar_file["[start]"])
         fuzzer = CoverageFuzzer(grammar)
 
         for _ in range(50):
