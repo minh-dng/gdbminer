@@ -13,11 +13,37 @@ Use `example_programs/<target>/` for desktop targets, including `configuration/`
 
 ## Build, Test, and Development Commands
 
-Develop with Python 3.9 (the supported range is `>=3.9,<3.10`):
+Develop with Python 3.9 (the supported range is `>=3.9,<3.10`). `mise` is the
+recommended way to pin that runtime and the rest of the dev toolchain; see
+`mise.toml` for the locked set (`python@3.9`, `uv`, `ruff`, `basedpyright`,
+`jq`, `shellcheck`, `shfmt`, `actionlint`). System deps still come from your
+OS (e.g. `gdb`, `valgrind`, `graphviz`/`graphviz-dev`, `pkg-config`, `llvm-8`).
+
+Preferred (mise):
+
+```bash
+curl https://mise.run | sh          # once
+mise trust                          # trust mise.toml (once per checkout)
+mise install                        # python + uv + ruff + jq + shellcheck/shfmt
+mise run install:dev                # uv sync --group dev  → .venv
+mise run lint                       # ruff check  (mise-managed, no venv needed)
+mise run fmt:check                  # ruff format --check
+mise run typecheck                  # basedpyright (pipx-managed)
+mise run check                      # lint + fmt:check + typecheck
+mise run trace                      # example_programs/json default config
+mise run mine
+mise run eval
+# or with an explicit config:
+mise run trace -- example_programs/json/configuration/configuration.ini
+mise run shellcheck; mise run shfmt:check
+mise tasks ls                       # all available tasks
+```
+
+Without mise (vanilla venv + pip):
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
-pip install -e .
+pip install -e .            # or: uv sync --group dev
 ./src/tracer/trace.py --config example_programs/json/configuration/configuration.ini
 ./src/miner/mine.py --config example_programs/json/configuration/configuration.ini
 ./src/eval/precision_recall.py --config example_programs/json/configuration/configuration.ini
