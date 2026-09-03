@@ -51,13 +51,15 @@ pip install -e .            # or: uv sync --group dev
 
 Tracing creates `*.trace`; mining writes `parsing_g.json`. For Docker and different arch testing, see `docs/DOCKER.md`.
 
-## Coding Style & Naming Conventions
+## Coding Style
 
-Follow the surrounding Python: four-space indentation, `snake_case` functions and modules, `PascalCase` classes, and concise module-level scripts with `main()`. Preserve existing type hints and logging patterns. Keep target-specific values in INI files rather than hard-coding paths or debugger settings.
+Preserve existing type hints and logging patterns. Keep target-specific values in INI files rather than hard-coding paths or debugger settings.
 
 ## Testing Guidelines
 
 There is no configured automated test suite. Validate with the smallest affected workflow: trace and mine an existing example, then run `precision_recall.py` when grammar output changes. Keep generated results out of source changes unless intentional.
+
+If the test can be verified with a linting / type-hint check then do not test it.
 
 ## Commit & Pull Request Guidelines
 

@@ -129,7 +129,7 @@ import pathlib
 
 WORKING_DIRECTORY = pathlib.Path("./output/json/trial-0/")
 
-with open(WORKING_DIRECTORY / "parsing_g.json", 'r') as f:
+with open(WORKING_DIRECTORY / "parsing_g.json", "r") as f:
     grammar_file = json.load(f)
     grammar = grammar_file["[grammar]"]
     grammar[START_SYMBOL] = [["<START>"]]
