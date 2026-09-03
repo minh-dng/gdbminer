@@ -19,6 +19,7 @@ from fuzzingbook.Grammars import (
     unreachable_nonterminals,
 )
 
+from eval import resolve_grammar_file
 from tracer.gdb_tracer import GDBTracer
 
 PRECISION_SIZE = 1000
@@ -48,12 +49,6 @@ def find_output_directory(output_directory_base: Path) -> Path:
             reverse=True,
         )
     )
-
-
-def resolve_grammar_file(args_grammar: str | None, output_directory: Path) -> Path:
-    if args_grammar:
-        return Path(args_grammar)
-    return output_directory / "parsing_g.json"
 
 
 def main() -> None:

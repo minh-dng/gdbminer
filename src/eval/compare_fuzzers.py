@@ -14,6 +14,7 @@ from fuzzingbook.GrammarCoverageFuzzer import GrammarCoverageFuzzer
 from fuzzingbook.GrammarMiner import readable
 from fuzzingbook.MutationFuzzer import MutationFuzzer
 
+from eval import resolve_grammar_file
 from tracer.gdb_tracer import GDBTracer
 
 PRECISION_SIZE = 1000
@@ -28,12 +29,6 @@ def find_output_directory(output_directory_base: Path) -> Path:
             reverse=True,
         )
     )
-
-
-def resolve_grammar_file(args_grammar: str | None, output_directory: Path) -> Path:
-    if args_grammar:
-        return Path(args_grammar)
-    return output_directory / "parsing_g.json"
 
 
 def setup_logging(output_directory: Path, loglevel: str) -> None:
