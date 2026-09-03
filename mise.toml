@@ -1,0 +1,195 @@
+# mise.toml — mise-en-place configuration for GDBMiner
+# https://mise.jdx.dev
+# Install mise: curl https://mise.run | sh
+# Then: mise trust && mise install && mise run install:dev
+#
+# System deps still come from your OS package manager (not mise-managed):
+#   Debian/Ubuntu: sudo apt install gdb valgrind graphviz graphviz-dev pkg-config \
+#                  libcairo2-dev python3-dev llvm-8 clang
+#   macOS:         brew install gdb graphviz pkg-config llvm
+# See README.md “Install local” and Dockerfile for the full list.
+
+min_version = "2025.6.0"
+
+[tools]
+# Runtime — project requires Python >=3.9,<3.10 (see pyproject.toml / uv.lock)
+python = "3.9"
+# Fast Python package manager (manages .venv via uv.lock)
+uv = "latest"
+# Lint / format — also available via `uv sync --group dev` but pinned here
+# so editors & `mise run lint` work without activating the venv
+ruff = "latest"
+# Type checker — prefer pipx-managed so `mise run typecheck` works even when
+# the full project venv cannot be built (e.g. missing graphviz headers on macOS)
+"pipx:basedpyright" = "latest"
+# Small CLI helpers used by scripts and eval
+jq = "latest"
+# Shell quality for run_experiment.sh / scripts/repro_json.sh
+shellcheck = "latest"
+shfmt = "latest"
+# GitHub Actions linting (optional, cheap to install)
+actionlint = "latest"
+
+[env]
+# Make `src/` importable without manual PYTHONPATH=src
+PYTHONPATH = "{{config_root}}/src"
+# uv stores the venv at <repo>/.venv — shared across mise & uv
+UV_PROJECT_ENVIRONMENT = "{{config_root}}/.venv"
+
+[settings]
+# Auto-activate .venv when entering the project (mise activate / mise exec).
+# Requires uv.lock to be present (it is). Use "create|source" so the venv
+# is bootstrapped on first `mise install`.
+python.uv_venv_auto = "create|source"
+# Allow idiomatic .python-version files if users prefer them.
+idiomatic_version_file_enable_tools = ["python"]
+# Faster exits, fewer redundant GitHub API calls
+experimental = true
+# Respect tool-versions / mise.lock determinism in CI (opt-in via env if needed)
+# locked = false
+
+# ---------------------------------------------------------------------------
+# Task groups — run with `mise run <task>` or abbreviated `mise <task>`
+# ---------------------------------------------------------------------------
+
+[tasks.install]
+description = "Create/update .venv and install locked deps (uv sync --frozen)"
+run = "uv sync --frozen"
+
+[tasks."install:dev"]
+description = "Install with dev group (ruff, basedpyright)"
+run = "uv sync --frozen --group dev"
+
+[tasks.sync]
+description = "Alias for install"
+run = { task = "install" }
+
+[tasks."sync:dev"]
+description = "Alias for install:dev"
+run = { task = "install:dev" }
+
+[tasks.lint]
+description = "ruff check (lint) — respects [tool.ruff] in pyproject.toml"
+# Uses mise-managed `ruff` so it works without a fully-synced .venv (pygraphviz needs graphviz headers).
+run = "ruff check src analyze_experiments.py"
+
+[tasks."lint:fix"]
+description = "ruff check --fix"
+run = "ruff check --fix src analyze_experiments.py"
+
+[tasks.fmt]
+description = "ruff format (auto-fix formatting)"
+run = "ruff format src analyze_experiments.py"
+
+[tasks."fmt:check"]
+description = "ruff format --check (CI-friendly)"
+run = "ruff format --check src analyze_experiments.py"
+
+[tasks.typecheck]
+description = "basedpyright on src + analyze_experiments.py (mise-managed, no venv needed)"
+run = "basedpyright"
+
+[tasks.check]
+description = "All static checks (lint + fmt:check + typecheck)"
+depends = ["lint", "fmt:check", "typecheck"]
+
+[tasks.shellcheck]
+description = "Lint shell scripts (run_experiment.sh, scripts/*.sh)"
+run = "shellcheck run_experiment.sh scripts/*.sh"
+
+[tasks.shfmt]
+description = "Format shell scripts (shfmt -w)"
+run = "shfmt -w run_experiment.sh scripts/*.sh fetch_example_programs.sh"
+
+[tasks."shfmt:check"]
+description = "Check shell formatting (shfmt -d)"
+run = "shfmt -d run_experiment.sh scripts/*.sh fetch_example_programs.sh"
+
+# ---- GDBMiner workflow helpers --------------------------------------------
+
+[tasks.trace]
+description = "Run tracer (usage: mise run trace [config])"
+usage = '''
+  arg "[config]" help="Path to configuration.ini" default="example_programs/json/configuration/configuration.ini"
+'''
+run = '''
+#!/usr/bin/env bash
+set -eu
+cfg="${usage_config:-example_programs/json/configuration/configuration.ini}"
+uv run python src/tracer/trace.py --config "$cfg"
+'''
+
+[tasks.mine]
+description = "Run miner (usage: mise run mine [config])"
+usage = '''
+  arg "[config]" help="Path to configuration.ini" default="example_programs/json/configuration/configuration.ini"
+'''
+run = '''
+#!/usr/bin/env bash
+set -eu
+cfg="${usage_config:-example_programs/json/configuration/configuration.ini}"
+uv run python src/miner/mine.py --config "$cfg"
+'''
+
+[tasks.eval]
+description = "Calculate precision/recall (usage: mise run eval [config])"
+usage = '''
+  arg "[config]"        help="Path to configuration.ini" default="example_programs/json/configuration/configuration.ini"
+  flag "--grammar <grammar>" help="Override grammar path (json path)"
+  flag "--out <out>"         help="Output result file"
+'''
+run = '''
+#!/usr/bin/env bash
+set -euo pipefail
+# usage_* vars are set by mise from `usage` spec; fall back to defaults if invoked via `mise run eval -- --help`
+cfg="${usage_config:-example_programs/json/configuration/configuration.ini}"
+args=(--config "$cfg")
+if [[ -n "${usage_grammar:-}" ]]; then args+=(--grammar "${usage_grammar}"); fi
+if [[ -n "${usage_out:-}" ]]; then args+=(--out "${usage_out}"); fi
+uv run python src/eval/precision_recall.py "${args[@]}"
+'''
+
+[tasks.generate]
+description = "Generate eval inputs from a grammar (usage: mise run generate -- --help)"
+usage = '''
+  arg "[grammar]" help="Grammar file" default="example_programs/json/json.grammar"
+  arg "[outdir]"  help="Output directory for generated inputs"
+  arg "[n]"       help="Number of inputs to generate" default="100"
+  flag "--config <config>" help="Config file for paths" default="example_programs/json/configuration/configuration.ini"
+'''
+run = '''
+#!/usr/bin/env bash
+set -euo pipefail
+if [[ -z "${usage_outdir:-}" ]]; then
+  echo "usage: mise run generate <grammar> <outdir> [n] [--config <ini>]" >&2
+  exit 2
+fi
+uv run python src/eval/generate_inputs.py --config "${usage_config}" "${usage_grammar}" "${usage_outdir}" "${usage_n}"
+'''
+
+[tasks."build:json"]
+description = "Compile example_programs/json/json (needs gcc/clang, -g -O0 -no-pie)"
+run = "gcc -g -O0 -no-pie -o example_programs/json/json example_programs/json/json.c"
+
+[tasks."repro:json"]
+description = "End-to-end repro for json target (compile → trace → mine)"
+depends = ["build:json"]
+run = "./scripts/repro_json.sh"
+
+[tasks.clean]
+description = "Remove local build artifacts and output"
+run = '''
+#!/usr/bin/env bash
+set -euo pipefail
+rm -rf output output_* output_svg* .cache .pytest_cache .ruff_cache
+rm -rf example_programs/json/json
+echo "cleaned"
+'''
+
+[tasks.update]
+description = "Bump locked deps and refresh mise lockfile"
+run = [
+  "uv lock --upgrade",
+  "uv sync --group dev",
+  "mise up",
+]
