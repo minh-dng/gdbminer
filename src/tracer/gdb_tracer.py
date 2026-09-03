@@ -2,12 +2,14 @@
 # Copyright (c) 2023 Robert Bosch GmbH
 # SPDX-License-Identifier: AGPL-3.0
 
+from __future__ import annotations
+
 import logging
-import os
 import re
 import time
 from configparser import ConfigParser
 from dataclasses import dataclass
+from pathlib import Path
 
 from tracer.instance.msp430_instance import MSP430Instance
 from tracer.instance.stm32_instance import STM32Instance
@@ -35,7 +37,7 @@ class GDBTracer:
 
     def trace_instruction(
         self, response: dict, instance: SUTInstance, execution_trace: list[TraceEntry]
-    ):
+    ) -> None:
         address = response["payload"]["frame"]["addr"]
         func_name = response["payload"]["frame"]["func"]
         func_args = response["payload"]["frame"]["args"]
@@ -75,7 +77,8 @@ class GDBTracer:
         entry = GDBTracer.TraceEntry(address, func_name, args, [], [])
         execution_trace.append(entry)
 
-    def open_sut_instance(config: ConfigParser, input_file: str = "") -> SUTInstance:
+    @staticmethod
+    def open_sut_instance(config: ConfigParser, input_file: Path | str = "") -> SUTInstance:
         instance = config["GDB"]["instance"]
         if instance == "valgrind":
             return ValgrindInstance(config, input_file)
@@ -83,7 +86,9 @@ class GDBTracer:
             return STM32Instance(config, input_file)
         elif instance == "msp430":
             return MSP430Instance(config, input_file)
+        raise ValueError(f"Unknown GDB instance type: {instance}")
 
+    @staticmethod
     def merge_traces(list1: list[TraceEntry], list2: list[TraceEntry]) -> list[TraceEntry]:
         if len(list1) == 0:
             return list2
@@ -104,8 +109,8 @@ class GDBTracer:
             result.append(new_entry)
         return result
 
-    def trace_input(self, filename) -> list[TraceEntry]:
-        input_len = os.path.getsize(filename)
+    def trace_input(self, filename: Path | str) -> list[TraceEntry]:
+        input_len = Path(filename).stat().st_size
 
         logging.info(f"Seed length: {input_len}")
 

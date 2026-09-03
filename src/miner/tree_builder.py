@@ -46,14 +46,14 @@ class TreeBuilder:
         # Read trace files
         self.traces: list[list[dict]] = []
         for f_name in trace_files:
-            with open(f_name, "r") as f:
+            with f_name.open("r") as f:
                 self.traces.append(json.load(f))
 
         # Read seeds
         self.seeds = seeds
         self.seed_contents: list[bytes] = []
         for f_name in seeds:
-            with open(f_name, "rb") as f:
+            with f_name.open("rb") as f:
                 self.seed_contents.append(f.read())
 
         # Derive cfg and function dicts from traces
@@ -176,9 +176,9 @@ class TreeBuilder:
         self,
         trace: list[dict],
         input: bytes,
-        input_file_name: str,
+        input_file_name: Path,
         program_file_name: str,
-    ):
+    ) -> None:
         assert len(trace) > 0
 
         # Map with  m_id, m_name, m_children
@@ -351,6 +351,6 @@ class TreeBuilder:
     def get_tree_list(self) -> list[dict]:
         return self.tree_list
 
-    def dump_to_file(self, filename: Path):
-        with open(filename, "w") as f:
+    def dump_to_file(self, filename: Path) -> None:
+        with filename.open("w") as f:
             json.dump(self.tree_list, f)

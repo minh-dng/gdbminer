@@ -7,7 +7,6 @@ import argparse
 import logging
 import sys
 import time
-from os import path
 from pathlib import Path
 
 sys.setrecursionlimit(99000)
@@ -27,13 +26,13 @@ from miner.token_generalizer import TokenGeneralizer
 from miner.tree_builder import TreeBuilder
 
 
-def setup_logging(output_directory, loglevel):
+def setup_logging(output_directory: Path, loglevel: str) -> None:
     logger = logging.getLogger()
     formatter = logging.Formatter(
         "%(asctime)s [%(levelname)s %(filename)s:%(lineno)s %(funcName)s()] %(message)s"
     )
 
-    file_logger = logging.FileHandler(path.join(output_directory, "out.log"))
+    file_logger = logging.FileHandler(output_directory / "out.log")
     file_logger.setLevel(loglevel)
     file_logger.setFormatter(formatter)
     logger.addHandler(file_logger)
@@ -46,7 +45,7 @@ def setup_logging(output_directory, loglevel):
     logging.root.setLevel(loglevel)
 
 
-def find_output_directory(output_directory_base: Path):
+def find_output_directory(output_directory_base: Path) -> Path:
     # Find last 'trial-*' folder
     return next(
         sorted(
@@ -247,7 +246,7 @@ def convert_spaces_in_keys(grammar):
     return new_grammar
 
 
-def main():
+def main() -> None:
     start_time = time.time()
     # Create a parser
     parser = argparse.ArgumentParser(description="Generate a context free grammar")
@@ -256,10 +255,9 @@ def main():
     parser.add_argument("--config", required=True, type=str, help="Path to a config file.")
 
     # Execute the parse_args() methode
-    config_file_path = parser.parse_args().config
-    config_file_path = path.expanduser(config_file_path)
+    config_file_path = Path(parser.parse_args().config).expanduser()
 
-    if not path.isfile(config_file_path):
+    if not config_file_path.is_file():
         raise Exception(f"Config file at {config_file_path} does not exist")
 
     # Start ConfigParser for further usage
@@ -267,13 +265,13 @@ def main():
     config.read(config_file_path)
 
     output_directory = find_output_directory(Path(config["BASIC"]["output_directory"]))
-    seed_directory = config["BASIC"]["seed_directory"]
+    seed_directory = Path(config["BASIC"]["seed_directory"])
 
     loglevel = config["LOGS"]["log_level"]
     setup_logging(output_directory=output_directory, loglevel=loglevel)
 
-    trace_files = sorted(Path(output_directory).glob("*.trace"))
-    seed_files = sorted(Path(seed_directory).glob("*"))
+    trace_files = sorted(output_directory.glob("*.trace"))
+    seed_files = sorted(seed_directory.glob("*"))
 
     builder = TreeBuilder(trace_files, seed_files, config["BASIC"]["binary_file"])
 
@@ -281,29 +279,29 @@ def main():
 
     mined_trees = miner(builder.get_tree_list())
 
-    with open(output_directory / "trees.json", "w") as f:
+    with (output_directory / "trees.json").open("w") as f:
         json.dump(mined_trees, f)
 
     # Squashing consecutive if conditions
     # for entry in mined_trees:
     #     entry['tree'] = squash_consecutive_conditions(entry['tree'])
 
-    # with open(output_directory / "squash_trees.json", 'w') as f:
+    # with (output_directory / "squash_trees.json").open('w') as f:
     #     json.dump(mined_trees, f)
 
     method_generalizer = MethodGeneralizer(config)
     trees = method_generalizer.generalize_method_trees(mined_trees)
 
-    with open(output_directory / "method_trees.json", "w") as f:
+    with (output_directory / "method_trees.json").open("w") as f:
         json.dump(trees, f)
 
     loop_generalizer = LoopGeneralizer(config)
     trees = loop_generalizer.generalize_loop_trees(trees)
 
-    with open(output_directory / "loop_trees.json", "w") as f:
+    with (output_directory / "loop_trees.json").open("w") as f:
         json.dump(trees, f)
 
-    with open(output_directory / "loop_trees.json", "r") as f:
+    with (output_directory / "loop_trees.json").open("r") as f:
         trees = json.load(f)
 
     # for entry in trees:
@@ -330,7 +328,7 @@ def main():
     g = G.grammar_gc(g, start_symbol)  # garbage collect
 
     grammar_map = {"[start]": start_symbol, "[grammar]": g, "[command]": cmd}
-    with open(output_directory / "mined_g.json", "w") as f:
+    with (output_directory / "mined_g.json").open("w") as f:
         json.dump(grammar_map, f, indent=4)
 
     token_generalizer = TokenGeneralizer(config)
@@ -346,7 +344,7 @@ def main():
         + token_generalizer.number_of_tested_inputs
     )
 
-    with open(output_directory / "parsing_g.json", "w") as f:
+    with (output_directory / "parsing_g.json").open("w") as f:
         json.dump(
             {
                 "[start]": start_symbol,
