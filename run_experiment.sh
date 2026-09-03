@@ -29,20 +29,22 @@ cp /example_programs/yxml/yxml.grammar /mimid/Cmimid/examples/
 
 
 # Run CMimid on all targets (where it works :/)
-
+# Mimid durations are kept in memory and merged into the .mimid.result JSON
+# below, so no separate *.mimid.execution_duration files are written.
+declare -A MIMID_EXECUTION_DURATIONS
 for target in calc cgi_decode json mjs tiny
 do
     START_TIME=$(date +%s)
     make -C /mimid/Cmimid/ build/$target.pgrammar
     END_TIME=$(date +%s)
     # Calculate the execution duration in seconds
-    EXECUTION_DURATION=$((END_TIME - START_TIME))
-    echo $EXECUTION_DURATION > /output/$target.${NUMBER_OF_SEEDS}.mimid.execution_duration
+    MIMID_EXECUTION_DURATIONS[$target]=$((END_TIME - START_TIME))
 done
 
 # Rename the tiny seeds to be consistent
 rename.ul tiny tinyc /mimid/Cmimid/build/tiny*
-mv /output/tiny.${NUMBER_OF_SEEDS}.mimid.execution_duration /output/tinyc.${NUMBER_OF_SEEDS}.mimid.execution_duration
+MIMID_EXECUTION_DURATIONS[tinyc]=${MIMID_EXECUTION_DURATIONS[tiny]:-}
+unset 'MIMID_EXECUTION_DURATIONS[tiny]'
 
 #Copy Mimid grammars to output folder
 cp /mimid/Cmimid/build/*-parsing.json /output/
@@ -86,8 +88,9 @@ do
 
     # Calculate Precision recall for CMimid
     python3 /GDBMiner/src/eval/precision_recall.py --config /example_programs/$target/configuration/configuration_docker.ini --grammar /mimid/Cmimid/build/$target-parsing.json --out /output/$target.${NUMBER_OF_SEEDS}.mimid.result
-    EXECUTION_DURATION=$(cat /output/$target.${NUMBER_OF_SEEDS}.mimid.execution_duration)
-    jq --arg duration "$EXECUTION_DURATION" '.execution_duration = ($duration | tonumber)' /output/$target.${NUMBER_OF_SEEDS}.mimid.result > tmp.$$.json && mv tmp.$$.json /output/$target.${NUMBER_OF_SEEDS}.mimid.result
+    if [[ -f /output/$target.${NUMBER_OF_SEEDS}.mimid.result && -n "${MIMID_EXECUTION_DURATIONS[$target]+x}" ]]; then
+        jq --arg duration "${MIMID_EXECUTION_DURATIONS[$target]}" '.execution_duration = ($duration | tonumber)' /output/$target.${NUMBER_OF_SEEDS}.mimid.result > tmp.$$.json && mv tmp.$$.json /output/$target.${NUMBER_OF_SEEDS}.mimid.result
+    fi
 
     #Run Arvada
     START_TIME=$(date +%s)
