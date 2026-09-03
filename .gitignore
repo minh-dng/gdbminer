@@ -136,6 +136,11 @@ output_svg*
 
 .vscode
 
+# mise — local overrides (do not commit)
+mise.local.toml
+.mise.local.toml
+mise.*.local.toml
+
 # Graphify internal state (regenerated, not useful outside tooling).
 graphify-out/cost.json
 graphify-out/cache/
