@@ -207,11 +207,11 @@ fuzz.py <inferred json grammar> <uninstrumented-exec> <count>
     sys.exit(0)
 
 
-def main(args):
+def main(args: list[str]) -> list[str]:
     if not args or args[0] == "-h":
         usage()
-    errors = []
-    with open(args[0]) as f:
+    errors: list[str] = []
+    with Path(args[0]).open() as f:
         s = json.load(f)
     grammar = s["[grammar]"]
     # if len(args) > 1:
@@ -222,7 +222,7 @@ def main(args):
     count = int(args[2])
     for i in range(count):
         v = f.fuzz(key)
-        with open(output_folder / f"eval.input.{i}", "w") as file:
+        with (output_folder / f"eval.input.{i}").open("w") as file:
             file.write(v)
         print(repr(v))
 

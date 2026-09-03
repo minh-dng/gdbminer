@@ -3,23 +3,26 @@
 # SPDX-License-Identifier: AGPL-3.0
 
 
+from __future__ import annotations
+
 import logging
 import subprocess
 import time
 from configparser import ConfigParser
+from pathlib import Path
 
 from tracer.connection.sut_connection import SUTConnection
 from tracer.instance.sut_instance import SUTInstance
 
 
 class MSP430Instance(SUTInstance):
-    def __init__(self, config: ConfigParser, input_file: str) -> None:
+    def __init__(self, config: ConfigParser, input_file: Path | str) -> None:
         super().__init__(config)
 
         self.gdb_server_path_with_args = config["GDB"]["gdb_server_path"].split(" ")
         self.gdb_server_address = config["GDB"]["gdb_server_address"]
         self.watchpoint_count = config.getint("GDB", "watchpoint_count")
-        self.input_file = input_file
+        self.input_file = Path(input_file)
 
     def __enter__(self):
         # Start gdb server in subprocess
@@ -62,8 +65,8 @@ class MSP430Instance(SUTInstance):
         # wait till something happened
         self.wait_for_any_gdb_response()
 
-    def send_input(self):
-        with open(self.input_file, "rb") as f:
+    def send_input(self) -> None:
+        with self.input_file.open("rb") as f:
             input = f.read()
         self.connection.send_input(input)
 

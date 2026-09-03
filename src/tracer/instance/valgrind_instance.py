@@ -2,24 +2,27 @@
 # Copyright (c) 2023 Robert Bosch GmbH
 # SPDX-License-Identifier: AGPL-3.0
 
+from __future__ import annotations
+
 import logging
 import subprocess
 import tempfile
 import time
 from configparser import ConfigParser
+from pathlib import Path
 
 from tracer.instance.sut_instance import SUTInstance
 
 
 class ValgrindInstance(SUTInstance):
-    def __init__(self, config: ConfigParser, input_file: str) -> None:
+    def __init__(self, config: ConfigParser, input_file: Path | str) -> None:
         super().__init__(config)
 
         self.valgrind_commands = "valgrind --vgdb=yes --vgdb-stop-at=startup --undef-value-errors=no --leak-check=no ".split()
         self.valgrind_commands.append(self.elf_file)
 
         # TODO offer different connections
-        self.valgrind_commands.append(input_file)
+        self.valgrind_commands.append(str(input_file))
 
         logging.info(self.valgrind_commands)
 

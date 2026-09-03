@@ -2,11 +2,12 @@
 # Copyright (c) 2023 Robert Bosch GmbH
 # SPDX-License-Identifier: AGPL-3.0
 
+from __future__ import annotations
+
 import argparse
 import json
 import logging
 from configparser import ConfigParser
-from os import path
 from pathlib import Path
 
 from fuzzingbook.GrammarCoverageFuzzer import GrammarCoverageFuzzer
@@ -18,7 +19,7 @@ from tracer.gdb_tracer import GDBTracer
 PRECISION_SIZE = 1000
 
 
-def find_output_directory(output_directory_base: Path):
+def find_output_directory(output_directory_base: Path) -> Path:
     # Find last 'trial-*' folder
     return next(
         sorted(
@@ -29,13 +30,19 @@ def find_output_directory(output_directory_base: Path):
     )
 
 
-def setup_logging(output_directory, loglevel):
+def resolve_grammar_file(args_grammar: str | None, output_directory: Path) -> Path:
+    if args_grammar:
+        return Path(args_grammar)
+    return output_directory / "parsing_g.json"
+
+
+def setup_logging(output_directory: Path, loglevel: str) -> None:
     logger = logging.getLogger()
     formatter = logging.Formatter(
         "%(asctime)s [%(levelname)s %(filename)s:%(lineno)s %(funcName)s()] %(message)s"
     )
 
-    file_logger = logging.FileHandler(path.join(output_directory, "out.log"))
+    file_logger = logging.FileHandler(output_directory / "out.log")
     file_logger.setLevel(loglevel)
     file_logger.setFormatter(formatter)
     logger.addHandler(file_logger)
@@ -48,7 +55,7 @@ def setup_logging(output_directory, loglevel):
     logging.root.setLevel(loglevel)
 
 
-def main():
+def main() -> None:
     # Create a parser
     parser = argparse.ArgumentParser(
         description="Calculates the precision of grammar-based fuzzer against a mutation-based one"
@@ -61,10 +68,9 @@ def main():
 
     # Execute the parse_args() methode
     args = parser.parse_args()
-    config_file_path = args.config
-    config_file_path = path.expanduser(config_file_path)
+    config_file_path = Path(args.config).expanduser()
 
-    if not path.isfile(config_file_path):
+    if not config_file_path.is_file():
         raise Exception(f"Config file at {config_file_path} does not exist")
 
     # Start ConfigParser for further usage
@@ -80,18 +86,15 @@ def main():
 
     seeds = []
     for seed_file in seeds_directory.glob("*"):
-        with open(seed_file) as f:
+        with seed_file.open() as f:
             seed_content = f.read()
             seeds.append(seed_content)
 
     mutation_fuzzer = MutationFuzzer(seed=seeds)
 
-    if args.grammar:
-        grammar_file = args.grammar
-    else:
-        grammar_file = output_directory / "parsing_g.json"
+    grammar_file = resolve_grammar_file(args.grammar, output_directory)
 
-    with open(grammar_file) as f:
+    with grammar_file.open() as f:
         mined = json.load(f)
     grammar = mined["[grammar]"]
     start = mined["[start]"]

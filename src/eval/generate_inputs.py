@@ -2,10 +2,11 @@
 # Copyright (c) 2023 Robert Bosch GmbH
 # SPDX-License-Identifier: AGPL-3.0
 
+from __future__ import annotations
+
 import argparse
 import json
 from configparser import ConfigParser
-from os import path
 from pathlib import Path
 
 from fuzzingbook.GrammarCoverageFuzzer import GrammarCoverageFuzzer
@@ -38,7 +39,7 @@ def trim_grammar(grammar: Grammar, start_symbol=START_SYMBOL) -> Grammar:
     return new_grammar
 
 
-def find_output_directory(output_directory_base: Path):
+def find_output_directory(output_directory_base: Path) -> Path:
     # Find last 'trial-*' folder
     return next(
         sorted(
@@ -49,7 +50,13 @@ def find_output_directory(output_directory_base: Path):
     )
 
 
-def main():
+def resolve_grammar_file(args_grammar: str | None, output_directory: Path) -> Path:
+    if args_grammar:
+        return Path(args_grammar)
+    return output_directory / "parsing_g.json"
+
+
+def main() -> None:
     # Create a parser
     parser = argparse.ArgumentParser(description="Generates inputs from grammar")
 
@@ -64,10 +71,9 @@ def main():
 
     # Execute the parse_args() methode
     args = parser.parse_args()
-    config_file_path = args.config
-    config_file_path = path.expanduser(config_file_path)
+    config_file_path = Path(args.config).expanduser()
 
-    if not path.isfile(config_file_path):
+    if not config_file_path.is_file():
         raise Exception(f"Config file at {config_file_path} does not exist")
 
     # Start ConfigParser for further usage
@@ -76,12 +82,9 @@ def main():
 
     output_directory = Path(args.out)
 
-    if args.grammar:
-        grammar_file = args.grammar
-    else:
-        grammar_file = output_directory / "parsing_g.json"
+    grammar_file = resolve_grammar_file(args.grammar, output_directory)
 
-    with open(grammar_file) as f:
+    with grammar_file.open() as f:
         mined = json.load(f)
     grammar = mined["[grammar]"]
     start = mined["[start]"]
@@ -105,7 +108,7 @@ def main():
             accepted = instance.input_accepted(input.encode("utf-8"))
             if accepted:
                 i += 1
-                with open(output_directory / f"input.{i}", "w") as out_file:
+                with (output_directory / f"input.{i}").open("w") as out_file:
                     out_file.write(input)
 
 

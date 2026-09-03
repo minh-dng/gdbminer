@@ -2,12 +2,13 @@
 # Copyright (c) 2023 Robert Bosch GmbH
 # SPDX-License-Identifier: AGPL-3.0
 
+from __future__ import annotations
+
 import argparse
 import json
 import logging
 import signal
 from configparser import ConfigParser
-from os import path
 from pathlib import Path
 
 import fuzzingbook.Parser as P
@@ -19,7 +20,7 @@ from tracer.gdb_tracer import GDBTracer
 PRECISION_SIZE = 1000
 
 
-def find_output_directory(output_directory_base: Path):
+def find_output_directory(output_directory_base: Path) -> Path:
     # Find last 'trial-*' folder
     return next(
         sorted(
@@ -30,13 +31,19 @@ def find_output_directory(output_directory_base: Path):
     )
 
 
-def setup_logging(output_directory, loglevel):
+def resolve_grammar_file(args_grammar: str | None, output_directory: Path) -> Path:
+    if args_grammar:
+        return Path(args_grammar)
+    return output_directory / "parsing_g.json"
+
+
+def setup_logging(output_directory: Path, loglevel: str) -> None:
     logger = logging.getLogger()
     formatter = logging.Formatter(
         "%(asctime)s [%(levelname)s %(filename)s:%(lineno)s %(funcName)s()] %(message)s"
     )
 
-    file_logger = logging.FileHandler(path.join(output_directory, "out.log"))
+    file_logger = logging.FileHandler(output_directory / "out.log")
     file_logger.setLevel(loglevel)
     file_logger.setFormatter(formatter)
     logger.addHandler(file_logger)
@@ -49,7 +56,7 @@ def setup_logging(output_directory, loglevel):
     logging.root.setLevel(loglevel)
 
 
-def main():
+def main() -> None:
     # Create a parser
     parser = argparse.ArgumentParser(description="Calculates the precision of a mined grammar")
 
@@ -62,10 +69,9 @@ def main():
 
     # Execute the parse_args() methode
     args = parser.parse_args()
-    config_file_path = args.config
-    config_file_path = path.expanduser(config_file_path)
+    config_file_path = Path(args.config).expanduser()
 
-    if not path.isfile(config_file_path):
+    if not config_file_path.is_file():
         raise Exception(f"Config file at {config_file_path} does not exist")
 
     # Start ConfigParser for further usage
@@ -79,12 +85,9 @@ def main():
 
     eval_directory = Path(config["BASIC"]["eval_directory"])
 
-    if args.grammar:
-        grammar_file = args.grammar
-    else:
-        grammar_file = output_directory / "parsing_g.json"
+    grammar_file = resolve_grammar_file(args.grammar, output_directory)
 
-    with open(grammar_file) as f:
+    with grammar_file.open() as f:
         mined = json.load(f)
     grammar = mined["[grammar]"]
     start = mined["[start]"]
@@ -114,7 +117,7 @@ def main():
     parsed_count = 0
     eval_set_len = 0
     for eval_f_name in eval_directory.glob("*"):
-        with open(eval_f_name) as eval_file:
+        with eval_f_name.open() as eval_file:
             eval_string = eval_file.read()
             eval_set_len += 1
             try:
@@ -140,7 +143,7 @@ def main():
     logging.info(result)
 
     if args.out:
-        with open(args.out, "w") as f:
+        with Path(args.out).open("w") as f:
             json.dump(result, f)
 
 
