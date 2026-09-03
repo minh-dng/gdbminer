@@ -5,10 +5,10 @@
 
 import argparse
 import logging
-import pathlib
 import sys
 import time
 from os import path
+from pathlib import Path
 
 sys.setrecursionlimit(99000)
 
@@ -46,7 +46,7 @@ def setup_logging(output_directory, loglevel):
     logging.root.setLevel(loglevel)
 
 
-def find_output_directory(output_directory_base: pathlib.Path):
+def find_output_directory(output_directory_base: Path):
     # Find last 'trial-*' folder
     return next(
         sorted(
@@ -266,14 +266,14 @@ def main():
     config = ConfigParser()
     config.read(config_file_path)
 
-    output_directory = find_output_directory(pathlib.Path(config["BASIC"]["output_directory"]))
+    output_directory = find_output_directory(Path(config["BASIC"]["output_directory"]))
     seed_directory = config["BASIC"]["seed_directory"]
 
     loglevel = config["LOGS"]["log_level"]
     setup_logging(output_directory=output_directory, loglevel=loglevel)
 
-    trace_files = sorted(pathlib.Path(output_directory).glob("*.trace"))
-    seed_files = sorted(pathlib.Path(seed_directory).glob("*"))
+    trace_files = sorted(Path(output_directory).glob("*.trace"))
+    seed_files = sorted(Path(seed_directory).glob("*"))
 
     builder = TreeBuilder(trace_files, seed_files, config["BASIC"]["binary_file"])
 

@@ -5,13 +5,13 @@
 # 3rd-party-licenses.txt file in the root directory of this source tree.
 
 import json
-import pathlib
 import random
 
 # import fuzzingbook.Parser as P
 # from fuzzingbook.GrammarFuzzer import tree_to_string
 import string
 import sys
+from pathlib import Path
 
 import cmimid.grammartools as G
 from cmimid import util
@@ -215,7 +215,7 @@ def main(args):
         s = json.load(f)
     grammar = s["[grammar]"]
     # if len(args) > 1:
-    output_folder = pathlib.Path(args[1])
+    output_folder = Path(args[1])
     f = LimitFuzzer(grammar)
     # key = args[2] if len(args)> 2 else s['[start]']
     key = s["[start]"]
