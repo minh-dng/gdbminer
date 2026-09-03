@@ -17,6 +17,8 @@
 !src/**
 !example_programs/
 !example_programs/**
+!docker/
+!docker/**
 
 **/.git
 **/.git/**

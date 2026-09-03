@@ -11,6 +11,37 @@ docker run --rm -v "$(pwd)/output:/output" gdbminer /run_experiment.sh
 
 Full experiments can run for days. Use a dedicated output directory per trial so results are not overwritten.
 
+## Toolchain management (mise)
+
+The image uses a separate `docker/mise.toml` and `docker/mise.lock` because it
+needs Java, CMake, and Ninja in addition to the local development tools. The
+Dockerfile installs this config globally under `/root/.config/mise`. Python
+and jq use the same exact versions as the root `mise.lock`; the mise binary is
+also pinned through `ARG MISE_VERSION`.
+
+| Tool | Docker pin | Replaces |
+| ---- | ---------- | -------- |
+| mise | 2026.9.1 | unpinned `curl \| sh` |
+| Python | 3.12.14 | uv-managed Python 3.12.11 |
+| Java | Temurin 11.0.32+101 | `apt` OpenJDK 11 |
+| CMake | 3.29.0 | architecture-specific 3.29.0-rc2 installer |
+| Ninja | 1.13.2 | `apt` package |
+| jq | 1.8.2 | `apt` package |
+
+mise selects the correct binaries for `linux/amd64` or `linux/arm64`. The
+build checks Python discovery, the JDK and `$JAVA_HOME`, CMake, Ninja, and jq.
+Native build dependencies remain installed through apt or built from source.
+uv remains pinned through the `astral-sh/uv` image.
+
+The root config keeps its broad `python = "3.12"` and `jq = "latest"`
+selectors, while the root lock records exact versions. Docker repeats those
+exact versions because image builds must not advance when the root selectors
+are updated. `UV_PYTHON=3.12` selects the mise-installed interpreter series;
+the Docker mise config and lock remain the single exact Python pin.
+
+The image runs as root because mise shims and installs live under `/root`.
+Changing `USER` or `HOME` would also require moving the mise installation.
+
 For a quick single-target check, reduce the generated inputs and target list:
 
 ```bash
@@ -21,9 +52,8 @@ docker run --rm -e NUMBER_OF_SEEDS=1 -e PRECISION_SET_SIZE=3 \
 
 ## Python 3.12 dependency choices
 
-The Ubuntu 24.04 image uses uv-managed Python 3.12.11. The project supports
-Python `>=3.12,<3.13`; mise selects the latest locked 3.12 patch release for
-local development.
+The Ubuntu 24.04 image uses mise-managed Python 3.12.14. The project supports
+Python `>=3.12,<3.13`; local and Docker mise locks select the same patch release.
 
 The evaluation code uses the local implementation added in #3, so Fuzzing
 Book, ISLa, and Z3 are no longer dependencies. This avoids the unavailable
@@ -39,33 +69,16 @@ modern Meson otherwise discovers first.
 Recheck the lock with Docker's uv and Python versions:
 
 ```bash
-uvx --from uv==0.11.1 uv lock --check --python 3.12.11
+uvx --from uv==0.11.1 uv lock --check --python 3.12.14
 ```
 
 The full image build remains the installation check because it also compiles
 mimid's taint instrumentation and the benchmark targets.
 
-### Combined ARM64 verification
-
-After merging #3 and rebasing this toolchain update, the final Linux ARM64
-worktree passed:
-
-- a full image build, including mimid's taint instrumentation;
-- Python 3.12.11, Meson 1.12.0, all nine installed distributions compatible,
-  and imports for the miner, local evaluator, and Clang binding;
-- FNEG and CALLBR LLVM reproducer scripts;
-- a reduced JSON evaluation with one seed and three precision inputs across
-  GDBMiner, Mimid, Arvada, and Treevada.
-
-All four result files were produced. Their small-sample precision values were
-1.0, 1.0, 1.0, and 0.333 respectively; recall was 0.0 for each. These figures
-confirm pipeline execution only and are too small to assess grammar quality.
-The full multi-target benchmark was not run because it can take days. AMD64
-support remains structurally present but was not executed in this pass.
-
 ## Different architectures
 
-The Dockerfile supports `linux/amd64` and `linux/arm64`. Build on a native host where possible:
+The Dockerfile supports `linux/amd64` and `linux/arm64`; mise selects matching
+binaries without a `TARGETARCH` switch. Build on a native host where possible:
 
 ```bash
 docker build --platform linux/arm64 -t gdbminer:arm64 .

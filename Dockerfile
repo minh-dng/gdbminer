@@ -10,6 +10,14 @@ FROM ubuntu:24.04
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+# ---------------------------------------------------------------------------
+# Toolchain: mise manages version-pinned tools for linux/amd64 and linux/arm64
+# (https://mise.jdx.dev, registry: https://mise-versions.jdx.dev).
+# Single source: docker/mise.toml (+ docker/mise.lock), installed below as the
+# global mise config. The aqua backend selects the CPU architecture, so no
+# TARGETARCH switch is needed. Native build dependencies remain on apt or
+# source builds.
+# ---------------------------------------------------------------------------
 COPY --from=ghcr.io/astral-sh/uv:0.11.1 /uv /uvx /usr/local/bin/
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
@@ -18,21 +26,37 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     && echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache \
     && apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
-    build-essential openjdk-11-jdk-headless git patch \
-    ninja-build pkg-config llvm-14-dev zlib1g-dev jq xz-utils \
+    build-essential git patch curl \
+    pkg-config llvm-14-dev zlib1g-dev xz-utils \
     autoconf dh-autoreconf automake libtool libjson-c-dev \
     wget ca-certificates liblzma-dev libc6-dbg texinfo \
     libgmp-dev libmpfr-dev \
     clang-14 clang-format-14 libclang-14-dev
 
+# Pin mise so image rebuilds do not silently change toolchain resolution.
+# The image runs as root because its mise shims and installs live under /root.
+ARG MISE_VERSION=2026.9.1
+RUN curl -fsSL https://mise.run | MISE_VERSION=${MISE_VERSION} sh
+ENV PATH="/opt/gdbminer-venv/bin:/root/.local/bin:/root/.local/share/mise/shims:$PATH" \
+    MISE_YES=1
+
+COPY docker/mise.toml /root/.config/mise/config.toml
+COPY docker/mise.lock /root/.config/mise/mise.lock
+RUN mise install --locked \
+    && python --version && UV_PYTHON=3.12 uv python find \
+    && java -version && javac -version && cmake --version && ninja --version && jq --version \
+    && ln -s "$(mise where java)" /opt/java \
+    && /opt/java/bin/java -version && /opt/java/bin/javac -version \
+    && rm -rf /root/.cache/mise
+
 RUN ln -s /usr/bin/clang-14 /usr/bin/clang && \
     ln -s /usr/bin/clang++-14 /usr/bin/clang++ && \
     ln -s /usr/bin/llvm-config-14 /usr/local/bin/llvm-config
-ENV UV_PROJECT_ENVIRONMENT=/opt/gdbminer-venv \
-    UV_PYTHON=3.12.11 \
+ENV JAVA_HOME=/opt/java \
+    UV_PROJECT_ENVIRONMENT=/opt/gdbminer-venv \
+    UV_PYTHON=3.12 \
     UV_CACHE_DIR=/root/.cache/uv \
-    UV_LINK_MODE=copy \
-    PATH="/opt/gdbminer-venv/bin:$PATH"
+    UV_LINK_MODE=copy
 RUN     mkdir -p /GDBMiner /tmp/build
 COPY    pyproject.toml uv.lock README.md LICENSE setup.py setup.cfg /GDBMiner/
 RUN --mount=type=cache,target=/root/.cache/uv \
@@ -66,16 +90,7 @@ RUN mkdir json-c && \
     make -j"$(nproc)" && make install-strip && \
     rm -rf /tmp/build/*
 
-ARG TARGETARCH
-RUN case "${TARGETARCH:-$(dpkg --print-architecture)}" in \
-        amd64) CMAKE_ARCH=x86_64 ;; \
-        arm64) CMAKE_ARCH=aarch64 ;; \
-        *) echo "Unsupported architecture: ${TARGETARCH:-$(dpkg --print-architecture)}" && exit 1 ;; \
-    esac && \
-    wget "https://github.com/Kitware/CMake/releases/download/v3.29.0-rc2/cmake-3.29.0-rc2-linux-${CMAKE_ARCH}.sh" -O /tmp/cmake.sh && \
-    chmod a+x /tmp/cmake.sh && \
-    bash /tmp/cmake.sh --skip-license --prefix=/usr/local --exclude-subdir && \
-    rm /tmp/cmake.sh
+# cmake/ninja/jq/java/python come from mise, which resolves the CPU architecture.
 
 # Compile static libxml
 RUN wget -O libxml2-2.12.4.tar.xz https://download.gnome.org/sources/libxml2/2.12/libxml2-2.12.4.tar.xz && \
