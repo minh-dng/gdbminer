@@ -5,10 +5,10 @@
 import argparse
 import json
 import logging
-import pathlib
 import time
 from configparser import ConfigParser
 from os import path
+from pathlib import Path
 
 from tracer.gdb_tracer import GDBTracer
 
@@ -24,7 +24,7 @@ def uniquify(logfile_path):
 
 def create_output_directory(output_directory_base):
     output_directory = uniquify(logfile_path=output_directory_base + "/trial")
-    pathlib.Path(output_directory).mkdir(parents=True, exist_ok=True)
+    Path(output_directory).mkdir(parents=True, exist_ok=True)
     return output_directory
 
 
@@ -84,7 +84,7 @@ def main():
 
     seed_directory = config["BASIC"]["seed_directory"]
     list_of_traces = []
-    for filename in sorted(pathlib.Path(seed_directory).glob("*")):
+    for filename in sorted(Path(seed_directory).glob("*")):
         logging.info(f"Start generating trace for {filename}")
         trace = generate_trace(filename, config)
         list_of_traces.append(trace)

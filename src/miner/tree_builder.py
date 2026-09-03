@@ -6,9 +6,9 @@
 import json
 import logging
 import os
-import pathlib
 import urllib.parse
 from dataclasses import dataclass
+from pathlib import Path
 
 import networkx as nx
 
@@ -39,8 +39,8 @@ class PseudoMethodScope:
 class TreeBuilder:
     def __init__(
         self,
-        trace_files: list[pathlib.Path],
-        seeds: list[pathlib.Path],
+        trace_files: list[Path],
+        seeds: list[Path],
         program_path: str,
     ) -> None:
         # Read trace files
@@ -351,6 +351,6 @@ class TreeBuilder:
     def get_tree_list(self) -> list[dict]:
         return self.tree_list
 
-    def dump_to_file(self, filename: pathlib.Path):
+    def dump_to_file(self, filename: Path):
         with open(filename, "w") as f:
             json.dump(self.tree_list, f)

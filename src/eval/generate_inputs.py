@@ -4,9 +4,9 @@
 
 import argparse
 import json
-import pathlib
 from configparser import ConfigParser
 from os import path
+from pathlib import Path
 
 from fuzzingbook.GrammarCoverageFuzzer import GrammarCoverageFuzzer
 from fuzzingbook.GrammarMiner import readable
@@ -38,7 +38,7 @@ def trim_grammar(grammar: Grammar, start_symbol=START_SYMBOL) -> Grammar:
     return new_grammar
 
 
-def find_output_directory(output_directory_base: pathlib.Path):
+def find_output_directory(output_directory_base: Path):
     # Find last 'trial-*' folder
     return next(
         sorted(
@@ -74,7 +74,7 @@ def main():
     config = ConfigParser()
     config.read(config_file_path)
 
-    output_directory = pathlib.Path(args.out)
+    output_directory = Path(args.out)
 
     if args.grammar:
         grammar_file = args.grammar

@@ -5,10 +5,10 @@
 import argparse
 import json
 import logging
-import pathlib
 import signal
 from configparser import ConfigParser
 from os import path
+from pathlib import Path
 
 import fuzzingbook.Parser as P
 
@@ -19,7 +19,7 @@ from tracer.gdb_tracer import GDBTracer
 PRECISION_SIZE = 1000
 
 
-def find_output_directory(output_directory_base: pathlib.Path):
+def find_output_directory(output_directory_base: Path):
     # Find last 'trial-*' folder
     return next(
         sorted(
@@ -72,12 +72,12 @@ def main():
     config = ConfigParser()
     config.read(config_file_path)
 
-    output_directory = find_output_directory(pathlib.Path(config["BASIC"]["output_directory"]))
+    output_directory = find_output_directory(Path(config["BASIC"]["output_directory"]))
 
     loglevel = config["LOGS"]["log_level"]
     setup_logging(output_directory=output_directory, loglevel=loglevel)
 
-    eval_directory = pathlib.Path(config["BASIC"]["eval_directory"])
+    eval_directory = Path(config["BASIC"]["eval_directory"])
 
     if args.grammar:
         grammar_file = args.grammar
