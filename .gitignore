@@ -149,3 +149,4 @@ graphify-out/memory/query_*
 docs/reviews/
 
 tmp/
+.DS_Store
