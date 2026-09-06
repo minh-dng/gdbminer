@@ -38,5 +38,9 @@ clang -g -O0 -o example_programs/json/json example_programs/json/json.c
 clang++ -g -O0 -D_GLIBCXX_DEBUG -o example_programs/jsoncpp/jsoncpp example_programs/jsoncpp/json.cpp
 clang -g -O0 -o example_programs/yxml/yxml example_programs/yxml/yxml.c
 clang++ -g -O0 -o example_programs/xmlcpp/xmlcpp example_programs/xmlcpp/xml.cpp
+# calcrs multiplies parsed i64 factors unchecked (calc.rs parse_term); with
+# overflow checks on, generated inputs would panic the target mid-trace, so
+# they are disabled there. jsonrs (tinyjson) parses numbers as f64, where the
+# default overflow checks (on at opt-level=0) cannot fire.
 rustc -g -C opt-level=0 -C target-feature=+crt-static -C overflow-checks=off -o example_programs/calcrs/calcrs example_programs/calcrs/calc.rs
 rustc -g -C opt-level=0 -C target-feature=+crt-static -o example_programs/jsonrs/jsonrs example_programs/jsonrs/json.rs
