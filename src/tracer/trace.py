@@ -74,11 +74,11 @@ def main() -> None:
     setup_logging(output_directory, config["LOGS"]["log_level"])
 
     seed_directory = Path(config["BASIC"]["seed_directory"])
-    list_of_traces = []
-    for filename in sorted(seed_directory.glob("*")):
+    # list_of_traces = []
+    for filename in (p for p in seed_directory.iterdir() if p.is_file()):
         logging.info(f"Start generating trace for {filename}")
         trace = generate_trace(filename, config)
-        list_of_traces.append(trace)
+        # list_of_traces.append(trace)
         trace_file_path = output_directory / f"{filename.name}.trace"
         with trace_file_path.open("w") as trace_file:
             json.dump(trace, trace_file, default=vars)
