@@ -217,11 +217,16 @@
      public static final int DOUBLEBYTESIZE = 8;
 --- a/taints/modules/trace-taint/sources/taintengine/operations/ConcreteOperationFactory.java	2026-09-05 15:45:33
 +++ b/taints/modules/trace-taint/sources/taintengine/operations/ConcreteOperationFactory.java	2026-09-06 14:12:27
-@@ -313,6 +313,7 @@
+@@ -313,6 +313,12 @@
          case FREM:
              return binOperation(info);
  
 +        case FNEG:
++        // CALLBR (LLVM >= 9, asm goto) and FREEZE (LLVM >= 10) were unknown to
++        // the LLVM 4 analyzer; the tracer records both as generic instructions,
++        // so propagate operand taints to the result.
++        case CALLBR:
++        case FREEZE:
          case PTRTOINT:
          case INTTOPTR:
          case SITOFP:
