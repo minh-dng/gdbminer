@@ -7,27 +7,28 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 import signal
 from configparser import ConfigParser
 from pathlib import Path
 
-import fuzzingbook.Parser as P
-
 import cmimid.fuzz as F
-from cmimid import util
 from eval import resolve_grammar_file
+from eval.grammar import accepts
 from tracer.gdb_tracer import GDBTracer
 
-PRECISION_SIZE = 1000
+PRECISION_SIZE = int(os.environ.get("PRECISION_SET_SIZE", "1000"))
 
 
 def find_output_directory(output_directory_base: Path) -> Path:
     # Find last 'trial-*' folder
     return next(
-        sorted(
-            output_directory_base.glob("trial-*"),
-            key=lambda x: int(x.name.split("-")[1]),
-            reverse=True,
+        iter(
+            sorted(
+                output_directory_base.glob("trial-*"),
+                key=lambda x: int(x.name.split("-")[1]),
+                reverse=True,
+            )
         )
     )
 
@@ -108,7 +109,6 @@ def main() -> None:
     # set the timeout handler
     signal.signal(signal.SIGALRM, handler)
 
-    parser = P.IterativeEarleyParser(P.non_canonical(grammar), start_symbol=start)
     parsed_count = 0
     eval_set_len = 0
     for eval_f_name in eval_directory.glob("*"):
@@ -117,10 +117,7 @@ def main() -> None:
             eval_set_len += 1
             try:
                 signal.alarm(10)
-                result = parser.parse(eval_string)
-                if not any(eval_string != util.tree_to_str(tree) for tree in result):
-                    # s = util.tree_to_str(tree)
-                    # if s == eval_string:
+                if accepts(grammar, eval_string, start):
                     parsed_count += 1.0
             except (SyntaxError, TimeoutError):
                 logging.warning(f"Can not parse {eval_string!r}")
@@ -130,7 +127,7 @@ def main() -> None:
     rec = parsed_count / eval_set_len
     result = {"precision": prec, "recall": rec}
 
-    result["f1"] = 2 * ((prec * rec) / (prec + rec))
+    result["f1"] = 2 * ((prec * rec) / (prec + rec)) if prec + rec else 0.0
 
     if "[no_tested_inputs]" in mined:
         result["no_tested_inputs"] = mined["[no_tested_inputs]"]

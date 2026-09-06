@@ -121,9 +121,7 @@ The following files will be stored to the configured output folder:
 To generate inputs from a mined grammar, use:
 
 ```python
-from fuzzingbook.GrammarMiner import readable
-from fuzzingbook.Grammars import START_SYMBOL
-from fuzzingbook.GrammarFuzzer import GrammarFuzzer
+from cmimid.fuzz import LimitFuzzer
 import json
 import pathlib
 
@@ -132,12 +130,10 @@ WORKING_DIRECTORY = pathlib.Path("./output/json/trial-0/")
 with open(WORKING_DIRECTORY / "parsing_g.json", "r") as f:
     grammar_file = json.load(f)
     grammar = grammar_file["[grammar]"]
-    grammar[START_SYMBOL] = [["<START>"]]
-
-    f = GrammarFuzzer(readable(grammar))
+    f = LimitFuzzer(grammar)
 
     for i in range(10):
-        print(f.fuzz())
+        print(f.fuzz(grammar_file["[start]"]))
 ```
 
 ## Calculate precision and recall

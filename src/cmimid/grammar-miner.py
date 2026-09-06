@@ -4,19 +4,13 @@
 # This source code is licensed under The Fuzzing Book License found in the
 # 3rd-party-licenses.txt file in the root directory of this source tree.
 
+import json
+import random
 import sys
-
-import pudb
 
 import cmimid.fuzz as F
 import cmimid.grammartools as G
-from cmimid import util
-
-bp = pudb.set_trace
-import json
-import random
-
-from cmimid import pta
+from cmimid import pta, util
 
 random.seed(0)
 

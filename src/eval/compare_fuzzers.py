@@ -7,26 +7,26 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 from configparser import ConfigParser
 from pathlib import Path
 
-from fuzzingbook.GrammarCoverageFuzzer import GrammarCoverageFuzzer
-from fuzzingbook.GrammarMiner import readable
-from fuzzingbook.MutationFuzzer import MutationFuzzer
-
 from eval import resolve_grammar_file
+from eval.grammar import CoverageFuzzer, MutationFuzzer, trim_grammar
 from tracer.gdb_tracer import GDBTracer
 
-PRECISION_SIZE = 1000
+PRECISION_SIZE = int(os.environ.get("PRECISION_SET_SIZE", "1000"))
 
 
 def find_output_directory(output_directory_base: Path) -> Path:
     # Find last 'trial-*' folder
     return next(
-        sorted(
-            output_directory_base.glob("trial-*"),
-            key=lambda x: int(x.name.split("-")[1]),
-            reverse=True,
+        iter(
+            sorted(
+                output_directory_base.glob("trial-*"),
+                key=lambda x: int(x.name.split("-")[1]),
+                reverse=True,
+            )
         )
     )
 
@@ -94,7 +94,7 @@ def main() -> None:
     grammar = mined["[grammar]"]
     start = mined["[start]"]
 
-    grammar_fuzzer = GrammarCoverageFuzzer(readable(grammar), start_symbol=start)
+    grammar_fuzzer = CoverageFuzzer(trim_grammar(grammar, start))
 
     # fuzzer = F.LimitFuzzer(grammar)
     mutation_accepted_count = 0
@@ -110,7 +110,7 @@ def main() -> None:
             if accepted:
                 mutation_accepted_count += 1.0
 
-            input = grammar_fuzzer.fuzz()
+            input = grammar_fuzzer.fuzz(start)
             accepted = instance.input_accepted(input.encode("utf-8"))
             if accepted:
                 grammar_accepted_count += 1.0
