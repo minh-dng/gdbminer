@@ -71,8 +71,7 @@ def main() -> None:
 
     # Setup logging
     output_directory = create_output_dir(Path(config["BASIC"]["output_directory"]))
-    loglevel = config["LOGS"]["log_level"]
-    setup_logging(output_directory=output_directory, loglevel=loglevel)
+    setup_logging(output_directory, config["LOGS"]["log_level"])
 
     seed_directory = Path(config["BASIC"]["seed_directory"])
     list_of_traces = []
