@@ -40,17 +40,6 @@ def trim_grammar(grammar: Grammar, start_symbol=START_SYMBOL) -> Grammar:
     return new_grammar
 
 
-def find_output_directory(output_directory_base: Path) -> Path:
-    # Find last 'trial-*' folder
-    return next(
-        sorted(
-            output_directory_base.glob("trial-*"),
-            key=lambda x: int(x.name.split("-")[1]),
-            reverse=True,
-        )
-    )
-
-
 def main() -> None:
     # Create a parser
     parser = argparse.ArgumentParser(description="Generates inputs from grammar")
