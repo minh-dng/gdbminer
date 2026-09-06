@@ -20,6 +20,7 @@ from util import find_output_directory
 
 PRECISION_SIZE = int(os.environ.get("PRECISION_SET_SIZE", "1000"))
 
+
 def setup_logging(output_directory: Path, loglevel: str) -> None:
     logger = logging.getLogger()
     formatter = logging.Formatter(
