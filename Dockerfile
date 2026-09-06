@@ -79,7 +79,12 @@ RUN wget -O libxml2-2.12.4.tar.xz https://download.gnome.org/sources/libxml2/2.1
 
 
 COPY    mimid-llvm14.patch /
+# Pin the mimid checkout: mimid-llvm14.patch is written against these exact
+# sources, and a moving master would break the patch non-reproducibly.
+ARG MIMID_COMMIT=9c96909783ba99035372f78d6c52003f7f42b1ec
 RUN git clone --depth 1 --single-branch https://github.com/vrthra/mimid.git /mimid && \
+    git -C /mimid fetch --depth 1 origin "${MIMID_COMMIT}" && \
+    git -C /mimid checkout --detach "${MIMID_COMMIT}" && \
     cd /mimid && tar -xf taints.tar.gz && patch -p1 < /mimid-llvm14.patch && \
     rm -rf .git taints.tar.gz /mimid-llvm14.patch && cd taints && \
     meson build/debug --prefix="$(pwd)/install" && \
