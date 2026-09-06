@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: AGPL-3.0
 
 import argparse
+import itertools
 import json
 import logging
 import time
@@ -12,19 +13,16 @@ from pathlib import Path
 from tracer.gdb_tracer import GDBTracer
 
 
-def uniquify(logfile_path: Path) -> Path:
-    counter = 0
-    while True:
-        new_path = Path(f"{logfile_path}-{counter}")
-        counter += 1
-        if not new_path.exists():
-            return new_path
-
-
-def create_output_directory(output_directory_base: Path) -> Path:
-    output_directory = uniquify(logfile_path=output_directory_base / "trial")
-    output_directory.mkdir(parents=True, exist_ok=True)
-    return output_directory
+def create_output_dir(output_dir_base: Path) -> Path:
+    base = output_dir_base.expanduser()
+    base.mkdir(parents=True, exist_ok=True)
+    for counter in itertools.count():
+        output_directory = base / f"trial-{counter}"
+        try:
+            output_directory.mkdir(parents=True, exist_ok=False)
+            return output_directory
+        except FileExistsError:
+            continue
 
 
 def setup_logging(output_directory: Path, loglevel: str) -> None:
@@ -72,9 +70,7 @@ def main() -> None:
     config.read(config_file_path)
 
     # Setup logging
-    output_directory = create_output_directory(
-        output_directory_base=Path(config["BASIC"]["output_directory"])
-    )
+    output_directory = create_output_dir(Path(config["BASIC"]["output_directory"]))
     loglevel = config["LOGS"]["log_level"]
     setup_logging(output_directory=output_directory, loglevel=loglevel)
 
