@@ -58,19 +58,16 @@ def generate_trace(filename: Path, config: ConfigParser) -> list[GDBTracer.Trace
 
 def main() -> None:
     start_time = time.time()
-    # Create a parser
-    parser = argparse.ArgumentParser(description="Generate traces of a program")
 
-    # Add the arguments
+    # cli
+    parser = argparse.ArgumentParser(description="Generate traces of a program")
     parser.add_argument("--config", required=True, type=str, help="Path to a config file.")
 
-    # Execute the parse_args() methode
     config_file_path = Path(parser.parse_args().config).expanduser()
 
     if not config_file_path.is_file():
         raise Exception(f"Config file at {config_file_path} does not exist")
 
-    # Start ConfigParser for further usage
     config = ConfigParser()
     config.read(config_file_path)
 

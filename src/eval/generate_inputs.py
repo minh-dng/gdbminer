@@ -17,19 +17,14 @@ PRECISION_SIZE = 1000
 
 
 def main() -> None:
-    # Create a parser
+    # cli
     parser = argparse.ArgumentParser(description="Generates inputs from grammar")
 
-    # Add the arguments
     parser.add_argument("--config", required=True, type=str, help="Path to a config file.")
-
     parser.add_argument("--grammar", type=str, help="Path to a grammar file.")
-
     parser.add_argument("out", type=str, help="Path to output folder.")
-
     parser.add_argument("count", type=int, help="Number of files to generate.")
 
-    # Execute the parse_args() methode
     args = parser.parse_args()
     config_file_path = Path(args.config).expanduser()
 
