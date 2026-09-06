@@ -1,6 +1,7 @@
 *
 
 !Dockerfile
+!mimid-llvm14.patch
 !.dockerignore
 !pyproject.toml
 !uv.lock
