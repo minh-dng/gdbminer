@@ -11,6 +11,8 @@
 !setup.cfg
 !fetch_example_programs.sh
 !run_experiment.sh
+!scripts/
+!scripts/**
 !src/
 !src/**
 !example_programs/
