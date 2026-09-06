@@ -17,19 +17,9 @@ import cmimid.fuzz as F
 from cmimid import util
 from eval import resolve_grammar_file
 from tracer.gdb_tracer import GDBTracer
+from util import find_output_directory
 
 PRECISION_SIZE = 1000
-
-
-def find_output_directory(output_directory_base: Path) -> Path:
-    # Find last 'trial-*' folder
-    return next(
-        sorted(
-            output_directory_base.glob("trial-*"),
-            key=lambda x: int(x.name.split("-")[1]),
-            reverse=True,
-        )
-    )
 
 
 def setup_logging(output_directory: Path, loglevel: str) -> None:

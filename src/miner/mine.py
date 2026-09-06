@@ -24,6 +24,7 @@ from miner.token_generalizer import TokenGeneralizer
 
 # If we stick to original mimid structure
 from miner.tree_builder import TreeBuilder
+from util import find_output_directory
 
 
 def setup_logging(output_directory: Path, loglevel: str) -> None:
@@ -43,17 +44,6 @@ def setup_logging(output_directory: Path, loglevel: str) -> None:
     logger.addHandler(stdout_logger)
 
     logging.root.setLevel(loglevel)
-
-
-def find_output_directory(output_directory_base: Path) -> Path:
-    # Find last 'trial-*' folder
-    return next(
-        sorted(
-            output_directory_base.glob("trial-*"),
-            key=lambda x: int(x.name.split("-")[1]),
-            reverse=True,
-        )
-    )
 
 
 def squash_consecutive_conditions(
