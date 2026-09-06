@@ -46,7 +46,7 @@ def main() -> None:
     grammar = trim_grammar(grammar, start)
     fuzzer = CoverageFuzzer(grammar)
 
-    seen = set()
+    seen: set[str] = set()
     i = 0
 
     with GDBTracer.open_sut_instance(config) as instance:
@@ -59,11 +59,10 @@ def main() -> None:
             if input in seen:
                 continue
             seen.add(input)
-            accepted = instance.input_accepted(input.encode("utf-8"))
+            accepted = instance.input_accepted(input.encode())
             if accepted:
                 i += 1
-                with (output_directory / f"input.{i}").open("w") as out_file:
-                    out_file.write(input)
+                (output_directory / f"input.{i}").write_text(input)
 
 
 if __name__ == "__main__":
