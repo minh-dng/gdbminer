@@ -110,6 +110,8 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 COPY    run_experiment.sh .
 RUN     chmod a+x run_experiment.sh
 
+COPY    scripts /scripts
+
 
 # Number of seeds to generate
 ENV     NUMBER_OF_SEEDS=20
