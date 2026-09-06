@@ -1,0 +1,232 @@
+--- a/taints/modules/trace-instr/meson.build	2026-09-05 15:45:33
++++ b/taints/modules/trace-instr/meson.build	2026-09-06 14:12:27
+@@ -1,4 +1,4 @@
+-llvm_dep = dependency('llvm', version : ['>=4.0', '<4.1'], modules : ['core'])
++llvm_dep = dependency('llvm', version : ['>=14.0', '<14.1'], modules : ['core'])
+ 
+ traceinstr_inc = include_directories('include')
+ 
+--- a/taints/modules/trace-instr/sources/traceplugin.cpp	2026-09-05 15:45:33
++++ b/taints/modules/trace-instr/sources/traceplugin.cpp	2026-09-06 14:12:27
+@@ -190,10 +190,10 @@
+      * @param str
+      * @return
+      */
+-    Value* getGlobalString(IRBuilder<>* builder, const std::string& str)
++    Value* getGlobalString(IRBuilder<>* builder, StringRef str)
+     {
+         Value* globstring;
+-        auto itr = globalStrings.find(str);
++        auto itr = globalStrings.find(str.str());
+         if (itr == globalStrings.end())
+         {
+             builderMutex.lock();
+@@ -239,10 +239,10 @@
+         VectorType* vecOperand = cast<llvm::VectorType>(operand->getType());
+         // create a sufficiently large array
+         builderMutex.lock();
+-        auto size = builder->getInt64(vecOperand->getVectorNumElements());
++        auto size = builder->getInt64(vecOperand->getElementCount().getKnownMinValue());
+         auto temp = builder->CreateAlloca(builder->getInt64Ty(), size);
+         builderMutex.unlock();
+-        for (unsigned int x = 0; x < vecOperand->getVectorNumElements(); ++x)
++        for (unsigned int x = 0; x < vecOperand->getElementCount().getKnownMinValue(); ++x)
+         {
+             // extract one value after another from the vector
+             builderMutex.lock();
+@@ -325,7 +325,7 @@
+             builderMutex.unlock();
+             return tmp;
+         }
+-        else if (operand->getType()->getTypeID() == llvm::Type::VectorTyID)
++        else if (operand->getType()->isVectorTy())
+         {
+             return createArrayFromVector(builder, operand);
+         }
+@@ -423,7 +423,7 @@
+             // value length
+             VectorType* vecOperand = cast<llvm::VectorType>(operand->getType());
+             builderMutex.lock();
+-            args.push_back(builder->getInt64(vecOperand->getVectorNumElements()));
++            args.push_back(builder->getInt64(vecOperand->getElementCount().getKnownMinValue()));
+             builderMutex.unlock();
+         }
+         else
+@@ -741,7 +741,7 @@
+                 // called function might be unknown when using casts or indirect calls (through pointer)
+ 
+                 // try harder to find the function name by removing casts and aliases
+-                calledFunctionName = callinst->getCalledValue()->stripPointerCasts()->getName();
++                calledFunctionName = callinst->getCalledOperand()->stripPointerCasts()->getName().str();
+                 if (calledFunctionName.empty())
+                 {
+                     // as a last resort use 'null' for the name
+@@ -922,21 +922,21 @@
+         auto DoubleTy = Type::getDoubleTy(llvm_context);
+ 
+         // ensure that we have all tracer functions available in the llvm module
+-        M.getOrInsertFunction("tracerllvm_argcargv", VoidTy, I64Ty, I8PtrPtrTy, nullptr);
+-        M.getOrInsertFunction("tracerllvm_callOperandInt", VoidTy, I8PtrTy, I64Ty, I8PtrTy, nullptr);
+-        M.getOrInsertFunction("tracerllvm_callOperandFloat", VoidTy, I8PtrTy, FloatTy, I8PtrTy, nullptr);
+-        M.getOrInsertFunction("tracerllvm_callOperandDouble", VoidTy, I8PtrTy, DoubleTy, I8PtrTy, nullptr);
+-        M.getOrInsertFunction("tracerllvm_callOperandString", VoidTy, I8PtrTy, I8PtrTy, I8PtrTy, nullptr);
+-        M.getOrInsertFunction("tracerllvm_callOperandFixedString", VoidTy, I8PtrTy, I8PtrTy, I8PtrTy, I64Ty, nullptr);
+-        M.getOrInsertFunction("tracerllvm_callOperandVector", VoidTy, I8PtrTy, I64PtrTy, I64Ty, I8PtrTy, nullptr);
+-        M.getOrInsertFunction("tracerllvm_callInstruction", VoidTy, I8PtrTy, I8PtrTy, I8PtrTy, I8PtrTy, nullptr);
+-        M.getOrInsertFunction("tracerllvm_instructionHeader", VoidTy, I64Ty, I8PtrTy, I8PtrTy, I8PtrTy, nullptr);
+-        M.getOrInsertFunction("tracerllvm_instructionEnd", VoidTy, nullptr);
+-        M.getOrInsertFunction("tracerllvm_filePosition", VoidTy, I64Ty, nullptr);
+-        M.getOrInsertFunction("tracerllvm_fileRawPrint", VoidTy, I64Ty, nullptr);
+-        M.getOrInsertFunction("tracerllvm_beginTrace", VoidTy, nullptr);
+-        M.getOrInsertFunction("tracerllvm_endTrace", VoidTy, nullptr);
+-        M.getOrInsertFunction("tracerllvm_enterBasicBlock", VoidTy, I64Ty, nullptr);
++        M.getOrInsertFunction("tracerllvm_argcargv", FunctionType::get(VoidTy, {I64Ty, I8PtrPtrTy}, false));
++        M.getOrInsertFunction("tracerllvm_callOperandInt", FunctionType::get(VoidTy, {I8PtrTy, I64Ty, I8PtrTy}, false));
++        M.getOrInsertFunction("tracerllvm_callOperandFloat", FunctionType::get(VoidTy, {I8PtrTy, FloatTy, I8PtrTy}, false));
++        M.getOrInsertFunction("tracerllvm_callOperandDouble", FunctionType::get(VoidTy, {I8PtrTy, DoubleTy, I8PtrTy}, false));
++        M.getOrInsertFunction("tracerllvm_callOperandString", FunctionType::get(VoidTy, {I8PtrTy, I8PtrTy, I8PtrTy}, false));
++        M.getOrInsertFunction("tracerllvm_callOperandFixedString", FunctionType::get(VoidTy, {I8PtrTy, I8PtrTy, I8PtrTy, I64Ty}, false));
++        M.getOrInsertFunction("tracerllvm_callOperandVector", FunctionType::get(VoidTy, {I8PtrTy, I64PtrTy, I64Ty, I8PtrTy}, false));
++        M.getOrInsertFunction("tracerllvm_callInstruction", FunctionType::get(VoidTy, {I8PtrTy, I8PtrTy, I8PtrTy, I8PtrTy}, false));
++        M.getOrInsertFunction("tracerllvm_instructionHeader", FunctionType::get(VoidTy, {I64Ty, I8PtrTy, I8PtrTy, I8PtrTy}, false));
++        M.getOrInsertFunction("tracerllvm_instructionEnd", FunctionType::get(VoidTy, {}, false));
++        M.getOrInsertFunction("tracerllvm_filePosition", FunctionType::get(VoidTy, {I64Ty}, false));
++        M.getOrInsertFunction("tracerllvm_fileRawPrint", FunctionType::get(VoidTy, {I64Ty}, false));
++        M.getOrInsertFunction("tracerllvm_beginTrace", FunctionType::get(VoidTy, {}, false));
++        M.getOrInsertFunction("tracerllvm_endTrace", FunctionType::get(VoidTy, {}, false));
++        M.getOrInsertFunction("tracerllvm_enterBasicBlock", FunctionType::get(VoidTy, {I64Ty}, false));
+ 
+         // read functions to skip
+         std::set<std::string> functionsToSkip;
+@@ -990,7 +990,7 @@
+                 continue;
+             }
+ 
+-            if (functionsToSkip.find(f.getName()) != functionsToSkip.end())
++            if (functionsToSkip.find(f.getName().str()) != functionsToSkip.end())
+             {
+                 continue;
+             }
+--- a/taints/modules/trace-instr/scripts/trace-instr	2026-09-05 15:45:33
++++ b/taints/modules/trace-instr/scripts/trace-instr	2026-09-06 14:12:27
+@@ -30,7 +30,7 @@
+ # build instrumented version
+ "${CLANG}" -g -S -D_FORTIFY_SOURCE=0 -emit-llvm -include "${INCDIR}/traceinstr/wrapper_libc.h" -o "${PROG_SOURCE}.uninstrumented.bc" -x c "${PROG_SOURCE}"
+ 
+-"${LLVM}/opt" -S -instnamer -reg2mem -load "${TRACEPLUGIN}" -traceplugin -exclude_functions "${EXCLUDED_FUNCTIONS}" -disable-verify "${PROG_SOURCE}.uninstrumented.bc" -o  "${PROG_SOURCE}.opt_debug.bc"
++"${LLVM}/opt" -enable-new-pm=0 -S -instnamer -reg2mem -load "${TRACEPLUGIN}" -traceplugin -exclude_functions "${EXCLUDED_FUNCTIONS}" -disable-verify "${PROG_SOURCE}.uninstrumented.bc" -o  "${PROG_SOURCE}.opt_debug.bc"
+ "${LLVM}/opt" -S -strip-debug "${PROG_SOURCE}.opt_debug.bc" -o "${PROG_SOURCE}.debug.bc"
+ 
+ "${CLANG}" -fno-inline -O3 -o "${PROG_SOURCE}.instrumented" "${PROG_SOURCE}.debug.bc" "-L${LIBDIR}" -lwrappermain -lwrapperlibc -lsimpletracer -ljson-c -lm -lz -ldl
+--- a/taints/modules/trace-taint/sources/utils/Opcode.java	2026-09-05 15:45:33
++++ b/taints/modules/trace-taint/sources/utils/Opcode.java	2026-09-06 14:12:27
+@@ -1,6 +1,7 @@
+ package utils;
+ 
+ public enum Opcode {
++    // LLVM 14 instruction numbering (regenerated from llvm/IR/Instruction.def)
+     // Terminator Instructions
+     RETURN,
+     BRANCH,
+@@ -14,6 +15,8 @@
+     CATCHSWITCHINSTRUCTION,
+ 
+     // Standard binary operators
++    CALLBR,
++    FNEG,
+     ADD,
+     FADD,
+     SUB,
+@@ -24,27 +27,27 @@
+     SDIV,
+     FDIV,
+     UREM,
+-    SREM,
+-    FREM,
+ 
+     // logical operators
++    SREM,
++    FREM,
+     SHL,
+     LSHR,
+     ASHR,
+     AND,
+-    OR,
+-    XOR,
+ 
+     // memory instructions
++    OR,
++    XOR,
+     ALLOCA,
+     LOAD,
+     STORE,
+     GETELEMENTPTR,
+     FENCE,
+-    ATOMICCMPXCHG,
+-    ATOMICRMW,
+ 
+     // cast operators
++    ATOMICCMPXCHG,
++    ATOMICRMW,
+     TRUNC,
+     ZEXT,
+     SEXT,
+@@ -58,10 +61,10 @@
+     INTTOPTR,
+     BITCAST,
+     ADDRSPACECAST,
+-    CLEANUPPAD,
+-    CATCHPAD,
+ 
+     // other operators
++    CLEANUPPAD,
++    CATCHPAD,
+     ICMP,
+     FCMP,
+     PHI,
+@@ -76,8 +79,9 @@
+     EXTRACTVALUE,
+     INSERTVALUE,
+     LANDINGPAD,
++    FREEZE,
+ 
+-    // selfmade operators
++    // selfmade operators (llvm-14 numbering: custom ops start at 68)
+     METHODENTRY,
+     FILEPOSITION,
+     __ISO99_FSCANF,
+@@ -86,7 +90,7 @@
+     FREAD,
+     STRTO,
+     REALLOC,
+-    ALLOC, // represents malloc and calloc
++    ALLOC,
+     STRDUP,
+     STRNDUP,
+     __ISOC99_SSCANF,
+--- a/taints/modules/trace-taint/sources/utils/Utils.java	2026-09-05 15:45:33
++++ b/taints/modules/trace-taint/sources/utils/Utils.java	2026-09-06 14:12:27
+@@ -8,7 +8,7 @@
+     public static final String CALLOBJECTSTARTER = "i";
+ 
+     // call instruction opcode
+-    public static final int CALLINSTRUCTIONOPCODE = 54;
++    public static final int CALLINSTRUCTIONOPCODE = Opcode.CALL.ordinal() + 1;
+ 
+     // Byte size of a double
+     public static final int DOUBLEBYTESIZE = 8;
+--- a/taints/modules/trace-taint/sources/taintengine/operations/ConcreteOperationFactory.java	2026-09-05 15:45:33
++++ b/taints/modules/trace-taint/sources/taintengine/operations/ConcreteOperationFactory.java	2026-09-06 14:12:27
+@@ -313,6 +313,12 @@
+         case FREM:
+             return binOperation(info);
+ 
++        case FNEG:
++        // CALLBR (LLVM >= 9, asm goto) and FREEZE (LLVM >= 10) were unknown to
++        // the LLVM 4 analyzer; the tracer records both as generic instructions,
++        // so propagate operand taints to the result.
++        case CALLBR:
++        case FREEZE:
+         case PTRTOINT:
+         case INTTOPTR:
+         case SITOFP:

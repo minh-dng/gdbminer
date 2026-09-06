@@ -43,10 +43,12 @@ def trim_grammar(grammar: Grammar, start_symbol=START_SYMBOL) -> Grammar:
 def find_output_directory(output_directory_base: Path) -> Path:
     # Find last 'trial-*' folder
     return next(
-        sorted(
-            output_directory_base.glob("trial-*"),
-            key=lambda x: int(x.name.split("-")[1]),
-            reverse=True,
+        iter(
+            sorted(
+                output_directory_base.glob("trial-*"),
+                key=lambda x: int(x.name.split("-")[1]),
+                reverse=True,
+            )
         )
     )
 
