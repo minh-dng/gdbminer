@@ -50,10 +50,11 @@ RUN wget --retry-connrefused --waitretry=2 --tries=5 -O gdb-13.2.tar.gz \
 RUN wget -O valgrind-3.23.0.tar.bz2 https://sourceware.org/pub/valgrind/valgrind-3.23.0.tar.bz2 && \
     tar -xf valgrind-3.23.0.tar.bz2 && cd valgrind-3.23.0 && \
     ./configure --enable-only64bit && make -j"$(nproc)" && make install-strip && \
-    find /usr/local/libexec/valgrind -maxdepth 1 -type f -name '*-arm64-linux' \
-        ! -name 'memcheck-arm64-linux' ! -name 'getoff-arm64-linux' -delete && \
-    find /usr/local/libexec/valgrind -maxdepth 1 -type f -name 'vgpreload_*-arm64-linux.so' \
-        ! -name 'vgpreload_core-arm64-linux.so' ! -name 'vgpreload_memcheck-arm64-linux.so' -delete && \
+    vg_arch="$(dpkg --print-architecture)" && \
+    find /usr/local/libexec/valgrind -maxdepth 1 -type f -name "*-${vg_arch}-linux" \
+        ! -name "memcheck-${vg_arch}-linux" ! -name "getoff-${vg_arch}-linux" -delete && \
+    find /usr/local/libexec/valgrind -maxdepth 1 -type f -name "vgpreload_*-${vg_arch}-linux.so" \
+        ! -name "vgpreload_core-${vg_arch}-linux.so" ! -name "vgpreload_memcheck-${vg_arch}-linux.so" -delete && \
     rm -rf /usr/local/include/valgrind /usr/local/lib/valgrind /usr/local/share/doc/valgrind && \
     rm -rf /tmp/build/*
 

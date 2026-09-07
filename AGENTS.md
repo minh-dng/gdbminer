@@ -17,7 +17,7 @@ Develop with Python 3.12 (the supported range is `>=3.12,<3.13`). `mise` is the
 recommended way to pin that runtime and the rest of the dev toolchain; see
 `mise.toml` for the locked set (`python@3.12`, `uv`, `ruff`, `basedpyright`,
 `jq`, `shellcheck`, `shfmt`, `actionlint`). System deps still come from your
-OS (e.g. `gdb`, `valgrind`, `graphviz`/`graphviz-dev`, `pkg-config`, `llvm-8`).
+OS (e.g. `gdb`, `valgrind`, `graphviz`/`graphviz-dev`, `pkg-config`, `llvm-14`).
 
 Preferred (mise):
 

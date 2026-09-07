@@ -5,7 +5,7 @@
 #
 # System deps still come from your OS package manager (not mise-managed):
 #   Debian/Ubuntu: sudo apt install gdb valgrind graphviz graphviz-dev pkg-config \
-#                  libcairo2-dev python3-dev llvm-8 clang
+#                  libcairo2-dev python3-dev llvm-14 clang
 #   macOS:         brew install gdb graphviz pkg-config llvm
 # See README.md “Install local” and Dockerfile for the full list.
 
