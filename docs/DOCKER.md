@@ -45,6 +45,24 @@ uvx --from uv==0.11.1 uv lock --check --python 3.12.11
 The full image build remains the installation check because it also compiles
 mimid's taint instrumentation and the benchmark targets.
 
+### Combined ARM64 verification
+
+After merging #3 and rebasing this toolchain update, the final Linux ARM64
+worktree passed:
+
+- a full image build, including mimid's taint instrumentation;
+- Python 3.12.11, Meson 1.12.0, all nine installed distributions compatible,
+  and imports for the miner, local evaluator, and Clang binding;
+- FNEG and CALLBR LLVM reproducer scripts;
+- a reduced JSON evaluation with one seed and three precision inputs across
+  GDBMiner, Mimid, Arvada, and Treevada.
+
+All four result files were produced. Their small-sample precision values were
+1.0, 1.0, 1.0, and 0.333 respectively; recall was 0.0 for each. These figures
+confirm pipeline execution only and are too small to assess grammar quality.
+The full multi-target benchmark was not run because it can take days. AMD64
+support remains structurally present but was not executed in this pass.
+
 ## Different architectures
 
 The Dockerfile supports `linux/amd64` and `linux/arm64`. Build on a native host where possible:
