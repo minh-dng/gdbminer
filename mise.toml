@@ -12,8 +12,8 @@
 min_version = "2025.6.0"
 
 [tools]
-# Runtime — project requires Python >=3.9,<3.10 (see pyproject.toml / uv.lock)
-python = "3.9"
+# Runtime — project requires Python >=3.12,<3.13 (see pyproject.toml / uv.lock)
+python = "3.12"
 # Fast Python package manager (manages .venv via uv.lock)
 uv = "latest"
 # Lint / format — also available via `uv sync --group dev` but pinned here

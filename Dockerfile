@@ -29,7 +29,7 @@ RUN ln -s /usr/bin/clang-14 /usr/bin/clang && \
     ln -s /usr/bin/clang++-14 /usr/bin/clang++ && \
     ln -s /usr/bin/llvm-config-14 /usr/local/bin/llvm-config
 ENV UV_PROJECT_ENVIRONMENT=/opt/gdbminer-venv \
-    UV_PYTHON=3.9.17 \
+    UV_PYTHON=3.12.11 \
     UV_CACHE_DIR=/root/.cache/uv \
     UV_LINK_MODE=copy \
     PATH="/opt/gdbminer-venv/bin:$PATH"

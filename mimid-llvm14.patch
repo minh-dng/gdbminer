@@ -2,7 +2,7 @@
 +++ b/taints/modules/trace-instr/meson.build	2026-09-06 14:12:27
 @@ -1,4 +1,4 @@
 -llvm_dep = dependency('llvm', version : ['>=4.0', '<4.1'], modules : ['core'])
-+llvm_dep = dependency('llvm', version : ['>=14.0', '<14.1'], modules : ['core'])
++llvm_dep = dependency('llvm', version : ['>=14.0', '<14.1'], modules : ['core'], method : 'config-tool')
  
  traceinstr_inc = include_directories('include')
  

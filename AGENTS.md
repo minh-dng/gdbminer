@@ -13,9 +13,9 @@ Use `example_programs/<target>/` for desktop targets, including `configuration/`
 
 ## Build, Test, and Development Commands
 
-Develop with Python 3.9 (the supported range is `>=3.9,<3.10`). `mise` is the
+Develop with Python 3.12 (the supported range is `>=3.12,<3.13`). `mise` is the
 recommended way to pin that runtime and the rest of the dev toolchain; see
-`mise.toml` for the locked set (`python@3.9`, `uv`, `ruff`, `basedpyright`,
+`mise.toml` for the locked set (`python@3.12`, `uv`, `ruff`, `basedpyright`,
 `jq`, `shellcheck`, `shfmt`, `actionlint`). System deps still come from your
 OS (e.g. `gdb`, `valgrind`, `graphviz`/`graphviz-dev`, `pkg-config`, `llvm-8`).
 

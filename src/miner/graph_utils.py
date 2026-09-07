@@ -3,12 +3,7 @@
 # SPDX-License-Identifier: AGPL-3.0
 
 
-from typing import TypeVar
-
 import networkx as nx
-
-# Generics in Python -> Yeah :)
-T = TypeVar("T")
 
 
 def build_control_flow_graphs_from_traces(
@@ -68,7 +63,7 @@ def build_control_flow_graphs_from_traces(
     return nx.DiGraph(edge_trace), function_entries, function_scopes
 
 
-def pre_dominator_graph(G: nx.DiGraph, entry_point: T) -> nx.DiGraph:
+def pre_dominator_graph[T](G: nx.DiGraph, entry_point: T) -> nx.DiGraph:
     return nx.DiGraph(nx.immediate_dominators(G, entry_point).items()).reverse(copy=False)
 
 
@@ -77,7 +72,7 @@ def post_dominator_graph(G: nx.DiGraph, exit_point):
 
 
 # Def. Back Edge: An edge n → d where d dom n
-def all_back_edges(G: nx.DiGraph, start_node: T) -> set[tuple[T]]:
+def all_back_edges[T](G: nx.DiGraph, start_node: T) -> set[tuple[T]]:
     back_edges: set[tuple[T]] = set()
 
     # First get pre dominator tree
@@ -92,7 +87,7 @@ def all_back_edges(G: nx.DiGraph, start_node: T) -> set[tuple[T]]:
 # The natural loop of a back edge a->b is {b} plus the set of nodes
 # that can reach a without going through b.
 # Two natural loops are either disjoint, identical, or nested
-def natural_loop(G: nx.DiGraph, back_edge: tuple[T]) -> set[T]:
+def natural_loop[T](G: nx.DiGraph, back_edge: tuple[T]) -> set[T]:
     src, dst = back_edge
     nodes_in_loop = {src, dst}
 
@@ -109,7 +104,7 @@ def natural_loop(G: nx.DiGraph, back_edge: tuple[T]) -> set[T]:
 
 
 # Map from entry of loop to a set of all containing loops
-def all_natural_loops(G: nx.DiGraph, start_node: T) -> dict[T, list[set[T]]]:
+def all_natural_loops[T](G: nx.DiGraph, start_node: T) -> dict[T, list[set[T]]]:
     loops: dict[T, list[set[T]]] = {}
     back_edges = all_back_edges(G, start_node)
 
@@ -122,7 +117,7 @@ def all_natural_loops(G: nx.DiGraph, start_node: T) -> dict[T, list[set[T]]]:
     return loops
 
 
-def if_else_scope(G: nx.DiGraph, entry_point: T, conditional_node: T) -> set[T]:
+def if_else_scope[T](G: nx.DiGraph, entry_point: T, conditional_node: T) -> set[T]:
     """Returns a set of all nodes that are within the if/else scope
 
     Args:

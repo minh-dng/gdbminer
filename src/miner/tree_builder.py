@@ -9,16 +9,19 @@ import os
 import urllib.parse
 from dataclasses import dataclass
 from pathlib import Path
+from typing import TypeVar
 
 import networkx as nx
 
 import cmimid.util
 from miner.graph_utils import (
-    T,
     all_natural_loops,
     build_control_flow_graphs_from_traces,
     if_else_scope,
 )
+
+# Node type for graph/annotation use in this module
+T = TypeVar("T")
 
 # If we stick to original mimid structure
 ORIGINAL_MIMID = os.getenv("ORIGINAL_MIMID", "0") == "1"

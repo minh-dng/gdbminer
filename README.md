@@ -6,7 +6,7 @@ above paper when reporting, reproducing or extending the results.
 
 ## Install local
 
-With `mise` (recommended — pins `python@3.9`, `uv`, `ruff`, `basedpyright`, `jq`,
+With `mise` (recommended — pins `python@3.12`, `uv`, `ruff`, `basedpyright`, `jq`,
 `shellcheck`/`shfmt` per `mise.toml`):
 
 ```sh
