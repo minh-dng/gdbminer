@@ -3,9 +3,9 @@
 @@ -1,4 +1,4 @@
 -llvm_dep = dependency('llvm', version : ['>=4.0', '<4.1'], modules : ['core'])
 +llvm_dep = dependency('llvm', version : ['>=14.0', '<14.1'], modules : ['core'], method : 'config-tool')
- 
+
  traceinstr_inc = include_directories('include')
- 
+
 --- a/taints/modules/trace-instr/sources/traceplugin.cpp	2026-09-05 15:45:33
 +++ b/taints/modules/trace-instr/sources/traceplugin.cpp	2026-09-06 14:12:27
 @@ -190,10 +190,10 @@
@@ -54,7 +54,7 @@
          else
 @@ -741,7 +741,7 @@
                  // called function might be unknown when using casts or indirect calls (through pointer)
- 
+
                  // try harder to find the function name by removing casts and aliases
 -                calledFunctionName = callinst->getCalledValue()->stripPointerCasts()->getName();
 +                calledFunctionName = callinst->getCalledOperand()->stripPointerCasts()->getName().str();
@@ -63,7 +63,7 @@
                      // as a last resort use 'null' for the name
 @@ -922,21 +922,21 @@
          auto DoubleTy = Type::getDoubleTy(llvm_context);
- 
+
          // ensure that we have all tracer functions available in the llvm module
 -        M.getOrInsertFunction("tracerllvm_argcargv", VoidTy, I64Ty, I8PtrPtrTy, nullptr);
 -        M.getOrInsertFunction("tracerllvm_callOperandInt", VoidTy, I8PtrTy, I64Ty, I8PtrTy, nullptr);
@@ -95,13 +95,13 @@
 +        M.getOrInsertFunction("tracerllvm_beginTrace", FunctionType::get(VoidTy, {}, false));
 +        M.getOrInsertFunction("tracerllvm_endTrace", FunctionType::get(VoidTy, {}, false));
 +        M.getOrInsertFunction("tracerllvm_enterBasicBlock", FunctionType::get(VoidTy, {I64Ty}, false));
- 
+
          // read functions to skip
          std::set<std::string> functionsToSkip;
 @@ -990,7 +990,7 @@
                  continue;
              }
- 
+
 -            if (functionsToSkip.find(f.getName()) != functionsToSkip.end())
 +            if (functionsToSkip.find(f.getName().str()) != functionsToSkip.end())
              {
@@ -112,17 +112,17 @@
 @@ -30,7 +30,7 @@
  # build instrumented version
  "${CLANG}" -g -S -D_FORTIFY_SOURCE=0 -emit-llvm -include "${INCDIR}/traceinstr/wrapper_libc.h" -o "${PROG_SOURCE}.uninstrumented.bc" -x c "${PROG_SOURCE}"
- 
+
 -"${LLVM}/opt" -S -instnamer -reg2mem -load "${TRACEPLUGIN}" -traceplugin -exclude_functions "${EXCLUDED_FUNCTIONS}" -disable-verify "${PROG_SOURCE}.uninstrumented.bc" -o  "${PROG_SOURCE}.opt_debug.bc"
 +"${LLVM}/opt" -enable-new-pm=0 -S -instnamer -reg2mem -load "${TRACEPLUGIN}" -traceplugin -exclude_functions "${EXCLUDED_FUNCTIONS}" -disable-verify "${PROG_SOURCE}.uninstrumented.bc" -o  "${PROG_SOURCE}.opt_debug.bc"
  "${LLVM}/opt" -S -strip-debug "${PROG_SOURCE}.opt_debug.bc" -o "${PROG_SOURCE}.debug.bc"
- 
+
  "${CLANG}" -fno-inline -O3 -o "${PROG_SOURCE}.instrumented" "${PROG_SOURCE}.debug.bc" "-L${LIBDIR}" -lwrappermain -lwrapperlibc -lsimpletracer -ljson-c -lm -lz -ldl
 --- a/taints/modules/trace-taint/sources/utils/Opcode.java	2026-09-05 15:45:33
 +++ b/taints/modules/trace-taint/sources/utils/Opcode.java	2026-09-06 14:12:27
 @@ -1,6 +1,7 @@
  package utils;
- 
+
  public enum Opcode {
 +    // LLVM 14 instruction numbering (regenerated from llvm/IR/Instruction.def)
      // Terminator Instructions
@@ -130,7 +130,7 @@
      BRANCH,
 @@ -14,6 +15,8 @@
      CATCHSWITCHINSTRUCTION,
- 
+
      // Standard binary operators
 +    CALLBR,
 +    FNEG,
@@ -143,7 +143,7 @@
      UREM,
 -    SREM,
 -    FREM,
- 
+
      // logical operators
 +    SREM,
 +    FREM,
@@ -153,7 +153,7 @@
      AND,
 -    OR,
 -    XOR,
- 
+
      // memory instructions
 +    OR,
 +    XOR,
@@ -164,7 +164,7 @@
      FENCE,
 -    ATOMICCMPXCHG,
 -    ATOMICRMW,
- 
+
      // cast operators
 +    ATOMICCMPXCHG,
 +    ATOMICRMW,
@@ -177,7 +177,7 @@
      ADDRSPACECAST,
 -    CLEANUPPAD,
 -    CATCHPAD,
- 
+
      // other operators
 +    CLEANUPPAD,
 +    CATCHPAD,
@@ -189,7 +189,7 @@
      INSERTVALUE,
      LANDINGPAD,
 +    FREEZE,
- 
+
 -    // selfmade operators
 +    // selfmade operators (llvm-14 numbering: custom ops start at 68)
      METHODENTRY,
@@ -208,11 +208,11 @@
 +++ b/taints/modules/trace-taint/sources/utils/Utils.java	2026-09-06 14:12:27
 @@ -8,7 +8,7 @@
      public static final String CALLOBJECTSTARTER = "i";
- 
+
      // call instruction opcode
 -    public static final int CALLINSTRUCTIONOPCODE = 54;
 +    public static final int CALLINSTRUCTIONOPCODE = Opcode.CALL.ordinal() + 1;
- 
+
      // Byte size of a double
      public static final int DOUBLEBYTESIZE = 8;
 --- a/taints/modules/trace-taint/sources/taintengine/operations/ConcreteOperationFactory.java	2026-09-05 15:45:33
@@ -220,7 +220,7 @@
 @@ -313,6 +313,12 @@
          case FREM:
              return binOperation(info);
- 
+
 +        case FNEG:
 +        // CALLBR (LLVM >= 9, asm goto) and FREEZE (LLVM >= 10) were unknown to
 +        // the LLVM 4 analyzer; the tracer records both as generic instructions,
