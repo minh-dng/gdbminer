@@ -7,7 +7,7 @@ name = "GDBMiner"
 version = "0.0.1"
 description = "Debugger-driven Grammar Mining"
 readme = "README.md"
-requires-python = ">=3.9,<3.10"
+requires-python = ">=3.12,<3.13"
 license = "AGPL-3.0"
 authors = [
     { name = "Max Eisele", email = "MaxCamillo.Eisele@bosch.com" },
@@ -22,7 +22,7 @@ dependencies = [
 experiment = [
     "clang==8.0.1",
     "lark-parser",
-    "meson==0.46.1",
+    "meson>=1.0,<2",
     "tqdm",
 ]
 
@@ -41,7 +41,7 @@ namespaces = true
 [tool.ruff]
 extend-exclude = ["example_programs"]
 line-length = 100
-target-version = "py39"
+target-version = "py312"
 
 [tool.ruff.lint]
 ignore = [
@@ -58,7 +58,7 @@ ignore = [
 
 [tool.basedpyright]
 include = ["src", "analyze_experiments.py"]
-pythonVersion = "3.9"
+pythonVersion = "3.12"
 typeCheckingMode = "off"
 
 [dependency-groups]

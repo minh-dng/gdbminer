@@ -9,10 +9,10 @@ CC="${CC:-gcc}"
 
 cd "$REPO_ROOT"
 
-if [[ -x "$PYTHON" ]] && [[ "$("$PYTHON" -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')" != "3.9" ]]; then
+if [[ -x "$PYTHON" ]] && [[ "$("$PYTHON" -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')" != "3.12" ]]; then
     rm -rf "$VENV"
 fi
-UV_PROJECT_ENVIRONMENT="$VENV" uv sync --frozen --python 3.9.17 --no-dev
+UV_PROJECT_ENVIRONMENT="$VENV" uv sync --frozen --python 3.12.11 --no-dev
 
 rm -rf "$OUT_DIR"
 mkdir -p "$OUT_DIR/bin" "$OUT_DIR/work/seeds" "$OUT_DIR/work/eval" "$OUT_DIR/work/out"
