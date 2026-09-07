@@ -65,6 +65,8 @@ If the test can be verified with a linting / type-hint check then do not test it
 
 Use `conventional-commit` for both commits and PR titles. Do small trackable commits. PRs should state the target/configuration, commands run, output changes, and linked issue; add logs or screenshots only when useful.
 
+Pull requests are documentation tools, as part of my honours thesis submission and write up (where I will gather the information from the PRs). I would like to see decision made regarding the code changes, use diagrams if it helps, engineering decisions carried out, trade-offs and related documentation / inspiration.
+
 ## Configuration & Hardware
 
 Treat configuration files as the execution contract: set binary paths, seed/output directories, GDB instance, watchpoint details, and entry/exit points there. Desktop targets need debug symbols and no compiler optimization; STM32 work requires the documented ST-Link/GDB-server setup.
