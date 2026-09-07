@@ -6,8 +6,6 @@
 
 import sys
 
-import pudb
-
 from cmimid import grammartools
 
 # ulimit -s 100000
@@ -19,8 +17,6 @@ import string
 
 import cmimid.fuzz as F
 from cmimid import util
-
-b = pudb.set_trace
 
 
 def is_nt(token):

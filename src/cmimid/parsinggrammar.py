@@ -22,11 +22,6 @@ def asciimap_to_nt(key):
         return ("", f"<__{orig}__>")
 
 
-import pudb
-
-b = pudb.set_trace
-
-
 def enhance_grammar(g):
     # convert '[__DIGIT__]' to '<__DIGIT__>'
     # convert '[__DIGIT__]+' to '<__DIGIT_s__>'

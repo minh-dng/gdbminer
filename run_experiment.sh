@@ -5,17 +5,19 @@
 # Copyright (c) 2023 Robert Bosch GmbH
 # SPDX-License-Identifier: AGPL-3.0
 
+set -euo pipefail
+
 #Adapt number of seeds to generate in the mimid Makefile
 sed -i "s+./build/ 100+./build/ ${NUMBER_OF_SEEDS}+g" /mimid/Cmimid/Makefile
 
-#Change input generation to GrammarCoverageFuzzer
-sed -i 's+import fuzzingbook.Parser as P+from fuzzingbook.GrammarCoverageFuzzer import GrammarCoverageFuzzer\nfrom fuzzingbook.GrammarMiner import readable\nfrom eval.generate_inputs import trim_grammar+g' /mimid/Cmimid/src/generateinputs.py
-sed -i 's+fuzzer = F.LimitFuzzer(grammar)+fuzzer = GrammarCoverageFuzzer(trim_grammar(readable(grammar), start_symbol=start), start_symbol=start)+g' /mimid/Cmimid/src/generateinputs.py
-sed -i 's+v = fuzzer.fuzz(start)+v = fuzzer.fuzz()+g' /mimid/Cmimid/src/generateinputs.py
+#Use GDBMiner's lightweight coverage fuzzer instead of the full fuzzingbook package
+sed -i 's+import fuzzingbook.Parser as P+from eval.grammar import CoverageFuzzer, trim_grammar+g' /mimid/Cmimid/src/generateinputs.py
+sed -i 's+fuzzer = F.LimitFuzzer(grammar)+fuzzer = CoverageFuzzer(trim_grammar(grammar, start))+g' /mimid/Cmimid/src/generateinputs.py
 
 
 sed -i 's+import fuzzingbook.Parser as P++g' /mimid/Cmimid/src/fuzz.py
-sed -i '14i sys.setrecursionlimit(99000)' /mimid/Cmimid/src/grammar-miner.py
+sed -i '/^import pudb$/d; /pudb\.set_trace/d' /mimid/Cmimid/src/*.py
+sed -i '/^import sys$/a sys.setrecursionlimit(99000)' /mimid/Cmimid/src/grammar-miner.py
 
 cp /example_programs/calc/calc.c /mimid/Cmimid/examples/
 cp /example_programs/calc/calc.grammar /mimid/Cmimid/examples/
@@ -32,7 +34,7 @@ cp /example_programs/yxml/yxml.grammar /mimid/Cmimid/examples/
 # Mimid durations are kept in memory and merged into the .mimid.result JSON
 # below, so no separate *.mimid.execution_duration files are written.
 declare -A MIMID_EXECUTION_DURATIONS
-for target in calc cgi_decode json mjs tiny
+for target in ${MIMID_TARGETS}
 do
     START_TIME=$(date +%s)
     make -C /mimid/Cmimid/ "build/$target.pgrammar"
@@ -42,21 +44,22 @@ do
 done
 
 # Rename the tiny seeds to be consistent
-rename.ul tiny tinyc /mimid/Cmimid/build/tiny*
-MIMID_EXECUTION_DURATIONS[tinyc]="${MIMID_EXECUTION_DURATIONS[tiny]:-}"
-unset 'MIMID_EXECUTION_DURATIONS[tiny]'
+if compgen -G '/mimid/Cmimid/build/tiny*' > /dev/null; then
+    rename.ul tiny tinyc /mimid/Cmimid/build/tiny*
+    MIMID_EXECUTION_DURATIONS[tinyc]="${MIMID_EXECUTION_DURATIONS[tiny]:-}"
+    unset 'MIMID_EXECUTION_DURATIONS[tiny]'
+fi
 
 #Copy Mimid grammars to output folder
 cp /mimid/Cmimid/build/*-parsing.json /output/
 
 export PYTHONPATH=/GDBMiner/src
 
-for target in calc calcrs calccpp cgi_decode json jsonrs jsoncpp yxml xmlcpp mjs tinyc 
+for target in ${TARGETS}
 do
 
-    mkdir "/example_programs/$target/mimid_seeds"
-    mkdir "/example_programs/$target/mimid_eval"
-
+    mkdir -p "/example_programs/$target/mimid_seeds"
+    mkdir -p "/example_programs/$target/mimid_eval"
     if test -f "/mimid/Cmimid/build/$target.input.1"; then
 
         #Copy Seeds from the Mimid run if exists
