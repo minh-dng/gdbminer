@@ -53,7 +53,7 @@ Tracing creates `*.trace`; mining writes `parsing_g.json`. For Docker and differ
 
 ## Coding Style
 
-Preserve existing type hints and logging patterns. Keep target-specific values in INI files rather than hard-coding paths or debugger settings.
+Preserve existing type hints and logging patterns. In `src/` (tracer/miner/eval/cmimid), keep target-specific values in INI files rather than hard-coding paths or debugger settings. That INI-over-hardcode rule applies to GDBMiner program code, not to Dockerfile/infra setup, where `ARG`/`ENV` pins are the mechanism.
 
 ## Testing Guidelines
 

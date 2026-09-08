@@ -13,10 +13,13 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # ---------------------------------------------------------------------------
 # Toolchain: mise manages version-pinned tools for linux/amd64 and linux/arm64
 # (https://mise.jdx.dev, registry: https://mise-versions.jdx.dev).
-# Single source: docker/mise.toml (+ docker/mise.lock), installed below as the
-# global mise config. The aqua backend selects the CPU architecture, so no
-# TARGETARCH switch is needed. Native build dependencies remain on apt or
-# source builds.
+# Single source for mise tools: docker/mise.toml (+ docker/mise.lock),
+# installed below as the global mise config. Python is the exception: it is
+# installed with uv (uv and Python releases are coupled), pinned by
+# ARG PYTHON_VERSION below — the single exact Python pin for the image,
+# manually kept in sync with the root mise.lock. The aqua backend selects the
+# CPU architecture, so no TARGETARCH switch is needed. Native build
+# dependencies remain on apt or source builds.
 # ---------------------------------------------------------------------------
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
@@ -34,6 +37,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 # Pin mise so image rebuilds do not silently change toolchain resolution.
 # The image runs as root because its mise shims and installs live under /root.
 ARG MISE_VERSION=2026.9.1
+# Single exact Python pin for the image (uv-managed, not in docker/mise.toml).
+ARG PYTHON_VERSION=3.12.14
 RUN curl -fsSL https://mise.run | MISE_VERSION=${MISE_VERSION} sh
 # Keep /root/.local/bin in PATH because update-shell changes shell startup files,
 # while Docker RUN commands use non-login shells.
@@ -45,9 +50,9 @@ COPY docker/mise.lock /root/.config/mise/mise.lock
 # uv's --default flag is experimental. If it breaks in a future uv release,
 # put Python back in docker/mise.toml and remove this uv Python installation.
 RUN mise install --locked \
-    && uv python install 3.12.14 --default \
+    && uv python install "${PYTHON_VERSION}" --default \
     && uv python update-shell \
-    && python --version && UV_PYTHON=3.12 uv python find \
+    && uv --version && python --version && UV_PYTHON=3.12 uv python find \
     && java -version && javac -version && cmake --version && ninja --version && jq --version \
     && ln -s "$(mise where java)" /opt/java \
     && /opt/java/bin/java -version && /opt/java/bin/javac -version \
@@ -73,11 +78,13 @@ RUN wget --retry-connrefused --waitretry=2 --tries=5 -O gdb-13.2.tar.gz \
     tar -xf gdb-13.2.tar.gz && cd gdb-13.2 && mkdir build && cd build && \
     ../configure --disable-gdbserver --disable-nls --disable-sim --with-python=no && \
     make -j"$(nproc)" && make install-strip && \
+    gdb --version && \
     rm -rf /tmp/build/*
 
 RUN wget -O valgrind-3.23.0.tar.bz2 https://sourceware.org/pub/valgrind/valgrind-3.23.0.tar.bz2 && \
     tar -xf valgrind-3.23.0.tar.bz2 && cd valgrind-3.23.0 && \
     ./configure --enable-only64bit && make -j"$(nproc)" && make install-strip && \
+    valgrind --version && \
     vg_arch="$(dpkg --print-architecture)" && \
     find /usr/local/libexec/valgrind -maxdepth 1 -type f -name "*-${vg_arch}-linux" \
         ! -name "memcheck-${vg_arch}-linux" ! -name "getoff-${vg_arch}-linux" -delete && \
@@ -94,7 +101,8 @@ RUN mkdir json-c && \
     make -j"$(nproc)" && make install-strip && \
     rm -rf /tmp/build/*
 
-# cmake/ninja/jq/java/python come from mise, which resolves the CPU architecture.
+# cmake/ninja/jq/java come from mise (arch-resolved); uv comes from mise and
+# installs Python (see ARG PYTHON_VERSION above).
 
 # Compile static libxml
 RUN wget -O libxml2-2.12.4.tar.xz https://download.gnome.org/sources/libxml2/2.12/libxml2-2.12.4.tar.xz && \
