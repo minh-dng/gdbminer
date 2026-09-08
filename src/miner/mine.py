@@ -257,8 +257,7 @@ def main() -> None:
     output_directory = find_output_directory(Path(config["BASIC"]["output_directory"]))
     seed_directory = Path(config["BASIC"]["seed_directory"])
 
-    loglevel = config["LOGS"]["log_level"]
-    setup_logging(output_directory=output_directory, loglevel=loglevel)
+    setup_logging(output_directory, config["LOGS"]["log_level"])
 
     trace_files = sorted(output_directory.glob("*.trace"))
     seed_files = sorted(seed_directory.glob("*"))

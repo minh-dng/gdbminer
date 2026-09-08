@@ -19,7 +19,7 @@ def build_control_flow_graphs_from_traces(
     """
     # Create an edge tuple list from trace
     start_node = "0"
-    edge_trace: list[tuple[str]] = []
+    edge_trace: list[tuple[str, str]] = []
     function_entries: dict[str, str] = {}  # from entry address to fname
     function_scopes: dict[str, set[str]] = {}
     function_stack: list[str] = []
@@ -72,8 +72,8 @@ def post_dominator_graph(G: nx.DiGraph, exit_point):
 
 
 # Def. Back Edge: An edge n → d where d dom n
-def all_back_edges[T](G: nx.DiGraph, start_node: T) -> set[tuple[T]]:
-    back_edges: set[tuple[T]] = set()
+def all_back_edges[T](G: nx.DiGraph, start_node: T) -> set[tuple[T, T]]:
+    back_edges: set[tuple[T, T]] = set()
 
     # First get pre dominator tree
     dom_tree = pre_dominator_graph(G, start_node)
@@ -87,7 +87,7 @@ def all_back_edges[T](G: nx.DiGraph, start_node: T) -> set[tuple[T]]:
 # The natural loop of a back edge a->b is {b} plus the set of nodes
 # that can reach a without going through b.
 # Two natural loops are either disjoint, identical, or nested
-def natural_loop[T](G: nx.DiGraph, back_edge: tuple[T]) -> set[T]:
+def natural_loop[T](G: nx.DiGraph, back_edge: tuple[T, T]) -> set[T]:
     src, dst = back_edge
     nodes_in_loop = {src, dst}
 

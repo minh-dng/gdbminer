@@ -49,7 +49,7 @@ class TreeBuilder:
         # Read trace files
         self.traces: list[list[dict]] = []
         for f_name in trace_files:
-            with f_name.open("r") as f:
+            with f_name.open() as f:
                 self.traces.append(json.load(f))
 
         # Read seeds
