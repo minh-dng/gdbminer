@@ -34,6 +34,20 @@ mise run shfmt      # format shell scripts (shfmt -w)
 mise run shfmt:check
 ```
 
+## Git worktrees
+
+To copy your local Docker notes into new worktrees, create
+`docs/DOCKER.local.md` in the primary worktree and install the repository hook
+once from the repository root:
+
+```sh
+git config --local core.hooksPath .githooks
+```
+
+The hook copies the file only when it is missing, so it will not overwrite local
+changes. It runs for normal `git worktree add` commands; with `--no-checkout`,
+it runs when the worktree is checked out later.
+
 ## Config File
 GDBMiner uses config files for passing required options.
 

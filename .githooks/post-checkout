@@ -1,0 +1,12 @@
+#!/bin/sh
+set -eu
+
+source_root=$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")
+source="$source_root/docs/DOCKER.local.md"
+destination="$(git rev-parse --show-toplevel)/docs/DOCKER.local.md"
+
+[ -f "$source" ] || exit 0
+[ -e "$destination" ] && exit 0
+
+mkdir -p "$(dirname "$destination")"
+cp "$source" "$destination"
