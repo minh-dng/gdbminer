@@ -20,3 +20,6 @@ java = "temurin-11.0.32+101"
 cmake = "3.29.0"
 ninja = "1.13.2"
 jq = "1.8.2"
+# Build-only compiler for calcrs and jsonrs. Lazy keeps it out of the earlier
+# toolchain layer; the Dockerfile removes it after compiling the benchmarks.
+rust = { version = "1.85.1", lazy = true }

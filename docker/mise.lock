@@ -60,6 +60,11 @@ checksum = "sha256:5749cbc4e668273514150a80e387a957f933c6ed3f5f11e03fb30955e2bbe
 url = "https://github.com/ninja-build/ninja/releases/download/v1.13.2/ninja-linux.zip"
 url_api = "https://api.github.com/repos/ninja-build/ninja/releases/assets/318865358"
 
+[[tools.rust]]
+version = "1.85.1"
+backend = "core:rust"
+specifiers = ["1.85.1"]
+
 [[tools.uv]]
 version = "0.12.10"
 backend = "aqua:astral-sh/uv"

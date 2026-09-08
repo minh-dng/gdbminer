@@ -79,7 +79,8 @@ RUN wget --retry-connrefused --waitretry=2 --tries=5 -O gdb-13.2.tar.gz \
     gdb --version && \
     rm -rf /tmp/build/*
 
-RUN wget -O valgrind-3.23.0.tar.bz2 https://sourceware.org/pub/valgrind/valgrind-3.23.0.tar.bz2 && \
+RUN wget -O valgrind-3.23.0.tar.bz2 \
+        https://ftp.osuosl.org/pub/blfs/conglomeration/valgrind/valgrind-3.23.0.tar.bz2 && \
     tar -xf valgrind-3.23.0.tar.bz2 && cd valgrind-3.23.0 && \
     ./configure --enable-only64bit && make -j"$(nproc)" && make install-strip && \
     valgrind --version && \
@@ -136,13 +137,10 @@ COPY    src /GDBMiner/src
 COPY    example_programs /example_programs
 
 COPY    fetch_example_programs.sh  .
-ARG RUST_VERSION=1.85.1
-RUN wget -qO /tmp/rustup-init https://sh.rustup.rs && \
-    chmod +x /tmp/rustup-init fetch_example_programs.sh && \
-    /tmp/rustup-init -y --profile minimal --default-toolchain "${RUST_VERSION}" && \
-    PATH="/root/.cargo/bin:$PATH" ./fetch_example_programs.sh && \
-    rm -rf /tmp/rustup-init /root/.cargo /root/.rustup && \
-    sed -i '/\.cargo\/env/d' /root/.profile
+RUN chmod +x fetch_example_programs.sh && \
+    MISE_LOCKED=1 ./fetch_example_programs.sh && \
+    mise uninstall rust && \
+    rm -rf /root/.cargo /root/.rustup
 RUN --mount=type=cache,target=/root/.cache/uv \
         uv sync --project /GDBMiner --frozen --no-dev --extra experiment
 
