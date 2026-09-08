@@ -2,8 +2,8 @@
 # Installed as the global mise config (COPY to /root/.config/mise/config.toml,
 # then `mise install`). Intentionally separate from the repo-root mise.toml:
 # the image needs java/cmake/ninja, which local dev does not (and dev needs
-# ruff/shellcheck/..., which the image does not). Python and jq pins mirror
-# the root mise.lock.
+# ruff/shellcheck/..., which the image does not). The jq pin mirrors the
+# root mise.lock; Python is managed by uv in the Dockerfile.
 # Refresh docker/mise.lock after editing versions with:
 #   mkdir -p /tmp/mise-docker && cp docker/mise.toml /tmp/mise-docker/mise.toml \
 #     && (cd /tmp/mise-docker && MISE_YES=1 mise lock --platform linux-arm64,linux-x64) \
@@ -12,7 +12,7 @@
 min_version = "2025.6.0"
 
 [tools]
-python = "3.12.14"
+uv = "0.12.10"
 java = "temurin-11.0.32+101"
 cmake = "3.29.0"
 ninja = "1.13.2"

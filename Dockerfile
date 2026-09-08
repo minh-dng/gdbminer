@@ -18,8 +18,6 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # TARGETARCH switch is needed. Native build dependencies remain on apt or
 # source builds.
 # ---------------------------------------------------------------------------
-COPY --from=ghcr.io/astral-sh/uv:0.11.1 /uv /uvx /usr/local/bin/
-
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
     rm -f /etc/apt/apt.conf.d/docker-clean \
@@ -37,12 +35,18 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 # The image runs as root because its mise shims and installs live under /root.
 ARG MISE_VERSION=2026.9.1
 RUN curl -fsSL https://mise.run | MISE_VERSION=${MISE_VERSION} sh
+# Keep /root/.local/bin in PATH because update-shell changes shell startup files,
+# while Docker RUN commands use non-login shells.
 ENV PATH="/opt/gdbminer-venv/bin:/root/.local/bin:/root/.local/share/mise/shims:$PATH" \
     MISE_YES=1
 
 COPY docker/mise.toml /root/.config/mise/config.toml
 COPY docker/mise.lock /root/.config/mise/mise.lock
+# uv's --default flag is experimental. If it breaks in a future uv release,
+# put Python back in docker/mise.toml and remove this uv Python installation.
 RUN mise install --locked \
+    && uv python install 3.12.14 --default \
+    && uv python update-shell \
     && python --version && UV_PYTHON=3.12 uv python find \
     && java -version && javac -version && cmake --version && ninja --version && jq --version \
     && ln -s "$(mise where java)" /opt/java \
