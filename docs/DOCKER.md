@@ -16,13 +16,13 @@ Full experiments can run for days. Use a dedicated output directory per trial so
 The image pins mise 2026.9.1 and installs the toolchain from
 `docker/mise.toml` and `docker/mise.lock` with `mise install --locked`.
 
-| Tool | Version | Check |
-| ---- | ------- | ----- |
-| uv | 0.12.10 | `uv --version` |
-| Java | Temurin 11.0.32+101 | `java -version && javac -version` |
-| CMake | 3.29.0 | `cmake --version` |
-| Ninja | 1.13.2 | `ninja --version` |
-| jq | 1.8.2 | `jq --version` |
+| Tool  | Version             | Check                             |
+| ----- | ------------------- | --------------------------------- |
+| uv    | 0.12.10             | `uv --version`                    |
+| Java  | Temurin 11.0.32+101 | `java -version && javac -version` |
+| CMake | 3.29.0              | `cmake --version`                 |
+| Ninja | 1.13.2              | `ninja --version`                 |
+| jq    | 1.8.2               | `jq --version`                    |
 
 Python 3.12.14 is installed separately through uv from `.python-version`.
 This uses uv's experimental `--default` option. If that option breaks, install
@@ -41,32 +41,6 @@ docker run --rm -e NUMBER_OF_SEEDS=1 -e PRECISION_SET_SIZE=3 \
   -v "$(pwd)/output:/output" gdbminer /run_experiment.sh
 ```
 
-## Python 3.12 dependency choices
-
-The Ubuntu 24.04 image uses uv-managed Python 3.12.14 (Dockerfile
-`ARG PYTHON_VERSION`, kept in sync with the root mise lock). The project supports
-Python `>=3.12,<3.13`; local and Docker pins select the same patch release.
-
-The evaluation code uses the local implementation added in #3, so Fuzzing
-Book, ISLa, and Z3 are no longer dependencies. This avoids the unavailable
-Linux ARM64 Z3 wheel rather than maintaining a platform-specific build
-workaround. The lock contains 12 packages for the `experiment` installation.
-
-Meson moves from 0.46.1 to the 1.x series because the old CLI uses
-`collections.MutableSet`, removed in Python 3.10. The LLVM 14 patch explicitly
-selects Meson's `config-tool` dependency method: mimid reads LLVM flags through
-`get_configtool_variable()`, which cannot operate on the CMake dependency that
-modern Meson otherwise discovers first.
-
-Recheck the lock with Docker's uv and Python versions:
-
-```bash
-uvx --from uv==0.12.10 uv lock --check --python 3.12.14
-```
-
-The full image build remains the installation check because it also compiles
-mimid's taint instrumentation and the benchmark targets.
-
 ## Different architectures
 
 The Dockerfile supports `linux/amd64` and `linux/arm64`; mise selects matching
@@ -76,7 +50,7 @@ binaries without a `TARGETARCH` switch. Build on a native host where possible:
 docker build --platform linux/arm64 -t gdbminer:arm64 .
 ```
 
-For a remote Docker daemon, create a context and run the build and experiment there:
+When a remote native host is available, prefer it over architecture emulation. Use the machine-specific context in [`docs/DOCKER.local.md`](DOCKER.local.md) when present. Otherwise, create a context and run the build and experiment there:
 
 ```bash
 docker context create remote --docker "host=ssh://user@host"
