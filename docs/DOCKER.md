@@ -13,40 +13,25 @@ Full experiments can run for days. Use a dedicated output directory per trial so
 
 ## Toolchain management (mise)
 
-The image uses a separate `docker/mise.toml` and `docker/mise.lock` because it
-needs Java, CMake, and Ninja in addition to the local development tools. The
-Dockerfile installs this config globally under `/root/.config/mise`. The uv
-binary itself is pinned there (aqua backend), replacing the previous
-`COPY --from ghcr.io/astral-sh/uv` image. Python is installed with that
-uv binary, pinned by Dockerfile `ARG PYTHON_VERSION`; jq uses the same exact
-version as the root `mise.lock`; the mise binary is also pinned through
-`ARG MISE_VERSION`.
+The image pins mise 2026.9.1 and installs the toolchain from
+`docker/mise.toml` and `docker/mise.lock` with `mise install --locked`.
 
-| Tool | Docker pin | Replaces |
-| ---- | ---------- | -------- |
-| mise | 2026.9.1 | unpinned `curl \| sh` |
-| uv | 0.12.10 | `COPY --from ghcr.io/astral-sh/uv:0.11.1` image |
-| Python | 3.12.14 (`ARG PYTHON_VERSION`, uv-managed) | uv-managed Python 3.12.11 |
-| Java | Temurin 11.0.32+101 | `apt` OpenJDK 11 |
-| CMake | 3.29.0 | architecture-specific 3.29.0-rc2 installer |
-| Ninja | 1.13.2 | `apt` package |
-| jq | 1.8.2 | `apt` package |
+| Tool | Version | Check |
+| ---- | ------- | ----- |
+| uv | 0.12.10 | `uv --version` |
+| Java | Temurin 11.0.32+101 | `java -version && javac -version` |
+| CMake | 3.29.0 | `cmake --version` |
+| Ninja | 1.13.2 | `ninja --version` |
+| jq | 1.8.2 | `jq --version` |
 
-mise selects the correct binaries for `linux/amd64` or `linux/arm64`. The
-build checks uv, Python discovery, the JDK and `$JAVA_HOME` (exposed via an
-`/opt/java` symlink), CMake, Ninja, jq, GDB, and Valgrind.
-Native build dependencies remain installed through apt or built from source.
+Python 3.12.14 is installed separately through uv from `.python-version`.
+This uses uv's experimental `--default` option. If that option breaks, install
+Python through mise again by adding it to `docker/mise.toml` and removing the
+uv Python installation from the Dockerfile. Check it with
+`python --version && UV_PYTHON=3.12 uv python find`.
 
-The root config keeps its broad `python = "3.12"` and `jq = "latest"`
-selectors, while the root lock records exact versions. Docker repeats those
-exact versions (mise tools in `docker/mise.toml`+lock, Python in
-`ARG PYTHON_VERSION`) because image builds must not advance when the root
-selectors are updated; the Docker pins are manually kept in sync with the
-root lock. `UV_PYTHON=3.12` selects the uv-installed interpreter series,
-while `ARG PYTHON_VERSION` remains the single exact Python pin for the image.
-
-The image runs as root because mise shims and installs live under `/root`.
-Changing `USER` or `HOME` would also require moving the mise installation.
+mise selects the correct binaries for `linux/amd64` and `linux/arm64`. Native
+build dependencies remain installed through apt or built from source.
 
 For a quick single-target check, reduce the generated inputs and target list:
 
