@@ -99,9 +99,6 @@ RUN mkdir json-c && \
     make -j"$(nproc)" && make install-strip && \
     rm -rf /tmp/build/*
 
-# cmake/ninja/jq/java come from mise (arch-resolved); uv comes from mise and
-# installs the Python version pinned in .python-version.
-
 # Compile static libxml
 RUN wget -O libxml2-2.12.4.tar.xz https://download.gnome.org/sources/libxml2/2.12/libxml2-2.12.4.tar.xz && \
     tar -xf libxml2-2.12.4.tar.xz && cd libxml2-2.12.4 && mkdir build && cd build && \
