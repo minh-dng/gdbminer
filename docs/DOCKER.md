@@ -50,7 +50,7 @@ binaries without a `TARGETARCH` switch. Build on a native host where possible:
 docker build --platform linux/arm64 -t gdbminer:arm64 .
 ```
 
-When a remote native host is available, prefer it over architecture emulation. Create a context and run the build and experiment there:
+When a remote native host is available, prefer it over architecture emulation. Keep machine-specific context details in an untracked `docs/DOCKER.local.md`; this file is local to each machine. Otherwise, create a context and run the build and experiment there:
 
 ```bash
 docker context create remote --docker "host=ssh://user@host"
