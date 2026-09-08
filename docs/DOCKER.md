@@ -58,4 +58,4 @@ docker --context remote build --platform linux/arm64 -t gdbminer:arm64 .
 docker --context remote run --rm -v "$(pwd)/output:/output" gdbminer:arm64 /run_experiment.sh
 ```
 
-Run these commands from a checkout available to the remote daemon, or publish the image to a registry it can access. The `-v` path is on the remote host, not the local machine. For physical firmware, ensure the container can reach the remote GDB server or the attached USB debugger.
+The Docker CLI sends the local build context to the remote daemon. The `-v` source path is resolved on the remote host, so create the output directory there and use its absolute remote path. For physical firmware, ensure the container can reach the remote GDB server or the attached USB debugger.
