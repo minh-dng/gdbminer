@@ -5,8 +5,8 @@
 # ruff/shellcheck/..., which the image does not). The jq pin mirrors the
 # root mise.lock. Python is intentionally NOT listed here: it is installed
 # with uv in the Dockerfile (uv and Python releases are coupled), pinned by
-# Dockerfile ARG PYTHON_VERSION — the single exact Python pin for the image,
-# manually kept in sync with the root mise.lock. uv itself IS pinned here.
+# the repo-root .python-version, shared with local development. uv itself IS
+# pinned here.
 # Refresh docker/mise.lock after editing versions with:
 #   mkdir -p /tmp/mise-docker && cp docker/mise.toml /tmp/mise-docker/mise.toml \
 #     && (cd /tmp/mise-docker && MISE_YES=1 mise lock --platform linux-arm64,linux-x64) \

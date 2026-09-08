@@ -15,10 +15,9 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # (https://mise.jdx.dev, registry: https://mise-versions.jdx.dev).
 # Single source for mise tools: docker/mise.toml (+ docker/mise.lock),
 # installed below as the global mise config. Python is the exception: it is
-# installed with uv (uv and Python releases are coupled), pinned by
-# ARG PYTHON_VERSION below — the single exact Python pin for the image,
-# manually kept in sync with the root mise.lock. The aqua backend selects the
-# CPU architecture, so no TARGETARCH switch is needed. Native build
+# installed with uv (uv and Python releases are coupled), pinned by the
+# repo-root .python-version shared with local development. The aqua backend
+# selects the CPU architecture, so no TARGETARCH switch is needed. Native build
 # dependencies remain on apt or source builds.
 # ---------------------------------------------------------------------------
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
@@ -37,8 +36,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 # Pin mise so image rebuilds do not silently change toolchain resolution.
 # The image runs as root because its mise shims and installs live under /root.
 ARG MISE_VERSION=2026.9.1
-# Single exact Python pin for the image (uv-managed, not in docker/mise.toml).
-ARG PYTHON_VERSION=3.12.14
 RUN curl -fsSL https://mise.run | MISE_VERSION=${MISE_VERSION} sh
 # Keep /root/.local/bin in PATH because update-shell changes shell startup files,
 # while Docker RUN commands use non-login shells.
@@ -47,10 +44,11 @@ ENV PATH="/opt/gdbminer-venv/bin:/root/.local/bin:/root/.local/share/mise/shims:
 
 COPY docker/mise.toml /root/.config/mise/config.toml
 COPY docker/mise.lock /root/.config/mise/mise.lock
+COPY .python-version /GDBMiner/.python-version
 # uv's --default flag is experimental. If it breaks in a future uv release,
 # put Python back in docker/mise.toml and remove this uv Python installation.
 RUN mise install --locked \
-    && uv python install "${PYTHON_VERSION}" --default \
+    && uv python install "$(cat /GDBMiner/.python-version)" --default \
     && uv python update-shell \
     && uv --version && python --version && UV_PYTHON=3.12 uv python find \
     && java -version && javac -version && cmake --version && ninja --version && jq --version \
@@ -102,7 +100,7 @@ RUN mkdir json-c && \
     rm -rf /tmp/build/*
 
 # cmake/ninja/jq/java come from mise (arch-resolved); uv comes from mise and
-# installs Python (see ARG PYTHON_VERSION above).
+# installs the Python version pinned in .python-version.
 
 # Compile static libxml
 RUN wget -O libxml2-2.12.4.tar.xz https://download.gnome.org/sources/libxml2/2.12/libxml2-2.12.4.tar.xz && \
