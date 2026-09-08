@@ -1,0 +1,63 @@
+name: Docker
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docker-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-evaluate:
+    name: ${{ matrix.architecture }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - architecture: amd64
+            runner: ubuntu-24.04
+          - architecture: arm64
+            runner: ubuntu-24.04-arm
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build image natively
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true
+          platforms: linux/${{ matrix.architecture }}
+          tags: gdbminer:ci
+          cache-from: type=gha,scope=docker-${{ matrix.architecture }}
+          cache-to: type=gha,mode=max,scope=docker-${{ matrix.architecture }}
+
+      - name: Run JSON evaluation
+        run: |
+          mkdir output
+          docker run --rm \
+            --env MIMID_TARGETS=json \
+            --env TARGETS=json \
+            --env NUMBER_OF_SEEDS=3 \
+            --env PRECISION_SET_SIZE=10 \
+            --volume "$PWD/output:/output" \
+            gdbminer:ci /run_experiment.sh
+          test "$(docker run --rm gdbminer:ci dpkg --print-architecture)" = "${{ matrix.architecture }}"
+          jq -e '.precision >= 0 and .recall >= 0' output/json.3.mimid.result
+
+      - name: Upload evaluation results
+        uses: actions/upload-artifact@v4
+        with:
+          name: json-evaluation-${{ matrix.architecture }}
+          path: output/*.result
+          if-no-files-found: error
