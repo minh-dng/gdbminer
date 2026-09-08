@@ -17,7 +17,8 @@ sed -i 's+fuzzer = F.LimitFuzzer(grammar)+fuzzer = CoverageFuzzer(trim_grammar(g
 
 sed -i 's+import fuzzingbook.Parser as P++g' /mimid/Cmimid/src/fuzz.py
 sed -i '/^import pudb$/d; /pudb\.set_trace/d' /mimid/Cmimid/src/*.py
-sed -i '/^import sys$/a sys.setrecursionlimit(99000)' /mimid/Cmimid/src/grammar-miner.py
+sed -i '/^import sys$/a sys.setrecursionlimit(99000)' \
+    /mimid/Cmimid/src/grammar-miner.py /mimid/Cmimid/src/grammar-compact.py
 
 cp /example_programs/calc/calc.c /mimid/Cmimid/examples/
 cp /example_programs/calc/calc.grammar /mimid/Cmimid/examples/
@@ -89,10 +90,12 @@ do
     jq --arg duration "$EXECUTION_DURATION" '.execution_duration = ($duration | tonumber)' "/output/$target.${NUMBER_OF_SEEDS}.gdbminer.result" > tmp.$$.json && mv tmp.$$.json "/output/$target.${NUMBER_OF_SEEDS}.gdbminer.result"
 
 
-    # Calculate Precision recall for CMimid
-    python3 /GDBMiner/src/eval/precision_recall.py --config "/example_programs/$target/configuration/configuration_docker.ini" --grammar "/mimid/Cmimid/build/$target-parsing.json" --out "/output/$target.${NUMBER_OF_SEEDS}.mimid.result"
-    if [[ -f "/output/$target.${NUMBER_OF_SEEDS}.mimid.result" && -n "${MIMID_EXECUTION_DURATIONS[$target]+x}" ]]; then
-        jq --arg duration "${MIMID_EXECUTION_DURATIONS[$target]}" '.execution_duration = ($duration | tonumber)' "/output/$target.${NUMBER_OF_SEEDS}.mimid.result" > tmp.$$.json && mv tmp.$$.json "/output/$target.${NUMBER_OF_SEEDS}.mimid.result"
+    # Calculate precision and recall for CMimid where it supports the target.
+    if [[ -f "/mimid/Cmimid/build/$target-parsing.json" ]]; then
+        python3 /GDBMiner/src/eval/precision_recall.py --config "/example_programs/$target/configuration/configuration_docker.ini" --grammar "/mimid/Cmimid/build/$target-parsing.json" --out "/output/$target.${NUMBER_OF_SEEDS}.mimid.result"
+        if [[ -f "/output/$target.${NUMBER_OF_SEEDS}.mimid.result" && -n "${MIMID_EXECUTION_DURATIONS[$target]+x}" ]]; then
+            jq --arg duration "${MIMID_EXECUTION_DURATIONS[$target]}" '.execution_duration = ($duration | tonumber)' "/output/$target.${NUMBER_OF_SEEDS}.mimid.result" > tmp.$$.json && mv tmp.$$.json "/output/$target.${NUMBER_OF_SEEDS}.mimid.result"
+        fi
     fi
 
     #Run Arvada
