@@ -53,7 +53,10 @@ jobs:
             --volume "$PWD/output:/output" \
             gdbminer:ci /run_experiment.sh
           test "$(docker run --rm gdbminer:ci dpkg --print-architecture)" = "${{ matrix.architecture }}"
-          jq -e '.precision >= 0 and .recall >= 0' output/json.3.mimid.result
+          jq -e '
+            .precision >= 0 and .precision <= 1 and
+            .recall >= 0 and .recall <= 1
+          ' output/json.3.mimid.result
 
       - name: Upload evaluation results
         uses: actions/upload-artifact@v7
