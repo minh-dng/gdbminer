@@ -1,0 +1,25 @@
+# docker/mise.toml — Docker image toolchain pins for mise-managed tools.
+# Installed as the global mise config (COPY to /root/.config/mise/config.toml,
+# then `mise install`). Intentionally separate from the repo-root mise.toml:
+# the image needs java/cmake/ninja, which local dev does not (and dev needs
+# ruff/shellcheck/..., which the image does not). The jq pin mirrors the
+# root mise.lock. Python is intentionally NOT listed here: it is installed
+# with uv in the Dockerfile (uv and Python releases are coupled), pinned by
+# the repo-root .python-version, shared with local development. uv itself IS
+# pinned here.
+# Refresh docker/mise.lock after editing versions with:
+#   mkdir -p /tmp/mise-docker && cp docker/mise.toml /tmp/mise-docker/mise.toml \
+#     && (cd /tmp/mise-docker && MISE_YES=1 mise lock --platform linux-arm64,linux-x64) \
+#     && cp /tmp/mise-docker/mise.lock docker/mise.lock
+
+min_version = "2025.6.0"
+
+[tools]
+uv = "0.12.10"
+java = "temurin-11.0.32+101"
+cmake = "3.29.0"
+ninja = "1.13.2"
+jq = "1.8.2"
+# Build-only compiler for calcrs and jsonrs. Lazy keeps it out of the earlier
+# toolchain layer; the Dockerfile removes it after compiling the benchmarks.
+rust = { version = "1.85.1", lazy = true }

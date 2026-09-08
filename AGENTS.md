@@ -15,17 +15,17 @@ Use `example_programs/<target>/` for desktop targets, including `configuration/`
 
 Develop with Python 3.12 (the supported range is `>=3.12,<3.13`). `mise` is the
 recommended way to pin that runtime and the rest of the dev toolchain; see
-`mise.toml` for the locked set (`python@3.12`, `uv`, `ruff`, `basedpyright`,
-`jq`, `shellcheck`, `shfmt`, `actionlint`). System deps still come from your
-OS (e.g. `gdb`, `valgrind`, `graphviz`/`graphviz-dev`, `pkg-config`, `llvm-14`).
+`mise.toml` for the configured tool set and `mise.lock` for exact resolved
+versions. System deps still come from your OS (e.g. `gdb`, `valgrind`,
+`graphviz`/`graphviz-dev`, `pkg-config`, `llvm-14`).
 
 Preferred (mise):
 
 ```bash
 curl https://mise.run | sh          # once
 mise trust                          # trust mise.toml (once per checkout)
-mise install                        # python + uv + ruff + jq + shellcheck/shfmt
-mise run install:dev                # uv sync --group dev  → .venv
+mise install                        # install the toolchain pinned by mise.lock
+mise run install:dev                # uv sync --frozen --group dev  → .venv
 mise run lint                       # ruff check  (mise-managed, no venv needed)
 mise run fmt:check                  # ruff format --check
 mise run typecheck                  # basedpyright (pipx-managed)
@@ -53,7 +53,7 @@ Tracing creates `*.trace`; mining writes `parsing_g.json`. For Docker and differ
 
 ## Coding Style
 
-Preserve existing type hints and logging patterns. Keep target-specific values in INI files rather than hard-coding paths or debugger settings.
+Preserve existing type hints and logging patterns. In `src/` (tracer/miner/eval/cmimid), keep target-specific values in INI files rather than hard-coding paths or debugger settings. That INI-over-hardcode rule applies to GDBMiner program code, not to Dockerfile/infra setup, where `ARG`/`ENV` pins are the mechanism.
 
 ## Testing Guidelines
 

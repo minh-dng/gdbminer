@@ -1,6 +1,7 @@
 *
 
 !Dockerfile
+!.python-version
 !mimid-llvm14.patch
 !.dockerignore
 !pyproject.toml
@@ -17,6 +18,8 @@
 !src/**
 !example_programs/
 !example_programs/**
+!docker/
+!docker/**
 
 **/.git
 **/.git/**
