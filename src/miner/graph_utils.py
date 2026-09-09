@@ -63,7 +63,7 @@ def build_control_flow_graphs_from_traces(
     return nx.DiGraph(edge_trace), function_entries, function_scopes
 
 
-def pre_dominator_graph(G: nx.DiGraph, entry_point: object) -> nx.DiGraph:
+def pre_dominator_graph[T](G: nx.DiGraph[T], entry_point: T) -> nx.DiGraph[T]:
     return nx.DiGraph(nx.immediate_dominators(G, entry_point).items()).reverse(copy=False)
 
 
