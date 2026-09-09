@@ -58,8 +58,10 @@ ignore = [
 
 [tool.basedpyright]
 include = ["src", "analyze_experiments.py"]
+# Vendored Cmimid baseline — not first-party, kept out of the gate.
+exclude = ["src/cmimid"]
 pythonVersion = "3.12"
-typeCheckingMode = "off"
+typeCheckingMode = "standard"
 
 [dependency-groups]
 dev = [
