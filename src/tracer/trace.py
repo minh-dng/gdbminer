@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: AGPL-3.0
 
 import argparse
+import itertools
 import json
 import logging
 import time
@@ -12,19 +13,16 @@ from pathlib import Path
 from tracer.gdb_tracer import GDBTracer
 
 
-def uniquify(logfile_path: Path) -> Path:
-    counter = 0
-    while True:
-        new_path = Path(f"{logfile_path}-{counter}")
-        counter += 1
-        if not new_path.exists():
-            return new_path
-
-
-def create_output_directory(output_directory_base: Path) -> Path:
-    output_directory = uniquify(logfile_path=output_directory_base / "trial")
-    output_directory.mkdir(parents=True, exist_ok=True)
-    return output_directory
+def create_output_dir(output_dir_base: Path) -> Path:
+    base = output_dir_base.expanduser()
+    base.mkdir(parents=True, exist_ok=True)
+    for counter in itertools.count():
+        output_directory = base / f"trial-{counter}"
+        try:
+            output_directory.mkdir(parents=True, exist_ok=False)
+            return output_directory
+        except FileExistsError:
+            continue
 
 
 def setup_logging(output_directory: Path, loglevel: str) -> None:
@@ -58,35 +56,29 @@ def generate_trace(filename: Path, config: ConfigParser) -> list[GDBTracer.Trace
 
 def main() -> None:
     start_time = time.time()
-    # Create a parser
-    parser = argparse.ArgumentParser(description="Generate traces of a program")
 
-    # Add the arguments
+    # cli
+    parser = argparse.ArgumentParser(description="Generate traces of a program")
     parser.add_argument("--config", required=True, type=str, help="Path to a config file.")
 
-    # Execute the parse_args() methode
     config_file_path = Path(parser.parse_args().config).expanduser()
 
     if not config_file_path.is_file():
         raise Exception(f"Config file at {config_file_path} does not exist")
 
-    # Start ConfigParser for further usage
     config = ConfigParser()
     config.read(config_file_path)
 
     # Setup logging
-    output_directory = create_output_directory(
-        output_directory_base=Path(config["BASIC"]["output_directory"])
-    )
-    loglevel = config["LOGS"]["log_level"]
-    setup_logging(output_directory=output_directory, loglevel=loglevel)
+    output_directory = create_output_dir(Path(config["BASIC"]["output_directory"]))
+    setup_logging(output_directory, config["LOGS"]["log_level"])
 
     seed_directory = Path(config["BASIC"]["seed_directory"])
-    list_of_traces = []
-    for filename in sorted(seed_directory.glob("*")):
+    # list_of_traces = []
+    for filename in (p for p in seed_directory.iterdir() if p.is_file()):
         logging.info(f"Start generating trace for {filename}")
         trace = generate_trace(filename, config)
-        list_of_traces.append(trace)
+        # list_of_traces.append(trace)
         trace_file_path = output_directory / f"{filename.name}.trace"
         with trace_file_path.open("w") as trace_file:
             json.dump(trace, trace_file, default=vars)
