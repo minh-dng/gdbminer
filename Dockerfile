@@ -119,10 +119,14 @@ RUN git clone --depth 1 --single-branch https://github.com/vrthra/mimid.git /mim
     meson build/debug --prefix="$(pwd)/install" && \
     ninja -C build/debug install
 
+# Abort the Cmimid taint recipe on instrumentation failure (issue #18); the stock
+# loop continued and could copy a stale pygmalion.json after an opt segfault.
 RUN sed -i 's+pfuzzer=../../taints+pfuzzer=../taints+g' /mimid/Cmimid/Makefile && \
     sed -i 's+CC=clang-8+CC=clang-14+g' /mimid/Cmimid/Makefile && \
     sed -i "s+/usr/lib/llvm-8/lib/clang/8.0.0/include+$(clang-14 -print-resource-dir)+g" /mimid/Cmimid/Makefile && \
-    sed -i 's+/usr/lib/llvm-8+/usr/lib/llvm-14+g' /mimid/Cmimid/Makefile
+    sed -i 's+/usr/lib/llvm-8+/usr/lib/llvm-14+g' /mimid/Cmimid/Makefile && \
+    python3 -c 'from pathlib import Path; p=Path("/mimid/Cmimid/Makefile"); t=p.read_text(); o="\t  (cd $(pfuzzer) && $(MAKE) build/$*.taint;) ; \\\n"; n="\t  (cd $(pfuzzer) && $(MAKE) build/$*.taint) || exit 1; \\\n"; assert o in t, "taint recipe not found"; p.write_text(t.replace(o, n, 1))' && \
+    grep -F 'build/$*.taint) || exit 1' /mimid/Cmimid/Makefile
 
 
 RUN git clone --branch master --single-branch --depth 1 https://github.com/neil-kulkarni/arvada.git /arvada && \

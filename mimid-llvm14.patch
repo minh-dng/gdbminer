@@ -98,7 +98,19 @@
 
          // read functions to skip
          std::set<std::string> functionsToSkip;
-@@ -990,7 +990,7 @@
+@@ -973,7 +973,10 @@
+         }
+
+         std::mutex builderMutex;
+-        unsigned int concurrentThreadsSupported = ceil(std::thread::hardware_concurrency() * 30);
++        // LLVM Module mutation is not thread-safe. Parallel workers race on
++        // IRBuilder/Module state and intermittently SIGSEGV on linux/amd64
++        // (exit 139). Instrument serially; correctness over occupancy.
++        unsigned int concurrentThreadsSupported = 1;
+         std::cout << "[INFO] number of threads: " << concurrentThreadsSupported << std::endl;
+
+         std::vector<std::vector<Function*>> threadFunctions(concurrentThreadsSupported);
+@@ -990,7 +993,7 @@
                  continue;
              }
 
