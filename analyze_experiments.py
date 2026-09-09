@@ -5,8 +5,12 @@
 import json
 from pathlib import Path
 
-import pandas as pd
-from scipy.stats import mannwhitneyu, tmean, tstd
+import pandas as pd  # pyright: ignore[reportMissingImports]
+from scipy.stats import (  # pyright: ignore[reportMissingImports]
+    mannwhitneyu,
+    tmean,
+    tstd,
+)
 
 # Define the paths and parameters
 targets = [
@@ -32,7 +36,7 @@ data = []
 # Loop through each output folder, target, and miner to load the data
 
 
-def output_folder(i) -> Path:
+def output_folder(i: int) -> Path:
     return Path(f"output_{i}")
 
 

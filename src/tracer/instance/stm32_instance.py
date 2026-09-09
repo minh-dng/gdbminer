@@ -118,7 +118,7 @@ class STM32Instance(SUTInstance):
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.connection.disconnect()
 
-        super().__exit__(exc_tb, exc_val, exc_tb)
+        super().__exit__(exc_type, exc_val, exc_tb)
 
         # Need a short time to wait between GDB and GDB Server shutdown, else we get errors like the following:
         # [!] send_recv send request failed: LIBUSB_ERROR_BUSY

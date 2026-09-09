@@ -18,11 +18,13 @@ class ValgrindInstance(SUTInstance):
     def __init__(self, config: ConfigParser, input_file: Path | str) -> None:
         super().__init__(config)
 
-        self.valgrind_commands = "valgrind --vgdb=yes --vgdb-stop-at=startup --undef-value-errors=no --leak-check=no ".split()
-        self.valgrind_commands.append(self.elf_file)
-
-        # TODO offer different connections
-        self.valgrind_commands.append(str(input_file))
+        self.valgrind_commands = (
+            "valgrind --vgdb=yes --vgdb-stop-at=startup --undef-value-errors=no --leak-check=no ".split()
+            + [
+                self.elf_file,
+                str(input_file),
+            ]
+        )
 
         logging.info(self.valgrind_commands)
 
@@ -78,7 +80,7 @@ class ValgrindInstance(SUTInstance):
         return accepted
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        super().__exit__(exc_tb, exc_val, exc_tb)
+        super().__exit__(exc_type, exc_val, exc_tb)
         # Exit gdb server
         self.valgrind_process.terminate()
         try:

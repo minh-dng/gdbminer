@@ -2,15 +2,22 @@
 # Copyright (c) 2023 Robert Bosch GmbH
 # SPDX-License-Identifier: AGPL-3.0
 
+from __future__ import annotations
+
 import logging
 from configparser import ConfigParser
+from types import TracebackType
+from typing import Self
 
 from pygdbmi import gdbcontroller
 
 
 class SUTInstance:
     def __init__(self, config: ConfigParser) -> None:
-        self.timeout = config["GDB"].getint("timeout")
+        timeout = config["GDB"].getint("timeout")
+        if timeout is None:
+            raise ValueError("Config [GDB] timeout must be set")
+        self.timeout = timeout
         self.elf_file = config["BASIC"]["binary_file"]
         self.gdb_with_args = config["GDB"]["gdb_path"].split(" ")
         self.config = config
@@ -120,7 +127,16 @@ class SUTInstance:
         pass
 
     def input_accepted(self, input: bytes) -> bool: ...
-    def __exit__(self, exc_type, exc_val, exc_tb):
+
+    def __enter__(self) -> Self:
+        return self
+
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
         self.gdb_controller.exit()
 
     def is_stop_message(self, response) -> bool:

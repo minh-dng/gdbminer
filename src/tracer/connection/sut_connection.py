@@ -31,7 +31,7 @@ class SUTConnection:
             connection = SerialConnection(config, self.inputs, self.responses, sut_reset_method)
         else:
             # Here we can add other connection types
-            pass
+            raise ValueError(f"Unsupported connection type: {sut_connection_type}")
 
         connection.daemon = True
         connection.start()

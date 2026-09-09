@@ -9,7 +9,6 @@ import os
 import urllib.parse
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TypeVar
 
 import networkx as nx
 
@@ -20,9 +19,6 @@ from miner.graph_utils import (
     if_else_scope,
 )
 
-# Node type for graph/annotation use in this module
-T = TypeVar("T")
-
 # If we stick to original mimid structure
 ORIGINAL_MIMID = os.getenv("ORIGINAL_MIMID", "0") == "1"
 
@@ -32,11 +28,11 @@ DELAY_WP = os.getenv("DELAY_WP", "0") == "1"
 
 @dataclass
 class PseudoMethodScope:
-    addr: T  # The address where the scope starts
-    scope_addresses: set[T]  # Addresses belonging to the scope
+    addr: str  # The address where the scope starts
+    scope_addresses: set[str]  # Addresses belonging to the scope
     method_stack_len: int  # The length of the method stack
     name: str
-    id: str  # A unique id
+    id: int  # A unique id
 
 
 class TreeBuilder:
@@ -49,7 +45,7 @@ class TreeBuilder:
         # Read trace files
         self.traces: list[list[dict]] = []
         for f_name in trace_files:
-            with f_name.open("r") as f:
+            with f_name.open() as f:
                 self.traces.append(json.load(f))
 
         # Read seeds
@@ -67,7 +63,7 @@ class TreeBuilder:
         logging.info(f"Functions: {' '.join(self.function_entries.values())}")
         logging.info(f"Using original Mimid algo: {ORIGINAL_MIMID}")
         # Find loops in all functions
-        self.loop_scopes: dict[T, list[set[T]]] = {}
+        self.loop_scopes: dict[str, list[set[str]]] = {}
         for entry_addr, fname in self.function_entries.items():
             try:
                 self.loop_scopes.update(all_natural_loops(self.cfg, entry_addr))
@@ -75,7 +71,7 @@ class TreeBuilder:
                 logging.warning(f"Error with function {fname} and entrypoint {entry_addr}")
                 raise
 
-        self.pseudo_method_names: dict[str, str] = {}
+        self.pseudo_method_names: dict[str, int] = {}
 
         self.tree_list: list[dict] = []
 
@@ -86,12 +82,12 @@ class TreeBuilder:
     def add_to_scope_stack(
         self,
         scope_stack: list[PseudoMethodScope],
-        method_map: dict[str, tuple[int, str, list[int]]],
-        addr: T,
-        scope_addresses: set[T],
+        method_map: dict[str, tuple[int, str | None, list[int]]],
+        addr: str,
+        scope_addresses: set[str],
         method_stack_len: int,
         name: str,
-    ):
+    ) -> None:
         # Assert not empty
         assert scope_stack
 
@@ -104,6 +100,7 @@ class TreeBuilder:
         scope_stack.append(stack_entry)
         self.scope_count += 1
 
+    @staticmethod
     def is_conditional_scope(scope_name: str) -> bool:
         return ":if_" in scope_name or ":while_" in scope_name
 
@@ -125,12 +122,13 @@ class TreeBuilder:
         for scope in reversed(scope_stack):
             if not TreeBuilder.is_conditional_scope(scope.name):
                 return scope
+        raise ValueError("No function scope found on the scope stack")
 
     def get_curent_function_name(self, scope_stack: list[PseudoMethodScope]) -> str:
         return self.get_curent_function_scope(scope_stack).name
 
     def function_args_lookahead(
-        self, trace: list[str], current_trace_index: int, current_method_scope: list[T]
+        self, trace: list[dict], current_trace_index: int, current_method_scope: set[str]
     ) -> str:
         # Function arguments can not be retrieved on the entry of a function,
         # but only after the preamble (stack setup, register saving) is finished.
@@ -150,12 +148,12 @@ class TreeBuilder:
 
     # Check in which loop we are by looking
     def loop_lookahead(
-        self, trace: list[str], current_trace_index: int, loop_scopes: list[list[T]]
-    ) -> int:
+        self, trace: list[dict], current_trace_index: int, loop_scopes: list[set[str]]
+    ) -> int | None:
         # Add all loops as candidates
         loop_candidates: set[int] = set(range(len(loop_scopes)))
 
-        all_nodes = set()
+        all_nodes: set[str] = set()
         for loop in loop_scopes:
             all_nodes.update(loop)
 
@@ -185,7 +183,7 @@ class TreeBuilder:
         assert len(trace) > 0
 
         # Map with  m_id, m_name, m_children
-        method_map: dict[str, tuple[int, str, list[int]]] = {"0": (0, None, [])}
+        method_map: dict[str, tuple[int, str | None, list[int]]] = {"0": (0, None, [])}
 
         # List with idx, char, mid
         comparisons: list[tuple[int, str, int]] = []
@@ -278,7 +276,9 @@ class TreeBuilder:
             # Check if node opens a new 'if' scope
             # Thats the case, when node has multiple successors,
             # and all successors stay within the current scope.
-            node_successors = set(self.cfg.successors(addr)) if addr in self.cfg else []
+            node_successors: set[str] = (
+                set(self.cfg.successors(addr)) if addr in self.cfg else set()
+            )
             if len(node_successors) > 1:
                 if node_successors.issubset(
                     scope_stack[-1].scope_addresses
