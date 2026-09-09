@@ -42,6 +42,20 @@ jobs:
           cache-from: type=gha,scope=docker-${{ matrix.architecture }}
           cache-to: type=gha,mode=max,scope=docker-${{ matrix.architecture }}
 
+      - name: Check Cmimid mjs va_list tracking
+        run: |
+          docker run --rm gdbminer:ci bash -euo pipefail -c '
+            sed -i "/^import pudb$/d; /pudb\.set_trace/d" /mimid/Cmimid/src/*.py
+            cd /mimid/Cmimid
+            make build/mjs.c >/tmp/mjs-build.log 2>&1
+            rm -rf /mimid/taints/build/*
+            cp examples/*.h build
+            cp -r build/* /mimid/taints/build/
+            printf "\nreturn\n\r" > /mimid/taints/build/mjs.input
+            make -C /mimid/taints build/mjs.taint
+            test -s /mimid/taints/build/pygmalion.json
+          '
+
       - name: Run JSON evaluation
         run: |
           mkdir output
