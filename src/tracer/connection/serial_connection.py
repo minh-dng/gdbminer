@@ -16,6 +16,8 @@ class SerialConnection(ConnectionBaseClass):
     def connect(self, config):
         port = config["Connection"]["port"]
         baud_rate = config["Connection"].getint("baud_rate")
+        if baud_rate is None:
+            raise ValueError("Config [Connection] baud_rate must be set")
         self.serial = serial.Serial(port, baud_rate)
         time.sleep(1)  # Give a bit time to open connection
         self.serial.reset_input_buffer()
