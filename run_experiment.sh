@@ -34,11 +34,17 @@ cp /example_programs/yxml/yxml.grammar /mimid/Cmimid/examples/
 # Run CMimid on all targets (where it works :/)
 # Mimid durations are kept in memory and merged into the .mimid.result JSON
 # below, so no separate *.mimid.execution_duration files are written.
+# Fail loudly if instrumentation or mining did not produce a parsing grammar;
+# a silent skip would report incomplete Cmimid baselines as success (issue #18).
 declare -A MIMID_EXECUTION_DURATIONS
 for target in ${MIMID_TARGETS}
 do
     START_TIME=$(date +%s)
     make -C /mimid/Cmimid/ "build/$target.pgrammar"
+    if [[ ! -s "/mimid/Cmimid/build/$target-parsing.json" ]]; then
+        echo "error: Cmimid produced no parsing grammar for target '$target'" >&2
+        exit 1
+    fi
     END_TIME=$(date +%s)
     # Calculate the execution duration in seconds
     MIMID_EXECUTION_DURATIONS[$target]=$((END_TIME - START_TIME))
