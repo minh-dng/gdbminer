@@ -9,10 +9,13 @@
 # This source code is licensed under The Fuzzing Book License found in the
 # 3rd-party-licenses.txt file in the root directory of this source tree.
 
+from __future__ import annotations
+
 import copy
 import logging
 import random
 from configparser import ConfigParser
+from typing import Any
 
 import cmimid.fuzz as F
 from cmimid import grammartools, util
@@ -20,6 +23,11 @@ from cmimid.fuzz import ASCII_MAP, CHARACTER_PARENT_MAP
 from miner.active_learning_utils import is_a_replaceable_with_b
 from tracer.gdb_tracer import GDBTracer
 from tracer.instance.sut_instance import SUTInstance
+
+# Nested parse trees as produced by the Mimid fuzzer / util helpers.
+type TreeNode = list[Any]
+# Grammar mapping nonterminals to list of production rules (token sequences).
+type Grammar = dict[str, list[list[str]]]
 
 
 class TokenGeneralizer:
@@ -29,11 +37,13 @@ class TokenGeneralizer:
     def __init__(self, config: ConfigParser) -> None:
         self.config = config
 
-    def is_nt(token):
+    @staticmethod
+    def is_nt(token: str) -> bool:
         return token.startswith("<") and token.endswith(">")
 
-    def generalize_tokens(grammar):
-        g_ = {}
+    @staticmethod
+    def generalize_tokens(grammar: Grammar) -> Grammar:
+        g_: Grammar = {}
         for k in grammar:
             new_rules = []
             for rule in grammar[k]:
@@ -47,7 +57,8 @@ class TokenGeneralizer:
             g_[k] = new_rules
         return g_
 
-    def get_list_of_single_chars(grammar) -> list[tuple[str, int, int, str]]:
+    @staticmethod
+    def get_list_of_single_chars(grammar: Grammar) -> list[tuple[str, int, int, str]]:
         lst = []
         for p, key in enumerate(grammar):
             for rule_index, rule in enumerate(grammar[key]):
@@ -58,19 +69,22 @@ class TokenGeneralizer:
                         lst.append((key, rule_index, token_index, token))
         return lst
 
-    def remove_recursion(d):
-        new_d = {}
-        for k in d:
+    @staticmethod
+    def remove_recursion(d: dict[str, list[str]]) -> dict[str, list[str]]:
+        new_d: dict[str, list[str]] = {}
+        for k, rules in d.items():
             new_rs = []
-            for t in d[k]:
+            for t in rules:
                 if t != k:
                     new_rs.append(t)
             new_d[k] = new_rs
         return new_d
 
-    def fill_tree(tree, parent, gk):
-        filled_tree = []
-        to_fill = [(tree, filled_tree)]
+    @staticmethod
+    def fill_tree(tree: TreeNode, parent: str, gk: str) -> tuple[TreeNode | None, TreeNode]:
+        filled_tree: TreeNode = []
+        to_fill: list[tuple[TreeNode, TreeNode]] = [(tree, filled_tree)]
+        my_node: TreeNode | None = None
         while to_fill:
             (node, filled_node), *to_fill = to_fill
             name, children = node
@@ -96,7 +110,10 @@ class TokenGeneralizer:
                 to_fill = [(c, child_nodes[i]) for i, c in enumerate(children)] + to_fill
         return my_node, filled_tree
 
-    def replaceable_with_kind(stree, orig, parent, gk, instance: SUTInstance):
+    @staticmethod
+    def replaceable_with_kind(
+        stree: TreeNode, orig: str, parent: str, gk: str, instance: SUTInstance
+    ) -> bool:
         my_node, tree0 = TokenGeneralizer.fill_tree(stree, parent, gk)
         # print(json.dumps(tree0, indent=4), file=sys.stderr)
         sval = util.tree_to_str(tree0)
@@ -116,7 +133,8 @@ class TokenGeneralizer:
                     return False
             return True
 
-    def find_max_generalized(tree, kind, gk, instance: SUTInstance):
+    @staticmethod
+    def find_max_generalized(tree: TreeNode, kind: str, gk: str, instance: SUTInstance) -> str:
         if kind not in CHARACTER_PARENT_MAP:
             return kind
         parent = CHARACTER_PARENT_MAP[kind]
@@ -125,14 +143,16 @@ class TokenGeneralizer:
         else:
             return kind
 
-    def do_n(tree, kind, gk, n):
+    @staticmethod
+    def do_n(tree: TreeNode, kind: str, gk: str, n: int) -> tuple[str, list[list[str]]]:
         ret = []
         for i in range(n):
             pval = random.choice(ASCII_MAP[kind])
             ret.append([pval, []])
         return (gk, ret)
 
-    def find_max_widened(tree, kind, gk, instance: SUTInstance):
+    @staticmethod
+    def find_max_widened(tree: TreeNode, kind: str, gk: str, instance: SUTInstance) -> str:
         my_node, tree0 = TokenGeneralizer.fill_tree(tree, kind, gk)
         sval = util.tree_to_str(tree0)
         assert my_node is not None
@@ -152,9 +172,16 @@ class TokenGeneralizer:
         logging.info(f"Found widened {kind}")
         return kind + "+"
 
+    @staticmethod
     def generalize_single_token(
-        grammar, start, key, rule_index, token_index, instance: SUTInstance, blacklist
-    ):
+        grammar: Grammar,
+        start: str,
+        key: str,
+        rule_index: int,
+        token_index: int,
+        instance: SUTInstance,
+        blacklist: list[tuple[str, int, int, str]],
+    ) -> str | None:
         # first we replace the token with a temporary key
         gk = TokenGeneralizer.GK
         # was there a previous widened char? and if ther wase,
@@ -166,7 +193,7 @@ class TokenGeneralizer:
             if last_char in ASCII_MAP and char in ASCII_MAP[last_char]:
                 # we are part of the last.
                 grammar[key][rule_index][token_index] = last_char + "+"
-                return grammar
+                return grammar[key][rule_index][token_index]
 
         g_ = copy.deepcopy(grammar)
         g_[key][rule_index][token_index] = gk
@@ -207,8 +234,9 @@ class TokenGeneralizer:
         # grammar[key][rule_index][token_index] = gen_token
         return gen_token
 
-    def remove_duplicate_repetitions(g):
-        new_g = {}
+    @staticmethod
+    def remove_duplicate_repetitions(g: Grammar) -> Grammar:
+        new_g: Grammar = {}
         for k in g:
             new_rules = []
             for rule in g[k]:
@@ -230,7 +258,7 @@ class TokenGeneralizer:
             new_g[k] = new_rules
         return new_g
 
-    def generalize_tokens_in_grammar(self, grammar, start) -> dict:
+    def generalize_tokens_in_grammar(self, grammar: Grammar, start: str) -> dict:
         # now, what we want to do is first regularize the grammar by splitting each
         # multi-character tokens into single characters.
         generalized_grammar = TokenGeneralizer.generalize_tokens(grammar)
