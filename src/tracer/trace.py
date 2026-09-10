@@ -11,6 +11,7 @@ from configparser import ConfigParser
 from pathlib import Path
 
 from tracer.gdb_tracer import GDBTracer
+from util import setup_logging
 
 
 def create_output_dir(output_dir_base: Path) -> Path:
@@ -23,25 +24,6 @@ def create_output_dir(output_dir_base: Path) -> Path:
             return output_directory
         except FileExistsError:
             continue
-
-
-def setup_logging(output_directory: Path, loglevel: str) -> None:
-    logger = logging.getLogger()
-    formatter = logging.Formatter(
-        "%(asctime)s [%(levelname)s %(filename)s:%(lineno)s %(funcName)s()] %(message)s"
-    )
-
-    file_logger = logging.FileHandler(output_directory / "out.log")
-    file_logger.setLevel(loglevel)
-    file_logger.setFormatter(formatter)
-    logger.addHandler(file_logger)
-
-    stdout_logger = logging.StreamHandler()
-    stdout_logger.setLevel(loglevel)
-    stdout_logger.setFormatter(formatter)
-    logger.addHandler(stdout_logger)
-
-    logging.root.setLevel(loglevel)
 
 
 def generate_trace(filename: Path, config: ConfigParser) -> list[GDBTracer.TraceEntry]:
