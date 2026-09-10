@@ -5,6 +5,7 @@
 
 import logging
 import multiprocessing as mp
+import queue
 from configparser import ConfigParser
 
 from tracer.connection.connection_base_class import ConnectionBaseClass
@@ -45,7 +46,7 @@ class SUTConnection:
             self.inputs.put(fuzz_input)
             try:
                 return self.responses.get(block=True, timeout=self.timeout)
-            except Exception:
+            except queue.Empty:
                 logging.warning("Connection timeout!")
                 # return False
                 self.disconnect()

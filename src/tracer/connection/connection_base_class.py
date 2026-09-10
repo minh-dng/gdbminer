@@ -29,8 +29,8 @@ class ConnectionBaseClass(mp.Process):
     def start(self):
         try:
             self.connect(self.config)
-        except Exception as e:
-            log.warning(e)
+        except Exception:
+            log.exception("Failed to connect to SUT")
 
         super().start()
 
