@@ -2,6 +2,7 @@
 
 import random
 import string
+from collections import deque
 
 type Grammar = dict[str, list[list[str]]]
 type State = tuple[str, tuple[str, ...], int, int]
@@ -108,9 +109,9 @@ class CoverageFuzzer:
             return [token, []]
 
         root = [key, None]
-        queue = [(0, root)]
+        queue = deque([(0, root)])
         while queue:
-            (depth, node), *queue = queue
+            depth, node = queue.popleft()
             if node[1] is not None:
                 continue
             rule = self._choose_rule(node[0], depth, max_depth)
@@ -118,12 +119,12 @@ class CoverageFuzzer:
             queue.extend((depth + 1, child) for child in node[1])
 
         output = []
-        queue = [root]
+        queue = deque([root])
         while queue:
-            node, *queue = queue
+            node = queue.popleft()
             symbol, children = node
             if symbol in self.grammar:
-                queue = children + queue
+                queue.extendleft(reversed(children))
             else:
                 output.append(symbol)
         return "".join(output)

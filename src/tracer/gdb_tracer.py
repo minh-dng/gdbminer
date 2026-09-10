@@ -5,6 +5,7 @@
 import logging
 import re
 import time
+from collections import deque
 from configparser import ConfigParser
 from dataclasses import dataclass
 from pathlib import Path
@@ -178,9 +179,9 @@ class GDBTracer:
 
         run = True
         while run:
-            responses = instance.get_gdb_responses()
+            responses = deque(instance.get_gdb_responses())
             while responses:
-                response = responses.pop(0)
+                response = responses.popleft()
 
                 if instance.is_stack_message(response):
                     # Stacktrace incoming
