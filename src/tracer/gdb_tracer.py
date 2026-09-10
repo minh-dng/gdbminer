@@ -16,7 +16,7 @@ from tracer.instance.valgrind_instance import ValgrindInstance
 
 
 class GDBTracer:
-    @dataclass
+    @dataclass(slots=True)
     class TraceEntry:
         address: str
         function_name: str

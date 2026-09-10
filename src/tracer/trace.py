@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: AGPL-3.0
 
 import argparse
+import dataclasses
 import itertools
 import json
 import logging
@@ -63,7 +64,7 @@ def main() -> None:
         # list_of_traces.append(trace)
         trace_file_path = output_directory / f"{filename.name}.trace"
         with trace_file_path.open("w") as trace_file:
-            json.dump(trace, trace_file, default=vars)
+            json.dump(trace, trace_file, default=dataclasses.asdict)
 
         logging.info(f"Write trace of {filename.name} to {trace_file_path}")
 

@@ -26,7 +26,7 @@ ORIGINAL_MIMID = os.getenv("ORIGINAL_MIMID", "0") == "1"
 DELAY_WP = os.getenv("DELAY_WP", "0") == "1"
 
 
-@dataclass
+@dataclass(slots=True)
 class PseudoMethodScope:
     addr: str  # The address where the scope starts
     scope_addresses: set[str]  # Addresses belonging to the scope
