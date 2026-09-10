@@ -4,7 +4,6 @@
 
 import argparse
 import dataclasses
-import itertools
 import json
 import logging
 import time
@@ -18,13 +17,14 @@ from util import setup_logging
 def create_output_dir(output_dir_base: Path) -> Path:
     base = output_dir_base.expanduser()
     base.mkdir(parents=True, exist_ok=True)
-    for counter in itertools.count():
+    counter = 0
+    while True:
         output_directory = base / f"trial-{counter}"
         try:
             output_directory.mkdir(parents=True, exist_ok=False)
             return output_directory
         except FileExistsError:
-            continue
+            counter += 1
 
 
 def generate_trace(filename: Path, config: ConfigParser) -> list[GDBTracer.TraceEntry]:

@@ -83,7 +83,7 @@ def to_grammar(tree, grammar):
 
 
 def merge_grammar(g1, g2):
-    all_keys = set(list(g1.keys()) + list(g2.keys()))
+    all_keys = set(g1) | set(g2)
     merged = {}
     for k in all_keys:
         alts = list(g1.get(k, []))

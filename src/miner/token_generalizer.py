@@ -185,9 +185,9 @@ class TokenGeneralizer:
         # was there a previous widened char? and if ther wase,
         # do we belong to it?
         char = grammar[key][rule_index][token_index]
-        if token_index > 0 and grammar[key][rule_index][token_index - 1][-1] == "+":
+        if token_index > 0 and grammar[key][rule_index][token_index - 1].endswith("+"):
             # remove the +
-            last_char = grammar[key][rule_index][token_index - 1][0:-1]
+            last_char = grammar[key][rule_index][token_index - 1].removesuffix("+")
             if last_char in ASCII_MAP and char in ASCII_MAP[last_char]:
                 # we are part of the last.
                 grammar[key][rule_index][token_index] = last_char + "+"
@@ -242,7 +242,7 @@ class TokenGeneralizer:
                 new_rule = []
                 last = -1
                 for i, t in enumerate(rule):
-                    if last >= 0 and len(t) > 0 and t[-1] == "+" and t == rule[last]:
+                    if last >= 0 and t.endswith("+") and t == rule[last]:
                         continue
                     else:
                         last = i

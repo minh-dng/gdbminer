@@ -98,9 +98,10 @@ class CoverageFuzzer:
         def token_node(token: str):
             if token in ASCII_MAP:
                 return [random.choice(ASCII_MAP[token]), []]
-            if token.endswith("+") and token[:-1] in ASCII_MAP:
+            if token.endswith("+") and token.removesuffix("+") in ASCII_MAP:
+                base = token.removesuffix("+")
                 length = random.randrange(10) + 1
-                chars = [random.choice(ASCII_MAP[token[:-1]]) for _ in range(length)]
+                chars = [random.choice(ASCII_MAP[base]) for _ in range(length)]
                 return ["".join(chars), []]
             if token in self.grammar:
                 return [token, None]
