@@ -7,6 +7,7 @@ import subprocess
 import time
 from configparser import ConfigParser
 from pathlib import Path
+from typing import override
 
 from tracer.connection.sut_connection import SUTConnection
 from tracer.instance.sut_instance import SUTInstance
@@ -21,6 +22,7 @@ class MSP430Instance(SUTInstance):
         self.watchpoint_count = config.getint("GDB", "watchpoint_count")
         self.input_file = Path(input_file)
 
+    @override
     def __enter__(self):
         # Start gdb server in subprocess
         self.gdb_server = subprocess.Popen(self.gdb_server_path_with_args)
@@ -62,17 +64,20 @@ class MSP430Instance(SUTInstance):
         # wait till something happened
         self.wait_for_any_gdb_response()
 
+    @override
     def send_input(self) -> None:
         with self.input_file.open("rb") as f:
             input = f.read()
         self.connection.send_input(input)
 
+    @override
     def input_accepted(self, input: bytes) -> bool:
         self.number_of_tested_inputs += 1
         accepted = self.connection.input_accepted(input)
         logging.debug(f"Test {input} : {accepted=}")
         return accepted
 
+    @override
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.connection.disconnect()
 

@@ -7,6 +7,7 @@ import subprocess
 import time
 from configparser import ConfigParser
 from pathlib import Path
+from typing import override
 
 from tracer.connection.sut_connection import SUTConnection
 from tracer.instance.sut_instance import SUTInstance
@@ -22,6 +23,7 @@ class STM32Instance(SUTInstance):
         self.dwt_function_reg = config["GDB"]["dwt_function_reg"]
         self.input_file = Path(input_file)
 
+    @override
     def __enter__(self):
         # Start gdb server in subprocess
         self.gdb_server = subprocess.Popen(self.gdb_server_path_with_args)
@@ -52,6 +54,7 @@ class STM32Instance(SUTInstance):
     def init_sut_connection(self):
         return SUTConnection(self.config, self.reset)
 
+    @override
     def step_instruction(self):
         # Since Watchpoints don't trigger in single stepping
         # on STM32 we manually ready their registers
@@ -67,6 +70,7 @@ class STM32Instance(SUTInstance):
             f"-data-read-memory {self.dwt_function_reg} t 4 {self.watchpoint_count} 4"
         )
 
+    @override
     def get_gdb_responses(self) -> list[dict]:
         responses = super().get_gdb_responses()
 
@@ -102,17 +106,20 @@ class STM32Instance(SUTInstance):
         self.wait_for_any_gdb_response()
         time.sleep(1)
 
+    @override
     def send_input(self) -> None:
         with self.input_file.open("rb") as f:
             input = f.read()
         self.connection.send_input(input)
 
+    @override
     def input_accepted(self, input: bytes) -> bool:
         self.number_of_tested_inputs += 1
         accepted = self.connection.input_accepted(input)
         logging.debug(f"Test {input} : {accepted=}")
         return accepted
 
+    @override
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.connection.disconnect()
 

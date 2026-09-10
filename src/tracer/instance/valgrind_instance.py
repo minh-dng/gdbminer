@@ -8,6 +8,7 @@ import tempfile
 import time
 from configparser import ConfigParser
 from pathlib import Path
+from typing import override
 
 from tracer.instance.sut_instance import SUTInstance
 
@@ -26,6 +27,7 @@ class ValgrindInstance(SUTInstance):
 
         logging.info(self.valgrind_commands)
 
+    @override
     def __enter__(self):
         # Start valgrind in subprocess
         self.valgrind_process = subprocess.Popen(self.valgrind_commands)
@@ -50,6 +52,7 @@ class ValgrindInstance(SUTInstance):
 
         return self
 
+    @override
     def input_accepted(self, input: bytes) -> bool:
         self.number_of_tested_inputs += 1
         # We do not need to fire a valgrind session for checking
@@ -77,6 +80,7 @@ class ValgrindInstance(SUTInstance):
             logging.debug(f"Test {input} : {accepted=}")
         return accepted
 
+    @override
     def __exit__(self, exc_type, exc_val, exc_tb):
         super().__exit__(exc_type, exc_val, exc_tb)
         # Exit gdb server

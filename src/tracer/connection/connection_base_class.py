@@ -7,6 +7,7 @@ import logging as log
 import multiprocessing as mp
 from abc import abstractmethod
 from configparser import ConfigParser
+from typing import override
 
 
 class ConnectionBaseClass(mp.Process):
@@ -24,6 +25,7 @@ class ConnectionBaseClass(mp.Process):
         self.config = config
         self.running = True
 
+    @override
     def start(self):
         try:
             self.connect(self.config)
@@ -34,6 +36,7 @@ class ConnectionBaseClass(mp.Process):
 
     def connect(self, config: ConfigParser): ...
 
+    @override
     def run(self):
         while self.running:
             self.wait_for_input_request()
@@ -61,6 +64,7 @@ class ConnectionBaseClass(mp.Process):
         Example: Close TCP socket.
         """
 
+    @override
     def terminate(self):
         self.running = False
         self.disconnect()
