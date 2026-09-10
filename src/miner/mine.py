@@ -268,9 +268,6 @@ def main() -> None:
     with (output_directory / "loop_trees.json").open("w") as f:
         json.dump(trees, f)
 
-    with (output_directory / "loop_trees.json").open("r") as f:
-        trees = json.load(f)
-
     # for entry in trees:
     #    entry['tree'] = move_subtree_to_single_function_call(entry['tree'])
 
