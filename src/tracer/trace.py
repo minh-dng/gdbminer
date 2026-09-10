@@ -63,7 +63,7 @@ def main() -> None:
         trace = generate_trace(filename, config)
         # list_of_traces.append(trace)
         trace_file_path = output_directory / f"{filename.name}.trace"
-        with trace_file_path.open("w") as trace_file:
+        with trace_file_path.open("w", encoding="utf-8") as trace_file:
             json.dump(trace, trace_file, default=dataclasses.asdict)
 
         logging.info(f"Write trace of {filename.name} to {trace_file_path}")

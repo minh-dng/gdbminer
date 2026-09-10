@@ -39,11 +39,13 @@ where = ["src"]
 namespaces = true
 
 [tool.ruff]
-extend-exclude = ["example_programs"]
+extend-exclude = ["example_programs", "src/cmimid"]
+force-exclude = true
 line-length = 100
 target-version = "py312"
 
 [tool.ruff.lint]
+extend-select = ["PTH123"]
 ignore = [
     "LOG015",
     "TRY002",

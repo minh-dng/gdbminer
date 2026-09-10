@@ -49,7 +49,7 @@ def main() -> None:
 
     grammar_file = resolve_grammar_file(args.grammar, output_directory)
 
-    with grammar_file.open() as f:
+    with grammar_file.open(encoding="utf-8") as f:
         mined = json.load(f)
     grammar = mined["[grammar]"]
     start = mined["[start]"]
@@ -78,7 +78,7 @@ def main() -> None:
     parsed_count = 0
     eval_set_len = 0
     for eval_f_name in eval_directory.glob("*"):
-        with eval_f_name.open() as eval_file:
+        with eval_f_name.open(encoding="utf-8") as eval_file:
             eval_string = eval_file.read()
             eval_set_len += 1
             try:
@@ -101,7 +101,7 @@ def main() -> None:
     logging.info(result)
 
     if args.out:
-        with Path(args.out).open("w") as f:
+        with Path(args.out).open("w", encoding="utf-8") as f:
             json.dump(result, f)
 
 

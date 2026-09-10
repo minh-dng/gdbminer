@@ -37,7 +37,7 @@ def main() -> None:
 
     grammar_file = resolve_grammar_file(args.grammar, output_directory)
 
-    with grammar_file.open() as f:
+    with grammar_file.open(encoding="utf-8") as f:
         mined = json.load(f)
     grammar = mined["[grammar]"]
     start = mined["[start]"]
@@ -60,7 +60,7 @@ def main() -> None:
             accepted = instance.input_accepted(input.encode())
             if accepted:
                 i += 1
-                (output_directory / f"input.{i}").write_text(input)
+                (output_directory / f"input.{i}").write_text(input, encoding="utf-8")
 
 
 if __name__ == "__main__":

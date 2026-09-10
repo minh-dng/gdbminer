@@ -246,7 +246,7 @@ def main() -> None:
 
     mined_trees = miner(builder.get_tree_list())
 
-    with (output_directory / "trees.json").open("w") as f:
+    with (output_directory / "trees.json").open("w", encoding="utf-8") as f:
         json.dump(mined_trees, f)
 
     # Squashing consecutive if conditions
@@ -259,13 +259,13 @@ def main() -> None:
     method_generalizer = MethodGeneralizer(config)
     trees = method_generalizer.generalize_method_trees(mined_trees)
 
-    with (output_directory / "method_trees.json").open("w") as f:
+    with (output_directory / "method_trees.json").open("w", encoding="utf-8") as f:
         json.dump(trees, f)
 
     loop_generalizer = LoopGeneralizer(config)
     trees = loop_generalizer.generalize_loop_trees(trees)
 
-    with (output_directory / "loop_trees.json").open("w") as f:
+    with (output_directory / "loop_trees.json").open("w", encoding="utf-8") as f:
         json.dump(trees, f)
 
     # for entry in trees:
@@ -292,7 +292,7 @@ def main() -> None:
     g = G.grammar_gc(g, start_symbol)  # garbage collect
 
     grammar_map = {"[start]": start_symbol, "[grammar]": g, "[command]": cmd}
-    with (output_directory / "mined_g.json").open("w") as f:
+    with (output_directory / "mined_g.json").open("w", encoding="utf-8") as f:
         json.dump(grammar_map, f, indent=4)
 
     token_generalizer = TokenGeneralizer(config)
@@ -308,7 +308,7 @@ def main() -> None:
         + token_generalizer.number_of_tested_inputs
     )
 
-    with (output_directory / "parsing_g.json").open("w") as f:
+    with (output_directory / "parsing_g.json").open("w", encoding="utf-8") as f:
         json.dump(
             {
                 "[start]": start_symbol,

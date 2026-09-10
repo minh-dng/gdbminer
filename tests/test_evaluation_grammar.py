@@ -10,7 +10,7 @@ class EvaluationGrammarTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         grammar_file = Path(__file__).parents[1] / "example_programs/calc/calc.grammar"
-        cls.grammar_file = json.loads(grammar_file.read_text())
+        cls.grammar_file = json.loads(grammar_file.read_text(encoding="utf-8"))
 
     def test_earley_recognizer_handles_left_recursion(self):
         grammar = self.grammar_file["[grammar]"]

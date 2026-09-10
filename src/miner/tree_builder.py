@@ -44,7 +44,7 @@ class TreeBuilder:
         # Read trace files
         self.traces: list[list[dict]] = []
         for f_name in trace_files:
-            with f_name.open() as f:
+            with f_name.open(encoding="utf-8") as f:
                 self.traces.append(json.load(f))
 
         # Read seeds
@@ -334,5 +334,5 @@ class TreeBuilder:
         return self.tree_list
 
     def dump_to_file(self, filename: Path) -> None:
-        with filename.open("w") as f:
+        with filename.open("w", encoding="utf-8") as f:
             json.dump(self.tree_list, f)
