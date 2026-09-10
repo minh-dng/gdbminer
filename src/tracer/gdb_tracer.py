@@ -2,11 +2,10 @@
 # Copyright (c) 2023 Robert Bosch GmbH
 # SPDX-License-Identifier: AGPL-3.0
 
-from __future__ import annotations
-
 import logging
 import re
 import time
+from collections import deque
 from configparser import ConfigParser
 from dataclasses import dataclass
 from pathlib import Path
@@ -18,7 +17,7 @@ from tracer.instance.valgrind_instance import ValgrindInstance
 
 
 class GDBTracer:
-    @dataclass
+    @dataclass(slots=True)
     class TraceEntry:
         address: str
         function_name: str
@@ -79,14 +78,15 @@ class GDBTracer:
 
     @staticmethod
     def open_sut_instance(config: ConfigParser, input_file: Path | str = "") -> SUTInstance:
-        instance = config["GDB"]["instance"]
-        if instance == "valgrind":
-            return ValgrindInstance(config, input_file)
-        elif instance == "stm32":
-            return STM32Instance(config, input_file)
-        elif instance == "msp430":
-            return MSP430Instance(config, input_file)
-        raise ValueError(f"Unknown GDB instance type: {instance}")
+        match config["GDB"]["instance"]:
+            case "valgrind":
+                return ValgrindInstance(config, input_file)
+            case "stm32":
+                return STM32Instance(config, input_file)
+            case "msp430":
+                return MSP430Instance(config, input_file)
+            case unknown:
+                raise ValueError(f"Unknown GDB instance type: {unknown}")
 
     @staticmethod
     def merge_traces(list1: list[TraceEntry], list2: list[TraceEntry]) -> list[TraceEntry]:
@@ -179,9 +179,9 @@ class GDBTracer:
 
         run = True
         while run:
-            responses = instance.get_gdb_responses()
+            responses = deque(instance.get_gdb_responses())
             while responses:
-                response = responses.pop(0)
+                response = responses.popleft()
 
                 if instance.is_stack_message(response):
                     # Stacktrace incoming

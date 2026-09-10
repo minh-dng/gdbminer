@@ -9,8 +9,6 @@
 # This source code is licensed under The Fuzzing Book License found in the
 # 3rd-party-licenses.txt file in the root directory of this source tree.
 
-from __future__ import annotations
-
 import copy
 import logging
 import random
@@ -116,7 +114,6 @@ class TokenGeneralizer:
     ) -> bool:
         my_node, tree0 = TokenGeneralizer.fill_tree(stree, parent, gk)
         # print(json.dumps(tree0, indent=4), file=sys.stderr)
-        sval = util.tree_to_str(tree0)
         assert my_node is not None
         a1 = my_node, "", tree0
         if parent == orig:
@@ -154,7 +151,6 @@ class TokenGeneralizer:
     @staticmethod
     def find_max_widened(tree: TreeNode, kind: str, gk: str, instance: SUTInstance) -> str:
         my_node, tree0 = TokenGeneralizer.fill_tree(tree, kind, gk)
-        sval = util.tree_to_str(tree0)
         assert my_node is not None
         a1 = my_node, "", tree0
 
@@ -187,9 +183,9 @@ class TokenGeneralizer:
         # was there a previous widened char? and if ther wase,
         # do we belong to it?
         char = grammar[key][rule_index][token_index]
-        if token_index > 0 and grammar[key][rule_index][token_index - 1][-1] == "+":
+        if token_index > 0 and grammar[key][rule_index][token_index - 1].endswith("+"):
             # remove the +
-            last_char = grammar[key][rule_index][token_index - 1][0:-1]
+            last_char = grammar[key][rule_index][token_index - 1].removesuffix("+")
             if last_char in ASCII_MAP and char in ASCII_MAP[last_char]:
                 # we are part of the last.
                 grammar[key][rule_index][token_index] = last_char + "+"
@@ -244,7 +240,7 @@ class TokenGeneralizer:
                 new_rule = []
                 last = -1
                 for i, t in enumerate(rule):
-                    if last >= 0 and len(t) > 0 and t[-1] == "+" and t == rule[last]:
+                    if last >= 0 and t.endswith("+") and t == rule[last]:
                         continue
                     else:
                         last = i

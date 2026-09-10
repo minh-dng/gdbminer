@@ -48,7 +48,7 @@ for target in targets:
         for miner in miners:
             file_path = output_folder(i) / f"{target}.20.{miner}.result"
             if file_path.exists():
-                with open(file_path, "r") as file:
+                with file_path.open(encoding="utf-8") as file:
                     result = json.load(file)
                     precision = result.get("precision")
                     recall = result.get("recall")
@@ -77,7 +77,7 @@ for target in targets:
             # Get average length of seeds
             for seed_file in seeds_folder.iterdir():
                 if seed_file.is_file():
-                    with open(seed_file, "r") as file:
+                    with seed_file.open(encoding="utf-8") as file:
                         seed = file.read()
                         seed_lengths[target].append(len(seed))
 

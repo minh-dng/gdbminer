@@ -2,9 +2,10 @@
 
 import random
 import string
+from collections import deque
 
-Grammar = dict[str, list[list[str]]]
-State = tuple[str, tuple[str, ...], int, int]
+type Grammar = dict[str, list[list[str]]]
+type State = tuple[str, tuple[str, ...], int, int]
 
 ASCII_MAP = {
     "[__ASCII_PRINTABLE__]": string.printable,
@@ -98,18 +99,19 @@ class CoverageFuzzer:
         def token_node(token: str):
             if token in ASCII_MAP:
                 return [random.choice(ASCII_MAP[token]), []]
-            if token.endswith("+") and token[:-1] in ASCII_MAP:
+            if token.endswith("+") and token.removesuffix("+") in ASCII_MAP:
+                base = token.removesuffix("+")
                 length = random.randrange(10) + 1
-                chars = [random.choice(ASCII_MAP[token[:-1]]) for _ in range(length)]
+                chars = [random.choice(ASCII_MAP[base]) for _ in range(length)]
                 return ["".join(chars), []]
             if token in self.grammar:
                 return [token, None]
             return [token, []]
 
         root = [key, None]
-        queue = [(0, root)]
+        queue = deque([(0, root)])
         while queue:
-            (depth, node), *queue = queue
+            depth, node = queue.popleft()
             if node[1] is not None:
                 continue
             rule = self._choose_rule(node[0], depth, max_depth)
@@ -117,12 +119,12 @@ class CoverageFuzzer:
             queue.extend((depth + 1, child) for child in node[1])
 
         output = []
-        queue = [root]
+        queue = deque([root])
         while queue:
-            node, *queue = queue
+            node = queue.popleft()
             symbol, children = node
             if symbol in self.grammar:
-                queue = children + queue
+                queue.extendleft(reversed(children))
             else:
                 output.append(symbol)
         return "".join(output)

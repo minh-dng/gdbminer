@@ -2,14 +2,13 @@
 # Copyright (c) 2023 Robert Bosch GmbH
 # SPDX-License-Identifier: AGPL-3.0
 
-from __future__ import annotations
-
 import logging
 import subprocess
 import tempfile
 import time
 from configparser import ConfigParser
 from pathlib import Path
+from typing import override
 
 from tracer.instance.sut_instance import SUTInstance
 
@@ -18,16 +17,19 @@ class ValgrindInstance(SUTInstance):
     def __init__(self, config: ConfigParser, input_file: Path | str) -> None:
         super().__init__(config)
 
-        self.valgrind_commands = (
-            "valgrind --vgdb=yes --vgdb-stop-at=startup --undef-value-errors=no --leak-check=no ".split()
-            + [
-                self.elf_file,
-                str(input_file),
-            ]
-        )
+        self.valgrind_commands = [
+            "valgrind",
+            "--vgdb=yes",
+            "--vgdb-stop-at=startup",
+            "--undef-value-errors=no",
+            "--leak-check=no",
+            self.elf_file,
+            str(input_file),
+        ]
 
         logging.info(self.valgrind_commands)
 
+    @override
     def __enter__(self):
         # Start valgrind in subprocess
         self.valgrind_process = subprocess.Popen(self.valgrind_commands)
@@ -52,6 +54,7 @@ class ValgrindInstance(SUTInstance):
 
         return self
 
+    @override
     def input_accepted(self, input: bytes) -> bool:
         self.number_of_tested_inputs += 1
         # We do not need to fire a valgrind session for checking
@@ -79,6 +82,7 @@ class ValgrindInstance(SUTInstance):
             logging.debug(f"Test {input} : {accepted=}")
         return accepted
 
+    @override
     def __exit__(self, exc_type, exc_val, exc_tb):
         super().__exit__(exc_type, exc_val, exc_tb)
         # Exit gdb server

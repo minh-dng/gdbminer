@@ -6,7 +6,6 @@
 import json
 import logging
 import os
-import urllib.parse
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -26,7 +25,7 @@ ORIGINAL_MIMID = os.getenv("ORIGINAL_MIMID", "0") == "1"
 DELAY_WP = os.getenv("DELAY_WP", "0") == "1"
 
 
-@dataclass
+@dataclass(slots=True)
 class PseudoMethodScope:
     addr: str  # The address where the scope starts
     scope_addresses: set[str]  # Addresses belonging to the scope
@@ -45,7 +44,7 @@ class TreeBuilder:
         # Read trace files
         self.traces: list[list[dict]] = []
         for f_name in trace_files:
-            with f_name.open() as f:
+            with f_name.open(encoding="utf-8") as f:
                 self.traces.append(json.load(f))
 
         # Read seeds
@@ -127,25 +126,6 @@ class TreeBuilder:
     def get_curent_function_name(self, scope_stack: list[PseudoMethodScope]) -> str:
         return self.get_curent_function_scope(scope_stack).name
 
-    def function_args_lookahead(
-        self, trace: list[dict], current_trace_index: int, current_method_scope: set[str]
-    ) -> str:
-        # Function arguments can not be retrieved on the entry of a function,
-        # but only after the preamble (stack setup, register saving) is finished.
-        # Therefore we lookahead for some instructions.
-        # TODO maybe limit to 10 instructions, or so?
-        args = trace[current_trace_index]["function_args"]
-        for elem in trace[current_trace_index + 1 :]:
-            if elem["address"] not in current_method_scope:
-                break
-
-            args = elem["function_args"]
-
-        # TODO make more generic
-        return urllib.parse.quote(
-            "_".join([str(i).encode("unicode_escape").decode("utf-8") for i in args])
-        )
-
     # Check in which loop we are by looking
     def loop_lookahead(
         self, trace: list[dict], current_trace_index: int, loop_scopes: list[set[str]]
@@ -209,8 +189,7 @@ class TreeBuilder:
 
             # First we check if the node opens a new 'method' scope.
             if addr in self.function_scopes and method_stack_len > scope_stack[-1].method_stack_len:
-                func_args = self.function_args_lookahead(trace, idx, self.function_scopes[addr])
-                function_name = f"{elem['function_name']}"  # ({func_args})'
+                function_name = f"{elem['function_name']}"
                 # Add the node to the scope_stack #TODO add function args
                 self.add_to_scope_stack(
                     scope_stack,
@@ -355,5 +334,5 @@ class TreeBuilder:
         return self.tree_list
 
     def dump_to_file(self, filename: Path) -> None:
-        with filename.open("w") as f:
+        with filename.open("w", encoding="utf-8") as f:
             json.dump(self.tree_list, f)

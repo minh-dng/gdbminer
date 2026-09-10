@@ -5,6 +5,7 @@
 
 import logging
 import multiprocessing as mp
+import queue
 from configparser import ConfigParser
 
 from tracer.connection.connection_base_class import ConnectionBaseClass
@@ -26,12 +27,12 @@ class SUTConnection:
         self.connection = self.init_connection(config, sut_reset_method)
 
     def init_connection(self, config: ConfigParser, sut_reset_method) -> ConnectionBaseClass:
-        sut_connection_type = config["Connection"]["input_channel"]
-        if sut_connection_type == "serial":
-            connection = SerialConnection(config, self.inputs, self.responses, sut_reset_method)
-        else:
-            # Here we can add other connection types
-            raise ValueError(f"Unsupported connection type: {sut_connection_type}")
+        match config["Connection"]["input_channel"]:
+            case "serial":
+                connection = SerialConnection(config, self.inputs, self.responses, sut_reset_method)
+            case unknown:
+                # Here we can add other connection types
+                raise ValueError(f"Unsupported connection type: {unknown}")
 
         connection.daemon = True
         connection.start()
@@ -45,7 +46,7 @@ class SUTConnection:
             self.inputs.put(fuzz_input)
             try:
                 return self.responses.get(block=True, timeout=self.timeout)
-            except Exception:
+            except queue.Empty:
                 logging.warning("Connection timeout!")
                 # return False
                 self.disconnect()

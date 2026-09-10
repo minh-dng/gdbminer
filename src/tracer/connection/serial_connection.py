@@ -6,6 +6,7 @@
 import logging as log
 import struct
 import time
+from typing import override
 
 import serial
 
@@ -13,6 +14,7 @@ from tracer.connection.connection_base_class import ConnectionBaseClass
 
 
 class SerialConnection(ConnectionBaseClass):
+    @override
     def connect(self, config):
         port = config["Connection"]["port"]
         baud_rate = config["Connection"].getint("baud_rate")
@@ -25,6 +27,7 @@ class SerialConnection(ConnectionBaseClass):
         self.reset_sut()
         log.info(f"Established connection with SUT via Serial at port {self.serial.name}")
 
+    @override
     def wait_for_input_request(self):
         # SUT sends 'A' whenever it requests and input
         read = ""
@@ -32,6 +35,7 @@ class SerialConnection(ConnectionBaseClass):
             read = self.serial.read(1)
         log.debug(f"READ: {read}")
 
+    @override
     def send_input(self, input: bytes) -> bool:
         # First send length
         log.debug(f"Sending input: {input}")
@@ -53,5 +57,6 @@ class SerialConnection(ConnectionBaseClass):
             log.error(f"Unexpected return value {ret[0]}")
             return True  # Let's consider it accepted
 
+    @override
     def disconnect(self):
         self.serial.close()

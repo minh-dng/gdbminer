@@ -2,8 +2,6 @@
 # Copyright (c) 2023 Robert Bosch GmbH
 # SPDX-License-Identifier: AGPL-3.0
 
-from __future__ import annotations
-
 import argparse
 import json
 import logging
@@ -49,7 +47,7 @@ def main() -> None:
 
     seeds = []
     for seed_file in seeds_directory.glob("*"):
-        with seed_file.open() as f:
+        with seed_file.open(encoding="utf-8") as f:
             seed_content = f.read()
             seeds.append(seed_content)
 
@@ -57,7 +55,7 @@ def main() -> None:
 
     grammar_file = resolve_grammar_file(args.grammar, output_directory)
 
-    with grammar_file.open() as f:
+    with grammar_file.open(encoding="utf-8") as f:
         mined = json.load(f)
     grammar = mined["[grammar]"]
     start = mined["[start]"]

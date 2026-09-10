@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: AGPL-3.0
 
 import argparse
-import itertools
+import dataclasses
 import json
 import logging
 import time
@@ -17,13 +17,14 @@ from util import setup_logging
 def create_output_dir(output_dir_base: Path) -> Path:
     base = output_dir_base.expanduser()
     base.mkdir(parents=True, exist_ok=True)
-    for counter in itertools.count():
+    counter = 0
+    while True:
         output_directory = base / f"trial-{counter}"
         try:
             output_directory.mkdir(parents=True, exist_ok=False)
             return output_directory
         except FileExistsError:
-            continue
+            counter += 1
 
 
 def generate_trace(filename: Path, config: ConfigParser) -> list[GDBTracer.TraceEntry]:
@@ -62,8 +63,8 @@ def main() -> None:
         trace = generate_trace(filename, config)
         # list_of_traces.append(trace)
         trace_file_path = output_directory / f"{filename.name}.trace"
-        with trace_file_path.open("w") as trace_file:
-            json.dump(trace, trace_file, default=vars)
+        with trace_file_path.open("w", encoding="utf-8") as trace_file:
+            json.dump(trace, trace_file, default=dataclasses.asdict)
 
         logging.info(f"Write trace of {filename.name} to {trace_file_path}")
 

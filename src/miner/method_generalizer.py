@@ -40,7 +40,7 @@ class MethodGeneralizer:
         for xnode in xnodes:
             node0, tree0, inputfile0, info = xnode
             if can_be_deleted:
-                new_name = "<%s>" % (node0[0][1:-1] + util.Epsilon)
+                new_name = f"<{node0[0][1:-1] + util.Epsilon}>"
                 info["node"][0] = new_name
 
     def update_method_stack(self, node, old_name, new_name):
