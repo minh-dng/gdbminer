@@ -24,26 +24,7 @@ from miner.token_generalizer import TokenGeneralizer
 
 # If we stick to original mimid structure
 from miner.tree_builder import TreeBuilder
-from util import find_output_directory
-
-
-def setup_logging(output_directory: Path, loglevel: str) -> None:
-    logger = logging.getLogger()
-    formatter = logging.Formatter(
-        "%(asctime)s [%(levelname)s %(filename)s:%(lineno)s %(funcName)s()] %(message)s"
-    )
-
-    file_logger = logging.FileHandler(output_directory / "out.log")
-    file_logger.setLevel(loglevel)
-    file_logger.setFormatter(formatter)
-    logger.addHandler(file_logger)
-
-    stdout_logger = logging.StreamHandler()
-    stdout_logger.setLevel(loglevel)
-    stdout_logger.setFormatter(formatter)
-    logger.addHandler(stdout_logger)
-
-    logging.root.setLevel(loglevel)
+from util import find_output_directory, setup_logging
 
 
 def squash_consecutive_conditions(
