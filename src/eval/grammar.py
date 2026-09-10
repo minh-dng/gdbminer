@@ -3,8 +3,8 @@
 import random
 import string
 
-Grammar = dict[str, list[list[str]]]
-State = tuple[str, tuple[str, ...], int, int]
+type Grammar = dict[str, list[list[str]]]
+type State = tuple[str, tuple[str, ...], int, int]
 
 ASCII_MAP = {
     "[__ASCII_PRINTABLE__]": string.printable,
