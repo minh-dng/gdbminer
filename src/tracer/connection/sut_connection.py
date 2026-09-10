@@ -26,12 +26,12 @@ class SUTConnection:
         self.connection = self.init_connection(config, sut_reset_method)
 
     def init_connection(self, config: ConfigParser, sut_reset_method) -> ConnectionBaseClass:
-        sut_connection_type = config["Connection"]["input_channel"]
-        if sut_connection_type == "serial":
-            connection = SerialConnection(config, self.inputs, self.responses, sut_reset_method)
-        else:
-            # Here we can add other connection types
-            raise ValueError(f"Unsupported connection type: {sut_connection_type}")
+        match config["Connection"]["input_channel"]:
+            case "serial":
+                connection = SerialConnection(config, self.inputs, self.responses, sut_reset_method)
+            case unknown:
+                # Here we can add other connection types
+                raise ValueError(f"Unsupported connection type: {unknown}")
 
         connection.daemon = True
         connection.start()

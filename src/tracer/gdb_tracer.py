@@ -77,14 +77,15 @@ class GDBTracer:
 
     @staticmethod
     def open_sut_instance(config: ConfigParser, input_file: Path | str = "") -> SUTInstance:
-        instance = config["GDB"]["instance"]
-        if instance == "valgrind":
-            return ValgrindInstance(config, input_file)
-        elif instance == "stm32":
-            return STM32Instance(config, input_file)
-        elif instance == "msp430":
-            return MSP430Instance(config, input_file)
-        raise ValueError(f"Unknown GDB instance type: {instance}")
+        match config["GDB"]["instance"]:
+            case "valgrind":
+                return ValgrindInstance(config, input_file)
+            case "stm32":
+                return STM32Instance(config, input_file)
+            case "msp430":
+                return MSP430Instance(config, input_file)
+            case unknown:
+                raise ValueError(f"Unknown GDB instance type: {unknown}")
 
     @staticmethod
     def merge_traces(list1: list[TraceEntry], list2: list[TraceEntry]) -> list[TraceEntry]:
