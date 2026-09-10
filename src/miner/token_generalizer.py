@@ -114,7 +114,6 @@ class TokenGeneralizer:
     ) -> bool:
         my_node, tree0 = TokenGeneralizer.fill_tree(stree, parent, gk)
         # print(json.dumps(tree0, indent=4), file=sys.stderr)
-        sval = util.tree_to_str(tree0)
         assert my_node is not None
         a1 = my_node, "", tree0
         if parent == orig:
@@ -152,7 +151,6 @@ class TokenGeneralizer:
     @staticmethod
     def find_max_widened(tree: TreeNode, kind: str, gk: str, instance: SUTInstance) -> str:
         my_node, tree0 = TokenGeneralizer.fill_tree(tree, kind, gk)
-        sval = util.tree_to_str(tree0)
         assert my_node is not None
         a1 = my_node, "", tree0
 

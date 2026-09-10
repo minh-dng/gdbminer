@@ -89,7 +89,7 @@ def merge_grammar(g1, g2):
         alts = list(g1.get(k, []))
         alts.extend(x for x in g2.get(k, []) if x not in alts)
         merged[k] = alts
-    return {k: [l for l in merged[k]] for k in merged}
+    return {k: list(merged[k]) for k in merged}
 
 
 def convert_to_grammar(my_trees):
@@ -132,10 +132,10 @@ def eliminate_non_terminating_vars(grammar):
                     continue
                 include = True
                 for p in rule:
-                    if G.is_nt(p):  # Add rule if all variables are already in grammar
-                        if p not in new_grammar:
-                            include = False
-                            break
+                    # Add rule if all variables are already in grammar
+                    if G.is_nt(p) and p not in new_grammar:
+                        include = False
+                        break
                 if include:
                     changed = True
                     if k not in new_grammar:
