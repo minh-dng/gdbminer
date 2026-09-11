@@ -34,16 +34,20 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     clang-14 clang-format-14 libclang-14-dev
 
 # Pin mise so image rebuilds do not silently change toolchain resolution.
-# The image runs as root because its mise shims and installs live under /root.
-ARG MISE_VERSION=2026.9.1
-RUN curl -fsSL https://mise.run | MISE_VERSION=${MISE_VERSION} sh
-# Keep /root/.local/bin in PATH because update-shell changes shell startup files,
-# while Docker RUN commands use non-login shells.
-ENV PATH="/opt/gdbminer-venv/bin:/root/.local/bin:/root/.local/share/mise/shims:$PATH" \
-    MISE_YES=1
+ARG MISE_VERSION=2026.9.5
+# uv installs the default Python executable in /root/.local/bin.
+ENV MISE_DATA_DIR="/mise" \
+    MISE_CONFIG_DIR="/mise" \
+    MISE_CACHE_DIR="/mise/cache" \
+    MISE_INSTALL_PATH="/usr/local/bin/mise" \
+    MISE_YES=1 \
+    PATH="/opt/gdbminer-venv/bin:/root/.local/bin:/mise/shims:$PATH"
+RUN curl --proto '=https' --proto-redir '=https' \
+    --fail --show-error --silent --location https://mise.run \
+    | MISE_VERSION="${MISE_VERSION}" sh
 
-COPY docker/mise.toml /root/.config/mise/config.toml
-COPY docker/mise.lock /root/.config/mise/mise.lock
+COPY docker/mise.toml /mise/config.toml
+COPY docker/mise.lock /mise/mise.lock
 COPY .python-version /GDBMiner/.python-version
 # uv's --default flag is experimental. If it breaks in a future uv release,
 # put Python back in docker/mise.toml and remove this uv Python installation.
@@ -54,7 +58,7 @@ RUN mise install --locked \
     && java -version && javac -version && cmake --version && ninja --version && jq --version \
     && ln -s "$(mise where java)" /opt/java \
     && /opt/java/bin/java -version && /opt/java/bin/javac -version \
-    && rm -rf /root/.cache/mise
+    && rm -rf "${MISE_CACHE_DIR}"
 
 RUN ln -s /usr/bin/clang-14 /usr/bin/clang && \
     ln -s /usr/bin/clang++-14 /usr/bin/clang++ && \

@@ -24,7 +24,7 @@ Preferred (mise):
 ```bash
 curl https://mise.run | sh          # once
 mise trust                          # trust mise.toml (once per checkout)
-mise install                        # install the toolchain pinned by mise.lock
+mise install --locked               # install the toolchain pinned by mise.lock
 mise run install:dev                # uv sync --frozen --group dev  → .venv
 mise run lint                       # ruff check  (mise-managed, no venv needed)
 mise run fmt:check                  # ruff format --check

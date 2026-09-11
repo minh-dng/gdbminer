@@ -1,7 +1,7 @@
 # mise.toml — mise-en-place configuration for GDBMiner
 # https://mise.jdx.dev
 # Install mise: curl https://mise.run | sh
-# Then: mise trust && mise install && mise run install:dev
+# Then: mise trust && mise install --locked && mise run install:dev
 #
 # System deps still come from your OS package manager (not mise-managed):
 #   Debian/Ubuntu: sudo apt install gdb valgrind graphviz graphviz-dev pkg-config \
@@ -45,8 +45,8 @@ python.uv_venv_auto = "create|source"
 idiomatic_version_file_enable_tools = ["python"]
 # Faster exits, fewer redundant GitHub API calls
 experimental = true
-# Respect tool-versions / mise.lock determinism in CI (opt-in via env if needed)
-# locked = false
+# `mise install --locked` is documented for reproducible setup; update the lock
+# intentionally with `mise run update`.
 
 # ---------------------------------------------------------------------------
 # Task groups — run with `mise run <task>` or abbreviated `mise <task>`

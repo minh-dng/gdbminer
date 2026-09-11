@@ -1,6 +1,7 @@
 # docker/mise.toml — Docker image toolchain pins for mise-managed tools.
-# Installed as the global mise config (COPY to /root/.config/mise/config.toml,
-# then `mise install`). Intentionally separate from the repo-root mise.toml:
+# Installed as the global mise config (COPY to /mise/config.toml with
+# MISE_CONFIG_DIR=/mise, then `mise install --locked`). Intentionally separate from the
+# repo-root mise.toml:
 # the image needs java/cmake/ninja, which local dev does not (and dev needs
 # ruff/shellcheck/..., which the image does not). The jq pin mirrors the
 # root mise.lock. Python is intentionally NOT listed here: it is installed
