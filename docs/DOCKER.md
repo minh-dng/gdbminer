@@ -13,8 +13,15 @@ Full experiments can run for days. Use a dedicated output directory per trial so
 
 ## Toolchain management (mise)
 
-The image pins mise 2026.9.1 and installs the toolchain from
-`docker/mise.toml` and `docker/mise.lock` with `mise install --locked`.
+The image pins mise 2026.9.5 and follows mise's Docker cookbook: the binary is
+installed at `/usr/local/bin/mise`, while configuration, tool data, cache, and
+shims live under `/mise`. It installs the toolchain from `docker/mise.toml` and
+`docker/mise.lock` with `mise install --locked`.
+
+The image does not use `mise install --system`. That cookbook variant installs
+an inline list of tools into `/usr/local`; this image instead keeps its committed
+configuration and lockfile as the toolchain contract. The explicit `/mise` paths
+still make the mise installation independent of root's home directory.
 
 | Tool  | Version             | Check                             |
 | ----- | ------------------- | --------------------------------- |
