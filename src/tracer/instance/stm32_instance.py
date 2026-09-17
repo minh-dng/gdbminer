@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: AGPL-3.0
 
 import logging
+import shlex
 import subprocess
 import time
 from configparser import ConfigParser
@@ -17,14 +18,20 @@ class STM32Instance(SUTInstance):
     def __init__(self, config: ConfigParser, input_file: Path | str) -> None:
         super().__init__(config)
 
-        self.gdb_server_path_with_args = config["GDB"]["gdb_server_path"].split(" ")
+        self.gdb_server_path_with_args = shlex.split(config["GDB"]["gdb_server_path"])
         self.gdb_server_address = config["GDB"]["gdb_server_address"]
         self.watchpoint_count = config.getint("GDB", "watchpoint_count")
         self.dwt_function_reg = config["GDB"]["dwt_function_reg"]
+        self.dwt_watchpoint_workaround = config.getboolean(
+            "GDB", "dwt_watchpoint_workaround", fallback=True
+        )
         self.input_file = Path(input_file)
 
     @override
     def __enter__(self):
+        # Native USB CDC devices must be opened while their firmware still runs.
+        self.connection = self.init_sut_connection()
+
         # Start gdb server in subprocess
         self.gdb_server = subprocess.Popen(self.gdb_server_path_with_args)
 
@@ -46,7 +53,7 @@ class STM32Instance(SUTInstance):
 
         self.wait_for_any_stop_message()
 
-        self.connection = self.init_sut_connection()
+        self.reset()
 
         return self
 
@@ -56,10 +63,9 @@ class STM32Instance(SUTInstance):
 
     @override
     def step_instruction(self):
-        # Since Watchpoints don't trigger in single stepping
-        # on STM32 we manually ready their registers
-        # after each step
-        self.read_dwt_function_register()
+        if self.dwt_watchpoint_workaround:
+            # ARMv7 DWT watchpoints do not interrupt single-stepping.
+            self.read_dwt_function_register()
         super().step_instruction()
 
     def read_dwt_function_register(self):
@@ -105,6 +111,9 @@ class STM32Instance(SUTInstance):
         # wait till something happened
         self.wait_for_any_gdb_response()
         time.sleep(1)
+        # Do not let reset's asynchronous stop notification masquerade as the
+        # entrypoint breakpoint of the next trace.
+        self.get_gdb_responses()
 
     @override
     def send_input(self) -> None:

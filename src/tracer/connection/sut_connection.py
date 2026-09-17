@@ -24,18 +24,27 @@ class SUTConnection:
         self.timeout = config.getint("GDB", "timeout")
         self.inputs = mp.Queue()
         self.responses = mp.Queue()
-        self.connection = self.init_connection(config, sut_reset_method)
+        self.ready = mp.Queue()
+        self.connection = self.init_connection(config, reset=False)
 
-    def init_connection(self, config: ConfigParser, sut_reset_method) -> ConnectionBaseClass:
+    def init_connection(self, config: ConfigParser, *, reset: bool) -> ConnectionBaseClass:
         match config["Connection"]["input_channel"]:
             case "serial":
-                connection = SerialConnection(config, self.inputs, self.responses, sut_reset_method)
+                connection = SerialConnection(config, self.inputs, self.responses, self.ready)
             case unknown:
                 # Here we can add other connection types
                 raise ValueError(f"Unsupported connection type: {unknown}")
 
         connection.daemon = True
         connection.start()
+        try:
+            connected = self.ready.get(block=True, timeout=self.timeout)
+        except queue.Empty as exc:
+            raise TimeoutError("Timed out connecting to SUT") from exc
+        if not connected:
+            raise ConnectionError("Failed to connect to SUT")
+        if reset:
+            self.sut_reset_method()
         return connection
 
     def send_input(self, fuzz_input: bytes):
@@ -50,7 +59,7 @@ class SUTConnection:
                 logging.warning("Connection timeout!")
                 # return False
                 self.disconnect()
-                self.connection = self.init_connection(self.config, self.sut_reset_method)
+                self.connection = self.init_connection(self.config, reset=True)
 
     def disconnect(self):
         assert self.connection.pid is not None
