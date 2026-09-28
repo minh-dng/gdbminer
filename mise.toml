@@ -116,7 +116,7 @@ run = '''
 #!/usr/bin/env bash
 set -eu
 cfg="${usage_config:-example_programs/json/configuration/configuration.ini}"
-uv run python src/tracer/trace.py --config "$cfg"
+uv run src/tracer/trace.py --config "$cfg"
 '''
 
 [tasks.mine]
@@ -128,7 +128,7 @@ run = '''
 #!/usr/bin/env bash
 set -eu
 cfg="${usage_config:-example_programs/json/configuration/configuration.ini}"
-uv run python src/miner/mine.py --config "$cfg"
+uv run src/miner/mine.py --config "$cfg"
 '''
 
 [tasks.eval]
@@ -146,7 +146,7 @@ cfg="${usage_config:-example_programs/json/configuration/configuration.ini}"
 args=(--config "$cfg")
 if [[ -n "${usage_grammar:-}" ]]; then args+=(--grammar "${usage_grammar}"); fi
 if [[ -n "${usage_out:-}" ]]; then args+=(--out "${usage_out}"); fi
-uv run python src/eval/precision_recall.py "${args[@]}"
+uv run src/eval/precision_recall.py "${args[@]}"
 '''
 
 [tasks.generate]
@@ -164,7 +164,7 @@ if [[ -z "${usage_outdir:-}" ]]; then
   echo "usage: mise run generate <grammar> <outdir> [n] [--config <ini>]" >&2
   exit 2
 fi
-uv run python src/eval/generate_inputs.py --config "${usage_config}" "${usage_grammar}" "${usage_outdir}" "${usage_n}"
+uv run src/eval/generate_inputs.py --config "${usage_config}" "${usage_grammar}" "${usage_outdir}" "${usage_n}"
 '''
 
 [tasks."build:json"]
