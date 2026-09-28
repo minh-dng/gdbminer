@@ -105,7 +105,7 @@ log_level = INFO
 To evaluate GDBMiner, we generate inputs using a grammar. For instance, create 1000 inputs for evaluation:
 
 ```sh
-uv run python src/eval/generate_inputs.py --config ./example_programs/json/configuration/configuration.ini --grammar ./example_programs/json/json.grammar ./example_programs/json/eval 1000
+uv run src/eval/generate_inputs.py --config ./example_programs/json/configuration/configuration.ini --grammar ./example_programs/json/json.grammar ./example_programs/json/eval 1000
 ```
 
 ## Run local
@@ -123,8 +123,8 @@ mise run trace -- example_programs/json/configuration/configuration.ini
 Or without mise:
 
 ```sh
-uv run python src/tracer/trace.py --config ./example_programs/json/configuration/configuration.ini
-uv run python src/miner/mine.py --config ./example_programs/json/configuration/configuration.ini
+uv run src/tracer/trace.py --config ./example_programs/json/configuration/configuration.ini
+uv run src/miner/mine.py --config ./example_programs/json/configuration/configuration.ini
 ```
 
 The following files will be stored to the configured output folder:
@@ -155,7 +155,7 @@ with open(WORKING_DIRECTORY / "parsing_g.json", "r") as f:
 Calculate precision and recall values using the eval inputs and the mined grammar
 
 ```sh
-uv run python src/eval/precision_recall.py --config ./example_programs/json/configuration/configuration.ini
+uv run src/eval/precision_recall.py --config ./example_programs/json/configuration/configuration.ini
 ```
 
 ## Run evaluation experiment in docker
@@ -223,9 +223,9 @@ For your info: platformio stored an .elf file of the SUT here: ./example_firmwar
 Check the config at `./example_firmware/stm32_arduinojson/configuration/configuration.ini` and start tracing and mining:
 
 ```sh
-uv run python src/tracer/trace.py --config ./example_firmware/stm32_arduinojson/configuration/configuration.ini
+uv run src/tracer/trace.py --config ./example_firmware/stm32_arduinojson/configuration/configuration.ini
 
-uv run python src/miner/mine.py --config ./example_firmware/stm32_arduinojson/configuration/configuration.ini
+uv run src/miner/mine.py --config ./example_firmware/stm32_arduinojson/configuration/configuration.ini
 ```
 
 ## SVGPP
