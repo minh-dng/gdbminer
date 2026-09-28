@@ -38,13 +38,20 @@ class SUTConnection:
         connection.daemon = True
         connection.start()
         try:
-            connected = self.ready.get(block=True, timeout=self.timeout)
-        except queue.Empty as exc:
-            raise TimeoutError("Timed out connecting to SUT") from exc
-        if not connected:
-            raise ConnectionError("Failed to connect to SUT")
-        if reset:
-            self.sut_reset_method()
+            try:
+                connected = self.ready.get(block=True, timeout=self.timeout)
+            except queue.Empty as exc:
+                raise TimeoutError("Timed out connecting to SUT") from exc
+            if not connected:
+                raise ConnectionError("Failed to connect to SUT")
+            if reset:
+                self.sut_reset_method()
+        except BaseException:
+            # The caller cannot clean up a process that has not been returned yet.
+            connection.terminate()
+            connection.join()
+            connection.close()
+            raise
         return connection
 
     def send_input(self, fuzz_input: bytes):
