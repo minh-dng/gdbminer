@@ -23,8 +23,6 @@ class SerialConnection(ConnectionBaseClass):
         self.serial = serial.Serial(port, baud_rate)
         time.sleep(1)  # Give a bit time to open connection
         self.serial.reset_input_buffer()
-        # Do a reset, so that the SUT requests an input now
-        self.reset_sut()
         log.info(f"Established connection with SUT via Serial at port {self.serial.name}")
 
     @override

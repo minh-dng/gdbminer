@@ -16,35 +16,31 @@ class ConnectionBaseClass(mp.Process):
         config: ConfigParser,
         inputs: mp.Queue,
         response: mp.Queue,
-        sut_reset_method,
+        ready: mp.Queue,
     ):
         super().__init__()
         self.inputs = inputs
         self.response = response
-        self.sut_reset_method = sut_reset_method
+        self.ready = ready
         self.config = config
         self.running = True
 
     @override
-    def start(self):
+    def run(self):
         try:
             self.connect(self.config)
         except Exception:
             log.exception("Failed to connect to SUT")
+            self.ready.put(False)
+            return
 
-        super().start()
-
-    def connect(self, config: ConfigParser): ...
-
-    @override
-    def run(self):
+        self.ready.put(True)
         while self.running:
             self.wait_for_input_request()
             fuzz_input = self.inputs.get(block=True)
             self.response.put(self.send_input(fuzz_input))
 
-    def reset_sut(self):
-        self.sut_reset_method()
+    def connect(self, config: ConfigParser): ...
 
     def connect_async(self): ...
 
@@ -67,5 +63,4 @@ class ConnectionBaseClass(mp.Process):
     @override
     def terminate(self):
         self.running = False
-        self.disconnect()
         super().terminate()

@@ -46,6 +46,7 @@ class MSP430Instance(SUTInstance):
         self.wait_for_any_stop_message()
 
         self.connection = self.init_sut_connection()
+        self.reset()
 
         return self
 
