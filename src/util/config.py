@@ -83,6 +83,58 @@ def validate_config(config: Config) -> None:
             require(stm32, "dwt_watchpoint_workaround", bool)
         if stm32.get("dwt_watchpoint_workaround", True) or "dwt_function_reg" in stm32:
             require(stm32, "dwt_function_reg", str)
+    elif instance == GDBInstance.ESP32C3:
+        from tracer.instance.esp32c3_debug import HARDWARE_TRIGGER_COUNT
+
+        if connection["input_channel"] != InputChannel.ESP32_UART:
+            raise ValueError(
+                f"ESP32-C3 Connection.input_channel must be '{InputChannel.ESP32_UART}'"
+            )
+        for key in ("boot_delay", "max_input_size"):
+            if key in connection:
+                raise ValueError(f"Remove obsolete ESP32 serial setting {key!r} from [Connection]")
+        if connection.get("rts", True) and not connection.get("reset_pulse", True):
+            raise ValueError("ESP32-C3 Connection.reset_pulse = false requires rts = false")
+        if "esp32c3" in config:
+            raise ValueError("Move the [esp32c3] table to [GDB.esp32c3]")
+        c3 = require(gdb, "esp32c3", dict)
+        c3_keys = (
+            "rom_elf",
+            "hardware_trigger_slot",
+            "reset_on_connect",
+            "breakpoint_always_inserted",
+            "startup_retry_interval",
+        )
+        for key in c3_keys:
+            if key in gdb:
+                raise ValueError(f"Move {key!r} from [GDB] to [GDB.esp32c3]")
+        if "stm32" in gdb or any(
+            key in table
+            for table in (gdb, c3)
+            for key in ("dwt_function_reg", "dwt_watchpoint_workaround")
+        ):
+            raise ValueError("ESP32-C3 uses RISC-V triggers; remove ARM DWT settings")
+        if unknown := c3.keys() - set(c3_keys):
+            raise ValueError(f"Unknown [GDB.esp32c3] keys: {', '.join(sorted(unknown))}")
+        if "rom_elf" in c3:
+            require(c3, "rom_elf", str)
+        for key in ("reset_on_connect", "breakpoint_always_inserted"):
+            if key in c3:
+                require(c3, key, bool)
+        if "startup_retry_interval" in c3:
+            interval = require(c3, "startup_retry_interval", (int, float))
+            if not math.isfinite(interval) or interval <= 0:
+                raise ValueError("GDB.esp32c3.startup_retry_interval must be positive and finite")
+        slot = require(c3, "hardware_trigger_slot", int)
+        if slot < 0 or slot + gdb["watchpoint_count"] > HARDWARE_TRIGGER_COUNT:
+            raise ValueError(
+                "ESP32-C3 hardware_trigger_slot + watchpoint_count must fit slots "
+                f"0..{HARDWARE_TRIGGER_COUNT - 1}"
+            )
+        if gdb["watchpoint_count"] == HARDWARE_TRIGGER_COUNT and gdb.get("exitpoint", ""):
+            raise ValueError("ESP32-C3 exitpoint requires a free hardware trigger slot")
+        if gdb["watchpoint_type"] != "(char*)":
+            raise ValueError("ESP32-C3 watchpoint_type must be '(char*)'")
 
 
 def load_config(path: Path) -> Config:

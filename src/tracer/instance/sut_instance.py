@@ -20,6 +20,7 @@ class GDBInstance(StrEnum):
     VALGRIND = "valgrind"
     STM32 = "stm32"
     MSP430 = "msp430"
+    ESP32C3 = "esp32c3"
 
 
 class SUTInstance:

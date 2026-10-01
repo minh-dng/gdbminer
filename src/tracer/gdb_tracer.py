@@ -9,6 +9,7 @@ from collections import deque
 from dataclasses import dataclass
 from pathlib import Path
 
+from tracer.instance.esp32c3_instance import ESP32C3Instance
 from tracer.instance.msp430_instance import MSP430Instance
 from tracer.instance.stm32_instance import STM32Instance
 from tracer.instance.sut_instance import GDBInstance, SUTInstance
@@ -83,6 +84,8 @@ class GDBTracer:
                 return ValgrindInstance(config, input_file)
             case GDBInstance.STM32:
                 return STM32Instance(config, input_file)
+            case GDBInstance.ESP32C3:
+                return ESP32C3Instance(config, input_file)
             case GDBInstance.MSP430:
                 return MSP430Instance(config, input_file)
 
