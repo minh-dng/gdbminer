@@ -1,8 +1,8 @@
 # GDBMiner: Debugger-driven-Grammar-Mining
 
-This is the companion code for the the paper GDBMiner: Mining Precise Input Grammars on (almost) any System by Eisele et al. The code allows the users to
-reproduce and extend the results reported in the study. Please cite the
-above paper when reporting, reproducing or extending the results.
+This is the companion code for the the paper GDBMiner: Mining Precise Input Grammars on (almost)
+any System by Eisele et al. The code allows the users to reproduce and extend the results reported
+in the study. Please cite the above paper when reporting, reproducing or extending the results.
 
 ## Install local
 
@@ -36,19 +36,19 @@ mise run shfmt:check
 
 ## Git worktrees
 
-To copy your local Docker notes into new worktrees, create
-`docs/DOCKER.local.md` in the primary worktree and install the repository hook
-once from the repository root:
+To copy your local Docker notes into new worktrees, create `docs/DOCKER.local.md` in the primary
+worktree and install the repository hook once from the repository root:
 
 ```sh
 git config --local core.hooksPath .githooks
 ```
 
-The hook copies the file only when it is missing, so it will not overwrite local
-changes. It runs for normal `git worktree add` commands; with `--no-checkout`,
-it runs when the worktree is checked out later.
+The hook copies the file only when it is missing, so it will not overwrite local changes. It runs
+for normal `git worktree add` commands; with `--no-checkout`, it runs when the worktree is
+checked out later.
 
 ## Config File
+
 GDBMiner uses config files for passing required options.
 
 ```ini
@@ -94,7 +94,7 @@ exitpoint = <symbol_name|address|empty>
 
 #The address of the input buffer or symbol name
 input_buffer = <symbol_name|address>
-   
+
 [LOGS]
 # One of {DEBUG, INFO, WARNING, ERROR, CRITICAL}
 log_level = INFO
@@ -186,15 +186,23 @@ done
 
 ## Execute on new binary
 
-GDBMiner relies on a valid stack layout at every point in execution, which is why the target binary programs need to be build without optimizations. Also debug symbols are required to name non terminals in the resulting grammar.
-Unfortunately on C++ binaries the compiler generated symbol names are required. This leads tu ugly entrypoint names like `_ZN8picojson5parseIPKcEET_RNS_5valueERKS3_S7_PNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE`instead of just `picojson::parse<const_char_*>`
+GDBMiner relies on a valid stack layout at every point in execution, which is why the target binary
+programs need to be build without optimizations. Also debug symbols are required to name non
+terminals in the resulting grammar.
+
+Unfortunately on C++ binaries the compiler generated symbol names are required. This leads to ugly
+entrypoint names like
+`_ZN8picojson5parseIPKcEET_RNS_5valueERKS3_S7_PNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE`
+instead of just `picojson::parse<const_char_*>`
 
 ## GDBMiner on STM32 B-L4S5I-IOT01A board
 
-In this case the B-L4S5I-IOT01A and its on-board debugger are used. This on-board debugger sets up a GDB server via the 'st-util' program, and enables access to this GDB server via localhost:4242.
+In this case the B-L4S5I-IOT01A and its on-board debugger are used. This on-board debugger sets up
+a GDB server via the 'st-util' program, and enables access to this GDB server via localhost:4242.
 
 - Install the STLINK driver [link](https://www.st.com/content/st_com/en/products/development-tools/software-development-tools/stm32-software-development-tools/stm32-utilities/stsw-link009.html)
 - Connect MCU board and PC via USB (on MCU board, connect to the USB connector that is labeled as 'USB STLINK')
+
 ```sh
 sudo apt-get install stlink-tools gdb-multiarch libusb-dev
 ```
@@ -216,7 +224,6 @@ ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE="664", GROUP="plugdev"
 ```
 
 into `/etc/udev/rules.d/90-stm32.rules`and run `sudo udevadm control --reload` to reload. Ensure that your user belongs to the `plugdev`group.
-
 
 For your info: platformio stored an .elf file of the SUT here: ./example_firmware/stm32_arduinojson/.pio/build/disco_l4s5i_iot01a/firmware.elf
 
@@ -250,7 +257,7 @@ sudo make install
 sudo ldconfig
 ```
 
-Tested in commit f460b2c7ceba92a875c0ba5c333826652863b396 from https://github.com/svgpp/svgpp.git
+Tested in commit f460b2c7ceba92a875c0ba5c333826652863b396 from <https://github.com/svgpp/svgpp.git>
 Compile SVGPP with the static LibXML2 library and debug:
 
 ```sh
@@ -277,8 +284,7 @@ docker run --rm  -v $( pwd)/output:/output/ gdbminer python3 /GDBMiner/src/miner
 
 ## License
 
-GDBMiner is open-sourced under the AGPL-3.0 license. See the
-[LICENSE](LICENSE) file for details.
+GDBMiner is open-sourced under the AGPL-3.0 license. See the [LICENSE](LICENSE) file for details.
 
-For a list of other open source components included in PROJECT-NAME, see the
-file [3rd-party-licenses.txt](3rd-party-licenses.txt).
+For a list of other open source components included in PROJECT-NAME, see the file
+[3rd-party-licenses.txt](3rd-party-licenses.txt).
