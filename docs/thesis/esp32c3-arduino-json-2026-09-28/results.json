@@ -1,0 +1,122 @@
+{
+  "git_head": "7d6c1e06ed61562f4851ef5aaab9cb8526876a0f",
+  "parser_library": "arduino-libraries/Arduino_JSON@0.2.0",
+  "source_sha256": {
+    "example_firmware/stm32_arduinojson/src/main.cpp": "57e53b4ab169b2e9affa475eabd37f0c097e5e2e9bb6faed4708410df7a307f5",
+    "example_firmware/stm32_arduinojson/platformio.ini": "2eaa82d65228eb13710304b7cb1aff013292cdd2def0fde8ce0c6cc9e2202804",
+    "example_firmware/stm32_arduinojson/configuration/configuration.ini": "8fd9684932ebb1e9c123bc5cd1a6046f79a7b74922010bc017c0340bb5217aa0",
+    "example_firmware/esp32-c3_json/src/main.cpp": "8689ded055f07bcb5e02924fdcd9139e29d3206521faaef1118d876061ee2550",
+    "example_firmware/esp32-c3_json/platformio.ini": "13b2acbfe10bc1d566c96cf5fbdc304f06da9084ebe939ce0b980568ef49ec37",
+    "example_firmware/esp32-c3_json/configuration/configuration.hw-eval.ini": "46042051925ef1d891bfae98da3e2809fc21dae582a7c6486ecee2bc1d5e3893",
+    "example_firmware/esp32-c3_json/configuration/configuration.ini": "d0fcf947ffaa354a988332d5c56917b8bca4b16b865ced88ebe6e6ef654adeb2",
+    "example_firmware/esp32-c3_json/.pio/libdeps/esp32-c3-devkitm-1/Arduino_JSON/src/Arduino_JSON.h": "9953ae7727bf9c6ba84df175efd8183eb3646725c03169d05f74a93efb3581a0",
+    "example_firmware/esp32-c3_json/.pio/libdeps/esp32-c3-devkitm-1/Arduino_JSON/src/JSON.cpp": "f503840fb9163779ba97af3f2a9edbde5eb3539f6f38e67391f732b3daf3b3f7",
+    "example_firmware/esp32-c3_json/.pio/libdeps/esp32-c3-devkitm-1/Arduino_JSON/src/JSON.h": "e6feaf49ae693502d363995b007bbfcd5e4941da9c23de60165ca71375f15f50",
+    "example_firmware/esp32-c3_json/.pio/libdeps/esp32-c3-devkitm-1/Arduino_JSON/src/JSONVar.cpp": "c275dc79a31ebb9f39876548cccd020b22d1866926647a50c492c8be98db4ca9",
+    "example_firmware/esp32-c3_json/.pio/libdeps/esp32-c3-devkitm-1/Arduino_JSON/src/JSONVar.h": "6ffe1549d55325f9682a2d8029a44d0bc65d97ebf3db19982aec7d4c16de4f7e",
+    "example_firmware/esp32-c3_json/.pio/libdeps/esp32-c3-devkitm-1/Arduino_JSON/src/cjson/LICENSE": "a36dda207c36db5818729c54e7ad4e8b0c6fba847491ba64f372c1a2037b6d5c",
+    "example_firmware/esp32-c3_json/.pio/libdeps/esp32-c3-devkitm-1/Arduino_JSON/src/cjson/cJSON.c": "4e43d91fee93db2e37becb17f2b12282432ddc397157c0cc436a99e61941a32d",
+    "example_firmware/esp32-c3_json/.pio/libdeps/esp32-c3-devkitm-1/Arduino_JSON/src/cjson/cJSON.h": "83f07304854b70d38e868ad031bad9782be5c499870c0cd89a40ea08f0b3cc9f",
+    "docs/thesis/esp32c3-arduino-json-2026-09-28/check_oracle.py": "df1786b6455e56a769867b0866adac95b4df71bf0b571d6767724865fcb6522f"
+  },
+  "firmware.elf_sha256": "ba726aef31242a55a798183c1ba130740207f8e1fca407e94b20df3f81e4d8fc",
+  "firmware.bin_sha256": "5bc3a6c81505dff61bcbe43e1aa0a94976b8b86971db0525f993a7b17f1aab9a",
+  "cJSON_version_definitions": [
+    "#define CJSON_VERSION_MAJOR 1",
+    "#define CJSON_VERSION_MINOR 7",
+    "#define CJSON_VERSION_PATCH 14"
+  ],
+  "corpora": {
+    "seeds": {
+      "count": 20,
+      "identical_to_stm32": true
+    },
+    "eval": {
+      "count": 1000,
+      "identical_to_stm32": true
+    }
+  },
+  "parser_bodies_match_ignoring_comments_whitespace": true,
+  "oracle": {
+    "status": "passed",
+    "cases": [
+      {
+        "name": "object",
+        "size": 2,
+        "expected_accept": true,
+        "response": 0
+      },
+      {
+        "name": "array",
+        "size": 12,
+        "expected_accept": true,
+        "response": 0
+      },
+      {
+        "name": "invalid escape",
+        "size": 4,
+        "expected_accept": false,
+        "response": 255
+      },
+      {
+        "name": "invalid token",
+        "size": 1,
+        "expected_accept": false,
+        "response": 255
+      },
+      {
+        "name": "empty",
+        "size": 0,
+        "expected_accept": false,
+        "response": 255
+      },
+      {
+        "name": "trailing bytes",
+        "size": 6,
+        "expected_accept": true,
+        "response": 0
+      },
+      {
+        "name": "embedded NUL",
+        "size": 4,
+        "expected_accept": true,
+        "response": 0
+      },
+      {
+        "name": "2048-byte valid input",
+        "size": 2048,
+        "expected_accept": true,
+        "response": 0
+      },
+      {
+        "name": "2049-byte wrapper rejection",
+        "size": 2049,
+        "expected_accept": false,
+        "response": 255
+      },
+      {
+        "name": "next packet after oversized rejection",
+        "size": 2,
+        "expected_accept": true,
+        "response": 0
+      }
+    ]
+  },
+  "post_trace_oracle_status": "passed",
+  "trace_smoke": {
+    "status": "incomplete",
+    "elf_sha256": "ba726aef31242a55a798183c1ba130740207f8e1fca407e94b20df3f81e4d8fc",
+    "adapter_sha256": "1c4799bea62d58d6455d728c99e1332fb54ad99979cd11b8c5696ac350c2dabd",
+    "seed_hex": "7b7d",
+    "runs": [
+      {
+        "count": 8,
+        "windows": [],
+        "status": "incomplete"
+      }
+    ],
+    "error": "RuntimeError(\"Unexpected parser return stack: ['0x403894b8', '0x403894b8', '0x403894b8', '0x403894b8', '0x00000000', '0x0']\")"
+  },
+  "full_evidence_root": "/Users/dan173/Documents/Uni/thesis/experiments/esp32c3-arduino-json-2026-09-28",
+  "full_manifest_sha256": "f6dd158565dfcad7630c58744d1d83dccd2bfee54e83a2d9d3c5d3901e913a30"
+}

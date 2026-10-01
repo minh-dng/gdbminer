@@ -1,0 +1,88 @@
+{
+  "status": "smoke-pipeline-passed-full-corpus-running",
+  "firmware_rebuilt_or_flashed": false,
+  "trace_comparison": {
+    "status": "passed",
+    "elf_sha256": "ba726aef31242a55a798183c1ba130740207f8e1fca407e94b20df3f81e4d8fc",
+    "adapter_sha256": "92697cc60ec0cee48d8bef1a7a0c628ee3789f58b93e5bb90c3777fb527fe77d",
+    "seed_hex": "7b7d",
+    "runs": [
+      {
+        "count": 8,
+        "windows": [
+          {
+            "offset": 0,
+            "instructions": 1039,
+            "hits": 14
+          }
+        ],
+        "status": "complete",
+        "reads_per_byte": [
+          10,
+          4
+        ],
+        "seconds": 119.04147704200295,
+        "instructions": 1039,
+        "hits": 14
+      },
+      {
+        "count": 1,
+        "windows": [
+          {
+            "offset": 0,
+            "instructions": 1039,
+            "hits": 10
+          },
+          {
+            "offset": 1,
+            "instructions": 1039,
+            "hits": 4
+          }
+        ],
+        "status": "complete",
+        "reads_per_byte": [
+          10,
+          4
+        ],
+        "seconds": 237.45588937500725,
+        "instructions": 1039,
+        "hits": 14
+      }
+    ]
+  },
+  "memset_walk": {
+    "steps": 43,
+    "caller_chain_preserved": true,
+    "checked_registers_unchanged": true,
+    "internal_and_ordinary_execution": true,
+    "ordinary_shared_byte_tail_exercised": false
+  },
+  "smoke_training_seeds": [
+    "{}"
+  ],
+  "precision_samples": 1000,
+  "recall_samples": 1000,
+  "evaluation": {
+    "precision": 1.0,
+    "recall": 0.001,
+    "f1": 0.0019980019980019984,
+    "no_tested_inputs": 5
+  },
+  "host_tests_passed": 24,
+  "ruff": "passed",
+  "basedpyright": "0 errors, 0 warnings, 0 notes",
+  "sha256": {
+    "/Users/dan173/Documents/Uni/thesis/impl/gdbminer.esp32-c3/src/tracer/instance/esp32c3_rom.gdb": "22d5db1b302e9303ca111d41d8b061e600629e470e08f66b88e9af41ce8c0d32",
+    "/Users/dan173/Documents/Uni/thesis/impl/gdbminer.esp32-c3/src/tracer/instance/esp32c3_instance.py": "92697cc60ec0cee48d8bef1a7a0c628ee3789f58b93e5bb90c3777fb527fe77d",
+    "/Users/dan173/Documents/Uni/thesis/impl/gdbminer.esp32-c3/src/miner/graph_utils.py": "08cda136a5e2e44dbcfc199af8fc9fd07d9d2163a6fa9e86ceba611a004b9e74",
+    "/Users/dan173/Documents/Uni/thesis/impl/gdbminer.esp32-c3/tests/test_graph_utils.py": "2e28159da0706d5e29113c609298f78669f7dc4581c1d002bbcfcecfb70670be",
+    "/Users/dan173/Documents/Uni/thesis/impl/gdbminer.esp32-c3/docs/thesis/esp32c3-arduino-json-2026-09-28/check_rom_stack.py": "dcf75e7f1d7f71d058b8c3832e99c594077917267f383d148bd0cf67b6ed6134",
+    "/Users/dan173/Documents/Uni/thesis/impl/gdbminer.esp32-c3/example_firmware/esp32-c3_json/configuration/configuration.hw-eval.ini": "a0d26289d94e3ae92b5c7ac543989d8ad720c2099995f8e3bbc83fda319acc36",
+    "/Users/dan173/Documents/Uni/thesis/impl/gdbminer.esp32-c3/example_firmware/esp32-c3_json/configuration/configuration.ini": "2cfaa7e066334dedd8dc3f155c938dc514db76ac0765f278a9a6b1f0fe30e819",
+    "/Users/dan173/Documents/Uni/thesis/impl/gdbminer.esp32-c3/example_firmware/esp32-c3_json/.pio/build/esp32-c3-devkitm-1/firmware.elf": "ba726aef31242a55a798183c1ba130740207f8e1fca407e94b20df3f81e4d8fc",
+    "/Users/dan173/Documents/Uni/thesis/impl/gdbminer.esp32-c3/example_firmware/esp32-c3_json/.pio/build/esp32-c3-devkitm-1/firmware.bin": "5bc3a6c81505dff61bcbe43e1aa0a94976b8b86971db0525f993a7b17f1aab9a",
+    "/Users/dan173/Documents/Uni/thesis/experiments/esp32c3-rom-unwind-2026-09-29/memset-walk-verified.log": "53354ee599075b551f700d57f4bd25aa9d60fde9bac53ada98b3b02218d1ddd3",
+    "/Users/dan173/Documents/Uni/thesis/experiments/esp32c3-rom-unwind-2026-09-29/pipeline-smoke/output/trial-0/parsing_g.json": "efeb53adc8b04fd4c0cbdca255ddd6056a7c57a5079a7d2b767584c3e9e5050f"
+  },
+  "full_pipeline_status_file": "/Users/dan173/Documents/Uni/thesis/experiments/esp32c3-rom-unwind-2026-09-29/full-pipeline.exit"
+}

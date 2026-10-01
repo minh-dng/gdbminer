@@ -1,0 +1,75 @@
+{
+  "status": "matched-build-smoke-passed-numeric-regression-running",
+  "framework": "esp32:esp32@3.3.12",
+  "compiler": "esp-14.2.0_20260121",
+  "parser_library": "Arduino_JSON@0.2.0",
+  "compatibility_stubs_removed": true,
+  "wrapper_source_unchanged": true,
+  "oracle_checks_passed": 10,
+  "trace_comparison": {
+    "status": "passed",
+    "elf_sha256": "f6cf61b78578edf6b69a4dd9b6aae29597064bbae64e6620f38a29cd6947bd8e",
+    "adapter_sha256": "92697cc60ec0cee48d8bef1a7a0c628ee3789f58b93e5bb90c3777fb527fe77d",
+    "seed_hex": "7b7d",
+    "runs": [
+      {
+        "count": 8,
+        "windows": [
+          {
+            "offset": 0,
+            "instructions": 1165,
+            "hits": 14
+          }
+        ],
+        "status": "complete",
+        "reads_per_byte": [
+          10,
+          4
+        ],
+        "seconds": 135.70920216699596,
+        "instructions": 1165,
+        "hits": 14
+      },
+      {
+        "count": 1,
+        "windows": [
+          {
+            "offset": 0,
+            "instructions": 1165,
+            "hits": 10
+          },
+          {
+            "offset": 1,
+            "instructions": 1165,
+            "hits": 4
+          }
+        ],
+        "status": "complete",
+        "reads_per_byte": [
+          10,
+          4
+        ],
+        "seconds": 260.8169232500077,
+        "instructions": 1165,
+        "hits": 14
+      }
+    ]
+  },
+  "smoke_evaluation": {
+    "precision": 1.0,
+    "recall": 0.001,
+    "f1": 0.0019980019980019984,
+    "no_tested_inputs": 6
+  },
+  "smoke_training_inputs": [
+    "{}"
+  ],
+  "precision_samples": 1000,
+  "recall_samples": 1000,
+  "smoke_generalization_queries": 6,
+  "evidence_root": "/Users/dan173/Documents/Uni/thesis/experiments/esp32c3-official-arduino-2026-09-29",
+  "manifest_sha256": "9bc27f65f8b5eb0adb58c9b0e8c752d69bc9166059fca12017a1af51d9451627",
+  "full_pipeline_gated_by": "regression-number/trace.exit",
+  "full_pipeline_status": "full-pipeline.state",
+  "full_pipeline_exit": "full-pipeline.exit"
+}

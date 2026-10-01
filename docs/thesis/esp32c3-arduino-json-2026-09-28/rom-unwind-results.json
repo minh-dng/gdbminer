@@ -1,0 +1,49 @@
+{
+  "status": "blocked-at-rom-memset",
+  "chip_revision": "v1.1",
+  "evidence_root": "/Users/dan173/Documents/Uni/thesis/experiments/esp32c3-rom-unwind-2026-09-29",
+  "clzsi2_stack_regression": "passed with ROM symbols; failed without",
+  "memset_stack_regression": "failed with ROM symbols in Homebrew and Espressif GDB",
+  "trace_comparison": {
+    "status": "incomplete",
+    "elf_sha256": "ba726aef31242a55a798183c1ba130740207f8e1fca407e94b20df3f81e4d8fc",
+    "adapter_sha256": "ebc42c3c4a55b5f2b7dc61bf3dab34e6fdb03c466b6080c4aacfb553d4aadbcb",
+    "seed_hex": "7b7d",
+    "runs": [
+      {
+        "count": 8,
+        "windows": [],
+        "status": "incomplete"
+      }
+    ],
+    "error": "RuntimeError(\"Unexpected parser return stack: ['0x0']\")"
+  },
+  "post_trace_oracle": "10/10 passed",
+  "checks": {
+    "hardware_contract_tests": 18,
+    "ruff": "passed",
+    "basedpyright_module": "0 errors, 0 warnings, 0 notes",
+    "mise_typecheck": "blocked by stale venv console-script shebang"
+  },
+  "sha256": {
+    "src/tracer/instance/esp32c3_instance.py": "ebc42c3c4a55b5f2b7dc61bf3dab34e6fdb03c466b6080c4aacfb553d4aadbcb",
+    "docs/thesis/esp32c3-arduino-json-2026-09-28/check_rom_stack.py": "730ced821535896903f5d64a1b4dcbb12483b246ba41ac3ac7ec6c5cb491f938",
+    "example_firmware/esp32-c3_json/configuration/configuration.hw-eval.ini": "0e9c4a2efb0653270f62a092f22b3fa7a2bc6a4a4dcf9f0d095ac3f537eb7774",
+    "example_firmware/esp32-c3_json/configuration/configuration.ini": "4f930676dc2f53729f7be0452885d9dbfa6ec5f95431cd1b819b7994c1b67344",
+    "/Users/dan173/.espressif/tools/esp-rom-elfs/20241011/esp32c3_rev101_rom.elf": "9495e1453f36f7eec4112714ea1dca22d77808776adffa93dda7dda4393e8336",
+    "/Users/dan173/Documents/Uni/thesis/experiments/esp32c3-rom-unwind-2026-09-29/probe-stack.log": "daef03a37e2aa107a64d378267c72a278b9d08b71561f525e3ef7b0a5236cef4",
+    "/Users/dan173/Documents/Uni/thesis/experiments/esp32c3-rom-unwind-2026-09-29/regression-memset.log": "e927e7b05443e544d13c6641e7afbe3216bff6054c4093ca43e098aa6f0a838e",
+    "/Users/dan173/Documents/Uni/thesis/experiments/esp32c3-rom-unwind-2026-09-29/probe-stack-address.log": "53517e145d5d96d63d3724d8ca67a38c4424e8f7337d4547a029556e451b3970",
+    "/Users/dan173/Documents/Uni/thesis/experiments/esp32c3-rom-unwind-2026-09-29/probe-second-stop-esp-gdb.log": "45ff22e2daaed4e7bcf01bf1612032fb3bba7ccfda445e1acbef23dca8a855e0",
+    "/Users/dan173/Documents/Uni/thesis/experiments/esp32c3-rom-unwind-2026-09-29/probe-stack-rom.log": "e8dc5df42814faed548d89f93b0a51661330b33f4a8449878c70829f00b503b2",
+    "/Users/dan173/Documents/Uni/thesis/experiments/esp32c3-rom-unwind-2026-09-29/probe-stack-resumed.log": "f78fc8330439abe2b83ef2c31b0a99ca368fa08e2edece9246b97a322ef5a05c",
+    "/Users/dan173/Documents/Uni/thesis/experiments/esp32c3-rom-unwind-2026-09-29/baseline.log": "08b21fee6419317692fed3144e29c465316f127c2c7883d3402c38278e443c47",
+    "/Users/dan173/Documents/Uni/thesis/experiments/esp32c3-rom-unwind-2026-09-29/probe-memset-disassembly.log": "d490325f5778b77cbd34e22d665855ce41eebea79b413be7efaaef04d7ed4460",
+    "/Users/dan173/Documents/Uni/thesis/experiments/esp32c3-rom-unwind-2026-09-29/regression-after.log": "67d0305368e94fa7131f0df47aeb873b5912f5b854a3974e76ffa3f213aced78",
+    "/Users/dan173/Documents/Uni/thesis/experiments/esp32c3-rom-unwind-2026-09-29/oracle-after.log": "32ceb255b684c575f46b9c601bc3d1a99f98963cc9b6ea567ea826c0b34ce5e5",
+    "/Users/dan173/Documents/Uni/thesis/experiments/esp32c3-rom-unwind-2026-09-29/regression-after-delay.log": "3d19f5be13f27007e23f5b4b3e102b382c542a5fd3f13862336d80450792be3c",
+    "/Users/dan173/Documents/Uni/thesis/experiments/esp32c3-rom-unwind-2026-09-29/regression-before.log": "d8ab9aad9000248df9853e6d892e38c0611b7b1b78dfdfde3efe91335c2a398d",
+    "/Users/dan173/Documents/Uni/thesis/experiments/esp32c3-rom-unwind-2026-09-29/probe-second-stop.log": "33325aa0181de201f8b2aa18179ecb1495753b0e2eec8e381485d6317b4c7340",
+    "/Users/dan173/Documents/Uni/thesis/experiments/esp32c3-rom-unwind-2026-09-29/rom-symbols.log": "c0c4175cb17ad3c29470a563e290b1befddc87e4fb925bf313cb62f6b69c4d5c"
+  }
+}

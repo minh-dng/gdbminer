@@ -1,0 +1,23 @@
+
+/Users/dan173/Documents/Uni/thesis/experiments/esp32c3-multislot-2026-09-28/fixture/.pio/build/esp32-c3-devkitm-1/firmware.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .iram0.text:
+
+Disassembly of section .flash.text:
+
+420000f2 <unaligned_fixture>:
+420000f2:	7179                	addi	sp,sp,-48
+420000f4:	d606                	sw	ra,44(sp)
+420000f6:	d422                	sw	s0,40(sp)
+420000f8:	1800                	addi	s0,sp,48
+420000fa:	fca42e23          	sw	a0,-36(s0)
+420000fe:	fdc42783          	lw	a5,-36(s0)
+42000102:	0017a783          	lw	a5,1(a5)
+42000106:	fef42623          	sw	a5,-20(s0)
+4200010a:	fec42783          	lw	a5,-20(s0)
+4200010e:	853e                	mv	a0,a5
+42000110:	50b2                	lw	ra,44(sp)
+42000112:	5422                	lw	s0,40(sp)
+42000114:	6145                	addi	sp,sp,48
+42000116:	8082                	ret

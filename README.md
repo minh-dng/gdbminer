@@ -275,6 +275,12 @@ uv run src/tracer/trace.py --config ./example_firmware/stm32_arduinojson/configu
 uv run src/miner/mine.py --config ./example_firmware/stm32_arduinojson/configuration/configuration.toml
 ```
 
+## GDBMiner on the ESP32-C3 DevKitM-1-N4X board
+
+Ports of the three STM32 examples (`esp32-c3_json`, `esp32-c3_cgidecode`, `esp32-c3_xml`) run on
+an ESP32-C3. For the wiring, build, debugger and run commands, see
+[`example_firmware/ESP32-C3 DevKitM-1-N4X.README.md`](example_firmware/ESP32-C3%20DevKitM-1-N4X.README.md).
+
 ## SVGPP
 
 Install dependencies
