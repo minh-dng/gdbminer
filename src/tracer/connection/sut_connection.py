@@ -31,6 +31,10 @@ class SUTConnection:
         match config["Connection"]["input_channel"]:
             case "serial":
                 connection = SerialConnection(config, self.inputs, self.responses, self.ready)
+            case "esp32-serial":
+                from tracer.connection.esp32_serial_connection import ESP32SerialConnection
+
+                connection = ESP32SerialConnection(config, self.inputs, self.responses, self.ready)
             case unknown:
                 # Here we can add other connection types
                 raise ValueError(f"Unsupported connection type: {unknown}")
@@ -64,8 +68,11 @@ class SUTConnection:
                 return self.responses.get(block=True, timeout=self.timeout)
             except queue.Empty:
                 logging.warning("Connection timeout!")
-                # return False
                 self.disconnect()
+                # Discard any unconsumed input or late response from the old process.
+                self.inputs = mp.Queue()
+                self.responses = mp.Queue()
+                self.ready = mp.Queue()
                 self.connection = self.init_connection(self.config, reset=True)
 
     def disconnect(self):
