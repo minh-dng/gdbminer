@@ -142,15 +142,21 @@ class GDBTracer:
         watchpoint_offset = {}
 
         # Set the first breakpoint at entrypoint address
-        instance.set_temporary_breakpoint(self.entrypoint)
-        instance.wait_for_any_gdb_response()
+        entry_breakpoint = instance.set_temporary_breakpoint(self.entrypoint)
+        if entry_breakpoint is None:
+            instance.wait_for_any_gdb_response()
         instance.continue_execution()
         time.sleep(1)  # Give GDB some time to continue the execution
         instance.send_input()
 
+        # The first stop after continuing must be the entry breakpoint: a late stop from the reset
+        # or attach would otherwise be taken as the parser entry. Backends that return the
+        # breakpoint number (C3) are also checked against it.
         response = instance.wait_for_any_stop_message()
-
-        self.trace_instruction(response, instance, instruction_trace_list)
+        if response["payload"].get("reason") != "breakpoint-hit":
+            raise RuntimeError(f"Unexpected stop before parser entry: {response}")
+        if entry_breakpoint is not None and response["payload"].get("bkptno") != entry_breakpoint:
+            raise RuntimeError(f"Unexpected entry breakpoint: {response}")
 
         string_range = range(input_len)
         watchpoint_range = range(self.watchpoint_count)
@@ -168,14 +174,16 @@ class GDBTracer:
 
         # Set breakpoint to exit address
         # TODO make this dependent on initial stack
+        exit_breakpoint = None
         if self.exitpoint:
-            instance.set_temporary_breakpoint(self.exitpoint)
+            exit_breakpoint = instance.set_temporary_breakpoint(self.exitpoint)
 
-        # Request stacktrace for first trace entry
-        instance.request_stacktrace()
+        # Request the entry stack only after watchpoint/breakpoint setup, so allocators that drain
+        # GDB batches cannot consume this response.
+        self.trace_instruction(response, instance, instruction_trace_list)
 
-        # Do one step
-        instance.step_instruction()
+        # Wait for each instruction's stack before stepping, including entry. Otherwise a delayed
+        # stack can be attributed to the successor.
 
         # To keep track of ignored functions and subroutines
         ignore_till_stack_len = -1
@@ -183,9 +191,20 @@ class GDBTracer:
         # To remember at which stack level we start tracing
 
         entry_stack_len = -1
+        entry_stack: list[str] = []
+        # Raw GDB frame names; trace entries hold names normalised for mimid.
+        entry_function = ""
+        entry_caller_func = ""
+        deadline = time.monotonic() + instance.timeout
+
+        # Valgrind's gdbserver reports a completed `-exec-finish` without a reason, so a reason-less
+        # stop is accepted only while a finish is pending.
+        finish_pending = False
 
         run = True
         while run:
+            if time.monotonic() >= deadline:
+                raise TimeoutError(f"Trace stalled at window {watchpoint_window_offset}")
             responses = deque(instance.get_gdb_responses())
             while responses:
                 response = responses.popleft()
@@ -195,11 +214,34 @@ class GDBTracer:
                     logging.debug(f"Stacktrace {response['payload']}")
 
                     stacktrace = self.parse_stacktrace(response)
+                    raw_frames = response["payload"].get("stack") or []
+                    current_func = (
+                        raw_frames[0].get("func", "")
+                        if raw_frames and isinstance(raw_frames[0], dict)
+                        else ""
+                    )
 
+                    deadline = time.monotonic() + instance.timeout
                     if entry_stack_len == -1:  # Init entry stack len
                         entry_stack_len = len(stacktrace)
+                        entry_stack = stacktrace
+                        entry_function = current_func
+                        if len(raw_frames) > 1 and isinstance(raw_frames[1], dict):
+                            entry_caller_func = raw_frames[1].get("func", "")
                     elif not self.exitpoint and entry_stack_len > len(stacktrace):
-                        # We ran beyond the entry function
+                        # Require the expected caller chain and that we actually left the parser.
+                        # `parse_stacktrace` drops the current frame, so a truncated unwind can
+                        # otherwise match `entry_stack[1:]`.
+                        if stacktrace != entry_stack[1:]:
+                            raise RuntimeError(f"Unexpected parser return stack: {stacktrace}")
+                        if current_func == entry_function or (
+                            entry_caller_func and current_func != entry_caller_func
+                        ):
+                            raise RuntimeError(
+                                f"Parser return stop still in unexpected frame: {current_func!r}"
+                            )
+                        if instruction_trace_list[-1].watchpoint_hits:
+                            raise RuntimeError("Read observations attached outside parser")
 
                         # Remove last trace element
                         instruction_trace_list.pop()
@@ -215,14 +257,17 @@ class GDBTracer:
 
                     if ignore_till_stack_len < 0:
                         # Just add stacktrace to latest trace entry
-                        assert not instruction_trace_list[-1].stack
-                        #    logging.warning(f"Overwrite stacktrace for instruction {instruction_trace_list[-1]} with {stacktrace}")
-                        instruction_trace_list[-1].stack = stacktrace
+                        if not instruction_trace_list[-1].stack:
+                            instruction_trace_list[-1].stack = stacktrace
+                            instance.step_instruction()
+                        else:
+                            logging.debug("Ignore duplicate stacktrace response")
 
                     elif len(stacktrace) > ignore_till_stack_len:
                         # We currently ignore messages
                         # Best we can do is to step out of func and check again
                         instance.step_out_of_function()
+                        finish_pending = True
                     else:
                         # We reached the desired stack len,
                         # so go back to track every instruction
@@ -233,12 +278,19 @@ class GDBTracer:
                 # Check if execution is interrupted
                 elif instance.is_stop_message(response):
                     logging.debug(f"Execution stopped {response['payload']}")
+                    deadline = time.monotonic() + instance.timeout
+                    after_finish, finish_pending = finish_pending, False
 
                     # Here we hit a breakpoint, which should only be on the exit point
                     if (
                         "reason" in response["payload"]
                         and response["payload"]["reason"] == "breakpoint-hit"
                     ):
+                        if not self.exitpoint or (
+                            exit_breakpoint is not None
+                            and response["payload"].get("bkptno") != exit_breakpoint
+                        ):
+                            raise RuntimeError(f"Unexpected exit breakpoint: {response}")
                         # Delete watchpoints and stop tracing
                         run = False
                         for wp_id in watchpoint_offset:
@@ -277,6 +329,11 @@ class GDBTracer:
                     #     (response['payload']['reason'] == 'end-stepping-range' or \
                     #     response['payload']['reason'] == 'function-finished'):
                     else:
+                        reason = response["payload"].get("reason")
+                        if reason not in {"end-stepping-range", "function-finished"} and not (
+                            after_finish and reason is None
+                        ):
+                            raise RuntimeError(f"Unexpected trace stop: {response}")
                         func_name = response["payload"]["frame"]["func"]
 
                         # Check if we currently ignore interruptions
@@ -290,21 +347,24 @@ class GDBTracer:
                             # Ignore all interruption until stack is back to previous function
                             ignore_till_stack_len = len(instruction_trace_list[-1].stack)
                             instance.step_out_of_function()
+                            finish_pending = True
                         else:
-                            assert instruction_trace_list[-1].stack
-                            #    logging.warning(f"No stack trace for instruction {instruction_trace_list[-1]} received")
+                            if not instruction_trace_list[-1].stack:
+                                raise RuntimeError("Successor arrived before instruction stack")
                             self.trace_instruction(response, instance, instruction_trace_list)
-                            instance.step_instruction()
+                elif response.get("type") == "result" and response.get("message") == "error":
+                    raise RuntimeError(f"GDB command failed: {response}")
                 else:
                     logging.debug(f"Unprocessed GDB message {response}")
 
         return instruction_trace_list
 
     def parse_stacktrace(self, response) -> list[str]:
+        if not response["payload"].get("stack"):
+            raise RuntimeError("Missing stack frames; cannot establish parser completion")
         stacktrace = []
         # Skip first address on stack trace, because it can be unreliable
-        if len(response["payload"]["stack"]) > 0:
-            for frame in response["payload"]["stack"][1:]:
-                stacktrace.append(frame["addr"])
+        for frame in response["payload"]["stack"][1:]:
+            stacktrace.append(frame["addr"])
         stacktrace.append("0x0")  # Put a dummy element on stack
         return stacktrace
