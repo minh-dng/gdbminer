@@ -7,11 +7,11 @@ import dataclasses
 import json
 import logging
 import time
-from configparser import ConfigParser
 from pathlib import Path
 
 from tracer.gdb_tracer import GDBTracer
 from util import setup_logging
+from util.config import Config, load_config
 
 
 def create_output_dir(output_dir_base: Path) -> Path:
@@ -27,7 +27,7 @@ def create_output_dir(output_dir_base: Path) -> Path:
             counter += 1
 
 
-def generate_trace(filename: Path, config: ConfigParser) -> list[GDBTracer.TraceEntry]:
+def generate_trace(filename: Path, config: Config) -> list[GDBTracer.TraceEntry]:
     gdb_tracer = GDBTracer(config)
 
     # Start gdb execution
@@ -46,11 +46,7 @@ def main() -> None:
 
     config_file_path = Path(parser.parse_args().config).expanduser()
 
-    if not config_file_path.is_file():
-        raise Exception(f"Config file at {config_file_path} does not exist")
-
-    config = ConfigParser()
-    config.read(config_file_path)
+    config = load_config(config_file_path)
 
     # Setup logging
     output_directory = create_output_dir(Path(config["BASIC"]["output_directory"]))

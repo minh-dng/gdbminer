@@ -7,7 +7,6 @@ import json
 import logging
 import os
 import signal
-from configparser import ConfigParser
 from pathlib import Path
 
 import cmimid.fuzz as F
@@ -15,6 +14,7 @@ from eval import resolve_grammar_file
 from eval.grammar import accepts
 from tracer.gdb_tracer import GDBTracer
 from util import find_output_directory, setup_logging
+from util.config import load_config
 
 PRECISION_SIZE = int(os.environ.get("PRECISION_SET_SIZE", "1000"))
 
@@ -34,12 +34,7 @@ def main() -> None:
     args = parser.parse_args()
     config_file_path = Path(args.config).expanduser()
 
-    if not config_file_path.is_file():
-        raise Exception(f"Config file at {config_file_path} does not exist")
-
-    # Start ConfigParser for further usage
-    config = ConfigParser()
-    config.read(config_file_path)
+    config = load_config(config_file_path)
 
     output_directory = find_output_directory(Path(config["BASIC"]["output_directory"]))
 

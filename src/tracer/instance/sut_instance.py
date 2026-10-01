@@ -3,19 +3,17 @@
 # SPDX-License-Identifier: AGPL-3.0
 
 import logging
-from configparser import ConfigParser
 from types import TracebackType
 from typing import Self
 
 from pygdbmi import gdbcontroller
 
+from util.config import Config
+
 
 class SUTInstance:
-    def __init__(self, config: ConfigParser) -> None:
-        timeout = config["GDB"].getint("timeout")
-        if timeout is None:
-            raise ValueError("Config [GDB] timeout must be set")
-        self.timeout = timeout
+    def __init__(self, config: Config) -> None:
+        self.timeout = config["GDB"]["timeout"]
         self.elf_file = config["BASIC"]["binary_file"]
         self.gdb_with_args = config["GDB"]["gdb_path"].split(" ")
         self.config = config

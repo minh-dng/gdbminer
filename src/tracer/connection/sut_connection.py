@@ -6,10 +6,10 @@
 import logging
 import multiprocessing as mp
 import queue
-from configparser import ConfigParser
 
 from tracer.connection.connection_base_class import ConnectionBaseClass
 from tracer.connection.serial_connection import SerialConnection
+from util.config import Config
 
 
 class SUTConnection:
@@ -18,16 +18,16 @@ class SUTConnection:
     generated inputs to this Connection component.
     """
 
-    def __init__(self, config: ConfigParser, sut_reset_method):
+    def __init__(self, config: Config, sut_reset_method):
         self.config = config
         self.sut_reset_method = sut_reset_method
-        self.timeout = config.getint("GDB", "timeout")
+        self.timeout = config["GDB"]["timeout"]
         self.inputs = mp.Queue()
         self.responses = mp.Queue()
         self.ready = mp.Queue()
         self.connection = self.init_connection(config, reset=False)
 
-    def init_connection(self, config: ConfigParser, *, reset: bool) -> ConnectionBaseClass:
+    def init_connection(self, config: Config, *, reset: bool) -> ConnectionBaseClass:
         match config["Connection"]["input_channel"]:
             case "serial":
                 connection = SerialConnection(config, self.inputs, self.responses, self.ready)

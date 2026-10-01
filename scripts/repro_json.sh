@@ -10,7 +10,7 @@ CC="${CC:-gcc}"
 cd "$REPO_ROOT"
 
 if [[ -x "$PYTHON" ]] && [[ "$("$PYTHON" -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')" != "3.12" ]]; then
-    rm -rf "$VENV"
+	rm -rf "$VENV"
 fi
 UV_PROJECT_ENVIRONMENT="$VENV" uv sync --frozen --python 3.12.11 --no-dev
 
@@ -22,32 +22,45 @@ cp example_programs/json/eval/input.{1,2,3,4,5,6,7,8,9,10} "$OUT_DIR/work/eval/"
 
 "$CC" -g -O0 -no-pie -o "$OUT_DIR/bin/json" example_programs/json/json.c
 
-cat > "$OUT_DIR/configuration.ini" <<EOF
-[BASIC]
-seed_directory = $OUT_DIR/work/seeds
-output_directory = $OUT_DIR/work/out
-binary_file = $OUT_DIR/bin/json
-eval_directory = $OUT_DIR/work/eval
+# JSON string escaping also produces valid TOML strings for arbitrary paths.
+"$PYTHON" - "$OUT_DIR" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+out = Path(sys.argv[1])
+paths = {
+    "seed_directory": out / "work/seeds",
+    "output_directory": out / "work/out",
+    "binary_file": out / "bin/json",
+    "eval_directory": out / "work/eval",
+}
+config = "[BASIC]\n" + "\n".join(
+    f"{key} = {json.dumps(str(value))}" for key, value in paths.items()
+)
+config += '''
 
 [Connection]
-input_channel = file
+input_channel = "file"
 
 [GDB]
-gdb_path = /usr/bin/gdb
-instance = valgrind
-ignore_functions_regex = @plt|_vgr*
-watchpoint_type = (char*)
+gdb_path = "/usr/bin/gdb"
+instance = "valgrind"
+ignore_functions_regex = '@plt|_vgr*'
+watchpoint_type = "(char*)"
 watchpoint_count = 10000
 timeout = 30
-entrypoint = json_parse
-exitpoint =
-input_buffer = my_string
+entrypoint = "json_parse"
+exitpoint = ""
+input_buffer = "my_string"
 
 [LOGS]
-log_level = INFO
-EOF
+log_level = "INFO"
+'''
+(out / "configuration.toml").write_text(config, encoding="utf-8")
+PY
 
-PYTHONPATH=src "$PYTHON" src/tracer/trace.py --config "$OUT_DIR/configuration.ini"
-PYTHONPATH=src "$PYTHON" src/miner/mine.py --config "$OUT_DIR/configuration.ini"
+PYTHONPATH=src "$PYTHON" src/tracer/trace.py --config "$OUT_DIR/configuration.toml"
+PYTHONPATH=src "$PYTHON" src/miner/mine.py --config "$OUT_DIR/configuration.toml"
 
 echo "Wrote mined grammar to $OUT_DIR/work/out/trial-0/parsing_g.json"

@@ -1,33 +1,29 @@
 # Here are basic configurations which concern the generation of the grammar in general.
 [BASIC]
-seed_directory = ./example_firmware/stm32_libyxml/seeds
+seed_directory = "./example_firmware/stm32_libyxml/seeds"
 
 # Path to a directory where output files (e.g. graphs, logfiles) are stored.
-output_directory = ./output/stm32_libyxml/
+output_directory = "./output/stm32_libyxml/"
 
-binary_file = ./example_firmware/stm32_libyxml/.pio/build/disco_l4s5i_iot01a/firmware.elf
+binary_file = "./example_firmware/stm32_libyxml/.pio/build/disco_l4s5i_iot01a/firmware.elf"
 
-eval_directory = ./example_firmware/stm32_libyxml/eval
+eval_directory = "./example_firmware/stm32_libyxml/eval"
 
 
 # This section contains configurations for the communication with the board on which the SuT is running.
 [Connection]
-input_channel = serial
-port = /dev/ttyACM0
+input_channel = "serial"
+port = "/dev/ttyACM0"
 baud_rate = 9600
 
 # This section contains configurations which are relevant for GDB
 [GDB]
-gdb_path = ../.platformio/packages/toolchain-gccarmnoneeabi/bin/arm-none-eabi-gdb
-instance = stm32
-
-gdb_server_path = st-util 
-#Written in address:port
-gdb_server_address = :4242
+gdb_path = "../.platformio/packages/toolchain-gccarmnoneeabi/bin/arm-none-eabi-gdb"
+instance = "stm32"
 
 # tracing will ignore function names that match the following regex 
 # see https://docs.python.org/3/library/re.html
-ignore_functions_regex = _malloc|_strtod_l|__aeabi_dadd
+ignore_functions_regex = "_malloc|_strtod_l|__aeabi_dadd"
 
 
 # Type of watchpoint (e.g. (uint8_t*), (uint16_t*), (uint32_t*), (char*), etc.).
@@ -35,25 +31,31 @@ ignore_functions_regex = _malloc|_strtod_l|__aeabi_dadd
 # (uint8_t*) == (char*) == (uint8*) but it is not everytime clear, which type will be accepted.
 # You know you do it wrong if you get the ERROR message 'No symbol table is loaded.  Use the "file" command.' when
 # setting a watchpoint
-watchpoint_type = (char*)
-# Number of available watchpoints (for infinite watchpoints use -1)
+watchpoint_type = "(char*)"
+# Number of available watchpoints (must be positive)
 watchpoint_count = 4
-
-# Comparator Function register DWT_FUNCTIONn first address
-dwt_function_reg = 0xe0001028
 # Time how long GDB should wait for responses from GDBServer in seconds
 timeout = 30
 
-entrypoint = main.ino:46
+entrypoint = "main.ino:46"
 #0x8006d10
-exitpoint = main.ino:53
+exitpoint = "main.ino:53"
 #0x8006d6e
 
 
-input_buffer = buf
+input_buffer = "buf"
 
 
 
 [LOGS]
 # One of {DEBUG, INFO, WARNING, ERROR, CRITICAL}
-log_level = INFO
+log_level = "INFO"
+
+[stm32]
+
+gdb_server_path = "st-util"
+#Written in address:port
+gdb_server_address = ":4242"
+
+# Comparator Function register DWT_FUNCTIONn first address
+dwt_function_reg = "0xe0001028"

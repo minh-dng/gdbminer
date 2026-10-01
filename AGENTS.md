@@ -34,7 +34,7 @@ mise run trace                      # example_programs/json default config
 mise run mine
 mise run eval
 # or with an explicit config:
-mise run trace -- example_programs/json/configuration/configuration.ini
+mise run trace -- example_programs/json/configuration/configuration.toml
 mise run shellcheck; mise run shfmt:check
 mise tasks ls                       # all available tasks
 ```
@@ -44,16 +44,16 @@ Without mise (vanilla venv + pip):
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install -e .            # or: uv sync --group dev
-./src/tracer/trace.py --config example_programs/json/configuration/configuration.ini
-./src/miner/mine.py --config example_programs/json/configuration/configuration.ini
-./src/eval/precision_recall.py --config example_programs/json/configuration/configuration.ini
+./src/tracer/trace.py --config example_programs/json/configuration/configuration.toml
+./src/miner/mine.py --config example_programs/json/configuration/configuration.toml
+./src/eval/precision_recall.py --config example_programs/json/configuration/configuration.toml
 ```
 
 Tracing creates `*.trace`; mining writes `parsing_g.json`. For Docker and different arch testing, see `docs/DOCKER.md`.
 
 ## Coding Style
 
-Preserve existing type hints and logging patterns. In `src/` (tracer/miner/eval/cmimid), keep target-specific values in INI files rather than hard-coding paths or debugger settings. That INI-over-hardcode rule applies to GDBMiner program code, not to Dockerfile/infra setup, where `ARG`/`ENV` pins are the mechanism.
+Preserve existing type hints and logging patterns. In `src/` (tracer/miner/eval/cmimid), keep target-specific values in TOML files rather than hard-coding paths or debugger settings. That TOML-over-hardcode rule applies to GDBMiner program code, not to Dockerfile/infra setup, where `ARG`/`ENV` pins are the mechanism.
 
 ## Testing Guidelines
 

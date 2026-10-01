@@ -6,7 +6,6 @@ import logging
 import re
 import time
 from collections import deque
-from configparser import ConfigParser
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -14,6 +13,7 @@ from tracer.instance.msp430_instance import MSP430Instance
 from tracer.instance.stm32_instance import STM32Instance
 from tracer.instance.sut_instance import SUTInstance
 from tracer.instance.valgrind_instance import ValgrindInstance
+from util.config import Config
 
 
 class GDBTracer:
@@ -25,13 +25,13 @@ class GDBTracer:
         stack: list[str]
         watchpoint_hits: list[int]
 
-    def __init__(self, config: ConfigParser):
+    def __init__(self, config: Config):
         self.entrypoint = config["GDB"]["entrypoint"]
         self.exitpoint = config["GDB"]["exitpoint"]
         self.watchpoint_type = config["GDB"]["watchpoint_type"]
         self.input_buffer = config["GDB"]["input_buffer"]
-        self.ignore_functions_regex = config.get("GDB", "ignore_functions_regex", fallback="")
-        self.watchpoint_count = config.getint("GDB", "watchpoint_count")
+        self.ignore_functions_regex = config["GDB"].get("ignore_functions_regex", "")
+        self.watchpoint_count = config["GDB"]["watchpoint_count"]
         self.config = config
 
     def trace_instruction(
@@ -77,7 +77,7 @@ class GDBTracer:
         execution_trace.append(entry)
 
     @staticmethod
-    def open_sut_instance(config: ConfigParser, input_file: Path | str = "") -> SUTInstance:
+    def open_sut_instance(config: Config, input_file: Path | str = "") -> SUTInstance:
         match config["GDB"]["instance"]:
             case "valgrind":
                 return ValgrindInstance(config, input_file)

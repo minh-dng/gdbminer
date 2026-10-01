@@ -110,31 +110,31 @@ run = "shfmt -d run_experiment.sh scripts/*.sh fetch_example_programs.sh"
 [tasks.trace]
 description = "Run tracer (usage: mise run trace [config])"
 usage = '''
-  arg "[config]" help="Path to configuration.ini" default="example_programs/json/configuration/configuration.ini"
+  arg "[config]" help="Path to configuration.toml" default="example_programs/json/configuration/configuration.toml"
 '''
 run = '''
 #!/usr/bin/env bash
 set -eu
-cfg="${usage_config:-example_programs/json/configuration/configuration.ini}"
+cfg="${usage_config:-example_programs/json/configuration/configuration.toml}"
 uv run src/tracer/trace.py --config "$cfg"
 '''
 
 [tasks.mine]
 description = "Run miner (usage: mise run mine [config])"
 usage = '''
-  arg "[config]" help="Path to configuration.ini" default="example_programs/json/configuration/configuration.ini"
+  arg "[config]" help="Path to configuration.toml" default="example_programs/json/configuration/configuration.toml"
 '''
 run = '''
 #!/usr/bin/env bash
 set -eu
-cfg="${usage_config:-example_programs/json/configuration/configuration.ini}"
+cfg="${usage_config:-example_programs/json/configuration/configuration.toml}"
 uv run src/miner/mine.py --config "$cfg"
 '''
 
 [tasks.eval]
 description = "Calculate precision/recall (usage: mise run eval [config])"
 usage = '''
-  arg "[config]"        help="Path to configuration.ini" default="example_programs/json/configuration/configuration.ini"
+  arg "[config]"        help="Path to configuration.toml" default="example_programs/json/configuration/configuration.toml"
   flag "--grammar <grammar>" help="Override grammar path (json path)"
   flag "--out <out>"         help="Output result file"
 '''
@@ -142,7 +142,7 @@ run = '''
 #!/usr/bin/env bash
 set -euo pipefail
 # usage_* vars are set by mise from `usage` spec; fall back to defaults if invoked via `mise run eval -- --help`
-cfg="${usage_config:-example_programs/json/configuration/configuration.ini}"
+cfg="${usage_config:-example_programs/json/configuration/configuration.toml}"
 args=(--config "$cfg")
 if [[ -n "${usage_grammar:-}" ]]; then args+=(--grammar "${usage_grammar}"); fi
 if [[ -n "${usage_out:-}" ]]; then args+=(--out "${usage_out}"); fi
@@ -155,13 +155,13 @@ usage = '''
   arg "[grammar]" help="Grammar file" default="example_programs/json/json.grammar"
   arg "[outdir]"  help="Output directory for generated inputs"
   arg "[n]"       help="Number of inputs to generate" default="100"
-  flag "--config <config>" help="Config file for paths" default="example_programs/json/configuration/configuration.ini"
+  flag "--config <config>" help="Config file for paths" default="example_programs/json/configuration/configuration.toml"
 '''
 run = '''
 #!/usr/bin/env bash
 set -euo pipefail
 if [[ -z "${usage_outdir:-}" ]]; then
-  echo "usage: mise run generate <grammar> <outdir> [n] [--config <ini>]" >&2
+  echo "usage: mise run generate <grammar> <outdir> [n] [--config <toml>]" >&2
   exit 2
 fi
 uv run src/eval/generate_inputs.py --config "${usage_config}" "${usage_grammar}" "${usage_outdir}" "${usage_n}"

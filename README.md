@@ -47,65 +47,69 @@ The hook copies the file only when it is missing, so it will not overwrite local
 for normal `git worktree add` commands; with `--no-checkout`, it runs when the worktree is
 checked out later.
 
-## Config File
+## Config file
 
-GDBMiner uses config files for passing required options.
+GDBMiner reads `configuration.toml` with Python's built-in `tomllib`; no extra TOML package is needed. Paths remain relative to the working directory. Table and key names are case-sensitive.
 
-```ini
+This example configures the desktop JSON target:
+
+```toml
 [BASIC]
-# Path to a directory containing seed files
-seed_directory = <path>
-# Path to a directory where output files (e.g. graphs, logfiles) are stored.
-output_directory = <path>
+seed_directory = "./example_programs/json/seeds"
+output_directory = "./output/json/"
+binary_file = "./example_programs/json/json"
+eval_directory = "./example_programs/json/eval"
 
-# Path to the binary target file
-binary_file = <path>
-
-# Path to directory containing eval files
-eval_directory = <path>
-
-# This section contains configurations which are relevant for GDB
 [GDB]
-gdb_path = /usr/bin/gdb
-instance = valgrind
-
-# tracing will ignore function names that match the following regex
-# see https://docs.python.org/3/library/re.html
-ignore_functions_regex = @plt|_vgr
-
-# Type of watchpoint (e.g. (uint8_t*), (uint16_t*), (uint32_t*), (char*), etc.).
-# Sometimes it can be a little bit tricky to find the correct type because
-# (uint8_t*) == (char*) == (uint8*) but it is not everytime clear, which type will be accepted.
-# You know you do it wrong if you get the ERROR message 'No symbol table is loaded.  Use the "file" command.' when
-# setting a watchpoint
-watchpoint_type = (char*)
-# Number of available watchpoints
-watchpoint_count = 10000
-
-# Time how long GDB should wait for responses from GDBServer in seconds
-timeout = 30
-
-# Address or symbol name where tracing should start
-entrypoint = <symbol_name|address>
-
-# Address or symbol name where tracing should end
-# or empty if tracing should stop when stepping out of entry function
-exitpoint = <symbol_name|address|empty>
-
-#The address of the input buffer or symbol name
-input_buffer = <symbol_name|address>
+gdb_path = "/usr/bin/gdb"
+instance = "valgrind" # valgrind, stm32, or msp430
+# Ignore function names matching this Python regular expression.
+# Literal strings preserve backslashes without TOML escape sequences.
+ignore_functions_regex = '@plt|_vgr'
+watchpoint_type = "(char*)"
+watchpoint_count = 10000 # Positive number of available watchpoints.
+timeout = 30 # GDB response timeout in seconds.
+entrypoint = "json_parse" # Symbol name or quoted hexadecimal address.
+exitpoint = "" # Empty means stop after leaving the entry function.
+input_buffer = "my_string" # Symbol name or quoted hexadecimal address.
 
 [LOGS]
-# One of {DEBUG, INFO, WARNING, ERROR, CRITICAL}
-log_level = INFO
+log_level = "INFO" # DEBUG, INFO, WARNING, ERROR, or CRITICAL.
 ```
+
+### MCU-specific settings
+
+Shared debugger settings stay in `[GDB]`. Only the selected backend reads its MCU table: `[stm32]` or `[msp430]`. Desktop targets do not need either table. Both MCU backends use `[Connection]` for serial input.
+
+For an STM32 target, set `GDB.instance = "stm32"`, update the binary, symbols and watchpoint count for your firmware, and add:
+
+```toml
+[stm32]
+gdb_server_path = "st-util -p 4243"
+gdb_server_address = ":4243"
+dwt_function_reg = "0xe0001028" # Keep addresses as strings for GDB commands.
+dwt_watchpoint_workaround = true # Defaults to true for ARMv7 DWT single-stepping.
+
+[Connection]
+input_channel = "serial"
+port = "/dev/ttyACM0"
+baud_rate = 9600
+```
+
+MSP430 uses a `[msp430]` table containing `gdb_server_path` and `gdb_server_address`; it does not read STM32's DWT settings.
+
+### Migrating an existing INI file
+
+Rename GDBMiner configs to `.toml`, quote strings (including empty values and addresses), and leave numbers and booleans unquoted. Move `gdb_server_path` and `gdb_server_address` from `[GDB]` into the selected MCU table; move `dwt_function_reg` and `dwt_watchpoint_workaround` into `[stm32]`. Update commands that pass `--config`. The old INI format is no longer supported; PlatformIO's `platformio.ini` files are unchanged.
+
+The loader returns ordinary dictionaries rather than a config class or a global schema that would require every MCU's settings. Malformed TOML raises `TOMLDecodeError`, missing required keys raise `KeyError` when read, and invalid logging levels retain Python logging's `ValueError`. Values must use the types shown above; the loader does not coerce quoted numbers or strings such as `"false"`.
 
 ## Generate inputs from a golden grammar
 
 To evaluate GDBMiner, we generate inputs using a grammar. For instance, create 1000 inputs for evaluation:
 
 ```sh
-uv run src/eval/generate_inputs.py --config ./example_programs/json/configuration/configuration.ini --grammar ./example_programs/json/json.grammar ./example_programs/json/eval 1000
+uv run src/eval/generate_inputs.py --config ./example_programs/json/configuration/configuration.toml --grammar ./example_programs/json/json.grammar ./example_programs/json/eval 1000
 ```
 
 ## Run local
@@ -117,14 +121,14 @@ mise run trace
 mise run mine
 mise run eval
 # or with an explicit config:
-mise run trace -- example_programs/json/configuration/configuration.ini
+mise run trace -- example_programs/json/configuration/configuration.toml
 ```
 
 Or without mise:
 
 ```sh
-uv run src/tracer/trace.py --config ./example_programs/json/configuration/configuration.ini
-uv run src/miner/mine.py --config ./example_programs/json/configuration/configuration.ini
+uv run src/tracer/trace.py --config ./example_programs/json/configuration/configuration.toml
+uv run src/miner/mine.py --config ./example_programs/json/configuration/configuration.toml
 ```
 
 The following files will be stored to the configured output folder:
@@ -155,7 +159,7 @@ with open(WORKING_DIRECTORY / "parsing_g.json", "r") as f:
 Calculate precision and recall values using the eval inputs and the mined grammar
 
 ```sh
-uv run src/eval/precision_recall.py --config ./example_programs/json/configuration/configuration.ini
+uv run src/eval/precision_recall.py --config ./example_programs/json/configuration/configuration.toml
 ```
 
 ## Run evaluation experiment in docker
@@ -227,12 +231,12 @@ into `/etc/udev/rules.d/90-stm32.rules`and run `sudo udevadm control --reload` t
 
 For your info: platformio stored an .elf file of the SUT here: ./example_firmware/stm32_arduinojson/.pio/build/disco_l4s5i_iot01a/firmware.elf
 
-Check the config at `./example_firmware/stm32_arduinojson/configuration/configuration.ini` and start tracing and mining:
+Check the config at `./example_firmware/stm32_arduinojson/configuration/configuration.toml` and start tracing and mining:
 
 ```sh
-uv run src/tracer/trace.py --config ./example_firmware/stm32_arduinojson/configuration/configuration.ini
+uv run src/tracer/trace.py --config ./example_firmware/stm32_arduinojson/configuration/configuration.toml
 
-uv run src/miner/mine.py --config ./example_firmware/stm32_arduinojson/configuration/configuration.ini
+uv run src/miner/mine.py --config ./example_firmware/stm32_arduinojson/configuration/configuration.toml
 ```
 
 ## SVGPP
@@ -277,9 +281,9 @@ inkscape --export-type=pdf --export-area-drawing --export-overwrite <file>.svg
 Run in Docker Container
 
 ```sh
-docker run --rm  -v $( pwd)/output:/output/ gdbminer python3 /GDBMiner/src/tracer/trace.py --config /example_programs/svgcpp/configuration_libxml.ini
+docker run --rm  -v $( pwd)/output:/output/ gdbminer python3 /GDBMiner/src/tracer/trace.py --config /example_programs/svgcpp/configuration_libxml.toml
 
-docker run --rm  -v $( pwd)/output:/output/ gdbminer python3 /GDBMiner/src/miner/mine.py --config /example_programs/svgcpp/configuration_libxml.ini
+docker run --rm  -v $( pwd)/output:/output/ gdbminer python3 /GDBMiner/src/miner/mine.py --config /example_programs/svgcpp/configuration_libxml.toml
 ```
 
 ## License
