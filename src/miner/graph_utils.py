@@ -23,9 +23,8 @@ def build_control_flow_graphs_from_traces(
     edge_trace: list[tuple[str, str]] = []
     function_entries: dict[str, str] = {}  # from entry address to fname
     function_scopes: dict[str, set[str]] = {}
-    function_stack: list[str] = []
-
     for trace in traces:
+        function_stack: list[tuple[int, str]] = []
         previous_node = start_node
         initial_stack_len = len(trace[0]["stack"])
         prev_stack_len = initial_stack_len - 1
@@ -42,7 +41,7 @@ def build_control_flow_graphs_from_traces(
             # Add fallthrough edge
             if stack_len > prev_stack_len:
                 edge_trace.append((previous_node, trace_entry["stack"][0]))
-                function_stack.append(addr)
+                function_stack.append((stack_len, addr))
                 if addr not in function_entries:
                     function_entries[addr] = fname
                     function_scopes[addr] = set()
@@ -52,11 +51,12 @@ def build_control_flow_graphs_from_traces(
                 edge_trace.append((previous_node, addr))
 
             else:
-                while stack_len < prev_stack_len:
+                # Inline debug frames can change depth by several levels at once.
+                # Pop observed scopes, not one scope per reported debug frame.
+                while function_stack[-1][0] > stack_len:
                     function_stack.pop()
-                    prev_stack_len -= 1
 
-            function_scopes[function_stack[-1]].add(addr)
+            function_scopes[function_stack[-1][1]].add(addr)
 
             previous_node = addr
             prev_stack_len = stack_len
