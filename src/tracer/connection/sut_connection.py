@@ -37,6 +37,7 @@ class InputChannel(StrEnum):
     """Values of the `Connection.input_channel` configuration key."""
 
     SERIAL = "serial"
+    ESP32_UART = "esp32-uart"
 
 
 class SUTConnection:
@@ -62,6 +63,10 @@ class SUTConnection:
                 from tracer.connection.serial_connection import SerialConnection
 
                 connection = SerialConnection(config, self.inputs, self.responses, self.ready)
+            case InputChannel.ESP32_UART:
+                from tracer.connection.esp32_serial_connection import ESP32UARTConnection
+
+                connection = ESP32UARTConnection(config, self.inputs, self.responses, self.ready)
 
         connection.daemon = True
         connection.start()

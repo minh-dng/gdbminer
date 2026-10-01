@@ -6,11 +6,12 @@ import tomllib
 from pathlib import Path
 from typing import Any
 
-# tomllib returns nested dictionaries with native TOML value types.
 type Config = dict[str, Any]
 
 
 def require(table: Config, key: str, expected: type | tuple[type, ...]) -> Any:
+    """Require a config key to have a specific type, raising a TypeError if it does not."""
+
     value = table[key]
     types = expected if isinstance(expected, tuple) else (expected,)
     # Exact types exclude booleans from numeric settings.
@@ -61,6 +62,15 @@ def validate_config(config: Config) -> None:
     require(connection, "port", str)
     if require(connection, "baud_rate", int) <= 0:
         raise ValueError("Connection.baud_rate must be positive")
+    if connection["input_channel"] == InputChannel.ESP32_UART:
+        for key in ("dtr", "rts", "reset_pulse"):
+            if key in connection:
+                require(connection, key, bool)
+        for key in ("quiet_sec", "grace_sec", "reset_pulse_sec"):
+            if key in connection:
+                seconds = require(connection, key, (int, float))
+                if not math.isfinite(seconds) or seconds <= 0:
+                    raise ValueError(f"Connection.{key} must be positive and finite")
 
     if instance == GDBInstance.STM32:
         for key in ("dwt_function_reg", "dwt_watchpoint_workaround"):
