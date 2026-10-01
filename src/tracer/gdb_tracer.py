@@ -88,22 +88,26 @@ class GDBTracer:
 
     @staticmethod
     def merge_traces(list1: list[TraceEntry], list2: list[TraceEntry]) -> list[TraceEntry]:
-        if len(list1) == 0:
-            return list2
-        elif len(list2) == 0:
-            return list1
+        if not list1 or not list2 or len(list1) != len(list2):
+            raise ValueError(f"Incomplete watchpoint windows: {len(list1)} != {len(list2)}")
 
         result: list[GDBTracer.TraceEntry] = []
-        for elem1, elem2 in zip(list1, list2):
-            assert elem1.address == elem2.address
+        for index, (elem1, elem2) in enumerate(zip(list1, list2, strict=True)):
+            if (elem1.address, elem1.function_name, elem1.stack) != (
+                elem2.address,
+                elem2.function_name,
+                elem2.stack,
+            ):
+                raise ValueError(
+                    f"Watchpoint windows diverge at instruction {index}: {elem1} != {elem2}"
+                )
             new_entry = GDBTracer.TraceEntry(
                 elem1.address,
                 elem1.function_name,
                 elem1.function_args,
                 elem1.stack,
-                elem1.watchpoint_hits,
+                [*elem1.watchpoint_hits, *elem2.watchpoint_hits],
             )
-            new_entry.watchpoint_hits.extend(elem2.watchpoint_hits)
             result.append(new_entry)
         return result
 
@@ -114,17 +118,21 @@ class GDBTracer:
 
         watchpoint_window_offset = 0
 
-        merged_trace: list[GDBTracer.TraceEntry] = []
+        merged_trace: list[GDBTracer.TraceEntry] | None = None
 
         # Sliding window according to watchpoint count
         while watchpoint_window_offset < input_len:
             with GDBTracer.open_sut_instance(self.config, filename) as instance:
                 trace = self.trace_input_slice(instance, input_len, watchpoint_window_offset)
 
-            merged_trace = GDBTracer.merge_traces(merged_trace, trace)
+            if not trace or any(not entry.stack for entry in trace):
+                raise ValueError(f"Incomplete trace window at offset {watchpoint_window_offset}")
+            merged_trace = trace if merged_trace is None else self.merge_traces(merged_trace, trace)
             # TODO: Investigate backend support for unlimited watchpoints (-1) and window advancement.
             watchpoint_window_offset += self.watchpoint_count
 
+        if merged_trace is None:
+            raise ValueError("Cannot trace an empty seed")
         return merged_trace
 
     def trace_input_slice(
