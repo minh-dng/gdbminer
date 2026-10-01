@@ -24,6 +24,8 @@ class STM32Instance(SUTInstance):
         self.watchpoint_count = config["GDB"]["watchpoint_count"]
         self.dwt_function_reg = stm32["dwt_function_reg"]
         self.dwt_watchpoint_workaround = stm32.get("dwt_watchpoint_workaround", True)
+        if not isinstance(self.dwt_watchpoint_workaround, bool):
+            raise TypeError("stm32.dwt_watchpoint_workaround must be a TOML boolean")
         self.input_file = Path(input_file)
 
     @override

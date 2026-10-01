@@ -102,7 +102,7 @@ MSP430 uses a `[msp430]` table containing `gdb_server_path` and `gdb_server_addr
 
 Rename GDBMiner configs to `.toml`, quote strings (including empty values and addresses), and leave numbers and booleans unquoted. Move `gdb_server_path` and `gdb_server_address` from `[GDB]` into the selected MCU table; move `dwt_function_reg` and `dwt_watchpoint_workaround` into `[stm32]`. Update commands that pass `--config`. The old INI format is no longer supported; PlatformIO's `platformio.ini` files are unchanged.
 
-The loader returns ordinary dictionaries rather than a config class or a global schema that would require every MCU's settings. Malformed TOML raises `TOMLDecodeError`, missing required keys raise `KeyError` when read, and invalid logging levels retain Python logging's `ValueError`. Values must use the types shown above; the loader does not coerce quoted numbers or strings such as `"false"`.
+The loader returns ordinary dictionaries rather than a config class or a global schema that would require every MCU's settings. Malformed TOML raises `TOMLDecodeError`, missing required keys raise `KeyError` when read, and invalid logging levels retain Python logging's `ValueError`. Values must use the types shown above; the loader does not coerce quoted numbers or strings such as `"false"`. Two checks prevent silent misbehaviour: tracing requires a positive integer `watchpoint_count`, and STM32 requires a boolean `dwt_watchpoint_workaround`.
 
 ## Generate inputs from a golden grammar
 

@@ -23,6 +23,7 @@ def test_config():
         assert isinstance(config["GDB"]["exitpoint"], str)
         assert "gdb_server_path" not in config["GDB"]
         assert "dwt_function_reg" not in config["GDB"]
+        GDBTracer(config)
         instance = GDBTracer.open_sut_instance(config)
         assert isinstance(instance, (STM32Instance, ValgrindInstance))
         if isinstance(instance, STM32Instance):
@@ -49,8 +50,29 @@ def test_config():
         assert isinstance(instance, STM32Instance)
         assert instance.dwt_watchpoint_workaround is False
         assert instance.timeout == 0.5
+        for invalid in ("false", "true", 0, 1):
+            config["stm32"]["dwt_watchpoint_workaround"] = invalid
+            try:
+                STM32Instance(config, "")
+            except TypeError:
+                pass
+            else:
+                raise AssertionError(f"Invalid workaround flag accepted: {invalid!r}")
         config["stm32"].pop("dwt_watchpoint_workaround")
         assert STM32Instance(config, "").dwt_watchpoint_workaround is True
+        config["GDB"].update(
+            entrypoint="parse", exitpoint="", watchpoint_type="(char*)", input_buffer="buf"
+        )
+        for invalid in (False, True, 0, -1, "4", 4.0):
+            config["GDB"]["watchpoint_count"] = invalid
+            try:
+                GDBTracer(config)
+            except ValueError:
+                pass
+            else:
+                raise AssertionError(f"Invalid watchpoint count accepted: {invalid!r}")
+        config["GDB"]["watchpoint_count"] = 4
+        assert GDBTracer(config).watchpoint_count == 4
         # An MSP430 target needs its own settings, not STM32's DWT settings.
         config["GDB"]["instance"] = "msp430"
         config["msp430"] = {
