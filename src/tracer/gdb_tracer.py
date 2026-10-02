@@ -124,6 +124,7 @@ class GDBTracer:
                 trace = self.trace_input_slice(instance, input_len, watchpoint_window_offset)
 
             merged_trace = GDBTracer.merge_traces(merged_trace, trace)
+            # TODO: Investigate backend support for unlimited watchpoints (-1) and window advancement.
             watchpoint_window_offset += self.watchpoint_count
 
         return merged_trace
