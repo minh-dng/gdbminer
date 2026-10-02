@@ -6,15 +6,15 @@ import logging
 import subprocess
 import tempfile
 import time
-from configparser import ConfigParser
 from pathlib import Path
 from typing import override
 
 from tracer.instance.sut_instance import SUTInstance
+from util.config import Config
 
 
 class ValgrindInstance(SUTInstance):
-    def __init__(self, config: ConfigParser, input_file: Path | str) -> None:
+    def __init__(self, config: Config, input_file: Path | str) -> None:
         super().__init__(config)
 
         self.valgrind_commands = [
@@ -64,7 +64,7 @@ class ValgrindInstance(SUTInstance):
             f.flush()
             # f.close()
             binary = self.config["BASIC"]["binary_file"]
-            timeout = self.config["GDB"].getfloat("timeout")
+            timeout = self.config["GDB"]["timeout"]
 
             try:
                 subprocess.check_call(

@@ -10,7 +10,6 @@
 # 3rd-party-licenses.txt file in the root directory of this source tree.
 
 import logging
-from configparser import ConfigParser
 
 from cmimid import util
 from miner.active_learning_utils import (
@@ -20,10 +19,11 @@ from miner.active_learning_utils import (
 )
 from tracer.gdb_tracer import GDBTracer
 from tracer.instance.sut_instance import SUTInstance
+from util.config import Config
 
 
 class LoopGeneralizer:
-    def __init__(self, config: ConfigParser) -> None:
+    def __init__(self, config: Config) -> None:
         self.config = config
         self.NODE_REGISTER: dict[str, list[tuple]] = {}
 

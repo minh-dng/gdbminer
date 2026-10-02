@@ -1,7 +1,6 @@
 """Hardware-free regression check: PYTHONPATH=src python tests/test_connection_lifecycle.py."""
 
 import queue
-from configparser import ConfigParser
 from unittest.mock import Mock, call, patch
 
 from tracer.connection.sut_connection import SUTConnection
@@ -9,8 +8,7 @@ from tracer.instance.msp430_instance import MSP430Instance
 
 
 def test_connection_startup():
-    config = ConfigParser()
-    config.read_dict({"Connection": {"input_channel": "serial"}})
+    config = {"Connection": {"input_channel": "serial"}}
     for ready, reset_error, expected_error in (
         (queue.Empty(), None, TimeoutError),
         (False, None, ConnectionError),

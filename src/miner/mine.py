@@ -12,7 +12,6 @@ from pathlib import Path
 sys.setrecursionlimit(99000)
 
 import json
-from configparser import ConfigParser
 
 import cmimid.grammartools as G
 import cmimid.util
@@ -25,6 +24,7 @@ from miner.token_generalizer import TokenGeneralizer
 # If we stick to original mimid structure
 from miner.tree_builder import TreeBuilder
 from util import find_output_directory, setup_logging
+from util.config import load_config
 
 
 def squash_consecutive_conditions(
@@ -224,13 +224,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Generate a context free grammar")
     parser.add_argument("--config", required=True, type=str, help="Path to a config file.")
 
-    config_file_path = Path(parser.parse_args().config).expanduser()
+    config_file_path = Path(parser.parse_args().config)
 
-    if not config_file_path.is_file():
-        raise Exception(f"Config file at {config_file_path} does not exist")
-
-    config = ConfigParser()
-    config.read(config_file_path)
+    config = load_config(config_file_path)
 
     output_directory = find_output_directory(Path(config["BASIC"]["output_directory"]))
     seed_directory = Path(config["BASIC"]["seed_directory"])

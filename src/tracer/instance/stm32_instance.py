@@ -6,25 +6,24 @@ import logging
 import shlex
 import subprocess
 import time
-from configparser import ConfigParser
 from pathlib import Path
 from typing import override
 
 from tracer.connection.sut_connection import SUTConnection
 from tracer.instance.sut_instance import SUTInstance
+from util.config import Config
 
 
 class STM32Instance(SUTInstance):
-    def __init__(self, config: ConfigParser, input_file: Path | str) -> None:
+    def __init__(self, config: Config, input_file: Path | str) -> None:
         super().__init__(config)
 
+        stm32 = config["GDB"]["stm32"]
         self.gdb_server_path_with_args = shlex.split(config["GDB"]["gdb_server_path"])
         self.gdb_server_address = config["GDB"]["gdb_server_address"]
-        self.watchpoint_count = config.getint("GDB", "watchpoint_count")
-        self.dwt_function_reg = config["GDB"]["dwt_function_reg"]
-        self.dwt_watchpoint_workaround = config.getboolean(
-            "GDB", "dwt_watchpoint_workaround", fallback=True
-        )
+        self.watchpoint_count = config["GDB"]["watchpoint_count"]
+        self.dwt_function_reg = stm32.get("dwt_function_reg", "")
+        self.dwt_watchpoint_workaround = stm32.get("dwt_watchpoint_workaround", True)
         self.input_file = Path(input_file)
 
     @override

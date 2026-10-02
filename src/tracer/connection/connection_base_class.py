@@ -6,14 +6,15 @@
 import logging as log
 import multiprocessing as mp
 from abc import abstractmethod
-from configparser import ConfigParser
 from typing import override
+
+from util.config import Config
 
 
 class ConnectionBaseClass(mp.Process):
     def __init__(
         self,
-        config: ConfigParser,
+        config: Config,
         inputs: mp.Queue,
         response: mp.Queue,
         ready: mp.Queue,
@@ -40,7 +41,7 @@ class ConnectionBaseClass(mp.Process):
             fuzz_input = self.inputs.get(block=True)
             self.response.put(self.send_input(fuzz_input))
 
-    def connect(self, config: ConfigParser): ...
+    def connect(self, config: Config): ...
 
     def connect_async(self): ...
 

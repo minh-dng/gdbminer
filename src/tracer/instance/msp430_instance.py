@@ -3,23 +3,23 @@
 # SPDX-License-Identifier: AGPL-3.0
 
 import logging
+import shlex
 import subprocess
 import time
-from configparser import ConfigParser
 from pathlib import Path
 from typing import override
 
 from tracer.connection.sut_connection import SUTConnection
 from tracer.instance.sut_instance import SUTInstance
+from util.config import Config
 
 
 class MSP430Instance(SUTInstance):
-    def __init__(self, config: ConfigParser, input_file: Path | str) -> None:
+    def __init__(self, config: Config, input_file: Path | str) -> None:
         super().__init__(config)
 
-        self.gdb_server_path_with_args = config["GDB"]["gdb_server_path"].split(" ")
+        self.gdb_server_path_with_args = shlex.split(config["GDB"]["gdb_server_path"])
         self.gdb_server_address = config["GDB"]["gdb_server_address"]
-        self.watchpoint_count = config.getint("GDB", "watchpoint_count")
         self.input_file = Path(input_file)
 
     @override

@@ -74,31 +74,31 @@ do
 
 
     else #For others we generate seeds with our script
-        python3 /GDBMiner/src/eval/generate_inputs.py --config "/example_programs/$target/configuration/configuration_docker.ini" --grammar "/example_programs/$target/$target.grammar" "/example_programs/$target/mimid_seeds" "${NUMBER_OF_SEEDS}"
+        python3 /GDBMiner/src/eval/generate_inputs.py --config "/example_programs/$target/configuration/configuration_docker.toml" --grammar "/example_programs/$target/$target.grammar" "/example_programs/$target/mimid_seeds" "${NUMBER_OF_SEEDS}"
     fi
 
     mkdir -p "/output/$target/" && cp -rf "/example_programs/$target/mimid_seeds" "/output/$target/seeds"
 
     # Generate eval inputs from golden grammar
-    python3 /GDBMiner/src/eval/generate_inputs.py --config "/example_programs/$target/configuration/configuration_docker.ini" --grammar "/example_programs/$target/$target.grammar" "/example_programs/$target/mimid_eval" "${PRECISION_SET_SIZE}"
+    python3 /GDBMiner/src/eval/generate_inputs.py --config "/example_programs/$target/configuration/configuration_docker.toml" --grammar "/example_programs/$target/$target.grammar" "/example_programs/$target/mimid_eval" "${PRECISION_SET_SIZE}"
 
     START_TIME=$(date +%s)
     # Run GDBMiner
-    python3 /GDBMiner/src/tracer/trace.py --config "/example_programs/$target/configuration/configuration_docker.ini"
-    python3 /GDBMiner/src/miner/mine.py --config "/example_programs/$target/configuration/configuration_docker.ini"
+    python3 /GDBMiner/src/tracer/trace.py --config "/example_programs/$target/configuration/configuration_docker.toml"
+    python3 /GDBMiner/src/miner/mine.py --config "/example_programs/$target/configuration/configuration_docker.toml"
     END_TIME=$(date +%s)
     # Calculate the execution duration in seconds
     EXECUTION_DURATION=$((END_TIME - START_TIME))
 
     # Calculate Precision recall for GDBMiner
-    python3 /GDBMiner/src/eval/precision_recall.py --config "/example_programs/$target/configuration/configuration_docker.ini" --out "/output/$target.${NUMBER_OF_SEEDS}.gdbminer.result"
+    python3 /GDBMiner/src/eval/precision_recall.py --config "/example_programs/$target/configuration/configuration_docker.toml" --out "/output/$target.${NUMBER_OF_SEEDS}.gdbminer.result"
 
     jq --arg duration "$EXECUTION_DURATION" '.execution_duration = ($duration | tonumber)' "/output/$target.${NUMBER_OF_SEEDS}.gdbminer.result" > tmp.$$.json && mv tmp.$$.json "/output/$target.${NUMBER_OF_SEEDS}.gdbminer.result"
 
 
     # Calculate precision and recall for CMimid where it supports the target.
     if [[ -f "/mimid/Cmimid/build/$target-parsing.json" ]]; then
-        python3 /GDBMiner/src/eval/precision_recall.py --config "/example_programs/$target/configuration/configuration_docker.ini" --grammar "/mimid/Cmimid/build/$target-parsing.json" --out "/output/$target.${NUMBER_OF_SEEDS}.mimid.result"
+        python3 /GDBMiner/src/eval/precision_recall.py --config "/example_programs/$target/configuration/configuration_docker.toml" --grammar "/mimid/Cmimid/build/$target-parsing.json" --out "/output/$target.${NUMBER_OF_SEEDS}.mimid.result"
         if [[ -f "/output/$target.${NUMBER_OF_SEEDS}.mimid.result" && -n "${MIMID_EXECUTION_DURATIONS[$target]+x}" ]]; then
             jq --arg duration "${MIMID_EXECUTION_DURATIONS[$target]}" '.execution_duration = ($duration | tonumber)' "/output/$target.${NUMBER_OF_SEEDS}.mimid.result" > tmp.$$.json && mv tmp.$$.json "/output/$target.${NUMBER_OF_SEEDS}.mimid.result"
         fi

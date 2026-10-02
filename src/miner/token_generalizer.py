@@ -12,7 +12,6 @@
 import copy
 import logging
 import random
-from configparser import ConfigParser
 from typing import Any
 
 import cmimid.fuzz as F
@@ -21,6 +20,7 @@ from cmimid.fuzz import ASCII_MAP, CHARACTER_PARENT_MAP
 from miner.active_learning_utils import is_a_replaceable_with_b
 from tracer.gdb_tracer import GDBTracer
 from tracer.instance.sut_instance import SUTInstance
+from util.config import Config
 
 # Nested parse trees as produced by the Mimid fuzzer / util helpers.
 type TreeNode = list[Any]
@@ -32,7 +32,7 @@ class TokenGeneralizer:
     GK = "<__GENERALIZE__>"
     MAX_CHECKS = 100
 
-    def __init__(self, config: ConfigParser) -> None:
+    def __init__(self, config: Config) -> None:
         self.config = config
 
     @staticmethod

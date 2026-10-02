@@ -4,12 +4,12 @@
 
 import argparse
 import json
-from configparser import ConfigParser
 from pathlib import Path
 
 from eval import resolve_grammar_file
 from eval.grammar import CoverageFuzzer, trim_grammar
 from tracer.gdb_tracer import GDBTracer
+from util.config import load_config
 
 PRECISION_SIZE = 1000
 
@@ -24,14 +24,9 @@ def main() -> None:
     parser.add_argument("count", type=int, help="Number of files to generate.")
 
     args = parser.parse_args()
-    config_file_path = Path(args.config).expanduser()
+    config_file_path = Path(args.config)
 
-    if not config_file_path.is_file():
-        raise Exception(f"Config file at {config_file_path} does not exist")
-
-    # Start ConfigParser for further usage
-    config = ConfigParser()
-    config.read(config_file_path)
+    config = load_config(config_file_path)
 
     output_directory = Path(args.out)
 
