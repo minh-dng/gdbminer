@@ -1,5 +1,6 @@
 """Load TOML and validate shared settings plus the selected backend's settings."""
 
+import logging
 import math
 import tomllib
 from pathlib import Path
@@ -28,6 +29,9 @@ def validate_config(config: Config) -> None:
         table = require(config, name, dict)
         for key in keys:
             require(table, key, str)
+
+    # Keep logging's native error without configuring application loggers.
+    logging.NullHandler(level=config["LOGS"]["log_level"])
 
     gdb = config["GDB"]
     for key in ("exitpoint", "ignore_functions_regex"):

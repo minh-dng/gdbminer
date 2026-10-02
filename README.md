@@ -136,7 +136,7 @@ Choose the binary, symbols, register address and watchpoint count for your firmw
 
 Rename GDBMiner configs to `.toml`, quote strings and addresses, and leave numbers and booleans unquoted. Keep `gdb_server_path` and `gdb_server_address` in `[GDB]`. Move `dwt_function_reg` and `dwt_watchpoint_workaround` into `[GDB.stm32]`. Update commands that pass `--config`. The old INI format is no longer supported. PlatformIO's `platformio.ini` files are unchanged.
 
-The loader uses ordinary dictionaries and checks shared fields plus the selected backend's fields before creating trial directories or starting a target. It does not coerce numbers or strings such as `"false"`. Malformed TOML raises `TOMLDecodeError`, missing required keys raise `KeyError`, wrong types raise `TypeError`, and invalid ranges or misplaced STM32 settings raise `ValueError`. Python logging reports invalid log levels itself.
+The loader uses ordinary dictionaries and checks shared fields plus the selected backend's fields before creating trial directories or starting a target. It does not coerce numbers or strings such as `"false"`. Malformed TOML raises `TOMLDecodeError`, missing required keys raise `KeyError`, wrong types raise `TypeError`, and invalid ranges or misplaced STM32 settings raise `ValueError`. The loader also validates log levels through Python logging before creating a trial directory, preserving logging's own `ValueError` message.
 
 `scripts/repro_json.sh` writes TOML using a Bash heredoc with literal strings. Its `OUT_DIR` supports spaces, double quotes, backslashes and UTF-8 text, but must not contain apostrophes or newlines.
 

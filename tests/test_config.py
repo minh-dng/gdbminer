@@ -16,6 +16,9 @@ STM32_CONFIG = ROOT / "example_firmware/stm32_libyxml/configuration/configuratio
 
 
 def test_config():
+    for path in ROOT.glob("example_*/**/configuration*.toml"):
+        load_config(path)
+
     desktop = load_config(JSON_CONFIG)
     stm32 = load_config(STM32_CONFIG)
 
@@ -26,24 +29,29 @@ def test_config():
         (desktop, "GDB", "entrypoint", (0x8001000,)),
         (desktop, "GDB", "input_buffer", (0x20000000,)),
         (desktop, "GDB", "exitpoint", (0x8002000,)),
+        (desktop, "LOGS", "log_level", ("INVALID",)),
         (stm32, "stm32", "dwt_function_reg", (0xE0001028,)),
         (stm32, "stm32", "dwt_watchpoint_workaround", ("false", "true", 0, 1)),
     ):
         for value in invalids:
             config = deepcopy(base)
-            target = config["GDB"] if table == "GDB" else config["GDB"][table]
+            target = config["GDB"][table] if table == "stm32" else config[table]
             target[key] = value
             # Exercise the CLI's loader, before any directory or target is created.
             with (
                 patch("sys.argv", ["trace", "--config", str(JSON_CONFIG)]),
                 patch("util.config.tomllib.load", return_value=config),
-                patch("tracer.trace.create_output_dir") as create_output,
+                patch(
+                    "tracer.trace.create_output_dir",
+                    side_effect=AssertionError("Invalid config reached trial-directory creation"),
+                ) as create_output,
                 patch("tracer.trace.generate_trace") as generate_trace,
             ):
                 try:
                     trace.main()
                 except (TypeError, ValueError) as exc:
-                    assert key in str(exc), str(exc)
+                    expected = f"Unknown level: {value!r}" if key == "log_level" else key
+                    assert expected in str(exc), str(exc)
                 else:
                     raise AssertionError(f"Accepted {key} = {value!r}")
                 create_output.assert_not_called()
