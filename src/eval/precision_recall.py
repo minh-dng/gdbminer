@@ -32,7 +32,7 @@ def main() -> None:
 
     # Execute the parse_args() methode
     args = parser.parse_args()
-    config_file_path = Path(args.config).expanduser()
+    config_file_path = Path(args.config)
 
     config = load_config(config_file_path)
 

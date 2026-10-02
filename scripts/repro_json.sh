@@ -7,6 +7,12 @@ OUT_DIR="${OUT_DIR:-$REPO_ROOT/output/repro-json}"
 PYTHON="$VENV/bin/python"
 CC="${CC:-gcc}"
 
+# Single-line TOML literal strings cannot contain apostrophes or newlines.
+if [[ "$OUT_DIR" == *"'"* || "$OUT_DIR" == *$'\n'* || "$OUT_DIR" == *$'\r'* ]]; then
+	printf '%s\n' "OUT_DIR must not contain apostrophes or newlines" >&2
+	exit 1
+fi
+
 cd "$REPO_ROOT"
 
 if [[ -x "$PYTHON" ]] && [[ "$("$PYTHON" -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')" != "3.12" ]]; then
@@ -22,23 +28,13 @@ cp example_programs/json/eval/input.{1,2,3,4,5,6,7,8,9,10} "$OUT_DIR/work/eval/"
 
 "$CC" -g -O0 -no-pie -o "$OUT_DIR/bin/json" example_programs/json/json.c
 
-# JSON string escaping also produces valid TOML strings for arbitrary paths.
-"$PYTHON" - "$OUT_DIR" <<'PY'
-import json
-import sys
-from pathlib import Path
-
-out = Path(sys.argv[1])
-paths = {
-    "seed_directory": out / "work/seeds",
-    "output_directory": out / "work/out",
-    "binary_file": out / "bin/json",
-    "eval_directory": out / "work/eval",
-}
-config = "[BASIC]\n" + "\n".join(
-    f"{key} = {json.dumps(str(value))}" for key, value in paths.items()
-)
-config += '''
+# TOML literal strings preserve spaces, double quotes and backslashes.
+cat >"$OUT_DIR/configuration.toml" <<EOF
+[BASIC]
+seed_directory = '$OUT_DIR/work/seeds'
+output_directory = '$OUT_DIR/work/out'
+binary_file = '$OUT_DIR/bin/json'
+eval_directory = '$OUT_DIR/work/eval'
 
 [Connection]
 input_channel = "file"
@@ -51,14 +47,11 @@ watchpoint_type = "(char*)"
 watchpoint_count = 10000
 timeout = 30
 entrypoint = "json_parse"
-exitpoint = ""
 input_buffer = "my_string"
 
 [LOGS]
 log_level = "INFO"
-'''
-(out / "configuration.toml").write_text(config, encoding="utf-8")
-PY
+EOF
 
 PYTHONPATH=src "$PYTHON" src/tracer/trace.py --config "$OUT_DIR/configuration.toml"
 PYTHONPATH=src "$PYTHON" src/miner/mine.py --config "$OUT_DIR/configuration.toml"

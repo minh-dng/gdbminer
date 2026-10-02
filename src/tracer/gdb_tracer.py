@@ -27,14 +27,11 @@ class GDBTracer:
 
     def __init__(self, config: Config):
         self.entrypoint = config["GDB"]["entrypoint"]
-        self.exitpoint = config["GDB"]["exitpoint"]
+        self.exitpoint = config["GDB"].get("exitpoint", "")
         self.watchpoint_type = config["GDB"]["watchpoint_type"]
         self.input_buffer = config["GDB"]["input_buffer"]
         self.ignore_functions_regex = config["GDB"].get("ignore_functions_regex", "")
         self.watchpoint_count = config["GDB"]["watchpoint_count"]
-        # Booleans are integers in Python, but false would stall the sliding window.
-        if type(self.watchpoint_count) is not int or self.watchpoint_count <= 0:
-            raise ValueError("GDB.watchpoint_count must be a positive TOML integer")
         self.config = config
 
     def trace_instruction(

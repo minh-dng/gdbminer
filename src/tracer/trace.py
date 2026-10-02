@@ -44,7 +44,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Generate traces of a program")
     parser.add_argument("--config", required=True, type=str, help="Path to a config file.")
 
-    config_file_path = Path(parser.parse_args().config).expanduser()
+    config_file_path = Path(parser.parse_args().config)
 
     config = load_config(config_file_path)
 

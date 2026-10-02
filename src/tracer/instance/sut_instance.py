@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: AGPL-3.0
 
 import logging
+import shlex
 from types import TracebackType
 from typing import Self
 
@@ -15,7 +16,7 @@ class SUTInstance:
     def __init__(self, config: Config) -> None:
         self.timeout = config["GDB"]["timeout"]
         self.elf_file = config["BASIC"]["binary_file"]
-        self.gdb_with_args = config["GDB"]["gdb_path"].split(" ")
+        self.gdb_with_args = shlex.split(config["GDB"]["gdb_path"])
         self.config = config
         self.number_of_tested_inputs: int = 0
 

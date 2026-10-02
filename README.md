@@ -47,7 +47,7 @@ The hook copies the file only when it is missing, so it will not overwrite local
 for normal `git worktree add` commands; with `--no-checkout`, it runs when the worktree is
 checked out later.
 
-## Config file
+## Writing up configuration TOMLs
 
 GDBMiner reads `configuration.toml` with Python's built-in `tomllib`; no extra TOML package is needed. Paths remain relative to the working directory. Table and key names are case-sensitive.
 
@@ -65,30 +65,64 @@ gdb_path = "/usr/bin/gdb"
 instance = "valgrind" # valgrind, stm32, or msp430
 # Ignore function names matching this Python regular expression.
 # Literal strings preserve backslashes without TOML escape sequences.
-ignore_functions_regex = '@plt|_vgr'
+ignore_functions_regex = '@plt|_vgr*'
 watchpoint_type = "(char*)"
 watchpoint_count = 10000 # Positive number of available watchpoints.
 timeout = 30 # GDB response timeout in seconds.
 entrypoint = "json_parse" # Symbol name or quoted hexadecimal address.
-exitpoint = "" # Empty means stop after leaving the entry function.
 input_buffer = "my_string" # Symbol name or quoted hexadecimal address.
 
 [LOGS]
 log_level = "INFO" # DEBUG, INFO, WARNING, ERROR, or CRITICAL.
 ```
 
-### MCU-specific settings
+### Shared fields
 
-Shared debugger settings stay in `[GDB]`. Only the selected backend reads its MCU table: `[stm32]` or `[msp430]`. Desktop targets do not need either table. Both MCU backends use `[Connection]` for serial input.
+All configurations require these fields unless marked optional:
 
-For an STM32 target, set `GDB.instance = "stm32"`, update the binary, symbols and watchpoint count for your firmware, and add:
+| Table | Field | Type and meaning |
+| --- | --- | --- |
+| `BASIC` | `seed_directory` | String, directory of seed inputs to trace. |
+| `BASIC` | `output_directory` | String, parent of the generated `trial-N` directories. |
+| `BASIC` | `binary_file` | String, target executable or firmware ELF with debug symbols. |
+| `BASIC` | `eval_directory` | String, directory of inputs used to measure recall. |
+| `GDB` | `gdb_path` | String, debugger command with optional arguments. Quote command paths containing spaces inside the TOML string. |
+| `GDB` | `instance` | String, `"valgrind"`, `"stm32"`, or `"msp430"`. |
+| `GDB` | `entrypoint` | String, symbol, source location, or quoted hexadecimal address where tracing starts. |
+| `GDB` | `exitpoint` | Optional string. Omit or use `""` to stop after leaving the entry function; otherwise give a breakpoint location. |
+| `GDB` | `input_buffer` | String, input buffer symbol or quoted hexadecimal address. |
+| `GDB` | `watchpoint_type` | String, GDB pointer type used to read the input buffer, such as `"(char*)"`. |
+| `GDB` | `watchpoint_count` | Positive integer, number of bytes watched per tracing pass. Use the hardware limit for MCUs. Valgrind can use a large count. |
+| `GDB` | `timeout` | Positive finite number, GDB response timeout in seconds; fractions are allowed. |
+| `GDB` | `ignore_functions_regex` | Optional string, Python regex for functions to skip; defaults to `""`. TOML literal strings preserve regex backslashes. |
+| `LOGS` | `log_level` | String, Python logging level such as `"DEBUG"`, `"INFO"`, `"WARNING"`, `"ERROR"`, or `"CRITICAL"`. |
+
+`watchpoint_count = -1` is not supported. The tracer advances through the input by this count, so it must be positive.
+
+### MCU settings
+
+STM32 and MSP430 both require the following server fields in `[GDB]` and serial fields in `[Connection]`. Valgrind supplies input through a file and does not require these fields or a `[Connection]` table.
+
+| Table | Field | Type and meaning |
+| --- | --- | --- |
+| `GDB` | `gdb_server_path` | String, server command and arguments, split using shell quoting rules. |
+| `GDB` | `gdb_server_address` | String, GDB remote address, such as `":4242"`. |
+| `Connection` | `input_channel` | String, `"serial"`. |
+| `Connection` | `port` | String, serial device path. |
+| `Connection` | `baud_rate` | Positive integer, serial baud rate. |
+| `GDB.stm32` | `dwt_watchpoint_workaround` | Optional boolean, defaults to `true`. Read DWT registers while stepping on ARMv7 targets. |
+| `GDB.stm32` | `dwt_function_reg` | String, quoted hexadecimal address of the first DWT comparator function register. Required when the workaround is enabled. |
+
+For STM32, change `instance` to `"stm32"` and add the server fields to the existing `[GDB]` table:
 
 ```toml
-[stm32]
+# Inside the existing [GDB] table:
 gdb_server_path = "st-util -p 4243"
 gdb_server_address = ":4243"
-dwt_function_reg = "0xe0001028" # Keep addresses as strings for GDB commands.
-dwt_watchpoint_workaround = true # Defaults to true for ARMv7 DWT single-stepping.
+
+[GDB.stm32]
+dwt_function_reg = "0xe0001028"
+dwt_watchpoint_workaround = true
 
 [Connection]
 input_channel = "serial"
@@ -96,13 +130,15 @@ port = "/dev/ttyACM0"
 baud_rate = 9600
 ```
 
-MSP430 uses a `[msp430]` table containing `gdb_server_path` and `gdb_server_address`; it does not read STM32's DWT settings.
+Choose the binary, symbols, register address and watchpoint count for your firmware and MCU. MSP430 uses `instance = "msp430"` with its server command and address in `[GDB]`. It needs no MCU subtable because it currently has no additional settings. Only the selected MCU's settings are validated and read.
 
 ### Migrating an existing INI file
 
-Rename GDBMiner configs to `.toml`, quote strings (including empty values and addresses), and leave numbers and booleans unquoted. Move `gdb_server_path` and `gdb_server_address` from `[GDB]` into the selected MCU table; move `dwt_function_reg` and `dwt_watchpoint_workaround` into `[stm32]`. Update commands that pass `--config`. The old INI format is no longer supported; PlatformIO's `platformio.ini` files are unchanged.
+Rename GDBMiner configs to `.toml`, quote strings and addresses, and leave numbers and booleans unquoted. Keep `gdb_server_path` and `gdb_server_address` in `[GDB]`. Move `dwt_function_reg` and `dwt_watchpoint_workaround` into `[GDB.stm32]`. Update commands that pass `--config`. The old INI format is no longer supported. PlatformIO's `platformio.ini` files are unchanged.
 
-The loader returns ordinary dictionaries rather than a config class or a global schema that would require every MCU's settings. Malformed TOML raises `TOMLDecodeError`, missing required keys raise `KeyError` when read, and invalid logging levels retain Python logging's `ValueError`. Values must use the types shown above; the loader does not coerce quoted numbers or strings such as `"false"`. Two checks prevent silent misbehaviour: tracing requires a positive integer `watchpoint_count`, and STM32 requires a boolean `dwt_watchpoint_workaround`.
+The loader uses ordinary dictionaries and checks shared fields plus the selected backend's fields before creating trial directories or starting a target. It does not coerce numbers or strings such as `"false"`. Malformed TOML raises `TOMLDecodeError`, missing required keys raise `KeyError`, wrong types raise `TypeError`, and invalid ranges or misplaced STM32 settings raise `ValueError`. Python logging reports invalid log levels itself.
+
+`scripts/repro_json.sh` writes TOML using a Bash heredoc with literal strings. Its `OUT_DIR` supports spaces, double quotes, backslashes and UTF-8 text, but must not contain apostrophes or newlines.
 
 ## Generate inputs from a golden grammar
 

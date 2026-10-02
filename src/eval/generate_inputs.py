@@ -24,7 +24,7 @@ def main() -> None:
     parser.add_argument("count", type=int, help="Number of files to generate.")
 
     args = parser.parse_args()
-    config_file_path = Path(args.config).expanduser()
+    config_file_path = Path(args.config)
 
     config = load_config(config_file_path)
 

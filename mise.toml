@@ -164,7 +164,7 @@ if [[ -z "${usage_outdir:-}" ]]; then
   echo "usage: mise run generate <grammar> <outdir> [n] [--config <toml>]" >&2
   exit 2
 fi
-uv run src/eval/generate_inputs.py --config "${usage_config}" "${usage_grammar}" "${usage_outdir}" "${usage_n}"
+uv run src/eval/generate_inputs.py --config "${usage_config}" --grammar "${usage_grammar}" "${usage_outdir}" "${usage_n}"
 '''
 
 [tasks."build:json"]
