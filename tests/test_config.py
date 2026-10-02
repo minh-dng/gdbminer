@@ -44,7 +44,7 @@ def test_config():
                 patch(
                     "tracer.trace.create_output_dir",
                     side_effect=AssertionError("Invalid config reached trial-directory creation"),
-                ) as create_output,
+                ),
                 patch("tracer.trace.generate_trace") as generate_trace,
             ):
                 try:
@@ -54,7 +54,6 @@ def test_config():
                     assert expected in str(exc), str(exc)
                 else:
                     raise AssertionError(f"Accepted {key} = {value!r}")
-                create_output.assert_not_called()
                 generate_trace.assert_not_called()
 
     for key, value in (("dwt_watchpoint_workaround", False), ("dwt_function_reg", "0x1000")):
