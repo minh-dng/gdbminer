@@ -152,18 +152,40 @@ trace_trial() {  # <trial-number>; trace.py must create exactly trial-<n>
     rd=$dir/resume-$k
     mkdir -p "$rd/seeds"
     missing_seeds "$dir" | while read -r seed; do cp "$seed" "$rd/seeds/"; done
-    $PY - "$cfg" "$rd" > "$rd/configuration.toml" <<'PYTHON'
+    if ! $PY - "$cfg" "$rd" > "$rd/configuration.toml" <<'PYTHON'
 import json
-import re
 import sys
+import tomllib
 from pathlib import Path
 
-paths = {"seed_directory": f"{sys.argv[2]}/seeds", "output_directory": f"{sys.argv[2]}/"}
-source = Path(sys.argv[1]).read_text()
-print(re.sub(r"^(seed_directory|output_directory) = .*",
-             lambda match: f"{match[1]} = {json.dumps(paths[match[1]])}",
-             source, flags=re.MULTILINE), end="")
+from util.config import load_config
+
+config = load_config(Path(sys.argv[1]))
+config["BASIC"].update(seed_directory=f"{sys.argv[2]}/seeds", output_directory=f"{sys.argv[2]}/")
+lines = []
+
+
+def emit(table, section=()):
+    if section:
+        lines.append("[" + ".".join(json.dumps(key) for key in section) + "]")
+    for key, value in table.items():
+        if not isinstance(value, dict):
+            lines.append(f"{json.dumps(key)} = {json.dumps(value, ensure_ascii=False)}")
+    for key, value in table.items():
+        if isinstance(value, dict):
+            emit(value, (*section, key))
+
+
+emit(config)
+source = "\n".join(lines) + "\n"
+if tomllib.loads(source) != config:
+    raise ValueError("Resume TOML did not preserve configuration values")
+print(source, end="")
 PYTHON
+    then
+      log "$t trial-$1: invalid resume configuration"
+      return 1
+    fi
     log "$t trial-$1: resume $k"
     stage "$dir/times.txt" "trace-resume-$k" "$trace_limit" "$rd/trace.log" \
       $PY src/tracer/trace.py --config "$rd/configuration.toml"
