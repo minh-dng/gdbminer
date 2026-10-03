@@ -21,9 +21,10 @@ needs the extra wiring.
 
 ### UART link (Micro-USB)
 
-Plug a USB cable into the board's Micro-USB port. The CP2102N bridge appears as `/dev/cu.usbserial-<n>`. Set that path
-as `port` in the `[Connection]` section of the target's `configuration.ini`. The number `<n>` changes when you re-plug
-the board or use another USB port, so check it before each session.
+Plug a USB cable into the board's Micro-USB port. The CP2102N bridge appears as
+`/dev/cu.usbserial-<n>`. Set that path as `port` in the `[Connection]` section of the target's
+`configuration.toml`. The number `<n>` changes when you re-plug the board or use another USB port,
+so check it before each session.
 
 To find the port, list the serial ports. `arduino-cli` comes from the [Toolchain](#toolchain) step; without it, compare
 `ls /dev/cu.*` before and after plugging in the cable.
@@ -214,27 +215,57 @@ Two more files are not installed by Arduino CLI:
 - **ROM symbol file:** [`esp-rom-elfs` 20241011](https://github.com/espressif/esp-rom-elfs/releases/tag/20241011)
   (installed here by the ESP-IDF tools to `~/.espressif/tools/esp-rom-elfs/20241011/`). Choose the file by chip
   revision. `arduino-cli upload` prints it, for example `ESP32-C3 AZ (QFN32) (revision v1.1)`; v1.1 needs
-  `esp32c3_rev101_rom.elf`. A file for another revision gives ROM functions wrong names, so `ignore_functions_regex`
-  would not match them.
+  `esp32c3_rev101_rom.elf`. Symbols for another revision can assign incorrect names to addresses
+  and make `ignore_functions_regex` matches unreliable.
 
 ### Values to change on another machine
 
-The three `configuration.ini` files hold absolute paths and device names from the recording Mac. Change these in each:
+The three `configuration.toml` files hold paths and device names from the recording Mac.
+Change these in each:
 
-| Section and key         | What it must name                                                                                           |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `[Connection] port`     | The UART device, `/dev/cu.usbserial-<n>` (see [UART link](#uart-link-micro-usb))                            |
-| `[GDB] gdb_path`        | Espressif `riscv32-esp-elf-gdb` from the Arduino core (see [Choosing the debugger](#choosing-the-debugger)) |
-| `[GDB] rom_elf`         | The ROM symbol file for the chip revision                                                                   |
-| `[GDB] gdb_server_path` | The OpenOCD binary, its `-s` scripts folder, and `adapter serial <MAC>` of your board                       |
+| Table and key | Value to change |
+| --- | --- |
+| `[Connection] port` | UART device, such as `/dev/cu.usbserial-<n>`. |
+| `[GDB] gdb_path` | Espressif `riscv32-esp-elf-gdb` from the Arduino core. |
+| `[GDB.esp32c3] rom_elf` | ROM symbol file matching the chip revision. |
+| `[GDB] gdb_server_path` | OpenOCD executable, scripts folder and board's `adapter serial`. |
+
+### Target settings in TOML
+
+Shared debugger settings, including `watchpoint_count` and `watchpoint_type`, stay in `[GDB]`.
+C3 settings live in `[GDB.esp32c3]`. For JSON:
+
+```toml
+[GDB.esp32c3]
+rom_elf = "/path/to/esp32c3_rev101_rom.elf"
+hardware_trigger_slot = 2
+reset_on_connect = false
+```
+
+The six JSON watchpoints occupy slots 2-7. CGI starts at slot 0 with eight watchpoints; XML
+starts at slot 1 with seven. XML also sets `breakpoint_always_inserted = true` in this table
+to keep its exit breakpoint inserted across steps, as in the measured run.
+
+`reset_on_connect = false` avoids a second reset after the serial adapter's EN pulse. It also
+leaves reconnect recovery to that adapter. Keep the serial control-line and reset settings in
+`[Connection]`: `dtr` defaults to `false`, `rts` and `reset_pulse` to `true`. The adapter waits
+for the firmware's ready marker, so no `boot_delay` setting is needed.
+If you disable `reset_pulse`, also set `rts = false` so EN is released.
+
+ARM DWT registers and `dwt_watchpoint_workaround` belong only in `[GDB.stm32]`. The C3 uses
+RISC-V read triggers and requires no DWT placeholder or workaround flag. The loader rejects
+unknown or misplaced C3 fields, obsolete connection settings, the generic serial channel,
+DWT settings on the C3, non-boolean flags and trigger windows outside slots 0-7 before
+starting the debugger or serial worker.
 
 ### Running the evaluation
 
-Flash the target's firmware, then run the authors' three stages with the target's INI, in this order:
+Flash the target's firmware, then run the authors' three stages with the target's TOML,
+in this order:
 
 ```sh
 TARGET=esp32-c3_json
-CONFIG=example_firmware/$TARGET/configuration/configuration.ini
+CONFIG=example_firmware/$TARGET/configuration/configuration.toml
 PYTHONPATH=src .venv/bin/python src/tracer/trace.py --config "$CONFIG"
 PYTHONPATH=src .venv/bin/python src/miner/mine.py --config "$CONFIG"
 PYTHONPATH=src .venv/bin/python src/eval/precision_recall.py --config "$CONFIG" --out evaluation.json
@@ -249,16 +280,22 @@ the UART (`lsof /dev/cu.usbserial-<n>`): stopping `trace.py` or `mine.py` can le
 
 ### Tracing: the paper replica method
 
-Each target's `configuration.ini` follows the paper's embedded setup (Eisele et al. 2025, §4.1 and §5.4) and the
-configuration of its STM32 reference: same entry point and the same `ignore_functions_regex`, skipped with GDB `finish`.
-The only name change is `__aeabi_dadd`, the ARM EABI alias of libgcc `__adddf3`. `strlen`, `memset` and the soft-float
-helpers run from the chip's mask ROM; the ROM symbol file (`rom_elf`) gives them names. Skipping them is also why no ROM
-unwind metadata is needed. The earlier `esp32c3_rom.gdb` rules and `configuration.hw-eval.ini`, which stepped through
-those routines, have been removed.
+Each target's `configuration.toml` follows the paper's embedded setup (Eisele et al. 2025, §4.1 and
+§5.4) and the configuration of its STM32 reference: same entry point and the same
+`ignore_functions_regex`, skipped with GDB `finish`.
+The only name change is `__aeabi_dadd`, the ARM EABI alias of libgcc `__adddf3`. `strlen`,
+`memset` and the soft-float helpers run from the chip's mask ROM. The adapter loads
+`GDB.esp32c3.rom_elf` with GDB's `add-symbol-file`, alongside the firmware ELF. It describes
+code already built into the chip and is never flashed. Its symbols let the ignore regex match
+ROM function names. GDB's `finish` also depends on available unwind information and debugger
+support; symbols alone do not guarantee it can return from a ROM call. The recorded runs used
+`finish` successfully. The earlier `esp32c3_rom.gdb` rules and `configuration.hw-eval.ini`, which
+stepped through those routines, have been removed.
 
 The C3 has eight trigger slots shared by breakpoints and watchpoints. GDB's `finish` inserts two hardware breakpoints
 (return address and the C++ exception hook `_Unwind_DebugHook`), so two slots must stay free wherever `finish` runs. The
-adapter reserves its trigger window (`hardware_trigger_slot` and `watchpoint_count` in `[GDB]`) in OpenOCD.
+adapter reserves its trigger window in OpenOCD. `GDB.watchpoint_count` sets its size;
+`GDB.esp32c3.hardware_trigger_slot` sets its first slot.
 
 | Target               | Skipped with `finish`                                                                         | Watchpoint slots                                  |
 | -------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------- |

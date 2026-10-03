@@ -27,9 +27,9 @@ Build and flash as in [Build and upload](../ESP32-C3%20DevKitM-1-N4X.README.md#b
 
 ## Tracing
 
-`configuration/configuration.ini` follows `stm32_arduinojson`: same entry point (`cJSON_Parse`) and the same
+`configuration/configuration.toml` follows `stm32_arduinojson`: same entry point (`cJSON_Parse`) and the same
 `ignore_functions_regex`, skipped with GDB `finish`; `__aeabi_dadd` is written as `__adddf3`. Six watchpoints use slots
-2-7, and slots 0-1 stay free for `finish`. The INI selects Espressif's bundled GDB, not Homebrew's
+2-7, and slots 0-1 stay free for `finish`. The TOML selects Espressif's bundled GDB, not Homebrew's
 ([why](../ESP32-C3%20DevKitM-1-N4X.README.md#choosing-the-debugger)). The method and the slot layout of all three targets
 are in the [C3 setup README](../ESP32-C3%20DevKitM-1-N4X.README.md#tracing-the-paper-replica-method); results are in the
 [replica record](../../docs/thesis/esp32c3-paper-replica-2026-09-30/README.md).

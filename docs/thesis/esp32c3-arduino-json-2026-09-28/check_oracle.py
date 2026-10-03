@@ -63,7 +63,6 @@ def main():
         if connection.getboolean("reset_pulse", fallback=True):
             time.sleep(0.05)
             port.rts = False
-            time.sleep(connection.getfloat("boot_delay", fallback=3))
         for name, candidate, expected in cases:
             read_one_of(port, {result["ready_byte"]}, 10)
             port.write(struct.pack("<I", len(candidate)) + candidate)

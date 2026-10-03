@@ -1,7 +1,9 @@
 """Host-side contract checks; live hardware evidence is still required."""
 
+import json
 import unittest
-from configparser import ConfigParser
+from pathlib import Path
+from tempfile import TemporaryDirectory
 from unittest.mock import Mock, patch
 
 from tracer.gdb_tracer import GDBTracer
@@ -9,28 +11,23 @@ from tracer.instance.esp32c3_instance import ESP32C3Instance, ReadTrigger
 
 
 def configuration():
-    config = ConfigParser()
-    config.read_dict(
-        {
-            "BASIC": {"binary_file": "unused.elf"},
-            "GDB": {
-                "timeout": "1",
-                "gdb_path": "gdb",
-                "gdb_server_path": "openocd",
-                "gdb_server_address": ":3334",
-                "watchpoint_count": "1",
-                "dwt_function_reg": "0",
-                "dwt_watchpoint_workaround": "false",
-                "hardware_trigger_slot": "0",
-                "exitpoint": "",
-                "entrypoint": "parser",
-                "watchpoint_type": "(char*)",
-                "input_buffer": "buf",
-            },
-            "Connection": {},
-        }
-    )
-    return config
+    return {
+        "BASIC": {"binary_file": "unused.elf"},
+        "GDB": {
+            "instance": "esp32c3",
+            "timeout": 1,
+            "gdb_path": "gdb",
+            "gdb_server_path": "openocd",
+            "gdb_server_address": ":3334",
+            "watchpoint_count": 1,
+            "esp32c3": {"hardware_trigger_slot": 0},
+            "exitpoint": "",
+            "entrypoint": "parser",
+            "watchpoint_type": "(char*)",
+            "input_buffer": "buf",
+        },
+        "Connection": {},
+    }
 
 
 def entry(address="0x10", function="parser", hits=()):
@@ -38,10 +35,47 @@ def entry(address="0x10", function="parser", hits=()):
 
 
 class HardwareContractTest(unittest.TestCase):
+    def test_missing_rom_elf_cleans_up_started_resources(self):
+        with TemporaryDirectory() as directory:
+            config = configuration()
+            config["GDB"]["esp32c3"]["rom_elf"] = str(Path(directory) / "missing.elf")
+            instance = ESP32C3Instance(config, "unused")
+            instance.gdb_controller = Mock()
+            connection, server = Mock(), Mock()
+            with (
+                patch.object(
+                    ESP32C3Instance.__mro__[1], "init_sut_connection", return_value=connection
+                ),
+                patch("tracer.instance.stm32_instance.subprocess.Popen", return_value=server),
+                patch("tracer.instance.stm32_instance.time.sleep"),
+                patch("tracer.instance.sut_instance.SUTInstance.init_gdb_controller"),
+                self.assertRaises(FileNotFoundError),
+            ):
+                instance.__enter__()
+            connection.disconnect.assert_called_once_with()
+            instance.gdb_controller.exit.assert_called_once_with()
+            server.terminate.assert_called_once_with()
+            server.wait.assert_called_once_with(timeout=5)
+
+    def test_rom_symbols_are_added_alongside_firmware_symbols(self):
+        instance = ESP32C3Instance(configuration(), "unused")
+        instance._command = Mock()
+        with TemporaryDirectory() as directory:
+            rom = Path(directory) / "ROM symbols.elf"
+            rom.touch()
+            instance.config["GDB"]["esp32c3"]["rom_elf"] = str(rom)
+            with patch("tracer.instance.sut_instance.SUTInstance.init_gdb_controller") as firmware:
+                instance.init_gdb_controller()
+            firmware.assert_called_once_with()
+            command = "add-symbol-file " + json.dumps(str(rom.resolve()))
+            instance._command.assert_called_once_with(
+                f"-interpreter-exec console {json.dumps(command)}"
+            )
+
     def hardware(self, count=1, first_slot=0):
         config = configuration()
-        config["GDB"]["watchpoint_count"] = str(count)
-        config["GDB"]["hardware_trigger_slot"] = str(first_slot)
+        config["GDB"]["watchpoint_count"] = count
+        config["GDB"]["esp32c3"]["hardware_trigger_slot"] = first_slot
         instance = ESP32C3Instance(config, "unused")
         instance._triggers = {
             f"c3-read-{first_slot + offset}": ReadTrigger(
@@ -179,15 +213,15 @@ class HardwareContractTest(unittest.TestCase):
 
     def test_dwt_polling_configuration_is_rejected(self):
         config = configuration()
-        config["GDB"]["dwt_watchpoint_workaround"] = "true"
+        config["GDB"]["stm32"] = {"dwt_watchpoint_workaround": True}
         with self.assertRaises(ValueError):
             ESP32C3Instance(config, "unused")
 
     def test_invalid_slot_budget_is_rejected(self):
         for count, start in [(0, 0), (9, 0), (8, 1), (1, -1)]:
             config = configuration()
-            config["GDB"]["watchpoint_count"] = str(count)
-            config["GDB"]["hardware_trigger_slot"] = str(start)
+            config["GDB"]["watchpoint_count"] = count
+            config["GDB"]["esp32c3"]["hardware_trigger_slot"] = start
             with self.subTest(count=count, start=start), self.assertRaises(ValueError):
                 ESP32C3Instance(config, "unused")
 
@@ -322,8 +356,9 @@ class HardwareContractTest(unittest.TestCase):
 
     def test_raw_window_is_reserved_from_openocd(self):
         config = configuration()
-        config["GDB"]["watchpoint_count"] = "6"
-        config["GDB"]["hardware_trigger_slot"] = "2"
+        config["GDB"]["watchpoint_count"] = 6
+        config["GDB"]["esp32c3"]["hardware_trigger_slot"] = 2
+        config["GDB"]["esp32c3"]["breakpoint_always_inserted"] = True
         instance = ESP32C3Instance(config, "unused")
         instance._monitor = Mock()
         instance._command = Mock()
@@ -333,6 +368,7 @@ class HardwareContractTest(unittest.TestCase):
             instance._monitor.call_args_list[0].args[0],
             "; ".join(f"riscv reserve_trigger {slot} on" for slot in range(2, 8)),
         )
+        instance._command.assert_called_once_with("-gdb-set breakpoint always-inserted on")
 
     def test_cleanup_attempts_every_slot_even_after_a_failure(self):
         instance = self.hardware(8)

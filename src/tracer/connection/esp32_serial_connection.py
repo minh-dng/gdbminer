@@ -1,9 +1,4 @@
-# Serial connection adapter for ESP32 USB serial (C3 UART or S3 USB CDC).
-#
-# The stock SerialConnection opens the port with pyserial defaults, which
-# asserts DTR/RTS and can leave the ESP32-C3-DevKitM-1 in reset/download.
-# This adapter opens with DTR released and a short EN pulse so the firmware
-# boots from flash and emits the configured input request marker.
+# Serial adapter with ESP32 boot/reset control and restart recovery.
 #
 # SPDX-License-Identifier: AGPL-3.0
 
@@ -15,6 +10,7 @@ from typing import override
 import serial
 
 from tracer.connection.connection_base_class import ConnectionBaseClass
+from util.config import Config
 
 
 class ESP32SerialConnection(ConnectionBaseClass):
@@ -33,30 +29,22 @@ class ESP32SerialConnection(ConnectionBaseClass):
     GRACE_SEC = 1.0  # After a marker, wait this long (plus transfer time) for a result.
 
     @override
-    def connect(self, config):
+    def connect(self, config: Config):
         port = config["Connection"]["port"]
-        baud_rate = config["Connection"].getint("baud_rate")
-        if baud_rate is None:
-            raise ValueError("Config [Connection] baud_rate must be set")
+        baud_rate = config["Connection"]["baud_rate"]
 
         # Leave port unset: passing it to Serial() opens immediately, before we
         # can set DTR/RTS. Their default states can reset the ESP32 or select download mode.
         self.serial = serial.Serial(baudrate=baud_rate, timeout=2)
         self.serial.port = port
-        # DTR (Data Terminal Ready) and RTS (Request To Send) are control lines,
-        # not data bytes. On this board they drive the boot/reset circuit.
-        # True means asserted, not necessarily high voltage (often active-low).
-        # PySerial has no dtr/rts constructor arguments; set them before open().
-        # Its default rtscts=False and dsrdtr=False disable automatic RTS/CTS
-        # (Clear To Send) and DSR/DTR (Data Set Ready) flow control, respectively;
-        # those flags do not set line states. Keep them disabled for manual reset.
-        self.serial.dtr = config["Connection"].getboolean("dtr", fallback=False)
-        self.serial.rts = config["Connection"].getboolean("rts", fallback=True)
+        # DTR/RTS drive the board's boot/reset circuit; True means asserted.
+        # Set them before open(), with automatic flow control left disabled.
+        self.serial.dtr = config["Connection"].get("dtr", False)
+        self.serial.rts = config["Connection"].get("rts", True)
         self.serial.open()
-        if config["Connection"].getboolean("reset_pulse", fallback=True):
+        if config["Connection"].get("reset_pulse", True):
             time.sleep(0.05)
-            self.serial.rts = False  # Release RTS to finish the reset pulse.
-            time.sleep(config["Connection"].getfloat("boot_delay", fallback=0.3))
+            self.serial.rts = False  # Release RTS; send_input waits for firmware readiness.
         log.info(f"Established connection with ESP32 SUT via Serial at {self.serial.name}")
         self._synced = False  # A reset may still follow (OpenOCD attach).
 
@@ -86,6 +74,8 @@ class ESP32SerialConnection(ConnectionBaseClass):
 
     def _read_result(self, deadline: float | None) -> int | None:
         """Return the next result byte, or the marker; None on silence past the deadline."""
+        # ponytail: unframed; noise starting with 0/0xFF needs a firmware protocol change.
+        boot_noise = False
         while True:
             # Read before checking the deadline: a delay of this process must not
             # turn an answer that is already buffered into silence.
@@ -95,19 +85,16 @@ class ESP32SerialConnection(ConnectionBaseClass):
                     return None
                 continue
             self._last_byte = ret[0]
-            if ret[0] in (0, 0xFF, self.READY_BYTE):
+            if ret[0] == self.READY_BYTE or (not boot_noise and ret[0] in (0, 0xFF)):
                 return ret[0]
-            # Boot noise after a reset.
-            log.debug("Skip non-result byte %r", ret)
+            # Once boot noise starts, even 0/0xFF are noise until the ready marker.
+            boot_noise = True
+            log.debug("Skip boot byte %r", ret)
 
     @override
     def send_input(self, input: bytes) -> bool:
         log.debug(f"Sending input: {input}")
-        max_input_size = self.config["Connection"].getint("max_input_size", fallback=0)
-        oversized = max_input_size > 0 and len(input) > max_input_size
-        # Keep the ready/result exchange aligned while rejecting inputs the firmware cannot hold.
-        wire_input = b"" if oversized else input
-        packet = struct.pack("I", len(wire_input)) + wire_input
+        packet = struct.pack("I", len(input)) + input
         transfer = len(packet) * 10 / self.serial.baudrate
 
         self._wait_until_ready()
@@ -124,7 +111,7 @@ class ESP32SerialConnection(ConnectionBaseClass):
                 self.serial.write(packet)
                 self.serial.flush()
                 result = self._read_result(None)
-        return result == 0 and not oversized
+        return result == 0
 
     @override
     def disconnect(self):

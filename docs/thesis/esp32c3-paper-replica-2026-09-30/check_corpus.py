@@ -11,10 +11,11 @@ import hashlib
 import json
 import struct
 import time
-from configparser import ConfigParser
 from pathlib import Path
 
 import serial
+
+from util.config import load_config
 
 CAPACITY = 2048
 
@@ -38,8 +39,7 @@ def main():
     )
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=False)
-    config = ConfigParser()
-    config.read(args.config)
+    config = load_config(args.config)
     basic, connection = config["BASIC"], config["Connection"]
 
     cases = [
@@ -67,16 +67,15 @@ def main():
     }
     port = serial.Serial()
     port.port = connection["port"]
-    port.baudrate = connection.getint("baud_rate")
+    port.baudrate = connection["baud_rate"]
     port.timeout = 0.2
-    port.dtr = connection.getboolean("dtr", fallback=False)
-    port.rts = connection.getboolean("rts", fallback=True)
+    port.dtr = connection.get("dtr", False)
+    port.rts = connection.get("rts", True)
     port.open()
     try:
-        if connection.getboolean("reset_pulse", fallback=True):
+        if connection.get("reset_pulse", True):
             time.sleep(0.05)
             port.rts = False
-            time.sleep(connection.getfloat("boot_delay", fallback=3))
         ready = ord("A")
         for name, candidate, expected in cases:
             read_one_of(port, {ready}, 10)

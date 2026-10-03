@@ -26,8 +26,7 @@ class STM32Instance(SUTInstance):
         self.dwt_watchpoint_workaround = stm32.get(
             "dwt_watchpoint_workaround", config["GDB"]["instance"] == "stm32"
         )
-        # False when the connection itself restarts the firmware (ESP32-C3 EN pulse).
-        self.reset_on_connect = config["GDB"].get("reset_on_connect", True)
+        self.reset_on_connect = True
         self.input_file = Path(input_file)
 
     @override

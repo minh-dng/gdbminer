@@ -2,7 +2,7 @@
 # ESP32-C3 paper replica, trials 1 and 2 (see README.md in this folder).
 #
 # Per target: flash the firmware built beforehand, check the corpus once, then
-# for each trial run the authors' pipeline with the target INI:
+# for each trial run the authors' pipeline with the target TOML:
 #   trace.py -> mine.py -> precision_recall.py
 # trace.py creates output/esp32-c3_<target>/trial-<n>/; mining and evaluation
 # select the newest trial folder, so each trial must finish before the next.
@@ -27,10 +27,21 @@ STAGES=$R/output/esp32-c3-trials.stages.log
 
 log() { printf '%s %s\n' "$(date '+%F %T')" "$*" >> "$STAGES"; }
 
-ini() { sed -n "s/^$2 = //p" "$1" | head -n 1; }
+config_value() {
+  $PY -c 'from pathlib import Path; import sys; from util.config import load_config
+print(load_config(Path(sys.argv[1]))[sys.argv[2]][sys.argv[3]])' "$@"
+}
+
+program_version() {
+  $PY -c 'from pathlib import Path; import shlex, subprocess, sys; from util.config import load_config
+command = load_config(Path(sys.argv[1]))["GDB"][sys.argv[2]]
+subprocess.run([shlex.split(command)[0], "--version"], check=True)' "$cfg" "$1" 2>&1 | head -n 1
+}
 
 # Run a command; after <seconds>, send it SIGTERM (exit 143). The alarm stays in
 # this perl parent, so it cannot interact with precision_recall.py's SIGALRM.
+# Perl expands these variables; the shell must pass them literally.
+# shellcheck disable=SC2016
 WATCHDOG='my $l = shift; my $p = fork // die "fork: $!"; if (!$p) { exec @ARGV or die "exec: $!" }
 $SIG{ALRM} = sub { kill "TERM", $p }; alarm $l;
 my $r; do { $r = waitpid($p, 0) } while ($r == -1 && $!{EINTR});
@@ -51,6 +62,8 @@ stage() {
 # A killed stage leaves its serial worker, GDB and OpenOCD running.
 cleanup() {
   holders=$(lsof -t "$port" 2> /dev/null | tr '\n' ' ')
+  # lsof returns a list of numeric PIDs; kill needs separate arguments.
+  # shellcheck disable=SC2086
   [ -n "$holders" ] && log "cleanup: UART holders $holders" && kill $holders 2> /dev/null
   pkill -f 'openocd.*esp32c3-builtin' && log "cleanup: OpenOCD"
   pkill -f 'riscv32-esp-elf-gdb.*interpreter' && log "cleanup: GDB"
@@ -88,9 +101,9 @@ snapshot() {  # <dir>: code, configuration and inputs the trial runs with, taken
     echo "date: $(date '+%F %T %Z')"
     echo "git HEAD: $(git rev-parse HEAD) ($(git rev-parse --abbrev-ref HEAD))"
     echo "src tree sha256 (see src.tgz): $(src_hash)"
-    echo "ELF sha256: $(shasum -a 256 "$(ini "$cfg" binary_file)" | cut -d' ' -f1)"
-    echo "gdb: $("$(ini "$cfg" gdb_path)" --version | head -n 1)"
-    echo "openocd: $($(ini "$cfg" gdb_server_path | cut -d' ' -f1) --version 2>&1 | head -n 1)"
+    echo "ELF sha256: $(shasum -a 256 "$(config_value "$cfg" BASIC binary_file)" | cut -d' ' -f1)"
+    echo "gdb: $(program_version gdb_path)"
+    echo "openocd: $(program_version gdb_server_path)"
     echo "python: $($PY --version)"
     echo "PRECISION_SET_SIZE=${PRECISION_SET_SIZE:-unset} PYTHONHASHSEED=${PYTHONHASHSEED:-unset} (RNG unseeded, as upstream)"
     echo "libraries:"
@@ -99,10 +112,10 @@ snapshot() {  # <dir>: code, configuration and inputs the trial runs with, taken
   git status --short > "$1/git-status.txt"
   git diff HEAD > "$1/git-diff.patch"
   tar -czf "$1/src.tgz" --exclude __pycache__ src
-  (cd "$(ini "$cfg" seed_directory)" && shasum -a 256 -- *) > "$1/seeds.sha256"
-  (cd "$(ini "$cfg" eval_directory)" && shasum -a 256 -- *) > "$1/eval.sha256"
-  cp "$cfg" "$1/configuration.ini"
-  cp "$(dirname "$(ini "$cfg" binary_file)")/build.options.json" "$1/build.options.json"
+  (cd "$(config_value "$cfg" BASIC seed_directory)" && shasum -a 256 -- *) > "$1/seeds.sha256"
+  (cd "$(config_value "$cfg" BASIC eval_directory)" && shasum -a 256 -- *) > "$1/eval.sha256"
+  cp "$cfg" "$1/configuration.toml"
+  cp "$(dirname "$(config_value "$cfg" BASIC binary_file)")/build.options.json" "$1/build.options.json"
   cp "$base/build-2026-10-01.log" "$1/build.log"
   cp "$base/flash-2026-10-01.log" "$1/flash.log"
 }
@@ -114,7 +127,7 @@ unchanged() {  # <trial-dir> <stage>: the code must not change during a trial
 }
 
 missing_seeds() {  # <trial-dir>
-  for seed in "$(ini "$cfg" seed_directory)"/*; do
+  for seed in "$(config_value "$cfg" BASIC seed_directory)"/*; do
     [ -f "$1/$(basename "$seed").trace" ] || echo "$seed"
   done
 }
@@ -139,11 +152,21 @@ trace_trial() {  # <trial-number>; trace.py must create exactly trial-<n>
     rd=$dir/resume-$k
     mkdir -p "$rd/seeds"
     missing_seeds "$dir" | while read -r seed; do cp "$seed" "$rd/seeds/"; done
-    sed -e "s|^seed_directory = .*|seed_directory = $rd/seeds|" \
-      -e "s|^output_directory = .*|output_directory = $rd/|" "$cfg" > "$rd/configuration.ini"
+    $PY - "$cfg" "$rd" > "$rd/configuration.toml" <<'PYTHON'
+import json
+import re
+import sys
+from pathlib import Path
+
+paths = {"seed_directory": f"{sys.argv[2]}/seeds", "output_directory": f"{sys.argv[2]}/"}
+source = Path(sys.argv[1]).read_text()
+print(re.sub(r"^(seed_directory|output_directory) = .*",
+             lambda match: f"{match[1]} = {json.dumps(paths[match[1]])}",
+             source, flags=re.MULTILINE), end="")
+PYTHON
     log "$t trial-$1: resume $k"
     stage "$dir/times.txt" "trace-resume-$k" "$trace_limit" "$rd/trace.log" \
-      $PY src/tracer/trace.py --config "$rd/configuration.ini"
+      $PY src/tracer/trace.py --config "$rd/configuration.toml"
     rc=$?
     cp "$rd"/trial-0/*.trace "$dir/" 2> /dev/null
   done
@@ -155,7 +178,7 @@ run_trial() {  # <trial-number>
   log "$t trial-$n: tracing"
   trace_trial "$n" || { log "$t trial-$n: failed tracing"; return 1; }
   # mine.py pairs sorted traces with sorted seeds; require exactly one trace per seed.
-  seeds=$(for f in "$(ini "$cfg" seed_directory)"/*; do basename "$f"; done | sort)
+  seeds=$(for f in "$(config_value "$cfg" BASIC seed_directory)"/*; do basename "$f"; done | sort)
   traces=$(for f in "$dir"/*.trace; do basename "$f" .trace; done | sort)
   [ "$seeds" = "$traces" ] || { log "$t trial-$n: traces do not match seeds"; return 1; }
   unchanged "$dir" mining || return 1
@@ -172,14 +195,14 @@ run_trial() {  # <trial-number>
 run_target() {  # <target> <trace seconds> <mine seconds> <check_corpus arguments...>
   t=$1 trace_limit=$2 mine_limit=$3
   shift 3
-  cfg=example_firmware/esp32-c3_$t/configuration/configuration.ini
-  base=$(ini "$cfg" output_directory | sed 's|/$||')
-  port=$(ini "$cfg" port)
+  cfg=example_firmware/esp32-c3_$t/configuration/configuration.toml
+  base=$(config_value "$cfg" BASIC output_directory | sed 's|/$||')
+  port=$(config_value "$cfg" Connection port)
   mkdir -p "$base"
   # Built once beforehand with the README command; its log is build-2026-10-01.log.
   [ -s "$base/build-2026-10-01.log" ] || { log "$t: build log missing"; return 1; }
   links_ready || { log "$t: links not ready for flashing"; return 1; }
-  log "$t: flashing $(shasum -a 256 "$(ini "$cfg" binary_file)" | cut -d' ' -f1)"
+  log "$t: flashing $(shasum -a 256 "$(config_value "$cfg" BASIC binary_file)" | cut -d' ' -f1)"
   "$CLI" upload -b "$FQBN" -p "$port" --input-dir "$R/example_firmware/esp32-c3_$t/build" \
     "example_firmware/esp32-c3_$t" > "$base/flash-2026-10-01.log" 2>&1 \
     || { log "$t: failed flashing"; return 1; }

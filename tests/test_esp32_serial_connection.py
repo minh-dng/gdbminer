@@ -1,4 +1,3 @@
-import configparser
 import struct
 import unittest
 from unittest.mock import Mock, patch
@@ -8,11 +7,9 @@ from tracer.connection.esp32_serial_connection import ESP32SerialConnection
 READY = b"A"
 
 
-def connection(bulk, single, **settings):
+def connection(bulk, single):
     """bulk: chunks for the readiness drain (read(256)); single: bytes for read(1)."""
     conn = ESP32SerialConnection.__new__(ESP32SerialConnection)
-    conn.config = configparser.ConfigParser()
-    conn.config.read_dict({"Connection": settings})
     conn.serial = Mock(baudrate=9600, timeout=2)
     conn._synced = False
     bulk, single = list(bulk), list(single)
@@ -27,11 +24,37 @@ def packet(data: bytes) -> bytes:
 
 
 class ESP32SerialConnectionTest(unittest.TestCase):
+    def test_connect_sets_control_lines_before_open_and_only_waits_for_reset_pulse(self):
+        config = {"Connection": {"port": "/dev/test", "baud_rate": 9600}}
+        conn = ESP32SerialConnection.__new__(ESP32SerialConnection)
+        port = Mock()
+        opened = []
+        port.open.side_effect = lambda: opened.append((port.port, port.dtr, port.rts))
+        with (
+            patch(
+                "tracer.connection.esp32_serial_connection.serial.Serial", return_value=port
+            ) as serial_class,
+            patch("tracer.connection.esp32_serial_connection.time.sleep") as sleep,
+        ):
+            conn.connect(config)
+        serial_class.assert_called_once_with(baudrate=9600, timeout=2)
+        self.assertEqual(opened, [("/dev/test", False, True)])
+        self.assertFalse(port.rts)
+        self.assertFalse(conn._synced)
+        sleep.assert_called_once_with(0.05)
+
     def test_sends_only_after_the_latest_marker_and_a_quiet_line(self):
         # Marker from the EN-pulse boot, then OpenOCD's reset: noise, new marker.
         conn = connection([READY + b"\x12\x9c", READY, b""], [b"\x00"])
         self.assertTrue(conn.send_input(b"{}"))
         self.assertEqual(conn.serial.write.call_args_list, [((packet(b"{}"),),)])
+
+    def test_result_bytes_in_boot_noise_are_not_parser_results(self):
+        # Captured UART boot prefix: the embedded 0x00 caused a false acceptance.
+        noise = bytes.fromhex("0cbcf588eddd4eef2e00") + b"\xff\x8d"
+        conn = connection([READY, b""], [bytes([byte]) for byte in noise] + [READY, b"\xff"])
+        self.assertFalse(conn.send_input(b"?"))
+        self.assertEqual(conn.serial.write.call_args_list, [((packet(b"?"),),)])
 
     def test_marker_then_result_is_not_resent(self):
         # The packet arrived after the reboot set up the UART: it is answered.
@@ -61,13 +84,14 @@ class ESP32SerialConnectionTest(unittest.TestCase):
         self.assertFalse(conn.send_input(b"["))
         self.assertEqual(conn.serial.read.call_args_list[-2:], [((1,),), ((1,),)])
 
-    def test_oversized_input_is_rejected_without_desynchronizing_serial(self):
-        conn = connection([READY, b""], [b"\x00", READY, b"\x00"], max_input_size="2")
-        self.assertFalse(conn.send_input(b"abc"))
+    def test_firmware_rejection_keeps_the_next_packet_aligned(self):
+        oversized = b"a" * 2049
+        conn = connection([READY, b""], [b"\xff", READY, b"\x00"])
+        self.assertFalse(conn.send_input(oversized))
         self.assertTrue(conn.send_input(b"ab"))
         self.assertEqual(
             conn.serial.write.call_args_list,
-            [((struct.pack("I", 0),),), ((packet(b"ab"),),)],
+            [((packet(oversized),),), ((packet(b"ab"),),)],
         )
 
 

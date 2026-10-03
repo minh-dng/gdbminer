@@ -97,7 +97,7 @@ Round-2 answers and resulting changes: see [Section 6](#6-round-2-review).
    evaluation inputs accepted, given invalid inputs rejected, 2,048 bytes accepted, 2,049 rejected, next packet
    aligned. The checker now exits non-zero when any answer disagrees; before round 2 it wrote `failed` and exited 0.
 3. For trial 1, then trial 2:
-   - Snapshot the code and inputs (below), then run `trace.py` with the target INI. It creates
+   - Snapshot the code and inputs (below), then run `trace.py` with the target TOML. It creates
      `output/esp32-c3_<target>/trial-<n>/`.
    - If tracing stops, the failure and its duration are kept. Once both links have been present for 30 s, the missing
      seeds are traced into `trial-<n>/resume-<k>/` and their traces added (at most two resumes).
@@ -118,9 +118,13 @@ Each trial folder holds:
 | `state.txt` | Date, git revision, hash of every `src/*.py`, ELF hash, GDB, OpenOCD, Python and library versions, RNG policy |
 | `src.tgz`, `git-diff.patch`, `git-status.txt` | The code that ran, including untracked C3 files |
 | `seeds.sha256`, `eval.sha256` | Per-file hashes of the seeds and the evaluation corpus |
-| `configuration.ini`, `build.log`, `flash.log`, `build.options.json` | Configuration and firmware provenance |
+| `configuration.toml`, `build.options.json` | Configuration and firmware build options |
+| `build.log`, `flash.log` | Firmware build and upload logs |
 | `times.txt` | Exit status and wall time of each stage |
 | `trace.log`, `mine.log`, `eval.log`, `out.log`, `evaluation.json` | Stage output; `out.log` has the tracing and mining times that the tools log |
+
+Existing trial-0 and interrupted October 1 snapshots retain `configuration.ini`. After the
+TOML migration, the updated runner writes `configuration.toml` for future trials and resumes.
 
 The random number generators of mining and precision sampling stay unseeded, as upstream. Individual oracle answers
 are not logged by the upstream tools.
@@ -150,9 +154,9 @@ Pending. Campaign log: `output/esp32-c3-trials.stages.log`.
 | 2026-10-01 09:37 | json trial-1 tracing started |
 | 2026-10-01 10:00 | Stopped by the author (laptop to be unplugged) after 8 of 20 seeds. Partial output moved to `output/esp32-c3_json/interrupted-2026-10-01-trial-1/`, so the resumed campaign starts trial-1 afresh. Not mined or evaluated. |
 
-To resume, check the UART device name (`ls /dev/cu.usbserial-*`) and update `[Connection] port` in the three INIs if it
-changed, then start `run-trials.sh` again. After each finished trial, `check-trial.sh <target> <n>` compares the
-board's rejections and scores with the host oracle.
+To resume, check the UART device name (`ls /dev/cu.usbserial-*`) and update `[Connection] port` in
+the three TOMLs if it changed, then start `run-trials.sh` again. After each finished trial,
+`check-trial.sh <target> <n>` compares the board's rejections and scores with the host oracle.
 
 ## 6. Round-2 review
 

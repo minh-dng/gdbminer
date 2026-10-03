@@ -6,13 +6,13 @@ import logging
 import re
 import subprocess
 import time
-from configparser import ConfigParser
 from dataclasses import dataclass
 from pathlib import Path
 from typing import override
 
 from tracer.instance.stm32_instance import STM32Instance
 from tracer.instance.sut_instance import SUTInstance
+from util.config import Config
 
 
 @dataclass
@@ -31,7 +31,7 @@ class ESP32C3Instance(STM32Instance):
     OpenOCD removes *managed* watchpoints during stepi. Raw mcontrol registers
     remain armed. Never mix this path with ARM DWT polling.
     The C3 has eight trigger slots shared by breakpoints and watchpoints.
-    Slots below hardware_trigger_slot stay free for GDB's managed hardware
+    Slots below GDB.esp32c3.hardware_trigger_slot stay free for GDB's managed hardware
     breakpoints: an exit point needs one, and each finish needs two (return
     address and the C++ exception hook _Unwind_DebugHook). The raw window is
     reserved in OpenOCD, so a breakpoint that does not fit fails to insert.
@@ -49,13 +49,16 @@ class ESP32C3Instance(STM32Instance):
     # arrives, so the poll interval is a latency floor on every transaction.
     POLL_SEC = 0.001
 
-    def __init__(self, config: ConfigParser, input_file: Path | str) -> None:
+    def __init__(self, config: Config, input_file: Path | str) -> None:
         super().__init__(config, input_file)
+        c3 = config["GDB"]["esp32c3"]
+        # The serial EN pulse already restarts firmware in the example configurations.
+        self.reset_on_connect = c3.get("reset_on_connect", True)
         if self.dwt_watchpoint_workaround:
             raise ValueError("C3 observes reads with RISC-V triggers, not ARM DWT polling")
         if not 1 <= self.watchpoint_count <= 8:
             raise ValueError("C3 hardware observation requires 1 <= watchpoint_count <= 8")
-        self.trigger_slot = config.getint("GDB", "hardware_trigger_slot")
+        self.trigger_slot = c3["hardware_trigger_slot"]
         if self.trigger_slot < 0 or self.trigger_slot + self.watchpoint_count > 8:
             raise ValueError("C3 configured trigger window must fit slots 0..7")
         self._token = 10000
@@ -67,9 +70,10 @@ class ESP32C3Instance(STM32Instance):
     @override
     def init_gdb_controller(self):
         super().init_gdb_controller()
-        rom_elf = self.config.get("GDB", "rom_elf", fallback="")
+        rom_elf = self.config["GDB"]["esp32c3"].get("rom_elf", "")
         if rom_elf:
-            # ROM function boundaries are needed to unwind back into firmware.
+            # Name built-in ROM routines so the tracer's ignore regex can match them.
+            # Symbols alone do not guarantee that GDB can unwind a ROM call.
             command = "add-symbol-file " + json.dumps(str(Path(rom_elf).resolve(strict=True)))
             self._command(f"-interpreter-exec console {json.dumps(command)}")
 
@@ -455,7 +459,7 @@ class ESP32C3Instance(STM32Instance):
             # instead of overwriting a read trigger.
             window = range(self.trigger_slot, self.trigger_slot + self.watchpoint_count)
             self._monitor("; ".join(f"riscv reserve_trigger {slot} on" for slot in window))
-            if self.config.getboolean("GDB", "breakpoint_always_inserted", fallback=False):
+            if self.config["GDB"]["esp32c3"].get("breakpoint_always_inserted", False):
                 # Same breakpoints, written once: by default GDB removes every
                 # breakpoint after each stop and re-inserts it before the next
                 # stepi (infrun.c maybe_remove_breakpoints).
