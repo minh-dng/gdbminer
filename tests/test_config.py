@@ -108,6 +108,26 @@ def test_config():
     assert (instance.trigger_slot, instance.watchpoint_count) == (2, 6)
     assert instance.gdb_server_path_with_args[-2:] == ["-c", "adapter speed 40000"]
 
+    full_window = deepcopy(c3)
+    full_window["GDB"]["watchpoint_count"] = 8
+    full_window["GDB"]["esp32c3"]["hardware_trigger_slot"] = 0
+    validate_config(full_window)
+    full_window["GDB"]["exitpoint"] = "parser_exit"
+    with (
+        patch("sys.argv", ["trace", "--config", str(C3_CONFIG)]),
+        patch("util.config.tomllib.load", return_value=full_window),
+        patch("tracer.trace.create_output_dir") as create_output,
+        patch("tracer.trace.generate_trace") as generate_trace,
+    ):
+        try:
+            trace.main()
+        except ValueError as exc:
+            assert "exitpoint" in str(exc)
+        else:
+            raise AssertionError("Accepted eight read triggers plus an exit breakpoint")
+        create_output.assert_not_called()
+        generate_trace.assert_not_called()
+
     no_reset = deepcopy(c3)
     no_reset["Connection"].update(rts=False, reset_pulse=False)
     validate_config(no_reset)

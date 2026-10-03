@@ -111,6 +111,8 @@ def validate_config(config: Config) -> None:
             raise ValueError(
                 "ESP32-C3 hardware_trigger_slot + watchpoint_count must fit slots 0..7"
             )
+        if gdb["watchpoint_count"] == 8 and gdb.get("exitpoint", ""):
+            raise ValueError("ESP32-C3 exitpoint requires a free hardware trigger slot")
         if gdb["watchpoint_type"] != "(char*)":
             raise ValueError("ESP32-C3 watchpoint_type must be '(char*)'")
 

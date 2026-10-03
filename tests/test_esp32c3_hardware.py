@@ -354,21 +354,45 @@ class HardwareContractTest(unittest.TestCase):
                 instance.step_out_of_function()
             self.assertEqual(instance._pending, [])
 
-    def test_raw_window_is_reserved_from_openocd(self):
+    def test_all_eight_slots_remain_available_until_parser_entry(self):
         config = configuration()
-        config["GDB"]["watchpoint_count"] = 6
-        config["GDB"]["esp32c3"]["hardware_trigger_slot"] = 2
+        config["GDB"]["watchpoint_count"] = 8
         config["GDB"]["esp32c3"]["breakpoint_always_inserted"] = True
         instance = ESP32C3Instance(config, "unused")
-        instance._monitor = Mock()
-        instance._command = Mock()
+        reserved = set()
+
+        def monitor(command):
+            for slot in range(8):
+                if f"riscv reserve_trigger {slot} on" in command:
+                    reserved.add(slot)
+
+        def command(command):
+            if command.startswith("-break-insert"):
+                if len(reserved) == 8:
+                    raise RuntimeError("No slot for the entry breakpoint")
+                return {"payload": {"bkpt": {"number": "1"}}}, ""
+            return {"payload": {"value": "256"}}, ""
+
+        instance._monitor = Mock(side_effect=monitor)
+        instance._command = Mock(side_effect=command)
+        instance._read_registers = Mock(return_value=({0: (0, 0)}, 0))
+        instance._set_triggers = Mock()
         with patch.object(ESP32C3Instance.__mro__[1], "__enter__", return_value=instance):
             instance.__enter__()
+        instance._monitor.assert_not_called()
+        self.assertEqual(instance.set_temporary_breakpoint("parser"), "1")
+        instance._halted = True  # The temporary entry breakpoint has been consumed.
+        instance.set_watchpoint_and_get_id("&buf[0]", "(char*)")
+        self.assertEqual(reserved, set(range(8)))
         self.assertEqual(
             instance._monitor.call_args_list[0].args[0],
-            "; ".join(f"riscv reserve_trigger {slot} on" for slot in range(2, 8)),
+            "; ".join(f"riscv reserve_trigger {slot} on" for slot in range(8)),
         )
-        instance._command.assert_called_once_with("-gdb-set breakpoint always-inserted on")
+        self.assertEqual(
+            instance._monitor.call_args_list[1].args[0],
+            "reg tselect 0; reg tdata1 0; reg tdata2 0x100",
+        )
+        instance._command.assert_any_call("-gdb-set breakpoint always-inserted on")
 
     def test_cleanup_attempts_every_slot_even_after_a_failure(self):
         instance = self.hardware(8)

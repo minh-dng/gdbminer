@@ -189,6 +189,12 @@ class ESP32C3Instance(STM32Instance):
             raise RuntimeError(f"C3 slot {slot} already has an active owner")
         if dcsr & (1 << 11):
             raise RuntimeError("C3 requires dcsr.stepie=0 (interrupts masked during stepping)")
+        if not self._triggers:
+            # The temporary entry breakpoint has fired and released its slot.
+            # Reserve only now so CGI can use all eight slots after reaching entry.
+            # Later exit/finish breakpoints must stay outside this raw window.
+            window = range(self.trigger_slot, self.trigger_slot + self.watchpoint_count)
+            self._monitor("; ".join(f"riscv reserve_trigger {index} on" for index in window))
         watchpoint_id = f"{self.WATCHPOINT_PREFIX}{slot}"
         trigger = ReadTrigger(slot, watch_address, offset, control, old_address)
         self._triggers[watchpoint_id] = trigger  # Reserve before writes for partial-init cleanup.
@@ -454,11 +460,6 @@ class ESP32C3Instance(STM32Instance):
     def __enter__(self):
         try:
             super().__enter__()
-            # Keep OpenOCD's breakpoint allocator out of the raw trigger window.
-            # An over-subscribed finish/exit breakpoint then fails to insert
-            # instead of overwriting a read trigger.
-            window = range(self.trigger_slot, self.trigger_slot + self.watchpoint_count)
-            self._monitor("; ".join(f"riscv reserve_trigger {slot} on" for slot in window))
             if self.config["GDB"]["esp32c3"].get("breakpoint_always_inserted", False):
                 # Same breakpoints, written once: by default GDB removes every
                 # breakpoint after each stop and re-inserts it before the next
