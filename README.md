@@ -62,7 +62,7 @@ eval_directory = "./example_programs/json/eval"
 
 [GDB]
 gdb_path = "/usr/bin/gdb"
-instance = "valgrind" # valgrind, stm32, or msp430
+instance = "valgrind" # valgrind, stm32, msp430, or esp32c3
 # Ignore function names matching this Python regular expression.
 # Literal strings preserve backslashes without TOML escape sequences.
 ignore_functions_regex = '@plt|_vgr*'
@@ -87,7 +87,7 @@ All configurations require these fields unless marked optional:
 | `BASIC` | `binary_file` | String, target executable or firmware ELF with debug symbols. |
 | `BASIC` | `eval_directory` | String, directory of inputs used to measure recall. |
 | `GDB` | `gdb_path` | String, debugger command with optional arguments. Quote command paths containing spaces inside the TOML string. |
-| `GDB` | `instance` | String, `"valgrind"`, `"stm32"`, or `"msp430"`. |
+| `GDB` | `instance` | String, `"valgrind"`, `"stm32"`, `"msp430"`, or `"esp32c3"`. |
 | `GDB` | `entrypoint` | String, symbol, source location, or quoted hexadecimal address where tracing starts. |
 | `GDB` | `exitpoint` | Optional string. Omit or use `""` to stop after leaving the entry function; otherwise give a breakpoint location. |
 | `GDB` | `input_buffer` | String, input buffer symbol or quoted hexadecimal address. |
@@ -101,13 +101,15 @@ All configurations require these fields unless marked optional:
 
 ### MCU settings
 
-STM32 and MSP430 both require the following server fields in `[GDB]` and serial fields in `[Connection]`. Valgrind supplies input through a file and does not require these fields or a `[Connection]` table.
+STM32, MSP430 and ESP32-C3 require the following server fields in `[GDB]` and serial fields in
+`[Connection]`. Valgrind supplies input through a file and does not require these fields or a
+`[Connection]` table.
 
 | Table | Field | Type and meaning |
 | --- | --- | --- |
 | `GDB` | `gdb_server_path` | String, server command and arguments, split using shell quoting rules. |
 | `GDB` | `gdb_server_address` | String, GDB remote address, such as `":4242"`. |
-| `Connection` | `input_channel` | String, `"serial"`. |
+| `Connection` | `input_channel` | String, `"serial"` or `"esp32-serial"`. |
 | `Connection` | `port` | String, serial device path. |
 | `Connection` | `baud_rate` | Positive integer, serial baud rate. |
 | `GDB.stm32` | `dwt_watchpoint_workaround` | Optional boolean, defaults to `true`. Read DWT registers while stepping on ARMv7 targets. |
@@ -131,6 +133,30 @@ baud_rate = 9600
 ```
 
 Choose the binary, symbols, register address and watchpoint count for your firmware and MCU. MSP430 uses `instance = "msp430"` with its server command and address in `[GDB]`. It needs no MCU subtable because it currently has no additional settings. Only the selected MCU's settings are validated and read.
+
+ESP32-C3 uses `instance = "esp32c3"` and `input_channel = "esp32-serial"`. Its target
+settings live in `[GDB.esp32c3]`; it uses RISC-V triggers and needs no `[GDB.stm32]` table.
+
+| Table | Field | Type and meaning |
+| --- | --- | --- |
+| `GDB.esp32c3` | `rom_elf` | Optional string, ROM symbol ELF matching the chip revision. |
+| `GDB.esp32c3` | `hardware_trigger_slot` | Integer, first read-trigger slot, in 0-7. |
+| `GDB.esp32c3` | `reset_on_connect` | Optional boolean, defaults to `true`. Reset after attach. |
+| `GDB.esp32c3` | `breakpoint_always_inserted` | Optional boolean, defaults to `false`. |
+| `Connection` | `dtr` | Optional boolean for ESP32 serial, defaults to `false`. |
+| `Connection` | `rts` | Optional boolean for ESP32 serial, defaults to `true`. |
+| `Connection` | `reset_pulse` | Optional boolean for ESP32 serial, defaults to `true`. |
+
+The trigger window must fit in eight shared slots. Leave slots free for the exit breakpoint
+and for GDB's `finish` when functions are skipped. The C3 example configs select their measured
+budgets and disable the extra reset because their serial adapter already pulses EN. `rom_elf`
+adds names for code permanently in ROM via `add-symbol-file`; it is never flashed. Symbols
+alone do not guarantee that GDB can unwind a ROM call. See the
+[C3 setup](example_firmware/ESP32-C3%20DevKitM-1-N4X.README.md#target-settings-in-toml).
+
+For the C3, disabling `reset_pulse` also requires `rts = false` so the board leaves reset.
+Unknown keys in `[GDB.esp32c3]` and obsolete `boot_delay` or `max_input_size` connection
+settings are rejected rather than ignored.
 
 ### Migrating an existing INI file
 
@@ -274,6 +300,12 @@ uv run src/tracer/trace.py --config ./example_firmware/stm32_arduinojson/configu
 
 uv run src/miner/mine.py --config ./example_firmware/stm32_arduinojson/configuration/configuration.toml
 ```
+
+## GDBMiner on the ESP32-C3 DevKitM-1-N4X board
+
+Ports of the three STM32 examples (`esp32-c3_json`, `esp32-c3_cgidecode`, `esp32-c3_xml`) run on
+an ESP32-C3. For the wiring, build, debugger and run commands, see
+[`example_firmware/ESP32-C3 DevKitM-1-N4X.README.md`](example_firmware/ESP32-C3%20DevKitM-1-N4X.README.md).
 
 ## SVGPP
 

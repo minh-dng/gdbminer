@@ -1,0 +1,335 @@
+# Setting up the ESP32-C3 DevKitM-1-N4X
+
+We are discussing the ESP32-C3 DevKitM-1-N4X hardware setup, firmware wrappers, the Arduino build,
+the debugger and the tracing method. See each target README for more information
+
+GDBMiner needs two separate USB connections to this board. Connect both before you run `trace.py`,
+`mine.py` or `precision_recall.py`.
+
+|               | UART link                                                    | JTAG link                                             |
+| ------------- | ------------------------------------------------------------ | ----------------------------------------------------- |
+| Chip side     | CP2102N USB-to-UART bridge on UART0                          | Built-in USB-Serial/JTAG on GPIO18 and GPIO19         |
+| Connection    | The board's Micro-USB port                                   | A USB breakout wired to the board pins (see below)    |
+| Mac device    | `/dev/cu.usbserial-<n>`                                      | `/dev/cu.usbmodem<n>` ("USB JTAG_serial debug unit")  |
+| Used for      | Flashing, sending each input, reading the accept/reject byte | OpenOCD and GDB: breakpoints, read triggers, stepping |
+| Configured in | `[Connection] port`                                          | `[GDB] gdb_server_path` (`adapter serial`)            |
+
+The Micro-USB port is UART-only: the chip's native USB pins (GPIO18 and GPIO19) are not wired to it,
+so the JTAG link needs the extra wiring.
+
+## Hardware
+
+### UART link (Micro-USB)
+
+Plug a USB cable into the board's Micro-USB port. The CP2102N bridge appears as
+`/dev/cu.usbserial-<n>`. Set that path as `port` in the `[Connection]` section of the target's
+`configuration.toml`. The number `<n>` changes when you re-plug the board or use another USB port,
+so check it before each session.
+
+To find the port, list the serial ports. `arduino-cli` comes from the [Toolchain](#toolchain) step;
+without it, compare `ls /dev/cu.*` before and after plugging in the cable.
+
+```sh
+arduino-cli board list
+```
+
+Example output:
+
+```text
+Port                            Protocol Type              Board Name          FQBN                      Core
+/dev/cu.Bluetooth-Incoming-Port serial   Serial Port       Unknown
+/dev/cu.CMFBuds                 serial   Serial Port       Unknown
+/dev/cu.JabraEvolve75SE         serial   Serial Port       Unknown
+/dev/cu.debug-console           serial   Serial Port       Unknown
+/dev/cu.usbmodem1101            serial   Serial Port (USB) ESP32 Family Device esp32:esp32:esp32_family  esp32:esp32
+                                         Serial Port (USB) Ozobot DRVKit       esp32:esp32:ozobot_drvkit esp32:esp32
+/dev/cu.usbserial-210           serial   Serial Port (USB) Unknown
+```
+
+Use the `usbserial-<n>` entry. That is the Micro-USB port on the board, the CP2102N USB-to-UART
+bridge. The `usbmodem<n>` entry is the JTAG link.
+
+### JTAG link (native USB on GPIO18 and GPIO19)
+
+Wire a USB breakout to the board so the Mac talks directly to the chip's USB-Serial/JTAG peripheral:
+
+| Breakout line | Board pin |
+| ------------- | --------- |
+| D−            | GPIO18    |
+| D+            | GPIO19    |
+| GND           | GND       |
+| 5 V           | 5 V       |
+
+All four wires are required. D− and D+ form one USB differential pair, referenced to GND. Plug the
+breakout into the Mac. It shows up as a second device next to the UART bridge. A loose joint drops
+this link mid-run: OpenOCD then reports `esp_usb_jtag: device not found`, and the tracer exits on a
+command or stop timeout. The September 30 XML run recorded such a failure. Mining and evaluation
+start OpenOCD in the same way, so they need the JTAG link too, although they only use the UART to
+test inputs.
+
+### Finding the identifiers
+
+OpenOCD finds the JTAG device over USB, not through a `/dev` path. `interface/esp_usb_jtag.cfg`
+matches the vendor and product ID `0x303a:0x1001`. The `adapter serial` option in `gdb_server_path`
+then selects one board when several are attached. For this chip the USB serial number is the chip's
+MAC address, and it stays the same when you re-plug.
+
+List the attached devices with either command:
+
+```sh
+arduino-cli board list --format json    # per port: properties.vid, .pid, .serialNumber
+ioreg -p IOUSB -w0 -l | grep -E '"(USB Product Name|USB Serial Number|idVendor|idProduct)"'
+```
+
+The default `arduino-cli board list` table does not show serial numbers; use the JSON output.
+
+Values for this board (checked 2026-09-30):
+
+| Link | Port                    | VID:PID         | USB serial number                    |
+| ---- | ----------------------- | --------------- | ------------------------------------ |
+| JTAG | `/dev/cu.usbmodem1101`  | `0x303A:0x1001` | `A0:F2:62:01:70:28` (the chip's MAC) |
+| UART | `/dev/cu.usbserial-210` | `0x10C4:0xEA60` | `8afe88d078bcf0119b5f157148e9de0f`   |
+
+Copy the JTAG serial number into `-c "adapter serial <MAC>"` in `gdb_server_path`. The UART serial
+number is not used. The `esp32-c3_json`, `esp32-c3_cgidecode` and `esp32-c3_xml` configuration files
+all carry it.
+
+## Firmware wrappers
+
+Each C3 target ports the wrapper of its STM32 reference (`stm32_arduinojson`, `stm32_cgidecode`,
+`stm32_libyxml`) with the same parser library, acceptance rule and serial protocol. Diffing each
+wrapper against its reference shows these five changes in all three ports; the target READMEs list
+any others:
+
+- LED on GPIO8.
+- `buf` has one extra byte, so a 2,048-byte input can be NUL-terminated inside the array.
+- `delay(1)` while waiting for UART input, so the ESP32 runtime can run.
+- `Serial.flush()` after the ready and result bytes.
+- An oversized packet is drained and rejected with `0xff` instead of hanging the board.
+
+## Arduino build
+
+The steps in this part are specific to Arduino CLI and the Arduino-ESP32 core.
+
+### Toolchain
+
+Build with Espressif's official Arduino-ESP32 distribution and its declared compiler/runtime
+dependencies.
+
+Use Arduino CLI 1.5.1.[^arduino-cli] Homebrew (`brew install arduino-cli`) and the [1.5.1 release
+archive](https://github.com/arduino/arduino-cli/releases/tag/v1.5.1) both provide it; the recorded
+runs used the archive, unpacked to `~/.local/opt/arduino-cli/1.5.1/`. Run these commands before
+building:
+
+```sh
+arduino-cli core update-index \
+  --additional-urls https://espressif.github.io/arduino-esp32/package_esp32_index.json
+arduino-cli core install esp32:esp32@3.3.12 \
+  --additional-urls https://espressif.github.io/arduino-esp32/package_esp32_index.json
+arduino-cli core list
+```
+
+Confirm core 3.3.12 before building. The official package index selects matching compiler and
+runtime versions. Then install the target's library as its README says, and check it with
+`arduino-cli lib list`.
+
+### Apple Silicon host prerequisite
+
+Arduino CLI 1.5.1 installs an Intel-only `ctags` 5.8-arduino11 ([GitHub
+issue](https://github.com/arduino/ctags/issues/20)). On a Mac without Rosetta, compile the same
+unmodified upstream release natively.
+
+```sh
+curl -fL -o /tmp/arduino-ctags.tar.xz \
+  https://github.com/arduino/ctags/releases/download/5.8-arduino11/ctags-5.8-arduino11.tar.xz
+PREFIX="$HOME/.local/opt/arduino-ctags/5.8-arduino11"
+mkdir -p "$PREFIX/source"
+tar -xf /tmp/arduino-ctags.tar.xz -C "$PREFIX/source" --strip-components=1
+(cd "$PREFIX/source" && ./configure --prefix="$PREFIX" && \
+  make -j4 CFLAGS='-O2 -include dirent.h' && make install)
+```
+
+Pre-including the system header avoids the old ctags `__unused__` macro colliding with the current
+macOS SDK header. No ctags source or installed Arduino package is patched. The build property below
+selects this native executable. Omit that property on hosts where the packaged executable works.
+
+### Build and upload
+
+From the repository root, set `TARGET` to `esp32-c3_json`, `esp32-c3_cgidecode` or `esp32-c3_xml`,
+and use the UART port (see [UART link](#uart-link-micro-usb)):
+
+```sh
+TARGET=esp32-c3_json
+
+arduino-cli compile \
+  -b esp32:esp32:esp32c3:CDCOnBoot=default,FlashMode=dio \
+  --build-property 'compiler.optimization_flags=-O0 -g3 -ggdb3' \
+  --build-property "runtime.tools.ctags.path=$HOME/.local/opt/arduino-ctags/5.8-arduino11/bin" \
+  --build-path "$PWD/example_firmware/$TARGET/build" \
+  -v "example_firmware/$TARGET"
+
+arduino-cli upload \
+  -b esp32:esp32:esp32c3:CDCOnBoot=default,FlashMode=dio \
+  -p /dev/cu.usbserial-<n> \
+  --input-dir "$PWD/example_firmware/$TARGET/build" \
+  "example_firmware/$TARGET"
+```
+
+The expected ELF is `build/$TARGET.ino.elf`. `-O0` and debug information apply to source compiled by
+this command, including the parser. They do not rebuild Espressif's precompiled SDK libraries.
+
+`CDCOnBoot=default` keeps CDC-on-boot disabled: input uses the UART, while the separate native USB
+connection provides JTAG. No upload is needed for each seed or mining query.
+
+### Upstream sources
+
+- [Arduino-ESP32 3.3.12](https://github.com/espressif/arduino-esp32/releases/tag/3.3.12)
+- [Official installation
+  instructions](https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html)
+- [Official package index](https://espressif.github.io/arduino-esp32/package_esp32_index.json)
+
+## Debugger and tracing
+
+### Choosing the debugger
+
+The `[GDB] gdb_path` of all three C3 targets points to Espressif's own `riscv32-esp-elf-gdb`
+17.1_20260402. Arduino CLI installs it with the `esp32:esp32` core:
+
+```text
+~/Library/Arduino15/packages/esp32/tools/riscv32-esp-elf-gdb/17.1_20260402/bin/riscv32-esp-elf-gdb
+```
+
+GDBMiner sets a breakpoint at each target's entry function (`break cJSON_Parse` for json). Homebrew
+GDB 17.2 crashes with a fatal internal error (exit code 139) when it does this on the json ELF, even
+with no board attached. Espressif's GDB sets the breakpoint correctly. The cause of the crash is not
+recorded. Only the debugger differs: the ELF, its debug information and the firmware instructions
+are unchanged.
+
+Check a debugger against an ELF without a board:
+
+```sh
+gdb -batch -nx -ex 'break cJSON_Parse' example_firmware/esp32-c3_json/build/esp32-c3_json.ino.elf
+```
+
+Result (checked 2026-09-30, json ELF `f6cf61b7…`): Homebrew GDB exits with 139. Espressif's GDB
+prints `Breakpoint 1 at 0x42001cf8: file …/cJSON.c, line 1208.` The check was run on the json ELF
+only.
+
+### Debug server and ROM symbols
+
+Two more files are not installed by Arduino CLI:
+
+- **OpenOCD:** Espressif's fork, release [`v0.12.0-esp32-20260831`][openocd-release]. The recorded
+  runs unpacked its macOS arm64 archive to `~/.espressif/openocd-esp32/`. The Arduino core bundles
+  an older build (`v0.12.0-esp32-20260424`); it was not used. Check with
+  `~/.espressif/openocd-esp32/bin/openocd --version`.
+- **ROM symbol file:** [`esp-rom-elfs`
+  20241011](https://github.com/espressif/esp-rom-elfs/releases/tag/20241011) (installed here by the
+  ESP-IDF tools to `~/.espressif/tools/esp-rom-elfs/20241011/`). Choose the file by chip revision.
+  `arduino-cli upload` prints it, for example `ESP32-C3 AZ (QFN32) (revision v1.1)`; v1.1 needs
+  `esp32c3_rev101_rom.elf`. Symbols for another revision can assign incorrect names to addresses and
+  make `ignore_functions_regex` matches unreliable.
+
+### Values to change on another machine
+
+The three `configuration.toml` files hold paths and device names from the recording Mac. Change
+these in each:
+
+| Table and key | Value to change |
+| --- | --- |
+| `[Connection] port` | UART device, such as `/dev/cu.usbserial-<n>`. |
+| `[GDB] gdb_path` | Espressif `riscv32-esp-elf-gdb` from the Arduino core. |
+| `[GDB.esp32c3] rom_elf` | ROM symbol file matching the chip revision. |
+| `[GDB] gdb_server_path` | OpenOCD executable, scripts folder and board's `adapter serial`. |
+
+### Target settings in TOML
+
+Shared debugger settings, including `watchpoint_count` and `watchpoint_type`, stay in `[GDB]`. C3
+settings live in `[GDB.esp32c3]`. For JSON:
+
+```toml
+[GDB.esp32c3]
+rom_elf = "/path/to/esp32c3_rev101_rom.elf"
+hardware_trigger_slot = 2
+reset_on_connect = false
+```
+
+The six JSON watchpoints occupy slots 2-7. CGI starts at slot 0 with eight watchpoints; XML starts
+at slot 1 with seven. XML also sets `breakpoint_always_inserted = true` in this table to keep its
+exit breakpoint inserted across steps, as in the measured run.
+
+`reset_on_connect = false` avoids a second reset after the serial adapter's EN pulse. It also leaves
+reconnect recovery to that adapter. Keep the serial control-line and reset settings in
+`[Connection]`: `dtr` defaults to `false`, `rts` and `reset_pulse` to `true`. The adapter waits for
+the firmware's ready marker, so no `boot_delay` setting is needed. If you disable `reset_pulse`,
+also set `rts = false` so EN is released.
+
+ARM DWT registers and `dwt_watchpoint_workaround` belong only in `[GDB.stm32]`. The C3 uses RISC-V
+read triggers and requires no DWT placeholder or workaround flag. The loader rejects unknown or
+misplaced C3 fields, obsolete connection settings, the generic serial channel, DWT settings on the
+C3, non-boolean flags and trigger windows outside slots 0-7 before starting the debugger or serial
+worker.
+
+### Running the evaluation
+
+Flash the target's firmware, then run the authors' three stages with the target's TOML, in this
+order:
+
+```sh
+TARGET=esp32-c3_json
+CONFIG=example_firmware/$TARGET/configuration/configuration.toml
+PYTHONPATH=src .venv/bin/python src/tracer/trace.py --config "$CONFIG"
+PYTHONPATH=src .venv/bin/python src/miner/mine.py --config "$CONFIG"
+PYTHONPATH=src .venv/bin/python src/eval/precision_recall.py \
+  --config "$CONFIG" --out evaluation.json
+```
+
+`trace.py` creates the next free `output/<target>/trial-<n>/`. `mine.py` and `precision_recall.py`
+use the newest `trial-<n>`, and `mine.py` pairs traces with seeds by sorted file name. Mine only
+after a trace run has written a trace for every seed. A failed or stopped trace run still leaves its
+`trial-<n>`, which mining would then select. Pass `--out` to keep the scores; without it, they are
+only in the log. Before each stage, check that no earlier process still holds the UART (`lsof
+/dev/cu.usbserial-<n>`): stopping `trace.py` or `mine.py` can leave its serial worker running.
+`docs/thesis/esp32c3-trials-2026-10-01/run-trials.sh` runs these steps for all three targets with
+these checks.
+
+### Tracing: the paper replica method
+
+Each target's `configuration.toml` follows the paper's embedded setup (Eisele et al. 2025, §4.1 and
+§5.4) and the configuration of its STM32 reference: same entry point and the same
+`ignore_functions_regex`, skipped with GDB `finish`. The only name change is `__aeabi_dadd`, the ARM
+EABI alias of libgcc `__adddf3`. `strlen`, `memset` and the soft-float helpers run from the chip's
+mask ROM. The adapter loads `GDB.esp32c3.rom_elf` with GDB's `add-symbol-file`, alongside the
+firmware ELF. It describes code already built into the chip and is never flashed. Its symbols let
+the ignore regex match ROM function names. GDB's `finish` also depends on available unwind
+information and debugger support; symbols alone do not guarantee it can return from a ROM call. The
+recorded runs used `finish` successfully. The earlier `esp32c3_rom.gdb` rules and
+`configuration.hw-eval.ini`, which stepped through those routines, have been removed.
+
+The C3 has eight trigger slots shared by breakpoints and watchpoints. GDB's `finish` inserts two
+hardware breakpoints (return address and the C++ exception hook `_Unwind_DebugHook`), so two slots
+must stay free wherever `finish` runs. The adapter reserves its trigger window in OpenOCD after the
+temporary entry breakpoint fires. This lets CGI reach its parser before reserving all eight slots.
+`GDB.watchpoint_count` sets its size; `GDB.esp32c3.hardware_trigger_slot` sets its first slot.
+
+| Target               | Skipped with `finish`                                                                         | Watchpoint slots                                  |
+| -------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| `esp32-c3_json`      | `malloc`, `free`, `_strtod_l`, `__adddf3`, `__floatdidf`, `__floatundidf`, `strlen`, `memset` | 6 (slots 2-7); slots 0-1 stay free                |
+| `esp32-c3_cgidecode` | nothing                                                                                       | 8 (slots 0-7)                                     |
+| `esp32-c3_xml`       | list never fires                                                                              | 7 (slots 1-7); the exit breakpoint takes one slot |
+
+See the [replica record](../docs/thesis/esp32c3-paper-replica-2026-09-30/README.md).
+
+[^arduino-cli]:
+    Arduino CLI drives the build, but the compiler is still Espressif's GCC from the core package.
+    The core's `platform.txt` defines the build: about 70 compiler and archiver calls, the link
+    against Espressif's precompiled SDK libraries, and the image steps (`esptool elf2image`,
+    `gen_esp32part.py`, `merge-bin`). Calling GCC directly would mean recreating all of that by
+    hand. The package index also resolves core 3.3.12 to its matching compiler, SDK libraries and
+    `esptool` as one set. That set is the reason for this migration: the earlier build mixed a
+    manually chosen GCC 16.1 with an older prebuilt framework and needed `toolchain_stubs.c` to
+    link. The STM32 reference targets also use the Arduino framework, so the wrapper keeps the
+    structure of the paper's setup. Arduino CLI records its options in `build/build.options.json`,
+    so one pinned command repeats the build.
+
+[openocd-release]: https://github.com/espressif/openocd-esp32/releases/tag/v0.12.0-esp32-20260831

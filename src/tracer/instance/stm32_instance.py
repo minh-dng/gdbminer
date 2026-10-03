@@ -18,12 +18,15 @@ class STM32Instance(SUTInstance):
     def __init__(self, config: Config, input_file: Path | str) -> None:
         super().__init__(config)
 
-        stm32 = config["GDB"]["stm32"]
+        stm32 = config["GDB"].get("stm32", {})
         self.gdb_server_path_with_args = shlex.split(config["GDB"]["gdb_server_path"])
         self.gdb_server_address = config["GDB"]["gdb_server_address"]
         self.watchpoint_count = config["GDB"]["watchpoint_count"]
         self.dwt_function_reg = stm32.get("dwt_function_reg", "")
-        self.dwt_watchpoint_workaround = stm32.get("dwt_watchpoint_workaround", True)
+        self.dwt_watchpoint_workaround = stm32.get(
+            "dwt_watchpoint_workaround", config["GDB"]["instance"] == "stm32"
+        )
+        self.reset_on_connect = True
         self.input_file = Path(input_file)
 
     @override
@@ -52,13 +55,14 @@ class STM32Instance(SUTInstance):
 
         self.wait_for_any_stop_message()
 
-        self.reset()
+        if self.reset_on_connect:
+            self.reset()
 
         return self
 
     # Subclasses may override init_SUT_connection
     def init_sut_connection(self):
-        return SUTConnection(self.config, self.reset)
+        return SUTConnection(self.config, self.reset if self.reset_on_connect else lambda: None)
 
     @override
     def step_instruction(self):

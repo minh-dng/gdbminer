@@ -71,6 +71,10 @@ Pull requests are documentation tools, as part of my honours thesis submission a
 
 Treat configuration files as the execution contract: set binary paths, seed/output directories, GDB instance, watchpoint details, and entry/exit points there. Desktop targets need debug symbols and no compiler optimization; STM32 work requires the documented ST-Link/GDB-server setup.
 
+## Markdown
+
+Manual line break at 100 characters.
+
 ## Agent skills
 
 ### Issue tracker

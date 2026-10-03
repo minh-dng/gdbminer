@@ -1,0 +1,739 @@
+42000020 <is_space(unsigned char)>:
+42000020:	1101                	addi	sp,sp,-32
+42000022:	ce06                	sw	ra,28(sp)
+42000024:	cc22                	sw	s0,24(sp)
+42000026:	1000                	addi	s0,sp,32
+42000028:	87aa                	mv	a5,a0
+4200002a:	fef407a3          	sb	a5,-17(s0)
+4200002e:	fef44703          	lbu	a4,-17(s0)
+42000032:	02000793          	li	a5,32
+42000036:	02f70163          	beq	a4,a5,42000058 <is_space(unsigned char)+0x38>
+4200003a:	fef44703          	lbu	a4,-17(s0)
+4200003e:	47a5                	li	a5,9
+42000040:	00f70c63          	beq	a4,a5,42000058 <is_space(unsigned char)+0x38>
+42000044:	fef44703          	lbu	a4,-17(s0)
+42000048:	47a9                	li	a5,10
+4200004a:	00f70763          	beq	a4,a5,42000058 <is_space(unsigned char)+0x38>
+4200004e:	fef44703          	lbu	a4,-17(s0)
+42000052:	47b5                	li	a5,13
+42000054:	00f71463          	bne	a4,a5,4200005c <is_space(unsigned char)+0x3c>
+42000058:	4785                	li	a5,1
+4200005a:	a011                	j	4200005e <is_space(unsigned char)+0x3e>
+4200005c:	4781                	li	a5,0
+4200005e:	853e                	mv	a0,a5
+42000060:	40f2                	lw	ra,28(sp)
+42000062:	4462                	lw	s0,24(sp)
+42000064:	6105                	addi	sp,sp,32
+42000066:	8082                	ret
+
+42000068 <skip_space(unsigned char const**, unsigned char const*)>:
+42000068:	1101                	addi	sp,sp,-32
+4200006a:	ce06                	sw	ra,28(sp)
+4200006c:	cc22                	sw	s0,24(sp)
+4200006e:	1000                	addi	s0,sp,32
+42000070:	fea42623          	sw	a0,-20(s0)
+42000074:	feb42423          	sw	a1,-24(s0)
+42000078:	a809                	j	4200008a <skip_space(unsigned char const**, unsigned char const*)+0x22>
+4200007a:	fec42783          	lw	a5,-20(s0)
+4200007e:	439c                	lw	a5,0(a5)
+42000080:	00178713          	addi	a4,a5,1
+42000084:	fec42783          	lw	a5,-20(s0)
+42000088:	c398                	sw	a4,0(a5)
+4200008a:	fec42783          	lw	a5,-20(s0)
+4200008e:	439c                	lw	a5,0(a5)
+42000090:	fe842703          	lw	a4,-24(s0)
+42000094:	00e7fd63          	bgeu	a5,a4,420000ae <skip_space(unsigned char const**, unsigned char const*)+0x46>
+42000098:	fec42783          	lw	a5,-20(s0)
+4200009c:	439c                	lw	a5,0(a5)
+4200009e:	0007c783          	lbu	a5,0(a5)
+420000a2:	853e                	mv	a0,a5
+420000a4:	3fb5                	jal	42000020 <is_space(unsigned char)>
+420000a6:	87aa                	mv	a5,a0
+420000a8:	c399                	beqz	a5,420000ae <skip_space(unsigned char const**, unsigned char const*)+0x46>
+420000aa:	4785                	li	a5,1
+420000ac:	a011                	j	420000b0 <skip_space(unsigned char const**, unsigned char const*)+0x48>
+420000ae:	4781                	li	a5,0
+420000b0:	f7e9                	bnez	a5,4200007a <skip_space(unsigned char const**, unsigned char const*)+0x12>
+420000b2:	0001                	nop
+420000b4:	0001                	nop
+420000b6:	40f2                	lw	ra,28(sp)
+420000b8:	4462                	lw	s0,24(sp)
+420000ba:	6105                	addi	sp,sp,32
+420000bc:	8082                	ret
+
+420000be <parse_string(unsigned char const**, unsigned char const*)>:
+420000be:	7179                	addi	sp,sp,-48
+420000c0:	d606                	sw	ra,44(sp)
+420000c2:	d422                	sw	s0,40(sp)
+420000c4:	1800                	addi	s0,sp,48
+420000c6:	fca42e23          	sw	a0,-36(s0)
+420000ca:	fcb42c23          	sw	a1,-40(s0)
+420000ce:	fdc42783          	lw	a5,-36(s0)
+420000d2:	439c                	lw	a5,0(a5)
+420000d4:	fef42623          	sw	a5,-20(s0)
+420000d8:	fec42703          	lw	a4,-20(s0)
+420000dc:	fd842783          	lw	a5,-40(s0)
+420000e0:	00f77e63          	bgeu	a4,a5,420000fc <parse_string(unsigned char const**, unsigned char const*)+0x3e>
+420000e4:	fec42783          	lw	a5,-20(s0)
+420000e8:	00178713          	addi	a4,a5,1
+420000ec:	fee42623          	sw	a4,-20(s0)
+420000f0:	0007c703          	lbu	a4,0(a5)
+420000f4:	02200793          	li	a5,34
+420000f8:	00f70463          	beq	a4,a5,42000100 <parse_string(unsigned char const**, unsigned char const*)+0x42>
+420000fc:	4785                	li	a5,1
+420000fe:	a011                	j	42000102 <parse_string(unsigned char const**, unsigned char const*)+0x44>
+42000100:	4781                	li	a5,0
+42000102:	cfb5                	beqz	a5,4200017e <parse_string(unsigned char const**, unsigned char const*)+0xc0>
+42000104:	4781                	li	a5,0
+42000106:	a059                	j	4200018c <parse_string(unsigned char const**, unsigned char const*)+0xce>
+42000108:	fec42783          	lw	a5,-20(s0)
+4200010c:	0007c703          	lbu	a4,0(a5)
+42000110:	05c00793          	li	a5,92
+42000114:	02f71563          	bne	a4,a5,4200013e <parse_string(unsigned char const**, unsigned char const*)+0x80>
+42000118:	fec42783          	lw	a5,-20(s0)
+4200011c:	0785                	addi	a5,a5,1
+4200011e:	fef42623          	sw	a5,-20(s0)
+42000122:	fec42703          	lw	a4,-20(s0)
+42000126:	fd842783          	lw	a5,-40(s0)
+4200012a:	00f76463          	bltu	a4,a5,42000132 <parse_string(unsigned char const**, unsigned char const*)+0x74>
+4200012e:	4781                	li	a5,0
+42000130:	a8b1                	j	4200018c <parse_string(unsigned char const**, unsigned char const*)+0xce>
+42000132:	fec42783          	lw	a5,-20(s0)
+42000136:	0785                	addi	a5,a5,1
+42000138:	fef42623          	sw	a5,-20(s0)
+4200013c:	a089                	j	4200017e <parse_string(unsigned char const**, unsigned char const*)+0xc0>
+4200013e:	fec42783          	lw	a5,-20(s0)
+42000142:	00178713          	addi	a4,a5,1
+42000146:	fee42623          	sw	a4,-20(s0)
+4200014a:	0007c783          	lbu	a5,0(a5)
+4200014e:	fde78793          	addi	a5,a5,-34
+42000152:	0017b793          	seqz	a5,a5
+42000156:	0ff7f793          	zext.b	a5,a5
+4200015a:	cb81                	beqz	a5,4200016a <parse_string(unsigned char const**, unsigned char const*)+0xac>
+4200015c:	fdc42783          	lw	a5,-36(s0)
+42000160:	fec42703          	lw	a4,-20(s0)
+42000164:	c398                	sw	a4,0(a5)
+42000166:	4785                	li	a5,1
+42000168:	a015                	j	4200018c <parse_string(unsigned char const**, unsigned char const*)+0xce>
+4200016a:	fec42783          	lw	a5,-20(s0)
+4200016e:	17fd                	addi	a5,a5,-1
+42000170:	0007c703          	lbu	a4,0(a5)
+42000174:	47fd                	li	a5,31
+42000176:	00e7e463          	bltu	a5,a4,4200017e <parse_string(unsigned char const**, unsigned char const*)+0xc0>
+4200017a:	4781                	li	a5,0
+4200017c:	a801                	j	4200018c <parse_string(unsigned char const**, unsigned char const*)+0xce>
+4200017e:	fec42703          	lw	a4,-20(s0)
+42000182:	fd842783          	lw	a5,-40(s0)
+42000186:	f8f761e3          	bltu	a4,a5,42000108 <parse_string(unsigned char const**, unsigned char const*)+0x4a>
+4200018a:	4781                	li	a5,0
+4200018c:	853e                	mv	a0,a5
+4200018e:	50b2                	lw	ra,44(sp)
+42000190:	5422                	lw	s0,40(sp)
+42000192:	6145                	addi	sp,sp,48
+42000194:	8082                	ret
+
+42000196 <parse_literal(unsigned char const**, unsigned char const*, char const*)>:
+42000196:	7179                	addi	sp,sp,-48
+42000198:	d606                	sw	ra,44(sp)
+4200019a:	d422                	sw	s0,40(sp)
+4200019c:	1800                	addi	s0,sp,48
+4200019e:	fca42e23          	sw	a0,-36(s0)
+420001a2:	fcb42c23          	sw	a1,-40(s0)
+420001a6:	fcc42a23          	sw	a2,-44(s0)
+420001aa:	fdc42783          	lw	a5,-36(s0)
+420001ae:	439c                	lw	a5,0(a5)
+420001b0:	fef42623          	sw	a5,-20(s0)
+420001b4:	a83d                	j	420001f2 <parse_literal(unsigned char const**, unsigned char const*, char const*)+0x5c>
+420001b6:	fec42703          	lw	a4,-20(s0)
+420001ba:	fd842783          	lw	a5,-40(s0)
+420001be:	02f77463          	bgeu	a4,a5,420001e6 <parse_literal(unsigned char const**, unsigned char const*, char const*)+0x50>
+420001c2:	fec42783          	lw	a5,-20(s0)
+420001c6:	00178713          	addi	a4,a5,1
+420001ca:	fee42623          	sw	a4,-20(s0)
+420001ce:	0007c703          	lbu	a4,0(a5)
+420001d2:	fd442783          	lw	a5,-44(s0)
+420001d6:	00178693          	addi	a3,a5,1
+420001da:	fcd42a23          	sw	a3,-44(s0)
+420001de:	0007c783          	lbu	a5,0(a5)
+420001e2:	00f70463          	beq	a4,a5,420001ea <parse_literal(unsigned char const**, unsigned char const*, char const*)+0x54>
+420001e6:	4785                	li	a5,1
+420001e8:	a011                	j	420001ec <parse_literal(unsigned char const**, unsigned char const*, char const*)+0x56>
+420001ea:	4781                	li	a5,0
+420001ec:	c399                	beqz	a5,420001f2 <parse_literal(unsigned char const**, unsigned char const*, char const*)+0x5c>
+420001ee:	4781                	li	a5,0
+420001f0:	a821                	j	42000208 <parse_literal(unsigned char const**, unsigned char const*, char const*)+0x72>
+420001f2:	fd442783          	lw	a5,-44(s0)
+420001f6:	0007c783          	lbu	a5,0(a5)
+420001fa:	ffd5                	bnez	a5,420001b6 <parse_literal(unsigned char const**, unsigned char const*, char const*)+0x20>
+420001fc:	fdc42783          	lw	a5,-36(s0)
+42000200:	fec42703          	lw	a4,-20(s0)
+42000204:	c398                	sw	a4,0(a5)
+42000206:	4785                	li	a5,1
+42000208:	853e                	mv	a0,a5
+4200020a:	50b2                	lw	ra,44(sp)
+4200020c:	5422                	lw	s0,40(sp)
+4200020e:	6145                	addi	sp,sp,48
+42000210:	8082                	ret
+
+42000212 <parse_number(unsigned char const**, unsigned char const*)>:
+42000212:	7179                	addi	sp,sp,-48
+42000214:	d606                	sw	ra,44(sp)
+42000216:	d422                	sw	s0,40(sp)
+42000218:	1800                	addi	s0,sp,48
+4200021a:	fca42e23          	sw	a0,-36(s0)
+4200021e:	fcb42c23          	sw	a1,-40(s0)
+42000222:	fdc42783          	lw	a5,-36(s0)
+42000226:	439c                	lw	a5,0(a5)
+42000228:	fef42623          	sw	a5,-20(s0)
+4200022c:	fec42703          	lw	a4,-20(s0)
+42000230:	fd842783          	lw	a5,-40(s0)
+42000234:	00f77f63          	bgeu	a4,a5,42000252 <parse_number(unsigned char const**, unsigned char const*)+0x40>
+42000238:	fec42783          	lw	a5,-20(s0)
+4200023c:	0007c703          	lbu	a4,0(a5)
+42000240:	02d00793          	li	a5,45
+42000244:	00f71763          	bne	a4,a5,42000252 <parse_number(unsigned char const**, unsigned char const*)+0x40>
+42000248:	fec42783          	lw	a5,-20(s0)
+4200024c:	0785                	addi	a5,a5,1
+4200024e:	fef42623          	sw	a5,-20(s0)
+42000252:	fec42703          	lw	a4,-20(s0)
+42000256:	fd842783          	lw	a5,-40(s0)
+4200025a:	00f76463          	bltu	a4,a5,42000262 <parse_number(unsigned char const**, unsigned char const*)+0x50>
+4200025e:	4781                	li	a5,0
+42000260:	a2e5                	j	42000448 <parse_number(unsigned char const**, unsigned char const*)+0x236>
+42000262:	fec42783          	lw	a5,-20(s0)
+42000266:	0007c703          	lbu	a4,0(a5)
+4200026a:	03000793          	li	a5,48
+4200026e:	00f71863          	bne	a4,a5,4200027e <parse_number(unsigned char const**, unsigned char const*)+0x6c>
+42000272:	fec42783          	lw	a5,-20(s0)
+42000276:	0785                	addi	a5,a5,1
+42000278:	fef42623          	sw	a5,-20(s0)
+4200027c:	a08d                	j	420002de <parse_number(unsigned char const**, unsigned char const*)+0xcc>
+4200027e:	fec42783          	lw	a5,-20(s0)
+42000282:	0007c703          	lbu	a4,0(a5)
+42000286:	03000793          	li	a5,48
+4200028a:	04e7f763          	bgeu	a5,a4,420002d8 <parse_number(unsigned char const**, unsigned char const*)+0xc6>
+4200028e:	fec42783          	lw	a5,-20(s0)
+42000292:	0007c703          	lbu	a4,0(a5)
+42000296:	03900793          	li	a5,57
+4200029a:	02e7ef63          	bltu	a5,a4,420002d8 <parse_number(unsigned char const**, unsigned char const*)+0xc6>
+4200029e:	a031                	j	420002aa <parse_number(unsigned char const**, unsigned char const*)+0x98>
+420002a0:	fec42783          	lw	a5,-20(s0)
+420002a4:	0785                	addi	a5,a5,1
+420002a6:	fef42623          	sw	a5,-20(s0)
+420002aa:	fec42703          	lw	a4,-20(s0)
+420002ae:	fd842783          	lw	a5,-40(s0)
+420002b2:	02f77563          	bgeu	a4,a5,420002dc <parse_number(unsigned char const**, unsigned char const*)+0xca>
+420002b6:	fec42783          	lw	a5,-20(s0)
+420002ba:	0007c703          	lbu	a4,0(a5)
+420002be:	02f00793          	li	a5,47
+420002c2:	00e7fd63          	bgeu	a5,a4,420002dc <parse_number(unsigned char const**, unsigned char const*)+0xca>
+420002c6:	fec42783          	lw	a5,-20(s0)
+420002ca:	0007c703          	lbu	a4,0(a5)
+420002ce:	03900793          	li	a5,57
+420002d2:	fce7f7e3          	bgeu	a5,a4,420002a0 <parse_number(unsigned char const**, unsigned char const*)+0x8e>
+420002d6:	a019                	j	420002dc <parse_number(unsigned char const**, unsigned char const*)+0xca>
+420002d8:	4781                	li	a5,0
+420002da:	a2bd                	j	42000448 <parse_number(unsigned char const**, unsigned char const*)+0x236>
+420002dc:	0001                	nop
+420002de:	fec42703          	lw	a4,-20(s0)
+420002e2:	fd842783          	lw	a5,-40(s0)
+420002e6:	08f77263          	bgeu	a4,a5,4200036a <parse_number(unsigned char const**, unsigned char const*)+0x158>
+420002ea:	fec42783          	lw	a5,-20(s0)
+420002ee:	0007c703          	lbu	a4,0(a5)
+420002f2:	02e00793          	li	a5,46
+420002f6:	06f71a63          	bne	a4,a5,4200036a <parse_number(unsigned char const**, unsigned char const*)+0x158>
+420002fa:	fec42783          	lw	a5,-20(s0)
+420002fe:	0785                	addi	a5,a5,1
+42000300:	fef42623          	sw	a5,-20(s0)
+42000304:	fec42703          	lw	a4,-20(s0)
+42000308:	fd842783          	lw	a5,-40(s0)
+4200030c:	02f77263          	bgeu	a4,a5,42000330 <parse_number(unsigned char const**, unsigned char const*)+0x11e>
+42000310:	fec42783          	lw	a5,-20(s0)
+42000314:	0007c703          	lbu	a4,0(a5)
+42000318:	02f00793          	li	a5,47
+4200031c:	00e7fa63          	bgeu	a5,a4,42000330 <parse_number(unsigned char const**, unsigned char const*)+0x11e>
+42000320:	fec42783          	lw	a5,-20(s0)
+42000324:	0007c703          	lbu	a4,0(a5)
+42000328:	03900793          	li	a5,57
+4200032c:	00e7f963          	bgeu	a5,a4,4200033e <parse_number(unsigned char const**, unsigned char const*)+0x12c>
+42000330:	4781                	li	a5,0
+42000332:	aa19                	j	42000448 <parse_number(unsigned char const**, unsigned char const*)+0x236>
+42000334:	fec42783          	lw	a5,-20(s0)
+42000338:	0785                	addi	a5,a5,1
+4200033a:	fef42623          	sw	a5,-20(s0)
+4200033e:	fec42703          	lw	a4,-20(s0)
+42000342:	fd842783          	lw	a5,-40(s0)
+42000346:	02f77263          	bgeu	a4,a5,4200036a <parse_number(unsigned char const**, unsigned char const*)+0x158>
+4200034a:	fec42783          	lw	a5,-20(s0)
+4200034e:	0007c703          	lbu	a4,0(a5)
+42000352:	02f00793          	li	a5,47
+42000356:	00e7fa63          	bgeu	a5,a4,4200036a <parse_number(unsigned char const**, unsigned char const*)+0x158>
+4200035a:	fec42783          	lw	a5,-20(s0)
+4200035e:	0007c703          	lbu	a4,0(a5)
+42000362:	03900793          	li	a5,57
+42000366:	fce7f7e3          	bgeu	a5,a4,42000334 <parse_number(unsigned char const**, unsigned char const*)+0x122>
+4200036a:	fec42703          	lw	a4,-20(s0)
+4200036e:	fd842783          	lw	a5,-40(s0)
+42000372:	0cf77563          	bgeu	a4,a5,4200043c <parse_number(unsigned char const**, unsigned char const*)+0x22a>
+42000376:	fec42783          	lw	a5,-20(s0)
+4200037a:	0007c703          	lbu	a4,0(a5)
+4200037e:	06500793          	li	a5,101
+42000382:	00f70a63          	beq	a4,a5,42000396 <parse_number(unsigned char const**, unsigned char const*)+0x184>
+42000386:	fec42783          	lw	a5,-20(s0)
+4200038a:	0007c703          	lbu	a4,0(a5)
+4200038e:	04500793          	li	a5,69
+42000392:	0af71563          	bne	a4,a5,4200043c <parse_number(unsigned char const**, unsigned char const*)+0x22a>
+42000396:	fec42783          	lw	a5,-20(s0)
+4200039a:	0785                	addi	a5,a5,1
+4200039c:	fef42623          	sw	a5,-20(s0)
+420003a0:	fec42703          	lw	a4,-20(s0)
+420003a4:	fd842783          	lw	a5,-40(s0)
+420003a8:	02f77763          	bgeu	a4,a5,420003d6 <parse_number(unsigned char const**, unsigned char const*)+0x1c4>
+420003ac:	fec42783          	lw	a5,-20(s0)
+420003b0:	0007c703          	lbu	a4,0(a5)
+420003b4:	02b00793          	li	a5,43
+420003b8:	00f70a63          	beq	a4,a5,420003cc <parse_number(unsigned char const**, unsigned char const*)+0x1ba>
+420003bc:	fec42783          	lw	a5,-20(s0)
+420003c0:	0007c703          	lbu	a4,0(a5)
+420003c4:	02d00793          	li	a5,45
+420003c8:	00f71763          	bne	a4,a5,420003d6 <parse_number(unsigned char const**, unsigned char const*)+0x1c4>
+420003cc:	fec42783          	lw	a5,-20(s0)
+420003d0:	0785                	addi	a5,a5,1
+420003d2:	fef42623          	sw	a5,-20(s0)
+420003d6:	fec42703          	lw	a4,-20(s0)
+420003da:	fd842783          	lw	a5,-40(s0)
+420003de:	02f77263          	bgeu	a4,a5,42000402 <parse_number(unsigned char const**, unsigned char const*)+0x1f0>
+420003e2:	fec42783          	lw	a5,-20(s0)
+420003e6:	0007c703          	lbu	a4,0(a5)
+420003ea:	02f00793          	li	a5,47
+420003ee:	00e7fa63          	bgeu	a5,a4,42000402 <parse_number(unsigned char const**, unsigned char const*)+0x1f0>
+420003f2:	fec42783          	lw	a5,-20(s0)
+420003f6:	0007c703          	lbu	a4,0(a5)
+420003fa:	03900793          	li	a5,57
+420003fe:	00e7f963          	bgeu	a5,a4,42000410 <parse_number(unsigned char const**, unsigned char const*)+0x1fe>
+42000402:	4781                	li	a5,0
+42000404:	a091                	j	42000448 <parse_number(unsigned char const**, unsigned char const*)+0x236>
+42000406:	fec42783          	lw	a5,-20(s0)
+4200040a:	0785                	addi	a5,a5,1
+4200040c:	fef42623          	sw	a5,-20(s0)
+42000410:	fec42703          	lw	a4,-20(s0)
+42000414:	fd842783          	lw	a5,-40(s0)
+42000418:	02f77263          	bgeu	a4,a5,4200043c <parse_number(unsigned char const**, unsigned char const*)+0x22a>
+4200041c:	fec42783          	lw	a5,-20(s0)
+42000420:	0007c703          	lbu	a4,0(a5)
+42000424:	02f00793          	li	a5,47
+42000428:	00e7fa63          	bgeu	a5,a4,4200043c <parse_number(unsigned char const**, unsigned char const*)+0x22a>
+4200042c:	fec42783          	lw	a5,-20(s0)
+42000430:	0007c703          	lbu	a4,0(a5)
+42000434:	03900793          	li	a5,57
+42000438:	fce7f7e3          	bgeu	a5,a4,42000406 <parse_number(unsigned char const**, unsigned char const*)+0x1f4>
+4200043c:	fdc42783          	lw	a5,-36(s0)
+42000440:	fec42703          	lw	a4,-20(s0)
+42000444:	c398                	sw	a4,0(a5)
+42000446:	4785                	li	a5,1
+42000448:	853e                	mv	a0,a5
+4200044a:	50b2                	lw	ra,44(sp)
+4200044c:	5422                	lw	s0,40(sp)
+4200044e:	6145                	addi	sp,sp,48
+42000450:	8082                	ret
+
+42000452 <parse_array(unsigned char const**, unsigned char const*)>:
+42000452:	7179                	addi	sp,sp,-48
+42000454:	d606                	sw	ra,44(sp)
+42000456:	d422                	sw	s0,40(sp)
+42000458:	1800                	addi	s0,sp,48
+4200045a:	fca42e23          	sw	a0,-36(s0)
+4200045e:	fcb42c23          	sw	a1,-40(s0)
+42000462:	fdc42783          	lw	a5,-36(s0)
+42000466:	439c                	lw	a5,0(a5)
+42000468:	fef42623          	sw	a5,-20(s0)
+4200046c:	fec42783          	lw	a5,-20(s0)
+42000470:	fd842703          	lw	a4,-40(s0)
+42000474:	00e7fe63          	bgeu	a5,a4,42000490 <parse_array(unsigned char const**, unsigned char const*)+0x3e>
+42000478:	fec42783          	lw	a5,-20(s0)
+4200047c:	00178713          	addi	a4,a5,1
+42000480:	fee42623          	sw	a4,-20(s0)
+42000484:	0007c703          	lbu	a4,0(a5)
+42000488:	05b00793          	li	a5,91
+4200048c:	00f70463          	beq	a4,a5,42000494 <parse_array(unsigned char const**, unsigned char const*)+0x42>
+42000490:	4785                	li	a5,1
+42000492:	a011                	j	42000496 <parse_array(unsigned char const**, unsigned char const*)+0x44>
+42000494:	4781                	li	a5,0
+42000496:	c399                	beqz	a5,4200049c <parse_array(unsigned char const**, unsigned char const*)+0x4a>
+42000498:	4781                	li	a5,0
+4200049a:	a0f1                	j	42000566 <parse_array(unsigned char const**, unsigned char const*)+0x114>
+4200049c:	fec40793          	addi	a5,s0,-20
+420004a0:	fd842583          	lw	a1,-40(s0)
+420004a4:	853e                	mv	a0,a5
+420004a6:	36c9                	jal	42000068 <skip_space(unsigned char const**, unsigned char const*)>
+420004a8:	fec42783          	lw	a5,-20(s0)
+420004ac:	fd842703          	lw	a4,-40(s0)
+420004b0:	02e7f363          	bgeu	a5,a4,420004d6 <parse_array(unsigned char const**, unsigned char const*)+0x84>
+420004b4:	fec42783          	lw	a5,-20(s0)
+420004b8:	0007c703          	lbu	a4,0(a5)
+420004bc:	05d00793          	li	a5,93
+420004c0:	00f71b63          	bne	a4,a5,420004d6 <parse_array(unsigned char const**, unsigned char const*)+0x84>
+420004c4:	fec42783          	lw	a5,-20(s0)
+420004c8:	00178713          	addi	a4,a5,1
+420004cc:	fdc42783          	lw	a5,-36(s0)
+420004d0:	c398                	sw	a4,0(a5)
+420004d2:	4785                	li	a5,1
+420004d4:	a849                	j	42000566 <parse_array(unsigned char const**, unsigned char const*)+0x114>
+420004d6:	fec40793          	addi	a5,s0,-20
+420004da:	fd842583          	lw	a1,-40(s0)
+420004de:	853e                	mv	a0,a5
+420004e0:	3661                	jal	42000068 <skip_space(unsigned char const**, unsigned char const*)>
+420004e2:	fec40793          	addi	a5,s0,-20
+420004e6:	fd842583          	lw	a1,-40(s0)
+420004ea:	853e                	mv	a0,a5
+420004ec:	2c31                	jal	42000708 <parse_value(unsigned char const**, unsigned char const*)>
+420004ee:	87aa                	mv	a5,a0
+420004f0:	0017c793          	xori	a5,a5,1
+420004f4:	0ff7f793          	zext.b	a5,a5
+420004f8:	c399                	beqz	a5,420004fe <parse_array(unsigned char const**, unsigned char const*)+0xac>
+420004fa:	4781                	li	a5,0
+420004fc:	a0ad                	j	42000566 <parse_array(unsigned char const**, unsigned char const*)+0x114>
+420004fe:	fec40793          	addi	a5,s0,-20
+42000502:	fd842583          	lw	a1,-40(s0)
+42000506:	853e                	mv	a0,a5
+42000508:	3685                	jal	42000068 <skip_space(unsigned char const**, unsigned char const*)>
+4200050a:	fec42783          	lw	a5,-20(s0)
+4200050e:	fd842703          	lw	a4,-40(s0)
+42000512:	02e7f363          	bgeu	a5,a4,42000538 <parse_array(unsigned char const**, unsigned char const*)+0xe6>
+42000516:	fec42783          	lw	a5,-20(s0)
+4200051a:	0007c703          	lbu	a4,0(a5)
+4200051e:	05d00793          	li	a5,93
+42000522:	00f71b63          	bne	a4,a5,42000538 <parse_array(unsigned char const**, unsigned char const*)+0xe6>
+42000526:	fec42783          	lw	a5,-20(s0)
+4200052a:	00178713          	addi	a4,a5,1
+4200052e:	fdc42783          	lw	a5,-36(s0)
+42000532:	c398                	sw	a4,0(a5)
+42000534:	4785                	li	a5,1
+42000536:	a805                	j	42000566 <parse_array(unsigned char const**, unsigned char const*)+0x114>
+42000538:	fec42783          	lw	a5,-20(s0)
+4200053c:	fd842703          	lw	a4,-40(s0)
+42000540:	00e7fe63          	bgeu	a5,a4,4200055c <parse_array(unsigned char const**, unsigned char const*)+0x10a>
+42000544:	fec42783          	lw	a5,-20(s0)
+42000548:	00178713          	addi	a4,a5,1
+4200054c:	fee42623          	sw	a4,-20(s0)
+42000550:	0007c703          	lbu	a4,0(a5)
+42000554:	02c00793          	li	a5,44
+42000558:	00f70463          	beq	a4,a5,42000560 <parse_array(unsigned char const**, unsigned char const*)+0x10e>
+4200055c:	4785                	li	a5,1
+4200055e:	a011                	j	42000562 <parse_array(unsigned char const**, unsigned char const*)+0x110>
+42000560:	4781                	li	a5,0
+42000562:	dbb5                	beqz	a5,420004d6 <parse_array(unsigned char const**, unsigned char const*)+0x84>
+42000564:	4781                	li	a5,0
+42000566:	853e                	mv	a0,a5
+42000568:	50b2                	lw	ra,44(sp)
+4200056a:	5422                	lw	s0,40(sp)
+4200056c:	6145                	addi	sp,sp,48
+4200056e:	8082                	ret
+
+42000570 <parse_object(unsigned char const**, unsigned char const*)>:
+42000570:	7179                	addi	sp,sp,-48
+42000572:	d606                	sw	ra,44(sp)
+42000574:	d422                	sw	s0,40(sp)
+42000576:	1800                	addi	s0,sp,48
+42000578:	fca42e23          	sw	a0,-36(s0)
+4200057c:	fcb42c23          	sw	a1,-40(s0)
+42000580:	fdc42783          	lw	a5,-36(s0)
+42000584:	439c                	lw	a5,0(a5)
+42000586:	fef42623          	sw	a5,-20(s0)
+4200058a:	fec42783          	lw	a5,-20(s0)
+4200058e:	fd842703          	lw	a4,-40(s0)
+42000592:	00e7fe63          	bgeu	a5,a4,420005ae <parse_object(unsigned char const**, unsigned char const*)+0x3e>
+42000596:	fec42783          	lw	a5,-20(s0)
+4200059a:	00178713          	addi	a4,a5,1
+4200059e:	fee42623          	sw	a4,-20(s0)
+420005a2:	0007c703          	lbu	a4,0(a5)
+420005a6:	07b00793          	li	a5,123
+420005aa:	00f70463          	beq	a4,a5,420005b2 <parse_object(unsigned char const**, unsigned char const*)+0x42>
+420005ae:	4785                	li	a5,1
+420005b0:	a011                	j	420005b4 <parse_object(unsigned char const**, unsigned char const*)+0x44>
+420005b2:	4781                	li	a5,0
+420005b4:	c399                	beqz	a5,420005ba <parse_object(unsigned char const**, unsigned char const*)+0x4a>
+420005b6:	4781                	li	a5,0
+420005b8:	a299                	j	420006fe <parse_object(unsigned char const**, unsigned char const*)+0x18e>
+420005ba:	fec40793          	addi	a5,s0,-20
+420005be:	fd842583          	lw	a1,-40(s0)
+420005c2:	853e                	mv	a0,a5
+420005c4:	3455                	jal	42000068 <skip_space(unsigned char const**, unsigned char const*)>
+420005c6:	fec42783          	lw	a5,-20(s0)
+420005ca:	fd842703          	lw	a4,-40(s0)
+420005ce:	02e7f363          	bgeu	a5,a4,420005f4 <parse_object(unsigned char const**, unsigned char const*)+0x84>
+420005d2:	fec42783          	lw	a5,-20(s0)
+420005d6:	0007c703          	lbu	a4,0(a5)
+420005da:	07d00793          	li	a5,125
+420005de:	00f71b63          	bne	a4,a5,420005f4 <parse_object(unsigned char const**, unsigned char const*)+0x84>
+420005e2:	fec42783          	lw	a5,-20(s0)
+420005e6:	00178713          	addi	a4,a5,1
+420005ea:	fdc42783          	lw	a5,-36(s0)
+420005ee:	c398                	sw	a4,0(a5)
+420005f0:	4785                	li	a5,1
+420005f2:	a231                	j	420006fe <parse_object(unsigned char const**, unsigned char const*)+0x18e>
+420005f4:	fec40793          	addi	a5,s0,-20
+420005f8:	fd842583          	lw	a1,-40(s0)
+420005fc:	853e                	mv	a0,a5
+420005fe:	34ad                	jal	42000068 <skip_space(unsigned char const**, unsigned char const*)>
+42000600:	fec40793          	addi	a5,s0,-20
+42000604:	fd842583          	lw	a1,-40(s0)
+42000608:	853e                	mv	a0,a5
+4200060a:	3c55                	jal	420000be <parse_string(unsigned char const**, unsigned char const*)>
+4200060c:	87aa                	mv	a5,a0
+4200060e:	0017c793          	xori	a5,a5,1
+42000612:	0ff7f793          	zext.b	a5,a5
+42000616:	c399                	beqz	a5,4200061c <parse_object(unsigned char const**, unsigned char const*)+0xac>
+42000618:	4781                	li	a5,0
+4200061a:	a0d5                	j	420006fe <parse_object(unsigned char const**, unsigned char const*)+0x18e>
+4200061c:	fec40793          	addi	a5,s0,-20
+42000620:	fd842583          	lw	a1,-40(s0)
+42000624:	853e                	mv	a0,a5
+42000626:	3489                	jal	42000068 <skip_space(unsigned char const**, unsigned char const*)>
+42000628:	fec42783          	lw	a5,-20(s0)
+4200062c:	fd842703          	lw	a4,-40(s0)
+42000630:	00e7fe63          	bgeu	a5,a4,4200064c <parse_object(unsigned char const**, unsigned char const*)+0xdc>
+42000634:	fec42783          	lw	a5,-20(s0)
+42000638:	00178713          	addi	a4,a5,1
+4200063c:	fee42623          	sw	a4,-20(s0)
+42000640:	0007c703          	lbu	a4,0(a5)
+42000644:	03a00793          	li	a5,58
+42000648:	00f70463          	beq	a4,a5,42000650 <parse_object(unsigned char const**, unsigned char const*)+0xe0>
+4200064c:	4785                	li	a5,1
+4200064e:	a011                	j	42000652 <parse_object(unsigned char const**, unsigned char const*)+0xe2>
+42000650:	4781                	li	a5,0
+42000652:	c399                	beqz	a5,42000658 <parse_object(unsigned char const**, unsigned char const*)+0xe8>
+42000654:	4781                	li	a5,0
+42000656:	a065                	j	420006fe <parse_object(unsigned char const**, unsigned char const*)+0x18e>
+42000658:	fec40793          	addi	a5,s0,-20
+4200065c:	fd842583          	lw	a1,-40(s0)
+42000660:	853e                	mv	a0,a5
+42000662:	3419                	jal	42000068 <skip_space(unsigned char const**, unsigned char const*)>
+42000664:	fec42783          	lw	a5,-20(s0)
+42000668:	fd842703          	lw	a4,-40(s0)
+4200066c:	00e7fe63          	bgeu	a5,a4,42000688 <parse_object(unsigned char const**, unsigned char const*)+0x118>
+42000670:	fec40793          	addi	a5,s0,-20
+42000674:	fd842583          	lw	a1,-40(s0)
+42000678:	853e                	mv	a0,a5
+4200067a:	2079                	jal	42000708 <parse_value(unsigned char const**, unsigned char const*)>
+4200067c:	87aa                	mv	a5,a0
+4200067e:	0017c793          	xori	a5,a5,1
+42000682:	0ff7f793          	zext.b	a5,a5
+42000686:	c399                	beqz	a5,4200068c <parse_object(unsigned char const**, unsigned char const*)+0x11c>
+42000688:	4785                	li	a5,1
+4200068a:	a011                	j	4200068e <parse_object(unsigned char const**, unsigned char const*)+0x11e>
+4200068c:	4781                	li	a5,0
+4200068e:	c399                	beqz	a5,42000694 <parse_object(unsigned char const**, unsigned char const*)+0x124>
+42000690:	4781                	li	a5,0
+42000692:	a0b5                	j	420006fe <parse_object(unsigned char const**, unsigned char const*)+0x18e>
+42000694:	fec40793          	addi	a5,s0,-20
+42000698:	fd842583          	lw	a1,-40(s0)
+4200069c:	853e                	mv	a0,a5
+4200069e:	32e9                	jal	42000068 <skip_space(unsigned char const**, unsigned char const*)>
+420006a0:	fec42783          	lw	a5,-20(s0)
+420006a4:	fd842703          	lw	a4,-40(s0)
+420006a8:	02e7f363          	bgeu	a5,a4,420006ce <parse_object(unsigned char const**, unsigned char const*)+0x15e>
+420006ac:	fec42783          	lw	a5,-20(s0)
+420006b0:	0007c703          	lbu	a4,0(a5)
+420006b4:	07d00793          	li	a5,125
+420006b8:	00f71b63          	bne	a4,a5,420006ce <parse_object(unsigned char const**, unsigned char const*)+0x15e>
+420006bc:	fec42783          	lw	a5,-20(s0)
+420006c0:	00178713          	addi	a4,a5,1
+420006c4:	fdc42783          	lw	a5,-36(s0)
+420006c8:	c398                	sw	a4,0(a5)
+420006ca:	4785                	li	a5,1
+420006cc:	a80d                	j	420006fe <parse_object(unsigned char const**, unsigned char const*)+0x18e>
+420006ce:	fec42783          	lw	a5,-20(s0)
+420006d2:	fd842703          	lw	a4,-40(s0)
+420006d6:	00e7fe63          	bgeu	a5,a4,420006f2 <parse_object(unsigned char const**, unsigned char const*)+0x182>
+420006da:	fec42783          	lw	a5,-20(s0)
+420006de:	00178713          	addi	a4,a5,1
+420006e2:	fee42623          	sw	a4,-20(s0)
+420006e6:	0007c703          	lbu	a4,0(a5)
+420006ea:	02c00793          	li	a5,44
+420006ee:	00f70463          	beq	a4,a5,420006f6 <parse_object(unsigned char const**, unsigned char const*)+0x186>
+420006f2:	4785                	li	a5,1
+420006f4:	a011                	j	420006f8 <parse_object(unsigned char const**, unsigned char const*)+0x188>
+420006f6:	4781                	li	a5,0
+420006f8:	ee078ee3          	beqz	a5,420005f4 <parse_object(unsigned char const**, unsigned char const*)+0x84>
+420006fc:	4781                	li	a5,0
+420006fe:	853e                	mv	a0,a5
+42000700:	50b2                	lw	ra,44(sp)
+42000702:	5422                	lw	s0,40(sp)
+42000704:	6145                	addi	sp,sp,48
+42000706:	8082                	ret
+
+42000708 <parse_value(unsigned char const**, unsigned char const*)>:
+42000708:	1101                	addi	sp,sp,-32
+4200070a:	ce06                	sw	ra,28(sp)
+4200070c:	cc22                	sw	s0,24(sp)
+4200070e:	1000                	addi	s0,sp,32
+42000710:	fea42623          	sw	a0,-20(s0)
+42000714:	feb42423          	sw	a1,-24(s0)
+42000718:	fe842583          	lw	a1,-24(s0)
+4200071c:	fec42503          	lw	a0,-20(s0)
+42000720:	32a1                	jal	42000068 <skip_space(unsigned char const**, unsigned char const*)>
+42000722:	fec42783          	lw	a5,-20(s0)
+42000726:	439c                	lw	a5,0(a5)
+42000728:	fe842703          	lw	a4,-24(s0)
+4200072c:	00e7e463          	bltu	a5,a4,42000734 <parse_value(unsigned char const**, unsigned char const*)+0x2c>
+42000730:	4781                	li	a5,0
+42000732:	a8e1                	j	4200080a <parse_value(unsigned char const**, unsigned char const*)+0x102>
+42000734:	fec42783          	lw	a5,-20(s0)
+42000738:	439c                	lw	a5,0(a5)
+4200073a:	0007c783          	lbu	a5,0(a5)
+4200073e:	07b00713          	li	a4,123
+42000742:	08e78f63          	beq	a5,a4,420007e0 <parse_value(unsigned char const**, unsigned char const*)+0xd8>
+42000746:	07b00713          	li	a4,123
+4200074a:	0af74963          	blt	a4,a5,420007fc <parse_value(unsigned char const**, unsigned char const*)+0xf4>
+4200074e:	07400713          	li	a4,116
+42000752:	04e78663          	beq	a5,a4,4200079e <parse_value(unsigned char const**, unsigned char const*)+0x96>
+42000756:	07400713          	li	a4,116
+4200075a:	0af74163          	blt	a4,a5,420007fc <parse_value(unsigned char const**, unsigned char const*)+0xf4>
+4200075e:	06e00713          	li	a4,110
+42000762:	06e78463          	beq	a5,a4,420007ca <parse_value(unsigned char const**, unsigned char const*)+0xc2>
+42000766:	06e00713          	li	a4,110
+4200076a:	08f74963          	blt	a4,a5,420007fc <parse_value(unsigned char const**, unsigned char const*)+0xf4>
+4200076e:	06600713          	li	a4,102
+42000772:	04e78163          	beq	a5,a4,420007b4 <parse_value(unsigned char const**, unsigned char const*)+0xac>
+42000776:	06600713          	li	a4,102
+4200077a:	08f74163          	blt	a4,a5,420007fc <parse_value(unsigned char const**, unsigned char const*)+0xf4>
+4200077e:	02200713          	li	a4,34
+42000782:	00e78763          	beq	a5,a4,42000790 <parse_value(unsigned char const**, unsigned char const*)+0x88>
+42000786:	05b00713          	li	a4,91
+4200078a:	06e78263          	beq	a5,a4,420007ee <parse_value(unsigned char const**, unsigned char const*)+0xe6>
+4200078e:	a0bd                	j	420007fc <parse_value(unsigned char const**, unsigned char const*)+0xf4>
+42000790:	fe842583          	lw	a1,-24(s0)
+42000794:	fec42503          	lw	a0,-20(s0)
+42000798:	321d                	jal	420000be <parse_string(unsigned char const**, unsigned char const*)>
+4200079a:	87aa                	mv	a5,a0
+4200079c:	a0bd                	j	4200080a <parse_value(unsigned char const**, unsigned char const*)+0x102>
+4200079e:	3c0307b7          	lui	a5,0x3c030
+420007a2:	12078613          	addi	a2,a5,288 # 3c030120 <_flash_rodata_start>
+420007a6:	fe842583          	lw	a1,-24(s0)
+420007aa:	fec42503          	lw	a0,-20(s0)
+420007ae:	32e5                	jal	42000196 <parse_literal(unsigned char const**, unsigned char const*, char const*)>
+420007b0:	87aa                	mv	a5,a0
+420007b2:	a8a1                	j	4200080a <parse_value(unsigned char const**, unsigned char const*)+0x102>
+420007b4:	3c0307b7          	lui	a5,0x3c030
+420007b8:	12878613          	addi	a2,a5,296 # 3c030128 <_flash_rodata_start+0x8>
+420007bc:	fe842583          	lw	a1,-24(s0)
+420007c0:	fec42503          	lw	a0,-20(s0)
+420007c4:	3ac9                	jal	42000196 <parse_literal(unsigned char const**, unsigned char const*, char const*)>
+420007c6:	87aa                	mv	a5,a0
+420007c8:	a089                	j	4200080a <parse_value(unsigned char const**, unsigned char const*)+0x102>
+420007ca:	3c0307b7          	lui	a5,0x3c030
+420007ce:	13078613          	addi	a2,a5,304 # 3c030130 <_flash_rodata_start+0x10>
+420007d2:	fe842583          	lw	a1,-24(s0)
+420007d6:	fec42503          	lw	a0,-20(s0)
+420007da:	3a75                	jal	42000196 <parse_literal(unsigned char const**, unsigned char const*, char const*)>
+420007dc:	87aa                	mv	a5,a0
+420007de:	a035                	j	4200080a <parse_value(unsigned char const**, unsigned char const*)+0x102>
+420007e0:	fe842583          	lw	a1,-24(s0)
+420007e4:	fec42503          	lw	a0,-20(s0)
+420007e8:	3361                	jal	42000570 <parse_object(unsigned char const**, unsigned char const*)>
+420007ea:	87aa                	mv	a5,a0
+420007ec:	a839                	j	4200080a <parse_value(unsigned char const**, unsigned char const*)+0x102>
+420007ee:	fe842583          	lw	a1,-24(s0)
+420007f2:	fec42503          	lw	a0,-20(s0)
+420007f6:	39b1                	jal	42000452 <parse_array(unsigned char const**, unsigned char const*)>
+420007f8:	87aa                	mv	a5,a0
+420007fa:	a801                	j	4200080a <parse_value(unsigned char const**, unsigned char const*)+0x102>
+420007fc:	fe842583          	lw	a1,-24(s0)
+42000800:	fec42503          	lw	a0,-20(s0)
+42000804:	3439                	jal	42000212 <parse_number(unsigned char const**, unsigned char const*)>
+42000806:	87aa                	mv	a5,a0
+42000808:	0001                	nop
+4200080a:	853e                	mv	a0,a5
+4200080c:	40f2                	lw	ra,28(sp)
+4200080e:	4462                	lw	s0,24(sp)
+42000810:	6105                	addi	sp,sp,32
+42000812:	8082                	ret
+
+42000814 <parse_json>:
+42000814:	7179                	addi	sp,sp,-48
+42000816:	d606                	sw	ra,44(sp)
+42000818:	d422                	sw	s0,40(sp)
+4200081a:	1800                	addi	s0,sp,48
+4200081c:	fca42e23          	sw	a0,-36(s0)
+42000820:	fcb42c23          	sw	a1,-40(s0)
+42000824:	fdc42783          	lw	a5,-36(s0)
+42000828:	fef42423          	sw	a5,-24(s0)
+4200082c:	fdc42703          	lw	a4,-36(s0)
+42000830:	fd842783          	lw	a5,-40(s0)
+42000834:	97ba                	add	a5,a5,a4
+42000836:	fef42623          	sw	a5,-20(s0)
+4200083a:	fe840793          	addi	a5,s0,-24
+4200083e:	fec42583          	lw	a1,-20(s0)
+42000842:	853e                	mv	a0,a5
+42000844:	35d1                	jal	42000708 <parse_value(unsigned char const**, unsigned char const*)>
+42000846:	87aa                	mv	a5,a0
+42000848:	0017c793          	xori	a5,a5,1
+4200084c:	0ff7f793          	zext.b	a5,a5
+42000850:	c399                	beqz	a5,42000856 <parse_json+0x42>
+42000852:	57fd                	li	a5,-1
+42000854:	a005                	j	42000874 <parse_json+0x60>
+42000856:	fe840793          	addi	a5,s0,-24
+4200085a:	fec42583          	lw	a1,-20(s0)
+4200085e:	853e                	mv	a0,a5
+42000860:	3021                	jal	42000068 <skip_space(unsigned char const**, unsigned char const*)>
+42000862:	fe842783          	lw	a5,-24(s0)
+42000866:	fec42703          	lw	a4,-20(s0)
+4200086a:	00f71463          	bne	a4,a5,42000872 <parse_json+0x5e>
+4200086e:	4781                	li	a5,0
+42000870:	a011                	j	42000874 <parse_json+0x60>
+42000872:	57fd                	li	a5,-1
+42000874:	853e                	mv	a0,a5
+42000876:	50b2                	lw	ra,44(sp)
+42000878:	5422                	lw	s0,40(sp)
+4200087a:	6145                	addi	sp,sp,48
+4200087c:	8082                	ret
+
+42017498 <parse_lsda_header(_Unwind_Context*, unsigned char const*, lsda_header_info*)>:
+42017498:	7179                	addi	sp,sp,-48
+4201749a:	d422                	sw	s0,40(sp)
+4201749c:	d226                	sw	s1,36(sp)
+4201749e:	d606                	sw	ra,44(sp)
+420174a0:	84aa                	mv	s1,a0
+420174a2:	8432                	mv	s0,a2
+420174a4:	4781                	li	a5,0
+420174a6:	c511                	beqz	a0,420174b2 <parse_lsda_header(_Unwind_Context*, unsigned char const*, lsda_header_info*)+0x1a>
+420174a8:	c62e                	sw	a1,12(sp)
+420174aa:	349020ef          	jal	42019ff2 <_Unwind_GetRegionStart>
+420174ae:	45b2                	lw	a1,12(sp)
+420174b0:	87aa                	mv	a5,a0
+420174b2:	c01c                	sw	a5,0(s0)
+420174b4:	00158613          	addi	a2,a1,1
+420174b8:	0005c583          	lbu	a1,0(a1)
+420174bc:	0ff00713          	li	a4,255
+420174c0:	04e58663          	beq	a1,a4,4201750c <parse_lsda_header(_Unwind_Context*, unsigned char const*, lsda_header_info*)+0x74>
+420174c4:	00440693          	addi	a3,s0,4 # 60040004 <APB_SARADC+0x4>
+420174c8:	8526                	mv	a0,s1
+420174ca:	3775                	jal	42017476 <read_encoded_value(_Unwind_Context*, unsigned char, unsigned char const*, unsigned int*)>
+420174cc:	862a                	mv	a2,a0
+420174ce:	00064703          	lbu	a4,0(a2)
+420174d2:	0ff00693          	li	a3,255
+420174d6:	00160513          	addi	a0,a2,1
+420174da:	00e40a23          	sb	a4,20(s0)
+420174de:	4781                	li	a5,0
+420174e0:	00d70663          	beq	a4,a3,420174ec <parse_lsda_header(_Unwind_Context*, unsigned char const*, lsda_header_info*)+0x54>
+420174e4:	086c                	addi	a1,sp,28
+420174e6:	3b21                	jal	420171fe <read_uleb128(unsigned char const*, unsigned long*)>
+420174e8:	47f2                	lw	a5,28(sp)
+420174ea:	97aa                	add	a5,a5,a0
+420174ec:	c45c                	sw	a5,12(s0)
+420174ee:	00054783          	lbu	a5,0(a0)
+420174f2:	086c                	addi	a1,sp,28
+420174f4:	0505                	addi	a0,a0,1
+420174f6:	00f40aa3          	sb	a5,21(s0)
+420174fa:	3311                	jal	420171fe <read_uleb128(unsigned char const*, unsigned long*)>
+420174fc:	47f2                	lw	a5,28(sp)
+420174fe:	50b2                	lw	ra,44(sp)
+42017500:	5492                	lw	s1,36(sp)
+42017502:	97aa                	add	a5,a5,a0
+42017504:	c81c                	sw	a5,16(s0)
+42017506:	5422                	lw	s0,40(sp)
+42017508:	6145                	addi	sp,sp,48
+4201750a:	8082                	ret
+4201750c:	c05c                	sw	a5,4(s0)
+4201750e:	b7c1                	j	420174ce <parse_lsda_header(_Unwind_Context*, unsigned char const*, lsda_header_info*)+0x36>

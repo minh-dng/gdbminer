@@ -1,0 +1,257 @@
+{
+  "json-nine-byte": {
+    "status": "passed",
+    "elf_sha256": "25d45f4fd47e1aaab8fa0f1292d3ded97d96bcdc698a0c683ddada32765af17f",
+    "adapter_sha256": "1c4799bea62d58d6455d728c99e1332fb54ad99979cd11b8c5696ac350c2dabd",
+    "seed_hex": "226162636465666722",
+    "runs": [
+      {
+        "count": 8,
+        "windows": [
+          {
+            "offset": 0,
+            "instructions": 326,
+            "hits": 24
+          },
+          {
+            "offset": 8,
+            "instructions": 326,
+            "hits": 2
+          }
+        ],
+        "status": "complete",
+        "seconds": 89.46380483300163,
+        "instructions": 326,
+        "hits": 26
+      },
+      {
+        "count": 1,
+        "windows": [
+          {
+            "offset": 0,
+            "instructions": 326,
+            "hits": 3
+          },
+          {
+            "offset": 1,
+            "instructions": 326,
+            "hits": 3
+          },
+          {
+            "offset": 2,
+            "instructions": 326,
+            "hits": 3
+          },
+          {
+            "offset": 3,
+            "instructions": 326,
+            "hits": 3
+          },
+          {
+            "offset": 4,
+            "instructions": 326,
+            "hits": 3
+          },
+          {
+            "offset": 5,
+            "instructions": 326,
+            "hits": 3
+          },
+          {
+            "offset": 6,
+            "instructions": 326,
+            "hits": 3
+          },
+          {
+            "offset": 7,
+            "instructions": 326,
+            "hits": 3
+          },
+          {
+            "offset": 8,
+            "instructions": 326,
+            "hits": 2
+          }
+        ],
+        "status": "complete",
+        "seconds": 354.5900909999982,
+        "instructions": 326,
+        "hits": 26
+      }
+    ]
+  },
+  "fixture-byte": {
+    "status": "passed",
+    "elf_sha256": "44918dc84643750999e884a3f20107312f5cd49990db373bd646a421eca7c42b",
+    "adapter_sha256": "1c4799bea62d58d6455d728c99e1332fb54ad99979cd11b8c5696ac350c2dabd",
+    "seed_hex": "616263646566676869",
+    "runs": [
+      {
+        "count": 8,
+        "windows": [
+          {
+            "offset": 0,
+            "instructions": 230,
+            "hits": 9
+          },
+          {
+            "offset": 8,
+            "instructions": 230,
+            "hits": 1
+          }
+        ],
+        "status": "complete",
+        "reads_per_byte": [
+          2,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "seconds": 68.89878279199911,
+        "instructions": 230,
+        "hits": 10
+      }
+    ]
+  },
+  "fixture-word": {
+    "status": "passed",
+    "elf_sha256": "44918dc84643750999e884a3f20107312f5cd49990db373bd646a421eca7c42b",
+    "adapter_sha256": "1c4799bea62d58d6455d728c99e1332fb54ad99979cd11b8c5696ac350c2dabd",
+    "seed_hex": "616263646566676869",
+    "runs": [
+      {
+        "count": 8,
+        "windows": [
+          {
+            "offset": 0,
+            "instructions": 7,
+            "hits": 4
+          },
+          {
+            "offset": 8,
+            "instructions": 7,
+            "hits": 0
+          }
+        ],
+        "status": "complete",
+        "reads_per_byte": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "seconds": 23.591887958995358,
+        "instructions": 7,
+        "hits": 4
+      }
+    ]
+  },
+  "fixture-unaligned": {
+    "status": "passed",
+    "elf_sha256": "44918dc84643750999e884a3f20107312f5cd49990db373bd646a421eca7c42b",
+    "adapter_sha256": "1c4799bea62d58d6455d728c99e1332fb54ad99979cd11b8c5696ac350c2dabd",
+    "seed_hex": "616263646566676869",
+    "runs": [
+      {
+        "count": 8,
+        "windows": [
+          {
+            "offset": 0,
+            "instructions": 9,
+            "hits": 4
+          },
+          {
+            "offset": 8,
+            "instructions": 9,
+            "hits": 0
+          }
+        ],
+        "status": "complete",
+        "reads_per_byte": [
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "seconds": 23.853889250000066,
+        "instructions": 9,
+        "hits": 4
+      }
+    ]
+  },
+  "cleanup": {
+    "status": "passed",
+    "interruptions": [
+      {
+        "mode": "armed",
+        "cleanup": "passed"
+      },
+      {
+        "mode": "partially-disabled-recovery",
+        "cleanup": "passed"
+      }
+    ],
+    "reconnect": "all-eight-inactive"
+  },
+  "oracle-after-restore": {
+    "status": "passed",
+    "results": [
+      {
+        "input_hex": "226162636465666722",
+        "result": "00"
+      },
+      {
+        "input_hex": "3f",
+        "result": "ff"
+      }
+    ]
+  },
+  "host_checks": [
+    {
+      "command": ".venv/bin/python -m ruff format /Users/dan173/Documents/Uni/thesis/impl/gdbminer.esp32-c3/docs/thesis/esp32c3-hardware-watchpoints-2026-09-28/multislot",
+      "exit": 0
+    },
+    {
+      "command": ".venv/bin/python -m ruff check src/tracer/instance/esp32c3_instance.py tests/test_esp32c3_hardware.py /Users/dan173/Documents/Uni/thesis/impl/gdbminer.esp32-c3/docs/thesis/esp32c3-hardware-watchpoints-2026-09-28/multislot",
+      "exit": 0
+    },
+    {
+      "command": ".venv/bin/python -m ruff format --check src/tracer/instance/esp32c3_instance.py tests/test_esp32c3_hardware.py /Users/dan173/Documents/Uni/thesis/impl/gdbminer.esp32-c3/docs/thesis/esp32c3-hardware-watchpoints-2026-09-28/multislot",
+      "exit": 0
+    },
+    {
+      "command": ".venv/bin/python -m unittest discover -s tests",
+      "exit": 0
+    },
+    {
+      "command": ".venv/bin/python -m basedpyright",
+      "exit": 0
+    }
+  ],
+  "source_sha256": {
+    "src/tracer/instance/esp32c3_instance.py": "1c4799bea62d58d6455d728c99e1332fb54ad99979cd11b8c5696ac350c2dabd",
+    "tests/test_esp32c3_hardware.py": "1724a4692aac8ade834c35875b3431d03a8701d1193b300df9c2f9ab7513cfe2",
+    "docs/thesis/esp32c3-hardware-watchpoints-2026-09-28/multislot/probe_slots.py": "30aa8ec4f990dda5ccd1a59e988cc8e40239015d7cd49154ac8fefdd52c80b8c",
+    "docs/thesis/esp32c3-hardware-watchpoints-2026-09-28/multislot/compare_windows.py": "120dfbaa2400b9a738d08b659587d68d6699a11f425e6c498835d189f6bbeefb",
+    "docs/thesis/esp32c3-hardware-watchpoints-2026-09-28/multislot/probe_cleanup.py": "9c74623a9ac66d17c1bd6156e266ab9a651f5b16407cee0a8a474d8e9724bd09",
+    "docs/thesis/esp32c3-hardware-watchpoints-2026-09-28/multislot/fixture.cpp": "093d249c0598af809c37db93d7152cca1453f39558363de91445d188366f5744",
+    "example_firmware/esp32-c3_json/configuration/configuration.hw-eval.ini": "04fba5ba331bec68a906491fdbc189e98942862d621fac80cf80ec86f9d63119",
+    "example_firmware/esp32-c3_json/configuration/configuration.ini": "df465c7adf62fd39497bb1df22ace9e403c391ced1f410ef176e725ec2b77566"
+  },
+  "evidence_root": "/Users/dan173/Documents/Uni/thesis/experiments/esp32c3-multislot-2026-09-28"
+}

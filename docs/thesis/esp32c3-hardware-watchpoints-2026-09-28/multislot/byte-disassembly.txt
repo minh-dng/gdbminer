@@ -1,0 +1,61 @@
+
+/Users/dan173/Documents/Uni/thesis/experiments/esp32c3-multislot-2026-09-28/fixture/.pio/build/esp32-c3-devkitm-1/firmware.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .iram0.text:
+
+Disassembly of section .flash.text:
+
+4200003e <byte_fixture>:
+4200003e:	7179                	addi	sp,sp,-48
+42000040:	d606                	sw	ra,44(sp)
+42000042:	d422                	sw	s0,40(sp)
+42000044:	1800                	addi	s0,sp,48
+42000046:	fca42e23          	sw	a0,-36(s0)
+4200004a:	fdc42783          	lw	a5,-36(s0)
+4200004e:	0007c783          	lbu	a5,0(a5)
+42000052:	873e                	mv	a4,a5
+42000054:	fdc42783          	lw	a5,-36(s0)
+42000058:	0007c783          	lbu	a5,0(a5)
+4200005c:	97ba                	add	a5,a5,a4
+4200005e:	fef42423          	sw	a5,-24(s0)
+42000062:	4785                	li	a5,1
+42000064:	fef42623          	sw	a5,-20(s0)
+42000068:	a025                	j	42000090 <byte_fixture+0x52>
+4200006a:	fdc42703          	lw	a4,-36(s0)
+4200006e:	fec42783          	lw	a5,-20(s0)
+42000072:	97ba                	add	a5,a5,a4
+42000074:	853e                	mv	a0,a5
+42000076:	376d                	jal	42000020 <nested_read>
+42000078:	87aa                	mv	a5,a0
+4200007a:	873e                	mv	a4,a5
+4200007c:	fe842783          	lw	a5,-24(s0)
+42000080:	97ba                	add	a5,a5,a4
+42000082:	fef42423          	sw	a5,-24(s0)
+42000086:	fec42783          	lw	a5,-20(s0)
+4200008a:	0785                	addi	a5,a5,1
+4200008c:	fef42623          	sw	a5,-20(s0)
+42000090:	fec42703          	lw	a4,-20(s0)
+42000094:	479d                	li	a5,7
+42000096:	fce7fae3          	bgeu	a5,a4,4200006a <byte_fixture+0x2c>
+4200009a:	fdc42783          	lw	a5,-36(s0)
+4200009e:	0789                	addi	a5,a5,2
+420000a0:	05a00713          	li	a4,90
+420000a4:	00e78023          	sb	a4,0(a5)
+420000a8:	fe842783          	lw	a5,-24(s0)
+420000ac:	8b85                	andi	a5,a5,1
+420000ae:	c791                	beqz	a5,420000ba <byte_fixture+0x7c>
+420000b0:	fe842783          	lw	a5,-24(s0)
+420000b4:	078d                	addi	a5,a5,3
+420000b6:	fef42423          	sw	a5,-24(s0)
+420000ba:	fdc42783          	lw	a5,-36(s0)
+420000be:	07a1                	addi	a5,a5,8
+420000c0:	0007c783          	lbu	a5,0(a5)
+420000c4:	873e                	mv	a4,a5
+420000c6:	fe842783          	lw	a5,-24(s0)
+420000ca:	97ba                	add	a5,a5,a4
+420000cc:	853e                	mv	a0,a5
+420000ce:	50b2                	lw	ra,44(sp)
+420000d0:	5422                	lw	s0,40(sp)
+420000d2:	6145                	addi	sp,sp,48
+420000d4:	8082                	ret
