@@ -84,3 +84,7 @@ Use the default five-label vocabulary. See `docs/agents/triage-labels.md`.
 ### Domain docs
 
 This is a single-context repository. See `docs/agents/domain.md`.
+
+## Thesis Documentation
+
+Document to my obsidian vault in `Uni/Thesis` and my my worktree -b docs/thesis. Include the scripts and stuff in that branch also. Do not push the branch.
