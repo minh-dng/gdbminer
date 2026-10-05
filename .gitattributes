@@ -1,0 +1,3 @@
+# Generated evaluation inputs: collapse in GitHub PRs and show as binary in local diffs.
+example_programs/*/eval/** linguist-generated -diff
+example_firmware/*/eval/** linguist-generated -diff
