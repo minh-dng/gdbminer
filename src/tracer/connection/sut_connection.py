@@ -6,10 +6,18 @@
 import logging
 import multiprocessing as mp
 import queue
+from enum import StrEnum, unique
 
 from tracer.connection.connection_base_class import ConnectionBaseClass
 from tracer.connection.serial_connection import SerialConnection
 from util.config import Config
+
+
+@unique
+class InputChannel(StrEnum):
+    """Values of the `Connection.input_channel` configuration key."""
+
+    SERIAL = "serial"
 
 
 class SUTConnection:
