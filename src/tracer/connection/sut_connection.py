@@ -9,7 +9,6 @@ import queue
 from enum import StrEnum, unique
 
 from tracer.connection.connection_base_class import ConnectionBaseClass
-from tracer.connection.serial_connection import SerialConnection
 from util.config import Config
 
 
@@ -36,12 +35,11 @@ class SUTConnection:
         self.connection = self.init_connection(config, reset=False)
 
     def init_connection(self, config: Config, *, reset: bool) -> ConnectionBaseClass:
-        match config["Connection"]["input_channel"]:
-            case "serial":
+        match InputChannel(config["Connection"]["input_channel"]):
+            case InputChannel.SERIAL:
+                from tracer.connection.serial_connection import SerialConnection
+
                 connection = SerialConnection(config, self.inputs, self.responses, self.ready)
-            case unknown:
-                # Here we can add other connection types
-                raise ValueError(f"Unsupported connection type: {unknown}")
 
         connection.daemon = True
         connection.start()
