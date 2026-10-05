@@ -6,10 +6,29 @@
 import logging
 import multiprocessing as mp
 import queue
-from enum import StrEnum, unique
+import struct
+from enum import IntEnum, StrEnum, unique
 
 from tracer.connection.connection_base_class import ConnectionBaseClass
 from util.config import Config
+
+READY_BYTE = ord("A")
+"""Byte ('A') that the SUT sends whenever it requests an input."""
+
+LENGTH_PREFIX = struct.Struct("<I")
+"""Length sent before each input: an unsigned 32-bit little-endian integer, the byte order of
+the STM32 and ESP32 firmware that reads it."""
+
+
+@unique
+class ParserResult(IntEnum):
+    """Result byte the firmware sends after parsing an input.
+
+    See `example_firmware/ESP32-C3 DevKitM-1-N4X.md#serial-protocol-values`.
+    """
+
+    ACCEPTED = 0
+    REJECTED = 0xFF
 
 
 @unique
