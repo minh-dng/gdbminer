@@ -32,6 +32,7 @@ def test_config():
         (desktop, "LOGS", "log_level", ("INVALID",)),
         (stm32, "stm32", "dwt_function_reg", (0xE0001028,)),
         (stm32, "stm32", "dwt_watchpoint_workaround", ("false", "true", 0, 1)),
+        (stm32, "Connection", "input_channel", ("SERIAL", "usb")),
     ):
         for value in invalids:
             config = deepcopy(base)

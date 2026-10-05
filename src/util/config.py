@@ -51,9 +51,12 @@ def validate_config(config: Config) -> None:
 
     for key in ("gdb_server_path", "gdb_server_address"):
         require(gdb, key, str)
+    # Imported here: tracer.connection imports Config from this module.
+    from tracer.connection.sut_connection import InputChannel
+
     connection = require(config, "Connection", dict)
-    if require(connection, "input_channel", str) != "serial":
-        raise ValueError(f"Unsupported connection type: {connection['input_channel']}")
+    if require(connection, "input_channel", str) not in InputChannel:
+        raise ValueError(f"Unsupported Connection.input_channel: {connection['input_channel']!r}")
     require(connection, "port", str)
     if require(connection, "baud_rate", int) <= 0:
         raise ValueError("Connection.baud_rate must be positive")
