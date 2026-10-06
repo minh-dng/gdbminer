@@ -10,7 +10,7 @@ import serial
 
 from tracer.connection.connection_base_class import ConnectionBaseClass
 from tracer.connection.sut_connection import LENGTH_PREFIX, READY_BYTE, ParserResult
-from util.config import Config
+from util import Config
 
 UART_BITS_PER_BYTE = 10
 """Bits on the wire per byte with PySerial's default 8N1: one start, eight data, one stop bit."""

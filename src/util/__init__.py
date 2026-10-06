@@ -32,3 +32,6 @@ def find_output_directory(output_directory_base: Path) -> Path:
             )
         )
     )
+
+
+from .config import Config, load_config  # noqa: F401

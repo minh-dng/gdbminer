@@ -11,7 +11,7 @@ from collections.abc import Callable
 from enum import IntEnum, StrEnum, unique
 
 from tracer.connection.connection_base_class import ConnectionBaseClass
-from util.config import Config
+from util import Config
 
 READY_BYTE = ord("A")
 """Byte ('A') that the SUT sends whenever it requests an input."""

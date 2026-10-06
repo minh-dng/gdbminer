@@ -19,7 +19,7 @@ from miner.active_learning_utils import (
 )
 from tracer.gdb_tracer import GDBTracer
 from tracer.instance.sut_instance import SUTInstance
-from util.config import Config
+from util import Config
 
 
 class LoopGeneralizer:

@@ -8,7 +8,7 @@ import multiprocessing as mp
 from abc import abstractmethod
 from typing import override
 
-from util.config import Config
+from util import Config
 
 
 class ConnectionBaseClass(mp.Process):

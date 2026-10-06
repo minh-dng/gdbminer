@@ -10,7 +10,8 @@ from tracer.instance.esp32c3_instance import ESP32C3Instance
 from tracer.instance.hardware_instance import HardwareInstance
 from tracer.instance.msp430_instance import MSP430Instance
 from tracer.instance.stm32_instance import STM32Instance
-from util.config import _validate_config, load_config
+from util import load_config
+from util.config import _validate_config
 
 ROOT = Path(__file__).resolve().parents[1]
 JSON_CONFIG = ROOT / "example_programs/json/configuration/configuration.toml"

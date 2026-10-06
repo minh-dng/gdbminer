@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import override
 
 from tracer.instance.sut_instance import SUTInstance
-from util.config import Config
+from util import Config
 
 
 class ValgrindInstance(SUTInstance):

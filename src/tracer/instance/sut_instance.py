@@ -10,7 +10,7 @@ from typing import Self
 
 from pygdbmi import gdbcontroller
 
-from util.config import Config
+from util import Config
 
 
 @unique

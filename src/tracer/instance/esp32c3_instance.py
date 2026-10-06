@@ -24,7 +24,7 @@ from tracer.instance.esp32c3_debug import (
     MControlFlag,
 )
 from tracer.instance.hardware_instance import HardwareInstance
-from util.config import Config
+from util import Config
 
 
 class StopFrame(TypedDict, total=False):

@@ -14,7 +14,7 @@ from tracer.instance.msp430_instance import MSP430Instance
 from tracer.instance.stm32_instance import STM32Instance
 from tracer.instance.sut_instance import GDBInstance, SUTInstance
 from tracer.instance.valgrind_instance import ValgrindInstance
-from util.config import Config
+from util import Config
 
 
 class GDBTracer:

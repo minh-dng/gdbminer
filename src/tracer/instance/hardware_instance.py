@@ -11,7 +11,7 @@ from typing import override
 
 from tracer.connection.sut_connection import SUTConnection
 from tracer.instance.sut_instance import SUTInstance
-from util.config import Config
+from util import Config
 
 GDB_SERVER_STOP_TIMEOUT_SEC = 5
 """Time the GDB server gets to exit after SIGTERM before `_stop_gdb_server` kills it."""

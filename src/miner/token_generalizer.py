@@ -20,7 +20,7 @@ from cmimid.fuzz import ASCII_MAP, CHARACTER_PARENT_MAP
 from miner.active_learning_utils import is_a_replaceable_with_b
 from tracer.gdb_tracer import GDBTracer
 from tracer.instance.sut_instance import SUTInstance
-from util.config import Config
+from util import Config
 
 # Nested parse trees as produced by the Mimid fuzzer / util helpers.
 type TreeNode = list[Any]

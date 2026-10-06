@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import override
 
 from tracer.instance.hardware_instance import HardwareInstance
-from util.config import Config
+from util import Config
 
 
 class STM32Instance(HardwareInstance):
