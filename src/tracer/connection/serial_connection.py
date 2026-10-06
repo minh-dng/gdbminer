@@ -14,6 +14,23 @@ from tracer.connection.sut_connection import LENGTH_PREFIX, READY_BYTE, ParserRe
 
 
 class SerialConnection(ConnectionBaseClass):
+    """Exchange length-prefixed inputs after the firmware's 'A' readiness byte.
+
+    Connection process                     Serial target
+            │                                      │
+            │ Wait for queued input...             │ Send 'A', then wait for input
+            │ 'A' may remain in the receive buffer │
+            │ Input arrives                        │
+            │ wait_for_input_request()             │
+            │ ◀──────── buffered or new 'A' ───────│
+            │ ───────── 4-byte length ────────────▶│
+            │ ───────── input bytes ──────────────▶│ Receive and parse
+            │ ◀──────── 0x00 / 0xFF ───────────────│
+            │ Queue acceptance result              │ Send next 'A'
+
+    Unlike the ESP32 adapter, this exchange has no explicit restart recovery.
+    """
+
     @override
     def connect(self, config):
         port = config["Connection"]["port"]
