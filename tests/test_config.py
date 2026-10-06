@@ -10,7 +10,7 @@ from tracer.instance.esp32c3_instance import ESP32C3Instance
 from tracer.instance.hardware_instance import HardwareInstance
 from tracer.instance.msp430_instance import MSP430Instance
 from tracer.instance.stm32_instance import STM32Instance
-from util.config import load_config, validate_config
+from util.config import _validate_config, load_config
 
 ROOT = Path(__file__).resolve().parents[1]
 JSON_CONFIG = ROOT / "example_programs/json/configuration/configuration.toml"
@@ -84,7 +84,7 @@ def test_config():
         config = deepcopy(stm32)
         config["GDB"][key] = value
         try:
-            validate_config(config)
+            _validate_config(config)
         except ValueError as exc:
             assert "[GDB.stm32]" in str(exc)
         else:
@@ -93,7 +93,7 @@ def test_config():
     config = deepcopy(stm32)
     config["stm32"] = config["GDB"].pop("stm32")
     try:
-        validate_config(config)
+        _validate_config(config)
     except ValueError as exc:
         assert "[GDB.stm32]" in str(exc)
     else:
@@ -101,13 +101,13 @@ def test_config():
 
     desktop["GDB"].pop("exitpoint")
     desktop["GDB"]["timeout"] = 0.5
-    validate_config(desktop)
+    _validate_config(desktop)
     assert GDBTracer(desktop).exitpoint == ""
     assert GDBTracer.open_sut_instance(desktop).timeout == 0.5
 
     assert STM32Instance(stm32, "").dwt_watchpoint_workaround is True
     stm32["GDB"]["stm32"] = {"dwt_watchpoint_workaround": False}
-    validate_config(stm32)
+    _validate_config(stm32)
     assert STM32Instance(stm32, "").dwt_watchpoint_workaround is False
 
     instance = GDBTracer.open_sut_instance(c3)
@@ -122,7 +122,7 @@ def test_config():
     full_window = deepcopy(c3)
     full_window["GDB"]["watchpoint_count"] = 8
     full_window["GDB"]["esp32c3"]["hardware_trigger_slot"] = 0
-    validate_config(full_window)
+    _validate_config(full_window)
     full_window["GDB"]["exitpoint"] = "parser_exit"
     with (
         patch("sys.argv", ["trace", "--config", str(C3_CONFIG)]),
@@ -141,7 +141,7 @@ def test_config():
 
     no_reset = deepcopy(c3)
     no_reset["Connection"].update(rts=False, reset_pulse=False)
-    validate_config(no_reset)
+    _validate_config(no_reset)
 
     for key in (
         "rom_elf",
@@ -152,7 +152,7 @@ def test_config():
         config = deepcopy(c3)
         config["GDB"][key] = config["GDB"]["esp32c3"].pop(key, False)
         try:
-            validate_config(config)
+            _validate_config(config)
         except ValueError as exc:
             assert "[GDB.esp32c3]" in str(exc)
         else:
@@ -163,7 +163,7 @@ def test_config():
         target = config["GDB"] if table == "GDB" else config["GDB"][table]
         target["dwt_watchpoint_workaround"] = False
         try:
-            validate_config(config)
+            _validate_config(config)
         except ValueError as exc:
             assert "DWT" in str(exc)
         else:
@@ -176,7 +176,7 @@ def test_config():
         gdb_path="'/opt/tool chain/gdb' --quiet",
         gdb_server_path="'/opt/tool chain/mspdebug' gdb",
     )
-    validate_config(stm32)
+    _validate_config(stm32)
     instance = GDBTracer.open_sut_instance(stm32)
     assert isinstance(instance, MSP430Instance)
     assert instance.gdb_with_args == ["/opt/tool chain/gdb", "--quiet"]
