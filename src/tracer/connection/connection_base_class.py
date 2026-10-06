@@ -12,6 +12,24 @@ from util.config import Config
 
 
 class ConnectionBaseClass(mp.Process):
+    """Exchange queued inputs with the target in a separate process.
+
+    Check target readiness only after an input is available: a reset while
+    waiting for the queue could invalidate an earlier readiness marker.
+    Adapters define how readiness, packets, and results are exchanged.
+
+    Connection process                     Target
+            │                                  │
+            │ Wait for queued input...         │ May become ready or reset
+            │ Input arrives                    │
+            │ wait_for_input_request()         │
+            │ ◀──────── readiness ─────────────│
+            │ send_input(input)                │
+            │ ───────── packet ───────────────▶│ Receive and parse
+            │ ◀──────── result ────────────────│
+            │ Queue acceptance result          │
+    """
+
     def __init__(
         self,
         config: Config,
@@ -37,8 +55,8 @@ class ConnectionBaseClass(mp.Process):
 
         self.ready.put(True)
         while self.running:
-            self.wait_for_input_request()
             fuzz_input = self.inputs.get(block=True)
+            self.wait_for_input_request()
             self.response.put(self.send_input(fuzz_input))
 
     def connect(self, config: Config): ...
