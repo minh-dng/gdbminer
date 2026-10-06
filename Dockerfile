@@ -93,9 +93,18 @@ RUN for base in \
     gdb --version && \
     rm -rf /tmp/build/*
 
-RUN wget -O valgrind-3.23.0.tar.bz2 \
-        https://ftp.osuosl.org/pub/blfs/conglomeration/valgrind/valgrind-3.23.0.tar.bz2 && \
-    tar -xf valgrind-3.23.0.tar.bz2 && cd valgrind-3.23.0 && \
+# Same mirror fallback as GDB above.
+ARG VALGRIND_VERSION=3.23.0
+ARG VALGRIND_SHA256=c5c34a3380457b9b75606df890102e7df2c702b9420c2ebef9540f8b5d56264d
+RUN for base in \
+        https://sourceware.org/pub/valgrind \
+        https://mirrors.kernel.org/sourceware/valgrind \
+        https://ftp.osuosl.org/pub/blfs/conglomeration/valgrind; do \
+      wget --retry-connrefused --waitretry=2 --tries=3 --timeout=30 -O valgrind.tar.bz2 \
+          "${base}/valgrind-${VALGRIND_VERSION}.tar.bz2" && \
+      echo "${VALGRIND_SHA256}  valgrind.tar.bz2" | sha256sum -c - && break; \
+    done && \
+    tar -xf valgrind.tar.bz2 && cd "valgrind-${VALGRIND_VERSION}" && \
     ./configure --enable-only64bit && make -j"$(nproc)" && make install-strip && \
     valgrind --version && \
     vg_arch="$(dpkg --print-architecture)" && \
