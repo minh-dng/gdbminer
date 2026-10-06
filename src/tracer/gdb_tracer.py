@@ -11,7 +11,7 @@ from pathlib import Path
 
 from tracer.instance.msp430_instance import MSP430Instance
 from tracer.instance.stm32_instance import STM32Instance
-from tracer.instance.sut_instance import SUTInstance
+from tracer.instance.sut_instance import GDBInstance, SUTInstance
 from tracer.instance.valgrind_instance import ValgrindInstance
 from util.config import Config
 
@@ -78,15 +78,13 @@ class GDBTracer:
 
     @staticmethod
     def open_sut_instance(config: Config, input_file: Path | str = "") -> SUTInstance:
-        match config["GDB"]["instance"]:
-            case "valgrind":
+        match GDBInstance(config["GDB"]["instance"]):
+            case GDBInstance.VALGRIND:
                 return ValgrindInstance(config, input_file)
-            case "stm32":
+            case GDBInstance.STM32:
                 return STM32Instance(config, input_file)
-            case "msp430":
+            case GDBInstance.MSP430:
                 return MSP430Instance(config, input_file)
-            case unknown:
-                raise ValueError(f"Unknown GDB instance type: {unknown}")
 
     @staticmethod
     def merge_traces(list1: list[TraceEntry], list2: list[TraceEntry]) -> list[TraceEntry]:

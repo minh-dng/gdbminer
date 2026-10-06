@@ -43,17 +43,18 @@ def validate_config(config: Config) -> None:
     if not math.isfinite(timeout) or timeout <= 0:
         raise ValueError("GDB.timeout must be positive and finite")
 
+    # Imported here: the tracer modules import Config from this module.
+    from tracer.connection.sut_connection import InputChannel
+    from tracer.instance.sut_instance import GDBInstance
+
     instance = gdb["instance"]
-    if instance == "valgrind":
-        return
-    if instance not in ("stm32", "msp430"):
+    if instance not in GDBInstance:
         raise ValueError(f"Unknown GDB instance type: {instance}")
+    if instance == GDBInstance.VALGRIND:
+        return
 
     for key in ("gdb_server_path", "gdb_server_address"):
         require(gdb, key, str)
-    # Imported here: tracer.connection imports Config from this module.
-    from tracer.connection.sut_connection import InputChannel
-
     connection = require(config, "Connection", dict)
     if require(connection, "input_channel", str) not in InputChannel:
         raise ValueError(f"Unsupported Connection.input_channel: {connection['input_channel']!r}")
@@ -61,7 +62,7 @@ def validate_config(config: Config) -> None:
     if require(connection, "baud_rate", int) <= 0:
         raise ValueError("Connection.baud_rate must be positive")
 
-    if instance == "stm32":
+    if instance == GDBInstance.STM32:
         for key in ("dwt_function_reg", "dwt_watchpoint_workaround"):
             if key in gdb:
                 raise ValueError(f"Move {key!r} from [GDB] to [GDB.stm32]")

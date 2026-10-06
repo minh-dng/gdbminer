@@ -29,6 +29,7 @@ def test_config():
         (desktop, "GDB", "entrypoint", (0x8001000,)),
         (desktop, "GDB", "input_buffer", (0x20000000,)),
         (desktop, "GDB", "exitpoint", (0x8002000,)),
+        (desktop, "GDB", "instance", ("STM32", "arm")),
         (desktop, "LOGS", "log_level", ("INVALID",)),
         (stm32, "stm32", "dwt_function_reg", (0xE0001028,)),
         (stm32, "stm32", "dwt_watchpoint_workaround", ("false", "true", 0, 1)),

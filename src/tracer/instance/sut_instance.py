@@ -4,12 +4,22 @@
 
 import logging
 import shlex
+from enum import StrEnum, unique
 from types import TracebackType
 from typing import Self
 
 from pygdbmi import gdbcontroller
 
 from util.config import Config
+
+
+@unique
+class GDBInstance(StrEnum):
+    """Values of the `GDB.instance` configuration key."""
+
+    VALGRIND = "valgrind"
+    STM32 = "stm32"
+    MSP430 = "msp430"
 
 
 class SUTInstance:
