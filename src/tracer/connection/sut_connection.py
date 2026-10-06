@@ -7,6 +7,7 @@ import logging
 import multiprocessing as mp
 import queue
 import struct
+from collections.abc import Callable
 from enum import IntEnum, StrEnum, unique
 
 from tracer.connection.connection_base_class import ConnectionBaseClass
@@ -44,7 +45,9 @@ class SUTConnection:
     generated inputs to this Connection component.
     """
 
-    def __init__(self, config: Config, sut_reset_method):
+    def __init__(self, config: Config, sut_reset_method: Callable[[], None]):
+        """`sut_reset_method` runs after a reconnect (`input_accepted`), so it must leave the
+        target able to answer inputs; see `HardwareInstance.reset`."""
         self.config = config
         self.sut_reset_method = sut_reset_method
         self.timeout = config["GDB"]["timeout"]
