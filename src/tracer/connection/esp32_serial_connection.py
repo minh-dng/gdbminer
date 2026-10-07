@@ -1,9 +1,10 @@
-# Serial adapter with ESP32 boot/reset control and restart recovery.
+# Serial adapters with ESP32 boot/reset control and restart recovery.
 #
 # SPDX-License-Identifier: AGPL-3.0
 
 import logging as log
 import time
+from abc import ABC, abstractmethod
 from typing import override
 
 import serial
@@ -16,14 +17,14 @@ UART_BITS_PER_BYTE = 10
 """Bits on the wire per byte with PySerial's default 8N1: one start, eight data, one stop bit."""
 
 
-class ESP32UARTConnection(ConnectionBaseClass):
+class ESP32SerialConnection(ConnectionBaseClass, ABC):
     """Request/response exchange that survives target resets between packets.
 
     OpenOCD resets the C3 core when GDB attaches (to disable memory protection), after this process
     may already have seen the firmware's first ready marker. The firmware then reboots, prints boot
-    noise and a new marker. A packet sent during the reboot is lost; one that arrives after the UART
-    is set up is still answered. Resending on every marker therefore made the firmware answer one
-    packet twice, and every later answer belonged to the previous query.
+    noise and a new marker. A packet sent during the reboot is lost; one that arrives after the
+    serial port is set up is still answered. Resending on every marker therefore made the firmware
+    answer one packet twice, and every later answer belonged to the previous query.
 
     Connection process                     ESP32 / debugger
             │                                      │
@@ -39,27 +40,30 @@ class ESP32UARTConnection(ConnectionBaseClass):
 
     After synchronisation, readiness is the next 'A' after the previous result. A restart during
     transmission is handled by `send_input`'s recovery loop.
+
+    The exchange and the reset control are the same on every ESP32 serial port. Subclasses, named
+    after the port, define how the port is configured (`_configure`), how a packet goes on the wire
+    (`_write`) and how long it may still travel afterwards (`_transfer_sec`).
     """
 
     @override
     def connect(self, config: Config):
         settings = config["Connection"]
-        port = settings["port"]
-        baud_rate = settings["baud_rate"]
         self.quiet_sec = settings.get("quiet_sec", 0.2)
         """Silence after an 'A' that marks the first readiness (`Connection.quiet_sec`)."""
         self.grace_sec = settings.get("grace_sec", 1.0)
         """Wait for a result after a restart, beyond the packet's transfer time, before the
         packet counts as lost (`Connection.grace_sec`)."""
         self.reset_pulse_sec = settings.get("reset_pulse_sec", 0.05)
-        """Length of the RTS pulse on EN (`Connection.reset_pulse_sec`)."""
+        """Length of the RTS pulse that resets the chip (`Connection.reset_pulse_sec`)."""
 
         # Leave port unset: passing it to `Serial()` opens immediately, before we can set DTR/RTS.
         # Their default states can reset the ESP32 or select download mode.
-        self.serial = serial.Serial(baudrate=baud_rate, timeout=2)
-        self.serial.port = port
-        # DTR/RTS drive the board's boot/reset circuit; True means asserted. Set them before
-        # `open()`, with automatic flow control left disabled.
+        self.serial = serial.Serial(timeout=2)
+        self.serial.port = settings["port"]
+        self._configure(settings)
+        # DTR/RTS drive the chip's boot/reset logic; True means asserted. Set them before `open()`,
+        # with automatic flow control left disabled.
         self.serial.dtr = settings.get("dtr", False)
         self.serial.rts = settings.get("rts", True)
         self.serial.open()
@@ -73,6 +77,20 @@ class ESP32UARTConnection(ConnectionBaseClass):
         self._last_byte: int | None = None
         """Last byte received. Before `_synced`, `wait_for_input_request` treats an 'A' followed
         by `quiet_sec` of silence as firmware readiness."""
+
+    def _configure(self, settings: Config) -> None:
+        """Apply the `[Connection]` settings of this port type to the closed `self.serial`.
+
+        Called before the port opens, because opening applies the port's settings.
+        """
+
+    @abstractmethod
+    def _write(self, packet: bytes) -> None:
+        """Write the whole packet and return once the host's serial driver has sent it."""
+
+    @abstractmethod
+    def _transfer_sec(self, size: int) -> float:
+        """Time a packet of `size` bytes may still need to reach the firmware after `_write`."""
 
     @override
     def wait_for_input_request(self):
@@ -117,10 +135,9 @@ class ESP32UARTConnection(ConnectionBaseClass):
     def send_input(self, input: bytes) -> bool:
         log.debug(f"Sending input: {input}")
         packet = LENGTH_PREFIX.pack(len(input)) + input
-        transfer = len(packet) * UART_BITS_PER_BYTE / self.serial.baudrate
+        transfer = self._transfer_sec(len(packet))
 
-        self.serial.write(packet)
-        self.serial.flush()
+        self._write(packet)
         # Tracing can hold the parser at a breakpoint for much longer than any timeout.
         result = self._read_result(None)
         while result == READY_BYTE:
@@ -129,11 +146,33 @@ class ESP32UARTConnection(ConnectionBaseClass):
             # silence means the packet was lost.
             result = self._read_result(time.monotonic() + self.grace_sec + transfer)
             if result is None:
-                self.serial.write(packet)
-                self.serial.flush()
+                self._write(packet)
                 result = self._read_result(None)
         return result == ParserResult.ACCEPTED
 
     @override
     def disconnect(self):
         self.serial.close()
+
+
+class ESP32UARTConnection(ESP32SerialConnection):
+    """Inputs over UART0, through a USB-to-UART bridge such as the DevKitM-1's CP2102N.
+
+    The bridge's RTS and DTR lines drive the board's auto-program circuit: RTS asserted with DTR
+    released holds EN low and resets the chip, and the chip boots from flash once RTS is released.
+    The firmware fixes the baud rate (`Serial.begin`); `Connection.baud_rate` must match it.
+    """
+
+    @override
+    def _configure(self, settings: Config) -> None:
+        self.serial.baudrate = settings["baud_rate"]
+
+    @override
+    def _write(self, packet: bytes) -> None:
+        self.serial.write(packet)
+        self.serial.flush()
+
+    @override
+    def _transfer_sec(self, size: int) -> float:
+        """Wire time at the baud rate: the bridge buffers what the host sent and shifts it out."""
+        return size * UART_BITS_PER_BYTE / self.serial.baudrate

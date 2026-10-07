@@ -36,7 +36,7 @@ def test_connect_sets_control_lines_before_open_and_only_waits_for_reset_pulse()
     conn = ESP32UARTConnection.__new__(ESP32UARTConnection)
     port = Mock()
     opened = []
-    port.open.side_effect = lambda: opened.append((port.port, port.dtr, port.rts))
+    port.open.side_effect = lambda: opened.append((port.port, port.baudrate, port.dtr, port.rts))
     with (
         patch(
             "tracer.connection.esp32_serial_connection.serial.Serial", return_value=port
@@ -44,8 +44,8 @@ def test_connect_sets_control_lines_before_open_and_only_waits_for_reset_pulse()
         patch("tracer.connection.esp32_serial_connection.time.sleep") as sleep,
     ):
         conn.connect(config)
-    serial_class.assert_called_once_with(baudrate=9600, timeout=2)
-    assert opened == [("/dev/test", False, True)]
+    serial_class.assert_called_once_with(timeout=2)
+    assert opened == [("/dev/test", 9600, False, True)]
     assert not port.rts
     assert not conn._synced
     sleep.assert_called_once_with(0.05)
