@@ -26,7 +26,7 @@ def test_connection_startup():
             sut.ready.get.side_effect = ready
         else:
             sut.ready.get.return_value = ready
-        with patch("tracer.connection.sut_connection.SerialConnection") as serial:
+        with patch("tracer.connection.serial_connection.SerialConnection") as serial:
             child = serial.return_value
             try:
                 result = sut.init_connection(config, reset=True)

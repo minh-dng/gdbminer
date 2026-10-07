@@ -6,13 +6,17 @@ from unittest.mock import patch
 
 from tracer import trace
 from tracer.gdb_tracer import GDBTracer
+from tracer.instance.esp32c3_instance import ESP32C3Instance
+from tracer.instance.hardware_instance import HardwareInstance
 from tracer.instance.msp430_instance import MSP430Instance
 from tracer.instance.stm32_instance import STM32Instance
-from util.config import load_config, validate_config
+from util import load_config
+from util.config import _validate_config
 
 ROOT = Path(__file__).resolve().parents[1]
 JSON_CONFIG = ROOT / "example_programs/json/configuration/configuration.toml"
 STM32_CONFIG = ROOT / "example_firmware/stm32_libyxml/configuration/configuration.toml"
+C3_CONFIG = ROOT / "example_firmware/esp32-c3_json/configuration/configuration.2-cables.toml"
 
 
 def test_config():
@@ -21,6 +25,7 @@ def test_config():
 
     desktop = load_config(JSON_CONFIG)
     stm32 = load_config(STM32_CONFIG)
+    c3 = load_config(C3_CONFIG)
 
     # Mutate parsed dictionaries instead of maintaining a second TOML fixture.
     for base, table, key, invalids in (
@@ -29,13 +34,33 @@ def test_config():
         (desktop, "GDB", "entrypoint", (0x8001000,)),
         (desktop, "GDB", "input_buffer", (0x20000000,)),
         (desktop, "GDB", "exitpoint", (0x8002000,)),
+        (desktop, "GDB", "instance", ("STM32", "arm")),
         (desktop, "LOGS", "log_level", ("INVALID",)),
         (stm32, "stm32", "dwt_function_reg", (0xE0001028,)),
         (stm32, "stm32", "dwt_watchpoint_workaround", ("false", "true", 0, 1)),
+        (stm32, "Connection", "input_channel", ("SERIAL", "usb")),
+        (c3, "GDB", "watchpoint_count", (9,)),
+        (c3, "GDB", "watchpoint_type", ("(uint16_t*)",)),
+        (c3, "esp32c3", "hardware_trigger_slot", (True, "2", 2.0, -1, 3)),
+        (c3, "esp32c3", "rom_elf", (123, False)),
+        (c3, "esp32c3", "reset_on_connect", ("false", 0, 1)),
+        (c3, "esp32c3", "reset_on_conect", (False,)),
+        (c3, "esp32c3", "breakpoint_always_inserted", ("true", 0, 1)),
+        (c3, "esp32c3", "startup_retry_interval", (True, "0.2", 0, -1, float("inf"), float("nan"))),
+        (c3, "Connection", "dtr", ("false", 0, 1)),
+        (c3, "Connection", "rts", ("true", 0, 1)),
+        (c3, "Connection", "reset_pulse", ("false", False, 0, 1)),
+        (c3, "Connection", "input_channel", ("serial",)),
+        *[
+            (c3, "Connection", key, (True, "1", 0, -1, float("inf"), float("nan")))
+            for key in ("quiet_sec", "grace_sec", "reset_pulse_sec")
+        ],
+        (c3, "Connection", "boot_delay", (3,)),
+        (c3, "Connection", "max_input_size", (2048,)),
     ):
         for value in invalids:
             config = deepcopy(base)
-            target = config["GDB"][table] if table == "stm32" else config[table]
+            target = config["GDB"][table] if table in ("stm32", "esp32c3") else config[table]
             target[key] = value
             # Exercise the CLI's loader, before any directory or target is created.
             with (
@@ -60,7 +85,7 @@ def test_config():
         config = deepcopy(stm32)
         config["GDB"][key] = value
         try:
-            validate_config(config)
+            _validate_config(config)
         except ValueError as exc:
             assert "[GDB.stm32]" in str(exc)
         else:
@@ -69,7 +94,7 @@ def test_config():
     config = deepcopy(stm32)
     config["stm32"] = config["GDB"].pop("stm32")
     try:
-        validate_config(config)
+        _validate_config(config)
     except ValueError as exc:
         assert "[GDB.stm32]" in str(exc)
     else:
@@ -77,14 +102,73 @@ def test_config():
 
     desktop["GDB"].pop("exitpoint")
     desktop["GDB"]["timeout"] = 0.5
-    validate_config(desktop)
+    _validate_config(desktop)
     assert GDBTracer(desktop).exitpoint == ""
     assert GDBTracer.open_sut_instance(desktop).timeout == 0.5
 
     assert STM32Instance(stm32, "").dwt_watchpoint_workaround is True
     stm32["GDB"]["stm32"] = {"dwt_watchpoint_workaround": False}
-    validate_config(stm32)
+    _validate_config(stm32)
     assert STM32Instance(stm32, "").dwt_watchpoint_workaround is False
+
+    instance = GDBTracer.open_sut_instance(c3)
+    assert isinstance(instance, ESP32C3Instance)
+    assert ESP32C3Instance.__bases__ == (HardwareInstance,)
+    assert STM32Instance.__bases__ == (HardwareInstance,)
+    assert not hasattr(instance, "dwt_watchpoint_workaround")
+    assert not instance.reset_on_connect
+    assert (instance.trigger_slot, instance.watchpoint_count) == (2, 6)
+    assert instance.gdb_server_path_with_args[-2:] == ["-c", "adapter speed 40000"]
+
+    full_window = deepcopy(c3)
+    full_window["GDB"]["watchpoint_count"] = 8
+    full_window["GDB"]["esp32c3"]["hardware_trigger_slot"] = 0
+    _validate_config(full_window)
+    full_window["GDB"]["exitpoint"] = "parser_exit"
+    with (
+        patch("sys.argv", ["trace", "--config", str(C3_CONFIG)]),
+        patch("util.config.tomllib.load", return_value=full_window),
+        patch("tracer.trace.create_output_dir") as create_output,
+        patch("tracer.trace.generate_trace") as generate_trace,
+    ):
+        try:
+            trace.main()
+        except ValueError as exc:
+            assert "exitpoint" in str(exc)
+        else:
+            raise AssertionError("Accepted eight read triggers plus an exit breakpoint")
+        create_output.assert_not_called()
+        generate_trace.assert_not_called()
+
+    no_reset = deepcopy(c3)
+    no_reset["Connection"].update(rts=False, reset_pulse=False)
+    _validate_config(no_reset)
+
+    for key in (
+        "rom_elf",
+        "hardware_trigger_slot",
+        "reset_on_connect",
+        "breakpoint_always_inserted",
+    ):
+        config = deepcopy(c3)
+        config["GDB"][key] = config["GDB"]["esp32c3"].pop(key, False)
+        try:
+            _validate_config(config)
+        except ValueError as exc:
+            assert "[GDB.esp32c3]" in str(exc)
+        else:
+            raise AssertionError(f"Accepted misplaced {key}")
+
+    for table in ("GDB", "esp32c3"):
+        config = deepcopy(c3)
+        target = config["GDB"] if table == "GDB" else config["GDB"][table]
+        target["dwt_watchpoint_workaround"] = False
+        try:
+            _validate_config(config)
+        except ValueError as exc:
+            assert "DWT" in str(exc)
+        else:
+            raise AssertionError("Accepted ARM DWT settings on ESP32-C3")
 
     # MSP430 uses the shared server settings and requires no DWT table.
     stm32["GDB"].pop("stm32")
@@ -93,7 +177,7 @@ def test_config():
         gdb_path="'/opt/tool chain/gdb' --quiet",
         gdb_server_path="'/opt/tool chain/mspdebug' gdb",
     )
-    validate_config(stm32)
+    _validate_config(stm32)
     instance = GDBTracer.open_sut_instance(stm32)
     assert isinstance(instance, MSP430Instance)
     assert instance.gdb_with_args == ["/opt/tool chain/gdb", "--quiet"]

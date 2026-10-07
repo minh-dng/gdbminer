@@ -4,16 +4,33 @@
 
 
 import logging as log
-import struct
 import time
 from typing import override
 
 import serial
 
 from tracer.connection.connection_base_class import ConnectionBaseClass
+from tracer.connection.sut_connection import LENGTH_PREFIX, READY_BYTE, ParserResult
 
 
 class SerialConnection(ConnectionBaseClass):
+    """Exchange length-prefixed inputs after the firmware's 'A' readiness byte.
+
+    Connection process                     Serial target
+            │                                      │
+            │ Wait for queued input...             │ Send 'A', then wait for input
+            │ 'A' may remain in the receive buffer │
+            │ Input arrives                        │
+            │ wait_for_input_request()             │
+            │ ◀──────── buffered or new 'A' ───────│
+            │ ───────── 4-byte length ────────────▶│
+            │ ───────── input bytes ──────────────▶│ Receive and parse
+            │ ◀──────── 0x00 / 0xFF ───────────────│
+            │ Queue acceptance result              │ Send next 'A'
+
+    Unlike the ESP32 adapter, this exchange has no explicit restart recovery.
+    """
+
     @override
     def connect(self, config):
         port = config["Connection"]["port"]
@@ -25,9 +42,8 @@ class SerialConnection(ConnectionBaseClass):
 
     @override
     def wait_for_input_request(self):
-        # SUT sends 'A' whenever it requests and input
         read = ""
-        while not read or read[-1] != 65:
+        while not read or read[-1] != READY_BYTE:
             read = self.serial.read(1)
         log.debug(f"READ: {read}")
 
@@ -35,7 +51,7 @@ class SerialConnection(ConnectionBaseClass):
     def send_input(self, input: bytes) -> bool:
         # First send length
         log.debug(f"Sending input: {input}")
-        input_len = struct.pack("I", len(input))
+        input_len = LENGTH_PREFIX.pack(len(input))
         self.serial.write(input_len)
 
         # After that input
@@ -45,9 +61,9 @@ class SerialConnection(ConnectionBaseClass):
 
         ret = self.serial.read(1)
         log.debug(f"Received: {ret}")
-        if ret[0] == 0:
+        if ret[0] == ParserResult.ACCEPTED:
             return True
-        elif ret[0] == 0xFF:
+        elif ret[0] == ParserResult.REJECTED:
             return False
         else:
             log.error(f"Unexpected return value {ret[0]}")

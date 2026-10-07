@@ -3,28 +3,22 @@
 # SPDX-License-Identifier: AGPL-3.0
 
 import logging
-import shlex
 import subprocess
 import time
 from pathlib import Path
 from typing import override
 
-from tracer.connection.sut_connection import SUTConnection
-from tracer.instance.sut_instance import SUTInstance
-from util.config import Config
+from tracer.instance.hardware_instance import HardwareInstance
+from util import Config
 
 
-class STM32Instance(SUTInstance):
+class STM32Instance(HardwareInstance):
     def __init__(self, config: Config, input_file: Path | str) -> None:
-        super().__init__(config)
+        super().__init__(config, input_file)
 
         stm32 = config["GDB"]["stm32"]
-        self.gdb_server_path_with_args = shlex.split(config["GDB"]["gdb_server_path"])
-        self.gdb_server_address = config["GDB"]["gdb_server_address"]
-        self.watchpoint_count = config["GDB"]["watchpoint_count"]
         self.dwt_function_reg = stm32.get("dwt_function_reg", "")
         self.dwt_watchpoint_workaround = stm32.get("dwt_watchpoint_workaround", True)
-        self.input_file = Path(input_file)
 
     @override
     def __enter__(self):
@@ -55,10 +49,6 @@ class STM32Instance(SUTInstance):
         self.reset()
 
         return self
-
-    # Subclasses may override init_SUT_connection
-    def init_sut_connection(self):
-        return SUTConnection(self.config, self.reset)
 
     @override
     def step_instruction(self):
@@ -99,7 +89,8 @@ class STM32Instance(SUTInstance):
 
         return responses
 
-    def reset(self):
+    @override
+    def reset(self) -> None:
         # Reset target
         self.interrupt()
         self.wait_for_any_gdb_response()
@@ -115,19 +106,6 @@ class STM32Instance(SUTInstance):
         self.get_gdb_responses()
 
     @override
-    def send_input(self) -> None:
-        with self.input_file.open("rb") as f:
-            input = f.read()
-        self.connection.send_input(input)
-
-    @override
-    def input_accepted(self, input: bytes) -> bool:
-        self.number_of_tested_inputs += 1
-        accepted = self.connection.input_accepted(input)
-        logging.debug(f"Test {input} : {accepted=}")
-        return accepted
-
-    @override
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.connection.disconnect()
 
@@ -140,11 +118,4 @@ class STM32Instance(SUTInstance):
         # [!] send_recv STLINK_JTAG_WRITEDEBUG_32BIT
 
         time.sleep(1)
-        # Exit gdb server
-        self.gdb_server.terminate()
-        try:
-            self.gdb_server.communicate(timeout=5)
-        except subprocess.TimeoutExpired:
-            self.gdb_server.kill()
-            self.gdb_server.communicate()
-        logging.info("GDB Server terminated")
+        self._stop_gdb_server()

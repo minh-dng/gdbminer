@@ -23,8 +23,7 @@ from miner.token_generalizer import TokenGeneralizer
 
 # If we stick to original mimid structure
 from miner.tree_builder import TreeBuilder
-from util import find_output_directory, setup_logging
-from util.config import load_config
+from util import find_output_directory, load_config, setup_logging
 
 
 def squash_consecutive_conditions(

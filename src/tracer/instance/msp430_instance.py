@@ -3,25 +3,14 @@
 # SPDX-License-Identifier: AGPL-3.0
 
 import logging
-import shlex
 import subprocess
 import time
-from pathlib import Path
 from typing import override
 
-from tracer.connection.sut_connection import SUTConnection
-from tracer.instance.sut_instance import SUTInstance
-from util.config import Config
+from tracer.instance.hardware_instance import HardwareInstance
 
 
-class MSP430Instance(SUTInstance):
-    def __init__(self, config: Config, input_file: Path | str) -> None:
-        super().__init__(config)
-
-        self.gdb_server_path_with_args = shlex.split(config["GDB"]["gdb_server_path"])
-        self.gdb_server_address = config["GDB"]["gdb_server_address"]
-        self.input_file = Path(input_file)
-
+class MSP430Instance(HardwareInstance):
     @override
     def __enter__(self):
         # Start gdb server in subprocess
@@ -50,11 +39,8 @@ class MSP430Instance(SUTInstance):
 
         return self
 
-    # Subclasses may override init_SUT_connection
-    def init_sut_connection(self):
-        return SUTConnection(self.config, self.reset)
-
-    def reset(self):
+    @override
+    def reset(self) -> None:
         # Reset target
         self.interrupt()
         self.wait_for_any_gdb_response()
@@ -64,19 +50,6 @@ class MSP430Instance(SUTInstance):
 
         # wait till something happened
         self.wait_for_any_gdb_response()
-
-    @override
-    def send_input(self) -> None:
-        with self.input_file.open("rb") as f:
-            input = f.read()
-        self.connection.send_input(input)
-
-    @override
-    def input_accepted(self, input: bytes) -> bool:
-        self.number_of_tested_inputs += 1
-        accepted = self.connection.input_accepted(input)
-        logging.debug(f"Test {input} : {accepted=}")
-        return accepted
 
     @override
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -91,11 +64,4 @@ class MSP430Instance(SUTInstance):
         # [!] send_recv STLINK_JTAG_WRITEDEBUG_32BIT
 
         time.sleep(1)
-        # Exit gdb server
-        self.gdb_server.terminate()
-        try:
-            self.gdb_server.communicate(timeout=5)
-        except subprocess.TimeoutExpired:
-            self.gdb_server.kill()
-            self.gdb_server.communicate()
-        logging.info("GDB Server terminated")
+        self._stop_gdb_server()

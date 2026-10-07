@@ -62,18 +62,16 @@ eval_directory = "./example_programs/json/eval"
 
 [GDB]
 gdb_path = "/usr/bin/gdb"
-instance = "valgrind" # valgrind, stm32, or msp430
-# Ignore function names matching this Python regular expression.
-# Literal strings preserve backslashes without TOML escape sequences.
+instance = "valgrind"
 ignore_functions_regex = '@plt|_vgr*'
 watchpoint_type = "(char*)"
-watchpoint_count = 10000 # Positive number of available watchpoints.
-timeout = 30 # GDB response timeout in seconds.
-entrypoint = "json_parse" # Symbol name or quoted hexadecimal address.
-input_buffer = "my_string" # Symbol name or quoted hexadecimal address.
+watchpoint_count = 10000
+timeout = 30
+entrypoint = "json_parse"
+input_buffer = "my_string"
 
 [LOGS]
-log_level = "INFO" # DEBUG, INFO, WARNING, ERROR, or CRITICAL.
+log_level = "INFO"
 ```
 
 ### Shared fields
@@ -82,63 +80,48 @@ All configurations require these fields unless marked optional:
 
 | Table | Field | Type and meaning |
 | --- | --- | --- |
-| `BASIC` | `seed_directory` | String, directory of seed inputs to trace. |
-| `BASIC` | `output_directory` | String, parent of the generated `trial-N` directories. |
-| `BASIC` | `binary_file` | String, target executable or firmware ELF with debug symbols. |
-| `BASIC` | `eval_directory` | String, directory of inputs used to measure recall. |
-| `GDB` | `gdb_path` | String, debugger command with optional arguments. Quote command paths containing spaces inside the TOML string. |
-| `GDB` | `instance` | String, `"valgrind"`, `"stm32"`, or `"msp430"`. |
-| `GDB` | `entrypoint` | String, symbol, source location, or quoted hexadecimal address where tracing starts. |
-| `GDB` | `exitpoint` | Optional string. Omit or use `""` to stop after leaving the entry function; otherwise give a breakpoint location. |
-| `GDB` | `input_buffer` | String, input buffer symbol or quoted hexadecimal address. |
-| `GDB` | `watchpoint_type` | String, GDB pointer type used to read the input buffer, such as `"(char*)"`. |
-| `GDB` | `watchpoint_count` | Positive integer, number of bytes watched per tracing pass. Use the hardware limit for MCUs. Valgrind can use a large count. |
-| `GDB` | `timeout` | Positive finite number, GDB response timeout in seconds; fractions are allowed. |
-| `GDB` | `ignore_functions_regex` | Optional string, Python regex for functions to skip; defaults to `""`. TOML literal strings preserve regex backslashes. |
-| `LOGS` | `log_level` | String, Python logging level such as `"DEBUG"`, `"INFO"`, `"WARNING"`, `"ERROR"`, or `"CRITICAL"`. |
+| `BASIC` | `seed_directory` | str, directory of seed inputs to trace. |
+| `BASIC` | `output_directory` | str, parent of the generated `trial-N` directories. |
+| `BASIC` | `binary_file` | str, target executable or firmware ELF with debug symbols. |
+| `BASIC` | `eval_directory` | str, directory of inputs used to measure recall. |
+| `GDB` | `gdb_path` | str, debugger command with optional arguments. |
+| `GDB` | `instance` | str, value from the [`GDBInstance` enum][gdb-instance]. |
+| `GDB` | `entrypoint` | str, breakpoint location where tracing starts. |
+| `GDB` | `exitpoint` | optional str, breakpoint location; omit or use `""` to stop on return. |
+| `GDB` | `input_buffer` | str, input buffer symbol or quoted hexadecimal address. |
+| `GDB` | `watchpoint_type` | str, GDB pointer type used to read input, such as `"(char*)"`. |
+| `GDB` | `watchpoint_count` | positive int, bytes watched per tracing pass. |
+| `GDB` | `timeout` | positive finite int or float, GDB response timeout in seconds. |
+| `GDB` | `ignore_functions_regex` | optional str, skip-function regex; defaults to `""`. |
+| `LOGS` | `log_level` | str, [Python logging level][logging-levels]. |
+
+Breakpoint locations can be symbols, source locations or quoted hexadecimal addresses.
+Commands accept arguments; quote command paths containing spaces inside the TOML str.
+TOML literal strings preserve regex backslashes.
+
+[gdb-instance]: src/tracer/instance/sut_instance.py
+[input-channel]: src/tracer/connection/sut_connection.py
+[logging-levels]: https://docs.python.org/3/library/logging.html#levels
 
 `watchpoint_count = -1` is not supported. The tracer advances through the input by this count, so it must be positive.
 
 ### MCU settings
 
-STM32 and MSP430 both require the following server fields in `[GDB]` and serial fields in `[Connection]`. Valgrind supplies input through a file and does not require these fields or a `[Connection]` table.
+STM32, MSP430 and ESP32-C3 require the following server fields in `[GDB]` and serial fields in
+`[Connection]`. Valgrind supplies input through a file and does not require these fields or a
+`[Connection]` table.
 
 | Table | Field | Type and meaning |
 | --- | --- | --- |
-| `GDB` | `gdb_server_path` | String, server command and arguments, split using shell quoting rules. |
-| `GDB` | `gdb_server_address` | String, GDB remote address, such as `":4242"`. |
-| `Connection` | `input_channel` | String, `"serial"`. |
-| `Connection` | `port` | String, serial device path. |
-| `Connection` | `baud_rate` | Positive integer, serial baud rate. |
-| `GDB.stm32` | `dwt_watchpoint_workaround` | Optional boolean, defaults to `true`. Read DWT registers while stepping on ARMv7 targets. |
-| `GDB.stm32` | `dwt_function_reg` | String, quoted hexadecimal address of the first DWT comparator function register. Required when the workaround is enabled. |
+| `GDB` | `gdb_server_path` | str, server command and arguments, using shell quoting rules. |
+| `GDB` | `gdb_server_address` | str, GDB remote address, such as `":4242"`. |
+| `Connection` | `input_channel` | str, value from the [`InputChannel` enum][input-channel]. |
+| `Connection` | `port` | str, serial device path. |
+| `Connection` | `baud_rate` | positive int, serial baud rate. |
 
-For STM32, change `instance` to `"stm32"` and add the server fields to the existing `[GDB]` table:
-
-```toml
-# Inside the existing [GDB] table:
-gdb_server_path = "st-util -p 4243"
-gdb_server_address = ":4243"
-
-[GDB.stm32]
-dwt_function_reg = "0xe0001028"
-dwt_watchpoint_workaround = true
-
-[Connection]
-input_channel = "serial"
-port = "/dev/ttyACM0"
-baud_rate = 9600
-```
-
-Choose the binary, symbols, register address and watchpoint count for your firmware and MCU. MSP430 uses `instance = "msp430"` with its server command and address in `[GDB]`. It needs no MCU subtable because it currently has no additional settings. Only the selected MCU's settings are validated and read.
-
-### Migrating an existing INI file
-
-Rename GDBMiner configs to `.toml`, quote strings and addresses, and leave numbers and booleans unquoted. Keep `gdb_server_path` and `gdb_server_address` in `[GDB]`. Move `dwt_function_reg` and `dwt_watchpoint_workaround` into `[GDB.stm32]`. Update commands that pass `--config`. The old INI format is no longer supported. PlatformIO's `platformio.ini` files are unchanged.
-
-The loader uses ordinary dictionaries and checks shared fields plus the selected backend's fields before creating trial directories or starting a target. It does not coerce numbers or strings such as `"false"`. Malformed TOML raises `TOMLDecodeError`, missing required keys raise `KeyError`, wrong types raise `TypeError`, and invalid ranges or misplaced STM32 settings raise `ValueError`. The loader also validates log levels through Python logging before creating a trial directory, preserving logging's own `ValueError` message.
-
-`scripts/repro_json.sh` writes TOML using a Bash heredoc with literal strings. Its `OUT_DIR` supports spaces, double quotes, backslashes and UTF-8 text, but must not contain apostrophes or newlines.
+Choose the watchpoint count for your hardware. Only the selected MCU's settings are validated
+and read. Board-specific fields and setup instructions live in the
+[firmware guides](example_firmware/README.md).
 
 ## Generate inputs from a golden grammar
 
@@ -235,45 +218,14 @@ entrypoint names like
 `_ZN8picojson5parseIPKcEET_RNS_5valueERKS3_S7_PNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE`
 instead of just `picojson::parse<const_char_*>`
 
-## GDBMiner on STM32 B-L4S5I-IOT01A board
+## Run on microcontrollers
 
-In this case the B-L4S5I-IOT01A and its on-board debugger are used. This on-board debugger sets up
-a GDB server via the 'st-util' program, and enables access to this GDB server via localhost:4242.
+See the [firmware overview](example_firmware/README.md) for supported boards and parser targets.
+Board-specific wiring, configuration, build and run instructions are in the
+[STM32 guide][stm32-setup] and [ESP32-C3 guide][c3-setup].
 
-- Install the STLINK driver [link](https://www.st.com/content/st_com/en/products/development-tools/software-development-tools/stm32-software-development-tools/stm32-utilities/stsw-link009.html)
-- Connect MCU board and PC via USB (on MCU board, connect to the USB connector that is labeled as 'USB STLINK')
-
-```sh
-sudo apt-get install stlink-tools gdb-multiarch libusb-dev
-```
-
-Build and flash a firmware for the STM32 B-L4S5I-IOT01A, for example the arduinojson project.
-
-Prerequisite: Install [platformio (pio)](https://docs.platformio.org/en/latest//core/installation.html#super-quick-mac-linux)
-
-```sh
-cd ./example_firmware/stm32_arduinojson/
-pio run --target upload
-```
-
-If a `LIBUSB_ERROR_ACCESS` occurs, put
-
-```sh
-# STLink v2
-ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", MODE="664", GROUP="plugdev"
-```
-
-into `/etc/udev/rules.d/90-stm32.rules`and run `sudo udevadm control --reload` to reload. Ensure that your user belongs to the `plugdev`group.
-
-For your info: platformio stored an .elf file of the SUT here: ./example_firmware/stm32_arduinojson/.pio/build/disco_l4s5i_iot01a/firmware.elf
-
-Check the config at `./example_firmware/stm32_arduinojson/configuration/configuration.toml` and start tracing and mining:
-
-```sh
-uv run src/tracer/trace.py --config ./example_firmware/stm32_arduinojson/configuration/configuration.toml
-
-uv run src/miner/mine.py --config ./example_firmware/stm32_arduinojson/configuration/configuration.toml
-```
+[stm32-setup]: example_firmware/STM32%20B-L4S5I-IOT01A.md
+[c3-setup]: example_firmware/ESP32-C3%20DevKitM-1-N4X.md
 
 ## SVGPP
 

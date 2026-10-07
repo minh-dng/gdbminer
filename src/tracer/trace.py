@@ -10,8 +10,7 @@ import time
 from pathlib import Path
 
 from tracer.gdb_tracer import GDBTracer
-from util import setup_logging
-from util.config import Config, load_config
+from util import Config, load_config, setup_logging
 
 
 def create_output_dir(output_dir_base: Path) -> Path:

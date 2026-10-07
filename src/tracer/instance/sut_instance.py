@@ -4,12 +4,23 @@
 
 import logging
 import shlex
+from enum import StrEnum, unique
 from types import TracebackType
 from typing import Self
 
 from pygdbmi import gdbcontroller
 
-from util.config import Config
+from util import Config
+
+
+@unique
+class GDBInstance(StrEnum):
+    """Values of the `GDB.instance` configuration key."""
+
+    VALGRIND = "valgrind"
+    STM32 = "stm32"
+    MSP430 = "msp430"
+    ESP32C3 = "esp32c3"
 
 
 class SUTInstance:
@@ -29,7 +40,7 @@ class SUTInstance:
         self.send_gdb_command(f"-file-exec-and-symbols {self.elf_file}")
         logging.info(f"GDB loaded symbols from {self.elf_file=} successfully")
 
-    def set_temporary_breakpoint(self, breakpoint_address):
+    def set_temporary_breakpoint(self, breakpoint_address) -> str | None:
         # -t for a temporary breakpoint.
         # -h for a hardware breakpoint
         if breakpoint_address.startswith("0x"):

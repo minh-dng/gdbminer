@@ -75,17 +75,36 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 WORKDIR /tmp/build
 
-RUN wget --retry-connrefused --waitretry=2 --tries=5 -O gdb-13.2.tar.gz \
-        https://ftp.gnu.org/gnu/gdb/gdb-13.2.tar.gz && \
-    tar -xf gdb-13.2.tar.gz && cd gdb-13.2 && mkdir build && cd build && \
+# Try each mirror in turn; the checksum rejects a bad mirror and moves to the next.
+# The loop exits non-zero only when every mirror fails.
+ARG GDB_VERSION=13.2
+ARG GDB_SHA256=7ead13d9e19fa0c57bb19104e1a5f67eefa9fc79f2e6360de491e8fddeda1e30
+RUN for base in \
+        https://sourceware.org/pub/gdb/releases \
+        https://mirrors.kernel.org/gnu/gdb \
+        https://ftp.gnu.org/gnu/gdb; do \
+      wget --retry-connrefused --waitretry=2 --tries=3 --timeout=30 -O gdb.tar.gz \
+          "${base}/gdb-${GDB_VERSION}.tar.gz" && \
+      echo "${GDB_SHA256}  gdb.tar.gz" | sha256sum -c - && break; \
+    done && \
+    tar -xf gdb.tar.gz && cd "gdb-${GDB_VERSION}" && mkdir build && cd build && \
     ../configure --disable-gdbserver --disable-nls --disable-sim --with-python=no && \
     make -j"$(nproc)" && make install-strip && \
     gdb --version && \
     rm -rf /tmp/build/*
 
-RUN wget -O valgrind-3.23.0.tar.bz2 \
-        https://ftp.osuosl.org/pub/blfs/conglomeration/valgrind/valgrind-3.23.0.tar.bz2 && \
-    tar -xf valgrind-3.23.0.tar.bz2 && cd valgrind-3.23.0 && \
+# Same mirror fallback as GDB above.
+ARG VALGRIND_VERSION=3.23.0
+ARG VALGRIND_SHA256=c5c34a3380457b9b75606df890102e7df2c702b9420c2ebef9540f8b5d56264d
+RUN for base in \
+        https://sourceware.org/pub/valgrind \
+        https://mirrors.kernel.org/sourceware/valgrind \
+        https://ftp.osuosl.org/pub/blfs/conglomeration/valgrind; do \
+      wget --retry-connrefused --waitretry=2 --tries=3 --timeout=30 -O valgrind.tar.bz2 \
+          "${base}/valgrind-${VALGRIND_VERSION}.tar.bz2" && \
+      echo "${VALGRIND_SHA256}  valgrind.tar.bz2" | sha256sum -c - && break; \
+    done && \
+    tar -xf valgrind.tar.bz2 && cd "valgrind-${VALGRIND_VERSION}" && \
     ./configure --enable-only64bit && make -j"$(nproc)" && make install-strip && \
     valgrind --version && \
     vg_arch="$(dpkg --print-architecture)" && \
