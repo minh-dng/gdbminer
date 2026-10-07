@@ -3,6 +3,7 @@
 from .esp32_instance import ESP32Instance
 from .esp32c3_debug import HARDWARE_TRIGGER_COUNT
 from .esp32c3_instance import ESP32C3Instance
+from .esp32s3_instance import ESP32S3Instance
 from .hardware_instance import HardwareInstance, MIReason
 from .msp430_instance import MSP430Instance
 from .stm32_instance import STM32Instance
@@ -13,6 +14,7 @@ __all__ = [
     "HARDWARE_TRIGGER_COUNT",
     "ESP32C3Instance",
     "ESP32Instance",
+    "ESP32S3Instance",
     "GDBInstance",
     "HardwareInstance",
     "MIReason",

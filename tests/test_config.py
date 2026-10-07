@@ -10,6 +10,7 @@ from tracer import GDBTracer, trace
 from tracer.instance import (
     ESP32C3Instance,
     ESP32Instance,
+    ESP32S3Instance,
     HardwareInstance,
     MSP430Instance,
     STM32Instance,
@@ -34,7 +35,7 @@ def test_config():
     # Mutate parsed dictionaries instead of maintaining a second TOML fixture.
     for base, table, key, invalids in (
         (desktop, "GDB", "watchpoint_count", (False, True, 0, -1, "4", 4.0)),
-        (desktop, "GDB", "watchpoint_min_distance", (False, True, 0, -1, "4", 4.0)),
+        (desktop, "GDB", "watchpoint_min_distance", (False, True, 0, -1, "4", 4.0, 4)),
         (desktop, "GDB", "timeout", (True, "30", 0, -1, float("inf"), float("nan"))),
         (desktop, "GDB", "entrypoint", (0x8001000,)),
         (desktop, "GDB", "input_buffer", (0x20000000,)),
@@ -341,7 +342,7 @@ def test_invalid_overrides_do_not_create_trial():
 
 
 def test_openocd_console_ports():
-    for path in ROOT.glob("example_firmware/esp32-c3_*/configuration/configuration*.toml"):
+    for path in ROOT.glob("example_firmware/esp32-*/configuration/configuration*.toml"):
         for flags, telnet, tcl in (
             ((), "disabled", "disabled"),
             (("--telnet-port", "4444"), "4444", "disabled"),
@@ -350,7 +351,9 @@ def test_openocd_console_ports():
         ):
             config = load_config(path)
             _override(config, "--adapter-serial", "AA:BB", *flags)
-            command = ESP32C3Instance(config, "").gdb_server_path_with_args
+            instance = GDBTracer.open_sut_instance(config)
+            assert isinstance(instance, HardwareInstance)
+            command = instance.gdb_server_path_with_args
             assert f"telnet port {telnet}" in command, path
             assert f"tcl port {tcl}" in command, path
 
@@ -383,6 +386,107 @@ def test_openocd_console_ports():
         raise AssertionError("Accepted colliding console ports")
 
 
+def esp32s3_config():
+    """The one-cable C3 JSON configuration, moved to the S3 backend."""
+    config = load_config(C3_CONFIG.with_name("configuration.1-cable.toml"))
+    gdb = config["GDB"]
+    gdb.pop("esp32c3")
+    gdb.update(instance="esp32s3", watchpoint_count=2)
+    gdb["esp32s3"] = {
+        "reset_on_connect": False,
+        "usb_reset_command": "true",
+        "startup_delay": 3,
+        "watchpoint_min_distance": 4,
+    }
+    return config
+
+
+def test_esp32s3_settings():
+    s3 = esp32s3_config()
+    _validate_config(s3)
+    instance = GDBTracer.open_sut_instance(s3)
+    assert isinstance(instance, ESP32S3Instance)
+    assert ESP32S3Instance.__bases__ == (ESP32Instance,)
+    assert (instance.startup_delay, instance.usb_reset_command) == (3, "true")
+    assert not instance.reset_on_connect
+
+    one = deepcopy(s3)
+    one["GDB"]["watchpoint_count"] = 1
+    one["GDB"]["esp32s3"]["watchpoint_min_distance"] = 1
+    _validate_config(one)
+    one["GDB"]["esp32s3"].pop("watchpoint_min_distance")
+    _validate_config(one)
+    assert GDBTracer(one).watchpoint_min_distance == 1
+
+    for table, key, value in [
+        ("GDB", "watchpoint_count", 3),
+        *[
+            ("esp32s3", "watchpoint_min_distance", value)
+            for value in (False, True, 0, -1, "4", 4.0, 3)
+        ],
+        ("GDB", "watchpoint_type", "(uint16_t*)"),
+        ("esp32s3", "startup_delay", -1),
+        ("esp32s3", "startup_delay", float("inf")),
+        ("esp32s3", "startup_delay", "3"),
+        ("esp32s3", "startup_delay", True),
+        ("esp32s3", "usb_reset_command", ["reset"]),
+        ("esp32s3", "rom_elf", 123),
+        ("esp32s3", "reset_on_connect", "false"),
+        ("esp32s3", "hardware_trigger_slot", 0),
+        ("esp32s3", "breakpoint_always_inserted", False),
+        ("esp32s3", "dwt_watchpoint_workaround", False),
+    ]:
+        config = deepcopy(s3)
+        target = config["GDB"]["esp32s3"] if table == "esp32s3" else config[table]
+        target[key] = value
+        try:
+            _validate_config(config)
+        except (TypeError, ValueError) as exc:
+            assert key in str(exc) or "DWT" in str(exc), str(exc)
+        else:
+            raise AssertionError(f"Accepted {table}.{key} = {value!r}")
+
+    no_distance = deepcopy(s3)
+    no_distance["GDB"]["esp32s3"].pop("watchpoint_min_distance")
+    try:
+        _validate_config(no_distance)
+    except ValueError as exc:
+        assert "watchpoint_min_distance" in str(exc)
+    else:
+        raise AssertionError("Accepted two S3 watchpoints without a minimum distance")
+
+    for key in ("startup_delay", "usb_reset_command", "rom_elf", "watchpoint_min_distance"):
+        config = deepcopy(s3)
+        config["GDB"][key] = config["GDB"]["esp32s3"].pop(key, "")
+        try:
+            _validate_config(config)
+        except ValueError as exc:
+            assert "[GDB.esp32s3]" in str(exc)
+        else:
+            raise AssertionError(f"Accepted misplaced {key}")
+
+
+def test_esp32s3_reset_command_takes_adapter_serial():
+    command = "uv run scripts/esp32_usb_reset.py --serial {adapter_serial}"
+    config = esp32s3_config()
+    config["GDB"]["esp32s3"]["usb_reset_command"] = command
+    _override(config, "--adapter-serial", "AA:BB")
+    assert config["GDB"]["esp32s3"]["usb_reset_command"] == command.replace(
+        "{adapter_serial}", "AA:BB"
+    )
+
+    # A reset command that names no board could reset another one than OpenOCD debugs.
+    config = esp32s3_config()
+    config["GDB"]["gdb_server_path"] = "openocd"
+    config["GDB"]["esp32s3"]["usb_reset_command"] = command
+    try:
+        _override(config)
+    except ValueError as exc:
+        assert "usb_reset_command" in str(exc), str(exc)
+    else:
+        raise AssertionError("Accepted an unfilled {adapter_serial} in usb_reset_command")
+
+
 if __name__ == "__main__":
     test_config()
     test_gdb_port_validation()
@@ -391,4 +495,6 @@ if __name__ == "__main__":
     test_invalid_overrides_do_not_create_trial()
     test_openocd_console_ports()
     test_esp32_usb_serial_jtag_settings()
+    test_esp32s3_settings()
+    test_esp32s3_reset_command_takes_adapter_serial()
     print("Configuration regression checks passed")

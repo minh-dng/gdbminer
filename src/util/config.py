@@ -46,8 +46,8 @@ def _validate_config(config: Config) -> None:
             _require(gdb, key, str)
     if _require(gdb, "watchpoint_count", int) <= 0:
         raise ValueError("GDB.watchpoint_count must be positive")
-    if "watchpoint_min_distance" in gdb and _require(gdb, "watchpoint_min_distance", int) <= 0:
-        raise ValueError("GDB.watchpoint_min_distance must be positive")
+    if "watchpoint_min_distance" in gdb:
+        raise ValueError("Move 'watchpoint_min_distance' from [GDB] to [GDB.esp32s3] (S3 only)")
     timeout = _require(gdb, "timeout", (int, float))
     if not math.isfinite(timeout) or timeout <= 0:
         raise ValueError("GDB.timeout must be positive and finite")
@@ -125,6 +125,36 @@ def _validate_config(config: Config) -> None:
             )
         if gdb["watchpoint_count"] == HARDWARE_TRIGGER_COUNT and gdb.get("exitpoint", ""):
             raise ValueError("ESP32-C3 exitpoint requires a free hardware trigger slot")
+    elif instance == GDBInstance.ESP32S3:
+        from tracer.instance.esp32s3_debug import DATA_BREAKPOINT_COUNT, WATCH_MIN_DISTANCE
+
+        s3 = _validate_esp32(
+            config,
+            "ESP32-S3",
+            "esp32s3",
+            ("startup_delay", "usb_reset_command", "watchpoint_min_distance"),
+            "Xtensa data breakpoints",
+        )
+        if "startup_delay" in s3:
+            delay = _require(s3, "startup_delay", (int, float))
+            if not math.isfinite(delay) or delay < 0:
+                raise ValueError("GDB.esp32s3.startup_delay must be non-negative and finite")
+        if "usb_reset_command" in s3:
+            _require(s3, "usb_reset_command", str)
+        if gdb["watchpoint_count"] > DATA_BREAKPOINT_COUNT:
+            raise ValueError(
+                f"ESP32-S3 watchpoint_count must be at most {DATA_BREAKPOINT_COUNT} (DBREAK pairs)"
+            )
+        if "watchpoint_min_distance" in s3 and _require(s3, "watchpoint_min_distance", int) <= 0:
+            raise ValueError("GDB.esp32s3.watchpoint_min_distance must be positive")
+        if (
+            gdb["watchpoint_count"] > 1
+            and s3.get("watchpoint_min_distance", 1) < WATCH_MIN_DISTANCE
+        ):
+            raise ValueError(
+                f"GDB.esp32s3.watchpoint_min_distance must be at least {WATCH_MIN_DISTANCE}: "
+                "one halt names one data breakpoint"
+            )
 
 
 def _validate_esp32(
@@ -221,7 +251,8 @@ def apply_overrides(config: Config, args: argparse.Namespace) -> None:
     Configure or buffer logging first: it logs each value it uses. `Connection.port` and
     `GDB.gdb_port` are replaced by `--port` and `--gdb-port`, then validated with the
     configuration's rules. `{gdb_port}` and `{adapter_serial}` in `gdb_server_path` are replaced by
-    the GDB port and `--adapter-serial`. `{telnet_port}` and `{tcl_port}` take their flags' port
+    the GDB port and `--adapter-serial`, which also fills `{adapter_serial}` in
+    `GDB.esp32s3.usb_reset_command`. `{telnet_port}` and `{tcl_port}` take their flags' port
     numbers, or `disabled` when omitted so parallel OpenOCD instances do not share console ports.
     A flag overriding a different configured value is logged as a warning.
 
@@ -282,3 +313,15 @@ def apply_overrides(config: Config, args: argparse.Namespace) -> None:
             path = path.replace(placeholder, str(value))
     gdb["gdb_server_path"] = path
     logging.info(f"GDB server command: {path}")
+    # The S3 resets a wedged USB device between attach attempts and must name the same board.
+    chip = gdb.get("esp32s3", {})
+    reset = chip.get("usb_reset_command", "")
+    if ADAPTER_SERIAL_PLACEHOLDER in reset:
+        if adapter_serial is None:
+            raise ValueError(
+                f"GDB.esp32s3.usb_reset_command needs a value for {ADAPTER_SERIAL_PLACEHOLDER}"
+            )
+        chip["usb_reset_command"] = reset.replace(ADAPTER_SERIAL_PLACEHOLDER, adapter_serial)
+        logging.info(
+            f"GDB.esp32s3.usb_reset_command: {ADAPTER_SERIAL_PLACEHOLDER} -> {adapter_serial}"
+        )

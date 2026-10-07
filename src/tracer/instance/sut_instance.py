@@ -21,6 +21,7 @@ class GDBInstance(StrEnum):
     STM32 = "stm32"
     MSP430 = "msp430"
     ESP32C3 = "esp32c3"
+    ESP32S3 = "esp32s3"
 
 
 class SUTInstance:

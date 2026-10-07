@@ -24,20 +24,31 @@ def test_merge_does_not_mutate_previous_window():
     assert first[0].watchpoint_hits == [0]
 
 
-def tracer(count, distance=None):
+def tracer(count, distance=None, instance="valgrind"):
     gdb = {
         "entrypoint": "parser",
         "input_buffer": "buf",
         "watchpoint_type": "(char*)",
         "watchpoint_count": count,
+        "instance": instance,
     }
     if distance is not None:
-        gdb["watchpoint_min_distance"] = distance
+        gdb["instance"] = "esp32s3"
+        gdb["esp32s3"] = {"watchpoint_min_distance": distance}
+    elif instance == "esp32s3":
+        gdb["esp32s3"] = {}
     return GDBTracer({"GDB": gdb})
 
 
-def test_default_windows_slide_contiguously():
-    assert tracer(2).watch_windows(5) == [[0, 1], [2, 3], [4]]
+@pytest.mark.parametrize("instance", ["valgrind", "stm32", "msp430", "esp32c3", "esp32s3"])
+def test_default_windows_slide_contiguously(instance):
+    assert tracer(2, instance=instance).watch_windows(5) == [[0, 1], [2, 3], [4]]
+
+
+def test_s3_distance_does_not_affect_other_targets():
+    gdb_tracer = tracer(2, 4)
+    gdb_tracer.config["GDB"]["instance"] = "esp32c3"
+    assert GDBTracer(gdb_tracer.config).watch_windows(5) == [[0, 1], [2, 3], [4]]
 
 
 @pytest.mark.parametrize("count, distance", [(1, 4), (2, 4), (3, 4), (2, 2), (6, 4)])

@@ -13,6 +13,7 @@ from pathlib import Path
 
 from tracer.instance import (
     ESP32C3Instance,
+    ESP32S3Instance,
     GDBInstance,
     MSP430Instance,
     STM32Instance,
@@ -38,9 +39,13 @@ class GDBTracer:
         self.input_buffer = config["GDB"]["input_buffer"]
         self.ignore_functions_regex = config["GDB"].get("ignore_functions_regex", "")
         self.watchpoint_count = config["GDB"]["watchpoint_count"]
-        self.watchpoint_min_distance = config["GDB"].get("watchpoint_min_distance", 1)
+        self.watchpoint_min_distance = 1
+        if config["GDB"].get("instance") == GDBInstance.ESP32S3:
+            self.watchpoint_min_distance = config["GDB"]["esp32s3"].get(
+                "watchpoint_min_distance", 1
+            )
         """Smallest distance between two bytes watched in the same run; 1 keeps the paper's
-        contiguous window (`GDB.watchpoint_min_distance`)."""
+        contiguous window (`GDB.esp32s3.watchpoint_min_distance` applies only to the S3)."""
         self.config = config
 
     def trace_instruction(
@@ -94,6 +99,8 @@ class GDBTracer:
                 return STM32Instance(config, input_file)
             case GDBInstance.ESP32C3:
                 return ESP32C3Instance(config, input_file)
+            case GDBInstance.ESP32S3:
+                return ESP32S3Instance(config, input_file)
             case GDBInstance.MSP430:
                 return MSP430Instance(config, input_file)
 
