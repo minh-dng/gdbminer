@@ -91,6 +91,7 @@ All configurations require these fields unless marked optional:
 | `GDB` | `input_buffer` | str, input buffer symbol or quoted hexadecimal address. |
 | `GDB` | `watchpoint_type` | str, GDB pointer type used to read input, such as `"(char*)"`. |
 | `GDB` | `watchpoint_count` | positive int, bytes watched per tracing pass. |
+| `GDB` | `watchpoint_min_distance` | optional positive int, smallest distance between two bytes watched in one pass; defaults to `1`, a contiguous window. |
 | `GDB` | `timeout` | positive finite int or float, GDB response timeout in seconds. |
 | `GDB` | `ignore_functions_regex` | optional str, skip-function regex; defaults to `""`. |
 | `LOGS` | `log_level` | str, [Python logging level][logging-levels]. |
@@ -104,6 +105,8 @@ TOML literal strings preserve regex backslashes.
 [logging-levels]: https://docs.python.org/3/library/logging.html#levels
 
 `watchpoint_count = -1` is not supported. The tracer advances through the input by this count, so it must be positive.
+
+With the default `watchpoint_min_distance = 1`, each pass watches the next `watchpoint_count` bytes, as in the paper. A larger distance `d` spreads each pass: pass `j` watches bytes `j`, `j + s`, `j + 2s`, … with stride `s = max(ceil(n / watchpoint_count), min(n, d))` for an input of `n` bytes. Every byte is still watched in exactly one pass. Use it when one hardware halt cannot name two watched bytes read by the same load (ESP32-S3: `d = 4`).
 
 ### MCU settings
 

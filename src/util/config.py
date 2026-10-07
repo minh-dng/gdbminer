@@ -46,6 +46,8 @@ def _validate_config(config: Config) -> None:
             _require(gdb, key, str)
     if _require(gdb, "watchpoint_count", int) <= 0:
         raise ValueError("GDB.watchpoint_count must be positive")
+    if "watchpoint_min_distance" in gdb and _require(gdb, "watchpoint_min_distance", int) <= 0:
+        raise ValueError("GDB.watchpoint_min_distance must be positive")
     timeout = _require(gdb, "timeout", (int, float))
     if not math.isfinite(timeout) or timeout <= 0:
         raise ValueError("GDB.timeout must be positive and finite")

@@ -34,6 +34,7 @@ def test_config():
     # Mutate parsed dictionaries instead of maintaining a second TOML fixture.
     for base, table, key, invalids in (
         (desktop, "GDB", "watchpoint_count", (False, True, 0, -1, "4", 4.0)),
+        (desktop, "GDB", "watchpoint_min_distance", (False, True, 0, -1, "4", 4.0)),
         (desktop, "GDB", "timeout", (True, "30", 0, -1, float("inf"), float("nan"))),
         (desktop, "GDB", "entrypoint", (0x8001000,)),
         (desktop, "GDB", "input_buffer", (0x20000000,)),
