@@ -324,8 +324,10 @@ class ESP32S3Instance(ESP32Instance[_DataBreak]):
         Reads by the skipped function are not recorded, as on the C3: the authors' published STM32
         traces never show bytes read only by the skipped `strlen`. GDB treats Xtensa watchpoints as
         nonsteppable: on a watchpoint halt during `finish` it removes the watchpoints, steps over
-        the load, re-inserts them and reports `read-watchpoint-trigger`. That stop is passed on as
-        `end-stepping-range`, after which the tracer asks for the stack and keeps skipping.
+        the load and reports `read-watchpoint-trigger`. That stop is passed on as
+        `end-stepping-range`, after which the tracer asks for the stack and keeps skipping. GDB
+        inserts the watchpoints again at the next resume, writing both DBREAK pairs afresh, and the
+        next step checks them.
         """
         if not self._triggers or not self._halted:
             raise RuntimeError("S3 finish needs a halted target and armed watchpoints")
@@ -338,21 +340,25 @@ class ESP32S3Instance(ESP32Instance[_DataBreak]):
         reason = payload.get("reason")
         if reason == MIReason.READ_WATCHPOINT_TRIGGER and cause & DebugCause.IC:
             logging.info("S3 read inside a skipped function retired at %s", self._pc)
-            retired: GDBResponse = {
-                "type": "notify",
-                "message": "stopped",
-                "payload": {
-                    "reason": MIReason.END_STEPPING_RANGE,
-                    "frame": payload.get("frame", {}),
-                },
-            }
-            stop = retired
+            # The watchpoints are removed here (DBREAKC reads 0), so `_rearm` must not run.
+            self._pending.append(
+                {
+                    "type": "notify",
+                    "message": "stopped",
+                    "payload": {
+                        "reason": MIReason.END_STEPPING_RANGE,
+                        "frame": payload.get("frame", {}),
+                    },
+                }
+            )
+            return
         # The finish return breakpoint and the exit breakpoint are IBREAKs. GDB labels a finish only
         # if the finished function has debug info (`finish_command_fsm::should_stop`); ROM routines
         # have symbols but no DWARF, so their return stop arrives unlabelled. The tracer accepts a
         # stop without a reason while a finish is pending, and checks an exit breakpoint's number.
-        elif reason not in {MIReason.FUNCTION_FINISHED, MIReason.BREAKPOINT_HIT, None} or not (
-            cause & DebugCause.IB
+        if (
+            reason not in {MIReason.FUNCTION_FINISHED, MIReason.BREAKPOINT_HIT, None}
+            or not cause & DebugCause.IB
         ):
             raise RuntimeError(f"Unexpected S3 finish stop: debugcause={cause:#x}, {stop}")
         self._rearm(state)

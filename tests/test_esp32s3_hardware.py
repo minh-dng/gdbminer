@@ -269,9 +269,12 @@ class TestFinish:
         assert instance._pending == [response]
 
     def test_read_inside_a_skipped_function_is_not_recorded(self):
+        # GDB stepped over the load with its watchpoints removed; it inserts them at the next
+        # resume, so the adapter must not re-insert them.
         response = stop(PC, "read-watchpoint-trigger", **{"hw-rwpt": {"number": "2"}})
-        instance = self.finish(response, state(IC))
+        instance = self.finish(response, state(IC, dbreaks=()))
         assert instance._pending == [stop(PC)]
+        assert instance._command.call_args_list == [call("-exec-finish")]
 
     @pytest.mark.parametrize(
         "reason, cause",
