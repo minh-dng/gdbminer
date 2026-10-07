@@ -1,5 +1,6 @@
 """Public debugger backends, configuration values and stop reasons."""
 
+from .esp32_instance import ESP32Instance
 from .esp32c3_debug import HARDWARE_TRIGGER_COUNT
 from .esp32c3_instance import ESP32C3Instance
 from .hardware_instance import HardwareInstance, MIReason
@@ -11,6 +12,7 @@ from .valgrind_instance import ValgrindInstance
 __all__ = [
     "HARDWARE_TRIGGER_COUNT",
     "ESP32C3Instance",
+    "ESP32Instance",
     "GDBInstance",
     "HardwareInstance",
     "MIReason",

@@ -113,7 +113,7 @@ class TestHardwareContract:
         target = Mock()
         instance.reset = target.reset
         instance.continue_execution = target.continue_execution
-        with patch("tracer.instance.esp32c3_instance.SUTConnection") as connection:
+        with patch("tracer.instance.esp32_instance.SUTConnection") as connection:
             instance.init_sut_connection()
         reset_on_reconnect = connection.call_args.args[1]
         reset_on_reconnect()

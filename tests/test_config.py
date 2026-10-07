@@ -7,7 +7,13 @@ from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
 from tracer import GDBTracer, trace
-from tracer.instance import ESP32C3Instance, HardwareInstance, MSP430Instance, STM32Instance
+from tracer.instance import (
+    ESP32C3Instance,
+    ESP32Instance,
+    HardwareInstance,
+    MSP430Instance,
+    STM32Instance,
+)
 from util import add_override_arguments, apply_overrides, load_config
 from util.config import _validate_config
 
@@ -111,7 +117,8 @@ def test_config():
 
     instance = GDBTracer.open_sut_instance(c3)
     assert isinstance(instance, ESP32C3Instance)
-    assert ESP32C3Instance.__bases__ == (HardwareInstance,)
+    assert ESP32C3Instance.__bases__ == (ESP32Instance,)
+    assert issubclass(ESP32Instance, HardwareInstance)
     assert STM32Instance.__bases__ == (HardwareInstance,)
     assert not hasattr(instance, "dwt_watchpoint_workaround")
     assert not instance.reset_on_connect
