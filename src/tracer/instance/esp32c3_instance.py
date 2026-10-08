@@ -124,8 +124,8 @@ class ESP32C3Instance(HardwareInstance):
         self.reset_on_connect = c3.get("reset_on_connect", True)
         """Reset the target through GDB at start-up and after a serial reconnect.
 
-        The example configurations set it to false: the serial EN pulse already restarts the
-        firmware.
+        The example configurations set it to false: the serial connection's reset pulse already
+        restarts the firmware.
         """
         if not 1 <= self.watchpoint_count <= HARDWARE_TRIGGER_COUNT:
             raise ValueError(
@@ -660,7 +660,12 @@ class ESP32C3Instance(HardwareInstance):
         self._halted = True
 
     def _start_gdb_server(self):
-        """Retry OpenOCD initialization while native USB/JTAG returns after EN reset."""
+        """Retry OpenOCD initialization while native USB/JTAG returns after an EN reset.
+
+        Only the UART bridge resets the chip through EN. The USB-Serial/JTAG port resets it through
+        the controller, which stayed connected in the recorded runs; the retry still covers a target
+        that is not yet ready for examination.
+        """
         c3 = self.config["GDB"]["esp32c3"]
         interval = c3.get("startup_retry_interval", 0.2)
         deadline = time.monotonic() + self.timeout
@@ -707,9 +712,9 @@ class ESP32C3Instance(HardwareInstance):
     @override
     def __enter__(self):
         try:
-            # Open the serial port first. With `rts` and `reset_pulse`, its EN pulse restarts the
-            # chip and the native USB-JTAG device re-enumerates; `_start_gdb_server` retries until
-            # OpenOCD reaches the JTAG link again.
+            # Open the serial port first: with `rts` and `reset_pulse`, it restarts the chip. Over
+            # the UART bridge the pulse drives EN, and the native USB-JTAG device re-enumerates;
+            # `_start_gdb_server` retries until OpenOCD reaches the JTAG function again.
             self.connection = self.init_sut_connection()
             self._start_gdb_server()
             self.init_gdb_controller()
