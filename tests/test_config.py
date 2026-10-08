@@ -287,9 +287,18 @@ def test_apply_overrides():
             raise AssertionError(f"Accepted overrides {flags!r}")
 
 
+def test_example_configs_template_gdb_port():
+    # One port setting reaches both the server and GDB only through the placeholder.
+    for path in ROOT.glob("example_*/**/configuration*.toml"):
+        gdb = load_config(path)["GDB"]
+        if "gdb_server_path" in gdb:
+            assert "{gdb_port}" in gdb["gdb_server_path"], path
+
+
 if __name__ == "__main__":
     test_config()
     test_gdb_port_validation()
     test_apply_overrides()
+    test_example_configs_template_gdb_port()
     test_esp32_usb_serial_jtag_settings()
     print("Configuration regression checks passed")

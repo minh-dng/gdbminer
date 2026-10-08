@@ -77,7 +77,7 @@ and do not declare `[GDB]` twice.
 ```toml
 [GDB]
 instance = "stm32"
-gdb_server_path = "st-util -p 4243"
+gdb_server_path = "st-util -p {gdb_port}"
 gdb_port = 4243
 
 [GDB.stm32]
@@ -104,6 +104,9 @@ CONFIG=./example_firmware/stm32_arduinojson/configuration/configuration.toml
 uv run src/tracer/trace.py --config "$CONFIG"
 uv run src/miner/mine.py --config "$CONFIG"
 ```
+
+Both stages start `st-util` and accept `--port` and `--gdb-port` to replace `Connection.port` and
+`GDB.gdb_port` without editing the file, for example for a second board.
 
 Keep the board connected and release the serial port from other applications before tracing.
 Mine after all seed traces have completed. Output is written under the configured

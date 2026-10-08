@@ -108,9 +108,9 @@ Values for this board (checked 2026-09-30):
 | JTAG | `/dev/cu.usbmodem1101`  | `0x303A:0x1001` | `A0:F2:62:01:70:28` (the chip's MAC) |
 | UART | `/dev/cu.usbserial-210` | `0x10C4:0xEA60` | `8afe88d078bcf0119b5f157148e9de0f`   |
 
-Copy the JTAG serial number into `-c "adapter serial <MAC>"` in `gdb_server_path`. The UART serial
-number is not used. The `esp32-c3_json`, `esp32-c3_cgidecode` and `esp32-c3_xml` configuration files
-all carry it.
+Pass the JTAG serial number as `--adapter-serial <MAC>` to `trace.py`, `mine.py` and
+`precision_recall.py`: the configuration files carry `-c "adapter serial {adapter_serial}"` in
+`gdb_server_path` and each stage fills it in. The UART serial number is not used.
 
 ## Firmware wrappers
 
@@ -294,7 +294,7 @@ device names from the recording Mac. Change these in each:
 |                         | One cable: native USB serial port, `/dev/cu.usbmodem<n>`.        |
 | `[GDB] gdb_path`        | Espressif `riscv32-esp-elf-gdb` from the Arduino core.           |
 | `[GDB.esp32c3] rom_elf` | ROM symbol file matching the chip revision.                      |
-| `[GDB] gdb_server_path` | OpenOCD executable, scripts folder and board's `adapter serial`. |
+| `[GDB] gdb_server_path` | OpenOCD executable and scripts folder; keep both placeholders.   |
 
 ### Debug register values
 
@@ -429,11 +429,32 @@ order:
 ```sh
 TARGET=esp32-c3_json
 CONFIG=example_firmware/$TARGET/configuration/configuration.2-cables.toml  # or .1-cable.toml
-PYTHONPATH=src .venv/bin/python src/tracer/trace.py --config "$CONFIG"
-PYTHONPATH=src .venv/bin/python src/miner/mine.py --config "$CONFIG"
+BOARD=(--adapter-serial A0:F2:62:01:70:28)  # add --port and --gdb-port as needed
+PYTHONPATH=src .venv/bin/python src/tracer/trace.py --config "$CONFIG" "${BOARD[@]}"
+PYTHONPATH=src .venv/bin/python src/miner/mine.py --config "$CONFIG" "${BOARD[@]}"
 PYTHONPATH=src .venv/bin/python src/eval/precision_recall.py \
-  --config "$CONFIG" --out evaluation.json
+  --config "$CONFIG" "${BOARD[@]}" --out evaluation.json
 ```
+
+All three stages start OpenOCD and run inputs on the board, so pass them the same flags. Besides
+`--adapter-serial`, each accepts `--port` (replaces `[Connection] port`, which changes when you plug
+into another socket) and `--gdb-port` (replaces `[GDB] gdb_port`, the port that fills `{gdb_port}`
+in `gdb_server_path` and that GDB connects to). To run two boards in parallel, give each its own
+`--adapter-serial`, `--port` and `--gdb-port`, for example `--gdb-port 3334` for the second. Two
+runs of the same target share `BASIC.output_directory`, and mining and evaluation read its newest
+`trial-<n>`, so such runs still need a second file with its own output directory. Omit `gdb_port`
+from the configuration file to make `--gdb-port` required. Each value taken from a flag
+is logged to `out.log`, with a warning when it replaces a different value from the file. A flag
+whose placeholder is not in `gdb_server_path`, an invalid or missing GDB port, or an
+`{adapter_serial}` without `--adapter-serial` stops the stage before any server starts.
+
+The configurations switch off OpenOCD's telnet and tcl ports with `-c "telnet port disabled"` and
+`-c "tcl port disabled"`. The tracer reaches OpenOCD only through GDB's `monitor` command, over the
+GDB port, so it needs neither. They are off because every OpenOCD that keeps the defaults (telnet
+4444, tcl 6666) blocks a second one: `Error: couldn't bind tcl to socket on port 6666: Address
+already in use`. To use them, for example to run `telnet localhost 4444` against a running trace
+for `reset halt` or `reg`, replace `disabled` with a port number in `gdb_server_path`. Give each
+parallel instance its own numbers, as with `--gdb-port`.
 
 `trace.py` creates the next free `output/<target>/trial-<n>/`. `mine.py` and `precision_recall.py`
 use the newest `trial-<n>`, and `mine.py` pairs traces with seeds by sorted file name. Mine only
