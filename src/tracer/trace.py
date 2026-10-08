@@ -10,7 +10,7 @@ import time
 from pathlib import Path
 
 from tracer import GDBTracer
-from util import Config, load_config, setup_logging
+from util import Config, add_override_arguments, apply_overrides, load_config, setup_logging
 
 
 def create_output_dir(output_dir_base: Path) -> Path:
@@ -42,14 +42,17 @@ def main() -> None:
     # cli
     parser = argparse.ArgumentParser(description="Generate traces of a program")
     parser.add_argument("--config", required=True, type=str, help="Path to a config file.")
+    add_override_arguments(parser)
+    args = parser.parse_args()
 
-    config_file_path = Path(parser.parse_args().config)
-
-    config = load_config(config_file_path)
+    config = load_config(Path(args.config))
 
     # Setup logging
     output_directory = create_output_dir(Path(config["BASIC"]["output_directory"]))
     setup_logging(output_directory, config["LOGS"]["log_level"])
+
+    # After the logging setup, so that out.log records which values the flags replaced.
+    apply_overrides(config, args)
 
     seed_directory = Path(config["BASIC"]["seed_directory"])
     # list_of_traces = []

@@ -119,6 +119,17 @@ STM32, MSP430 and ESP32-C3 require the following server fields in `[GDB]` and se
 | `Connection` | `port` | str, serial device path. |
 | `Connection` | `baud_rate` | positive int, baud rate; omit for `esp32-usb-serial-jtag`. |
 
+`gdb_server_path` passes the port to the server through the `{gdb_port}` placeholder, as in
+`st-util -p {gdb_port}`, so the server and GDB always use the same port. It may also contain
+`{adapter_serial}`, the debug adapter's serial number, to pick one board when several are attached.
+
+The serial device, the GDB port and the adapter serial change from machine to machine and board to
+board. `trace.py`, `mine.py` and the evaluation scripts all start the target, so each accepts the
+same three flags: `--port` replaces `Connection.port`, `--gdb-port` replaces `GDB.gdb_port`, and
+`--adapter-serial` fills `{adapter_serial}`. Leave `gdb_port` out of the file to make `--gdb-port`
+required. Each value taken from a flag is logged, with a warning when it replaces a different value
+from the file.
+
 Choose the watchpoint count for your hardware. Only the selected MCU's settings are validated
 and read. Board-specific fields and setup instructions live in the
 [firmware guides](example_firmware/README.md).

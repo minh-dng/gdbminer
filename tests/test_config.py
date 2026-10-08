@@ -1,12 +1,13 @@
 """Hardware-free regression check: PYTHONPATH=src python tests/test_config.py."""
 
+from argparse import ArgumentParser
 from copy import deepcopy
 from pathlib import Path
 from unittest.mock import patch
 
 from tracer import GDBTracer, trace
 from tracer.instance import ESP32C3Instance, HardwareInstance, MSP430Instance, STM32Instance
-from util import load_config
+from util import add_override_arguments, apply_overrides, load_config
 from util.config import _validate_config
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -204,6 +205,11 @@ def test_esp32_usb_serial_jtag_settings():
 
 
 def test_gdb_port_validation():
+    config = load_config(C3_CONFIG)
+    del config["GDB"]["gdb_port"]
+    # `--gdb-port` can supply the port, so the file may leave it out.
+    _validate_config(config)
+
     for key, value in (
         ("gdb_server_address", ":3333"),
         *[("gdb_port", value) for value in (0, -1, 65536, "3333", True)],
@@ -218,8 +224,72 @@ def test_gdb_port_validation():
             raise AssertionError(f"Accepted GDB.{key} = {value!r}")
 
 
+def _override(config, *flags: str) -> None:
+    parser = ArgumentParser()
+    add_override_arguments(parser)
+    apply_overrides(config, parser.parse_args(flags))
+
+
+def _templated(gdb_port: int | None = 3333):
+    """C3 configuration whose server command holds both placeholders."""
+    config = load_config(C3_CONFIG)
+    config["GDB"]["gdb_server_path"] = (
+        'openocd -c "gdb port {gdb_port}" -c "adapter serial {adapter_serial}"'
+    )
+    if gdb_port is None:
+        del config["GDB"]["gdb_port"]
+    return config
+
+
+def test_apply_overrides():
+    config = _templated()
+    with patch("util.config.logging") as log:
+        _override(config, "--port", "/dev/ttyB", "--adapter-serial", "AA:BB", "--gdb-port", "3334")
+    assert config["Connection"]["port"] == "/dev/ttyB"
+    assert config["GDB"]["gdb_port"] == 3334
+    assert config["GDB"]["gdb_server_path"] == (
+        'openocd -c "gdb port 3334" -c "adapter serial AA:BB"'
+    )
+    # Both flags replace a different configured value, which is worth a warning each.
+    assert log.warning.call_count == 2
+
+    # Without --gdb-port the placeholder takes GDB.gdb_port.
+    config = _templated()
+    port = config["Connection"]["port"]
+    _override(config, "--adapter-serial", "AA:BB")
+    assert config["Connection"]["port"] == port
+    assert 'gdb port 3333"' in config["GDB"]["gdb_server_path"]
+
+    # --gdb-port alone suffices when the configuration leaves gdb_port out.
+    config = _templated(gdb_port=None)
+    _override(config, "--adapter-serial", "AA:BB", "--gdb-port", "5000")
+    assert config["GDB"]["gdb_port"] == 5000
+
+    # A missing or invalid value, and a flag without its placeholder, must not start a server.
+    plain = load_config(STM32_CONFIG)
+    plain["GDB"]["gdb_server_path"] = "st-util"
+    for base, flags in (
+        (_templated(), ()),
+        (_templated(gdb_port=None), ("--adapter-serial", "AA:BB")),
+        *[
+            (_templated(), ("--adapter-serial", "AA:BB", "--gdb-port", p))
+            for p in ("0", "-1", "65536")
+        ],
+        (deepcopy(plain), ("--adapter-serial", "AA:BB")),
+        (deepcopy(plain), ("--gdb-port", "4243")),
+        (load_config(JSON_CONFIG), ("--port", "/dev/ttyB")),
+    ):
+        try:
+            _override(base, *flags)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError(f"Accepted overrides {flags!r}")
+
+
 if __name__ == "__main__":
     test_config()
-    test_esp32_usb_serial_jtag_settings()
     test_gdb_port_validation()
+    test_apply_overrides()
+    test_esp32_usb_serial_jtag_settings()
     print("Configuration regression checks passed")
