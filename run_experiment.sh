@@ -74,13 +74,13 @@ do
 
 
     else #For others we generate seeds with our script
-        python3 /GDBMiner/src/eval/generate_inputs.py --config "/example_programs/$target/configuration/configuration_docker.toml" --grammar "/example_programs/$target/$target.grammar" "/example_programs/$target/mimid_seeds" "${NUMBER_OF_SEEDS}"
+        python3 /GDBMiner/src/eval/generate_inputs.py --config "/example_programs/$target/configuration/configuration_docker.toml" --grammar "/example_programs/$target/$target.grammar" --prefix seed "/example_programs/$target/mimid_seeds" "${NUMBER_OF_SEEDS}"
     fi
 
     mkdir -p "/output/$target/" && cp -rf "/example_programs/$target/mimid_seeds" "/output/$target/seeds"
 
     # Generate eval inputs from golden grammar
-    python3 /GDBMiner/src/eval/generate_inputs.py --config "/example_programs/$target/configuration/configuration_docker.toml" --grammar "/example_programs/$target/$target.grammar" "/example_programs/$target/mimid_eval" "${PRECISION_SET_SIZE}"
+    python3 /GDBMiner/src/eval/generate_inputs.py --config "/example_programs/$target/configuration/configuration_docker.toml" --grammar "/example_programs/$target/$target.grammar" --prefix eval "/example_programs/$target/mimid_eval" "${PRECISION_SET_SIZE}"
 
     START_TIME=$(date +%s)
     # Run GDBMiner

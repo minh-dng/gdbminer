@@ -20,6 +20,9 @@ def main() -> None:
 
     parser.add_argument("--config", required=True, type=str, help="Path to a config file.")
     parser.add_argument("--grammar", type=str, help="Path to a grammar file.")
+    parser.add_argument(
+        "--prefix", choices=("seed", "eval"), required=True, help="Input file prefix."
+    )
     parser.add_argument("out", type=str, help="Path to output folder.")
     parser.add_argument("count", type=int, help="Number of files to generate.")
 
@@ -55,7 +58,7 @@ def main() -> None:
             accepted = instance.input_accepted(input.encode())
             if accepted:
                 i += 1
-                (output_directory / f"input.{i}").write_text(input, encoding="utf-8")
+                (output_directory / f"{args.prefix}.{i}.in").write_text(input, encoding="utf-8")
 
 
 if __name__ == "__main__":

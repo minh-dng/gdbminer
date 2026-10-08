@@ -3,4 +3,4 @@
   clang -g -O0 -o calc calc.c 
   
 ## Debug 
-  gdb --args ./calc seeds/input.1
+  gdb --args ./calc seeds/seed.1.in
