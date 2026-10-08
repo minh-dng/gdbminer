@@ -3,19 +3,32 @@
 We are discussing the ESP32-C3 DevKitM-1-N4X hardware setup, firmware wrappers, the Arduino build,
 the debugger and the tracing method. See each target README for more information
 
-GDBMiner needs two separate USB connections to this board. Connect both before you run `trace.py`,
-`mine.py` or `precision_recall.py`. Each target's `configuration.2-cables.toml` holds this setup.
+GDBMiner runs this board in one of two setups. Both debug through the chip's built-in
+USB-Serial/JTAG peripheral; they differ in the port that carries the inputs and the accept/reject
+byte. Connect the cables of your setup before you run `trace.py`, `mine.py` or
+`precision_recall.py`.
 
-|               | UART link                                                    | JTAG link                                             |
-| ------------- | ------------------------------------------------------------ | ----------------------------------------------------- |
-| Chip side     | CP2102N USB-to-UART bridge on UART0                          | Built-in USB-Serial/JTAG on GPIO18 and GPIO19         |
-| Connection    | The board's Micro-USB port                                   | A USB breakout wired to the board pins (see below)    |
-| Mac device    | `/dev/cu.usbserial-<n>`                                      | `/dev/cu.usbmodem<n>` ("USB JTAG_serial debug unit")  |
-| Used for      | Flashing, sending each input, reading the accept/reject byte | OpenOCD and GDB: breakpoints, read triggers, stepping |
-| Configured in | `[Connection] port`                                          | `[GDB] gdb_server_path` (`adapter serial`)            |
+| Setup      | Inputs over               | TOML file                     | `input_channel`         |
+| ---------- | ------------------------- | ----------------------------- | ----------------------- |
+| Two cables | UART (CP2102N, Micro-USB) | `configuration.2-cables.toml` | `esp32-uart`            |
+| One cable  | Native USB (CDC-ACM port) | `configuration.1-cable.toml`  | `esp32-usb-serial-jtag` |
 
-The Micro-USB port is UART-only: the chip's native USB pins (GPIO18 and GPIO19) are not wired to it,
-so the JTAG link needs the extra wiring.
+The firmware source is the same in both setups. The build option `CDCOnBoot` decides whether
+`Serial` is UART0 or the USB-Serial/JTAG serial port, so each setup has its own build directory (see
+[Build and upload](#build-and-upload)): `build-1/` for one cable, `build-2/` for two.
+
+|               | UART link                           | Native USB link                            |
+| ------------- | ----------------------------------- | ------------------------------------------ |
+| Chip side     | CP2102N USB-to-UART bridge on UART0 | Built-in USB-Serial/JTAG on GPIO18 and 19  |
+| Connection    | The board's Micro-USB port          | A USB breakout wired to the pins (below)   |
+| Mac device    | `/dev/cu.usbserial-<n>`             | `/dev/cu.usbmodem<n>`                      |
+| Two cables    | Flashing, each input and its answer | OpenOCD and GDB (debugging)                |
+| One cable     | Not used                            | Debugging, flashing, each input and answer |
+| Configured in | `[Connection] port`                 | `adapter serial`; one cable: also `port`   |
+
+The Micro-USB port is UART-only: the chip's native USB pins (GPIO18 and GPIO19) are not wired to
+it, so the native USB link needs the extra wiring in both setups. macOS lists the native USB device
+as "USB JTAG_serial debug unit".
 
 ## Hardware
 
@@ -47,9 +60,9 @@ Port                            Protocol Type              Board Name          F
 ```
 
 Use the `usbserial-<n>` entry. That is the Micro-USB port on the board, the CP2102N USB-to-UART
-bridge. The `usbmodem<n>` entry is the JTAG link.
+bridge. The `usbmodem<n>` entry is the native USB link.
 
-### JTAG link (native USB on GPIO18 and GPIO19)
+### Native USB link (GPIO18 and GPIO19)
 
 Wire a USB breakout to the board so the Mac talks directly to the chip's USB-Serial/JTAG peripheral:
 
@@ -64,8 +77,13 @@ All four wires are required. D− and D+ form one USB differential pair, referen
 breakout into the Mac. It shows up as a second device next to the UART bridge. A loose joint drops
 this link mid-run: OpenOCD then reports `esp_usb_jtag: device not found`, and the tracer exits on a
 command or stop timeout. The September 30 XML run recorded such a failure. Mining and evaluation
-start OpenOCD in the same way, so they need the JTAG link too, although they only use the UART to
-test inputs.
+start OpenOCD in the same way, so they need this link too, although in the two-cable setup they
+only use the UART to test inputs.
+
+The peripheral is one USB device with two functions: a vendor-specific JTAG adapter, which OpenOCD
+uses, and a CDC-ACM serial port, `/dev/cu.usbmodem<n>` (ESP32-C3 TRM v1.4, §30.2). The one-cable
+setup sends the inputs over that serial port, so the breakout is the only cable: set the
+`usbmodem<n>` path as `port` in `configuration.1-cable.toml`. Esptool flashes over it too.
 
 ### Finding the identifiers
 
@@ -165,8 +183,9 @@ selects this native executable. Omit that property on hosts where the packaged e
 
 ### Build and upload
 
-From the repository root, set `TARGET` to `esp32-c3_json`, `esp32-c3_cgidecode` or `esp32-c3_xml`,
-and use the UART port (see [UART link](#uart-link-micro-usb)):
+From the repository root, set `TARGET` to `esp32-c3_json`, `esp32-c3_cgidecode` or `esp32-c3_xml`.
+For the two-cable setup, build into `build-2/` and upload over the UART port (see
+[UART link](#uart-link-micro-usb)):
 
 ```sh
 TARGET=<?>
@@ -190,6 +209,30 @@ by this command, including the parser. They do not rebuild Espressif's precompil
 
 `CDCOnBoot=default` keeps CDC-on-boot disabled: input uses the UART, while the separate native USB
 connection provides JTAG. No upload is needed for each seed or mining query.
+
+For the one-cable setup, build with `CDCOnBoot=cdc` into `build-1/` and upload over the
+native USB serial port (see [Native USB link](#native-usb-link-gpio18-and-gpio19)):
+
+```sh
+arduino-cli compile \
+  -b esp32:esp32:esp32c3:CDCOnBoot=cdc,FlashMode=dio \
+  --build-property 'compiler.optimization_flags=-O0 -g3 -ggdb3' \
+  --build-property "runtime.tools.ctags.path=$HOME/.local/opt/arduino-ctags/5.8-arduino11/bin" \
+  --build-path "$PWD/example_firmware/$TARGET/build-1" \
+  -v "example_firmware/$TARGET"
+
+arduino-cli upload \
+  -b esp32:esp32:esp32c3:CDCOnBoot=cdc,FlashMode=dio \
+  -p /dev/cu.usbmodem<n> \
+  --input-dir "$PWD/example_firmware/$TARGET/build-1" \
+  "example_firmware/$TARGET"
+```
+
+`CDCOnBoot=cdc` defines `ARDUINO_USB_CDC_ON_BOOT=1` (check `build-1/compile_commands.json`),
+which makes `Serial` the `HWCDC` driver of the USB-Serial/JTAG serial port. Only the driver behind
+`Serial` changes; the wrapper and parser sources are the same, but the ELF is not. Esptool reports
+`USB mode: USB-Serial/JTAG` and can flash either build over this port. OpenOCD must not run while
+it flashes.
 
 ### Upstream sources
 
@@ -242,12 +285,13 @@ Two more files are not installed by Arduino CLI:
 
 ### Values to change on another machine
 
-The three `configuration.2-cables.toml` files hold paths and device names from the recording Mac.
-Change these in each:
+The three `configuration.2-cables.toml` and three `configuration.1-cable.toml` files hold paths and
+device names from the recording Mac. Change these in each:
 
 | Table and key           | Value to change                                                  |
 | ----------------------- | ---------------------------------------------------------------- |
-| `[Connection] port`     | UART device, such as `/dev/cu.usbserial-<n>`.                    |
+| `[Connection] port`     | Two cables: UART device, such as `/dev/cu.usbserial-<n>`.        |
+|                         | One cable: native USB serial port, `/dev/cu.usbmodem<n>`.        |
 | `[GDB] gdb_path`        | Espressif `riscv32-esp-elf-gdb` from the Arduino core.           |
 | `[GDB.esp32c3] rom_elf` | ROM symbol file matching the chip revision.                      |
 | `[GDB] gdb_server_path` | OpenOCD executable, scripts folder and board's `adapter serial`. |
@@ -294,9 +338,9 @@ unexpected breakpoint numbers still fail closed.
 
 Shared debugger settings, including `watchpoint_count` and `watchpoint_type`, stay in `[GDB]`;
 see the [shared configuration reference](../README.md#writing-up-configuration-tomls).
-Set `instance = "esp32c3"` from the [`GDBInstance` enum][gdb-instance] and
-`input_channel = "esp32-uart"` from the [`InputChannel` enum][input-channel].
-C3 settings live in `[GDB.esp32c3]`:
+Set `instance = "esp32c3"` from the [`GDBInstance` enum][gdb-instance] and `input_channel` from
+the [`InputChannel` enum][input-channel]: `"esp32-uart"` for two cables, `"esp32-usb-serial-jtag"`
+for one. C3 settings live in `[GDB.esp32c3]`:
 
 | Table | Field | Type and meaning |
 | --- | --- | --- |
@@ -311,23 +355,44 @@ C3 settings live in `[GDB.esp32c3]`:
 | `Connection` | `reset_pulse_sec` | optional positive finite seconds, default `0.05`. |
 | `Connection` | `quiet_sec` | optional positive finite seconds, default `0.2`. |
 | `Connection` | `grace_sec` | optional positive finite seconds, default `1.0`. |
+| `Connection` | `baud_rate` | `esp32-uart`: positive int, the firmware's 9600; USB: rejected. |
+| `Connection` | `write_gap_sec` | USB only: optional positive finite seconds, default `0.002`. |
 
-After the UART EN reset, native USB/JTAG can disappear briefly. The C3 backend starts
+After the UART EN reset (two cables), native USB/JTAG can disappear briefly. The C3 backend starts
 OpenOCD with an explicit `init` followed by a readiness marker. It retries exited startup
 attempts at `startup_retry_interval` until `GDB.timeout` expires; GDB attaches only after
-successful initialization. Timeout or initialization failure closes the UART worker and
+successful initialization. Timeout or initialization failure closes the serial worker and
 terminates/reaps only the OpenOCD/GDB processes owned by that instance. A stalled OpenOCD
 is terminated at the deadline, with a five-second termination grace before forced kill.
 This replaces the inherited fixed post-spawn sleep, not the STM32 startup path.
 
-The UART timing settings apply to `esp32-uart`. `reset_pulse_sec` holds RTS asserted
+The serial timing settings apply to both ESP32 channels. `reset_pulse_sec` holds RTS asserted
 before release when `reset_pulse = true`. `quiet_sec` is the silence required after the
 latest firmware ready marker during initial/reboot synchronization. `grace_sec`, plus
-packet transfer time at the configured baud rate, is how long to wait for a result after
-a reboot marker before resending a lost packet. The serial read timeout can add up to
-two seconds to that grace wait. Normal traced responses have no UART deadline because
-GDB can hold the parser halted. All three timings reject booleans, zero, negative,
+packet transfer time at the configured baud rate (none on the USB-Serial/JTAG port), is how
+long to wait for a result after a reboot marker before resending a lost packet. The serial
+read timeout can add up to two seconds to that grace wait. Normal traced responses have no
+deadline because GDB can hold the parser halted. All timings reject booleans, zero, negative,
 infinite and NaN values. Omitted settings preserve the prior UART timing defaults.
+
+The USB-Serial/JTAG port differs from the UART in three ways, all handled by
+`ESP32USBSerialJTAGConnection`:
+
+- **Reset.** The peripheral maps RTS and DTR like the bridge's auto-program circuit: RTS asserted
+  with DTR released resets the chip, and it boots from flash once RTS is released (TRM Tables 30.3-2
+  and 30.4-2). The same `rts`, `dtr` and `reset_pulse` settings therefore apply. On the recording
+  Mac, every open of the port reset the chip anyway, and the reset did not drop the USB device:
+  the port and OpenOCD's JTAG connection stayed up, so OpenOCD needed no start-up retry.
+- **No baud rate.** The peripheral ignores the CDC line coding (TRM Table 30.3-1); data moves at USB
+  full speed. For the xml evaluation inputs measured here (26 bytes on average), a query took about
+  1 ms instead of about 35 ms at 9,600 baud; a 2,048-byte input took about 100 ms.
+- **No software-queue backpressure.** The Arduino `HWCDC` driver copies each received USB packet
+  into a 256-byte queue and drops what does not fit; the controller holds the host back only while
+  its own one-packet buffer is not drained, for example while the core is halted. Inputs longer
+  than 252 bytes lost bytes when written at once, and the wrapper then waited forever. The adapter
+  writes 64-byte chunks, `write_gap_sec` apart. The 2 ms default lost nothing in the recorded
+  checks, up to 2,048-byte inputs; this is open-loop pacing, so a shorter gap leaves the tested
+  range.
 
 For JSON:
 
@@ -342,17 +407,17 @@ The six JSON watchpoints occupy slots 2-7. CGI starts at slot 0 with eight watch
 at slot 1 with seven. XML also sets `breakpoint_always_inserted = true` in this table to keep its
 exit breakpoint inserted across steps, as in the measured run.
 
-`reset_on_connect = false` avoids a second reset after the serial adapter's EN pulse. It also leaves
-reconnect recovery to that adapter. Keep the serial control-line and reset settings in
+`reset_on_connect = false` avoids a second reset after the serial adapter's reset pulse. It also
+leaves reconnect recovery to that adapter. Keep the serial control-line and reset settings in
 `[Connection]`. The adapter waits for
 the firmware's ready marker, so no `boot_delay` setting is needed. If you disable `reset_pulse`,
 also set `rts = false` so EN is released.
 
 ARM DWT registers and `dwt_watchpoint_workaround` belong only in `[GDB.stm32]`. The C3 uses RISC-V
 read triggers and requires no DWT placeholder or workaround flag. The loader rejects unknown or
-misplaced C3 fields, obsolete connection settings, the generic serial channel, DWT settings on the
-C3, non-bool flags and trigger windows outside slots 0-7 before starting the debugger or serial
-worker.
+misplaced C3 fields, obsolete connection settings, the generic serial channel, a baud rate on the
+USB-Serial/JTAG channel, DWT settings on the C3, non-bool flags and trigger windows outside slots
+0-7 before starting the debugger or serial worker.
 
 ### Running the evaluation
 
@@ -361,7 +426,7 @@ order:
 
 ```sh
 TARGET=esp32-c3_json
-CONFIG=example_firmware/$TARGET/configuration/configuration.2-cables.toml
+CONFIG=example_firmware/$TARGET/configuration/configuration.2-cables.toml  # or .1-cable.toml
 PYTHONPATH=src .venv/bin/python src/tracer/trace.py --config "$CONFIG"
 PYTHONPATH=src .venv/bin/python src/miner/mine.py --config "$CONFIG"
 PYTHONPATH=src .venv/bin/python src/eval/precision_recall.py \
@@ -372,8 +437,10 @@ PYTHONPATH=src .venv/bin/python src/eval/precision_recall.py \
 use the newest `trial-<n>`, and `mine.py` pairs traces with seeds by sorted file name. Mine only
 after a trace run has written a trace for every seed. A failed or stopped trace run still leaves its
 `trial-<n>`, which mining would then select. Pass `--out` to keep the scores; without it, they are
-only in the log. Before each stage, check that no earlier process still holds the UART (`lsof
-/dev/cu.usbserial-<n>`): stopping `trace.py` or `mine.py` can leave its serial worker running.
+only in the log. Before each stage, check that no earlier process still holds the input port
+(`lsof /dev/cu.usbserial-<n>` or `lsof /dev/cu.usbmodem<n>`): stopping `trace.py` or `mine.py` can
+leave its serial worker running. With one cable, an orphaned worker also blocks esptool.
+The one-cable traces go to `output/<target>-1-cable/`, so a trial never mixes the two builds.
 
 ### Tracing: the paper replica method
 

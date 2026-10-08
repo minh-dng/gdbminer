@@ -15,15 +15,17 @@ The STM32 reference targets use the B-L4S5I-IOT01A Discovery kit, with an STM32L
 supporting a 120 MHz core clock.
 
 The C3 board's Micro-USB port provides UART through a USB-to-UART bridge, **not JTAG**. The C3
-workflow needs a second USB connection wired to the native USB pins. Follow the
-[hardware setup][c3-setup] before connecting the debugger.
+workflow needs a USB connection wired to the native USB pins, for the debugger and, in the
+one-cable setup, also for the inputs. Follow the [hardware setup][c3-setup] before connecting the
+debugger.
 
 ## Parser targets
 
 Each target includes firmware, seed inputs, an evaluation corpus and a TOML file in
-`configuration/`: `configuration.toml` for STM32 and `configuration.2-cables.toml` for the C3
-two-cable setup. The C3 targets port the corresponding STM32 parser wrappers;
-platform differences and validation notes are documented in their READMEs.
+`configuration/`: `configuration.toml` for STM32, and `configuration.2-cables.toml` and
+`configuration.1-cable.toml` for the C3 two-cable and one-cable setups. The C3 targets port the
+corresponding STM32 parser wrappers; platform differences and validation notes are documented in
+their READMEs.
 
 | Parser                        | STM32 reference              | ESP32-C3 port                |
 | ----------------------------- | ---------------------------- | ---------------------------- |
@@ -59,7 +61,8 @@ same port.
 Follow the [C3 setup guide][c3-setup] for the Arduino CLI toolchain, dual USB connections,
 Espressif GDB, OpenOCD and chip-revision-specific ROM symbols. Then follow the chosen target's
 README to install its parser library, build and upload. The expected firmware ELF is
-`example_firmware/<target>/build-2/<target>.ino.elf`.
+`example_firmware/<target>/build-1/<target>.ino.elf` for one cable and
+`example_firmware/<target>/build-2/<target>.ino.elf` for two.
 
 Use the target's existing watchpoint budget and trigger window as the starting point. The C3's
 hardware breakpoints and read triggers share eight slots; assigning all eight to input reads is

@@ -32,7 +32,8 @@ arduino-cli lib install 'percent_encode@2.0.1'
 arduino-cli lib list
 ```
 
-The expected ELF is `build-2/esp32-c3_cgidecode.ino.elf`.
+The expected ELF is `build-2/esp32-c3_cgidecode.ino.elf` for two cables and
+`build-1/esp32-c3_cgidecode.ino.elf` for one cable.
 
 ## Tracing
 

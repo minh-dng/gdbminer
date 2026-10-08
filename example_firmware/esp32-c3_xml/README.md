@@ -33,7 +33,8 @@ arduino-cli lib install 'LibYxml@1.0.2'
 arduino-cli lib list
 ```
 
-The expected ELF is `build-2/esp32-c3_xml.ino.elf`.
+The expected ELF is `build-2/esp32-c3_xml.ino.elf` for two cables and
+`build-1/esp32-c3_xml.ino.elf` for one cable.
 
 ## Tracing
 

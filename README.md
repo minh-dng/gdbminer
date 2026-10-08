@@ -117,7 +117,7 @@ STM32, MSP430 and ESP32-C3 require the following server fields in `[GDB]` and se
 | `GDB` | `gdb_server_address` | str, GDB remote address, such as `":4242"`. |
 | `Connection` | `input_channel` | str, value from the [`InputChannel` enum][input-channel]. |
 | `Connection` | `port` | str, serial device path. |
-| `Connection` | `baud_rate` | positive int, serial baud rate. |
+| `Connection` | `baud_rate` | positive int, baud rate; omit for `esp32-usb-serial-jtag`. |
 
 Choose the watchpoint count for your hardware. Only the selected MCU's settings are validated
 and read. Board-specific fields and setup instructions live in the
