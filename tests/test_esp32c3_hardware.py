@@ -17,7 +17,7 @@ from tracer.instance.esp32c3_debug import (
     DCSRMask,
     MControlFlag,
 )
-from tracer.instance.esp32c3_instance import ReadTrigger
+from tracer.instance.esp32c3_instance import _ReadTrigger
 
 
 def configuration():
@@ -62,7 +62,7 @@ class TestHardwareContract:
             "DMODE": 0x8000000,
             "TYPE_MCONTROL": 0x20000000,
         }
-        assert ESP32C3Instance.MCONTROL == 0x28001041
+        assert ESP32C3Instance._MCONTROL == 0x28001041
         assert MCONTROL_ACCESS_MASK == 0x7
         assert MCONTROL_CONTROL_MASK == 0xF81FFFFF
         assert DCSRMask.CAUSE == 0x1C0
@@ -139,7 +139,7 @@ class TestHardwareContract:
         config["GDB"]["esp32c3"]["hardware_trigger_slot"] = first_slot
         instance = ESP32C3Instance(config, "unused")
         instance._triggers = {
-            f"c3-read-{first_slot + offset}": ReadTrigger(
+            f"c3-read-{first_slot + offset}": _ReadTrigger(
                 first_slot + offset, 0x100 + offset, offset, 0, 0
             )
             for offset in range(count)
@@ -156,7 +156,7 @@ class TestHardwareContract:
                 first_slot + i: (
                     0
                     if i in disabled
-                    else ESP32C3Instance.MCONTROL | (MControlFlag.HIT if i in hits else 0),
+                    else ESP32C3Instance._MCONTROL | (MControlFlag.HIT if i in hits else 0),
                     0x100 + i,
                 )
                 for i in range(count)
@@ -282,7 +282,7 @@ class TestHardwareContract:
     def test_failed_trigger_init_still_disables_slot(self):
         instance = ESP32C3Instance(configuration(), "unused")
         instance._halted = True
-        instance._triggers = {"c3-read-0": ReadTrigger(0, 0x100, 0, 0, 0)}
+        instance._triggers = {"c3-read-0": _ReadTrigger(0, 0x100, 0, 0, 0)}
         # Partial init left an unexpected active trigger; cleanup must still disable it.
         instance._read_registers = Mock(return_value=({0: (0, 0)}, 0))
         instance._monitor = Mock()
@@ -500,7 +500,7 @@ class TestHardwareContract:
         for slot in [0, 1]:
             text += (
                 f"tselect (/32): {slot:#x}\ntselect (/32): {slot:#x}\n"
-                f"tdata1 (/32): {instance.MCONTROL:#x}\ntdata2 (/32): {0x100 + slot:#x}\n"
+                f"tdata1 (/32): {instance._MCONTROL:#x}\ntdata2 (/32): {0x100 + slot:#x}\n"
             )
         text += "dcsr (/32): 0x100\n"
         instance._monitor = Mock(return_value=text)

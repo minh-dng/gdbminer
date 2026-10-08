@@ -15,7 +15,7 @@ from util import Config
 
 from .sut_instance import SUTInstance
 
-GDB_SERVER_STOP_TIMEOUT_SEC = 5
+_GDB_SERVER_STOP_TIMEOUT_SEC = 5
 """Time the GDB server gets to exit after SIGTERM before `_stop_gdb_server` kills it."""
 
 
@@ -88,7 +88,7 @@ class HardwareInstance(SUTInstance, ABC):
         """
         self.gdb_server.terminate()
         try:
-            self.gdb_server.wait(timeout=GDB_SERVER_STOP_TIMEOUT_SEC)
+            self.gdb_server.wait(timeout=_GDB_SERVER_STOP_TIMEOUT_SEC)
         except subprocess.TimeoutExpired:
             self.gdb_server.kill()
             self.gdb_server.wait()

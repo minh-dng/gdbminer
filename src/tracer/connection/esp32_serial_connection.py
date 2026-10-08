@@ -14,10 +14,10 @@ from util import Config
 from .connection_base_class import ConnectionBaseClass
 from .sut_connection import LENGTH_PREFIX, READY_BYTE, ParserResult
 
-UART_BITS_PER_BYTE = 10
+_UART_BITS_PER_BYTE = 10
 """Bits on the wire per byte with PySerial's default 8N1: one start, eight data, one stop bit."""
 
-USB_PACKET_SIZE = 64
+_USB_PACKET_SIZE = 64
 """Largest data payload of a USB full-speed bulk packet, and of one packet that the
 USB-Serial/JTAG controller accepts from the host (ESP32-C3 TRM v1.4, §30.3.1)."""
 
@@ -190,7 +190,7 @@ class ESP32UARTConnection(ESP32SerialConnection):
     @override
     def _transfer_sec(self, size: int) -> float:
         """Wire time at the baud rate: the bridge buffers what the host sent and shifts it out."""
-        return size * UART_BITS_PER_BYTE / self.serial.baudrate
+        return size * _UART_BITS_PER_BYTE / self.serial.baudrate
 
 
 class ESP32USBSerialJTAGConnection(ESP32SerialConnection):
@@ -233,10 +233,10 @@ class ESP32USBSerialJTAGConnection(ESP32SerialConnection):
 
     @override
     def _write(self, packet: bytes) -> None:
-        for start in range(0, len(packet), USB_PACKET_SIZE):
+        for start in range(0, len(packet), _USB_PACKET_SIZE):
             if start:
                 time.sleep(self.write_gap_sec)
-            self.serial.write(packet[start : start + USB_PACKET_SIZE])
+            self.serial.write(packet[start : start + _USB_PACKET_SIZE])
             # Drain this chunk to the device before the pause starts.
             self.serial.flush()
 
