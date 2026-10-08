@@ -24,7 +24,7 @@ rm -rf "$OUT_DIR"
 mkdir -p "$OUT_DIR/bin" "$OUT_DIR/work/seeds" "$OUT_DIR/work/eval" "$OUT_DIR/work/out"
 
 cp example_programs/json/seeds/seed.{1,2,3}.in "$OUT_DIR/work/seeds/"
-cp example_programs/json/eval/input.{1,2,3,4,5,6,7,8,9,10} "$OUT_DIR/work/eval/"
+cp example_programs/json/eval/eval.{1,2,3,4,5,6,7,8,9,10}.in "$OUT_DIR/work/eval/"
 
 "$CC" -g -O0 -no-pie -o "$OUT_DIR/bin/json" example_programs/json/json.c
 
