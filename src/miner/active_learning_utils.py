@@ -13,7 +13,7 @@ import copy
 import logging
 
 from cmimid import util
-from tracer.instance.sut_instance import SUTInstance
+from tracer.instance import SUTInstance
 
 # Tree = Tuple[]
 # Node = Tuple[str, ]

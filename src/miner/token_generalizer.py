@@ -18,8 +18,8 @@ import cmimid.fuzz as F
 from cmimid import grammartools, util
 from cmimid.fuzz import ASCII_MAP, CHARACTER_PARENT_MAP
 from miner.active_learning_utils import is_a_replaceable_with_b
-from tracer.gdb_tracer import GDBTracer
-from tracer.instance.sut_instance import SUTInstance
+from tracer import GDBTracer
+from tracer.instance import SUTInstance
 from util import Config
 
 # Nested parse trees as produced by the Mimid fuzzer / util helpers.

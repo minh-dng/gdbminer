@@ -3,12 +3,12 @@ from unittest.mock import Mock, call, patch
 
 import pytest
 
-from tracer.connection.esp32_serial_connection import (
+from tracer.connection import (
+    READY_BYTE,
     ESP32SerialConnection,
     ESP32UARTConnection,
     ESP32USBSerialJTAGConnection,
 )
-from tracer.connection.sut_connection import READY_BYTE
 
 READY = bytes([READY_BYTE])
 

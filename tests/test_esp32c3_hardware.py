@@ -8,16 +8,16 @@ from unittest.mock import Mock, call, patch
 
 import pytest
 
+from tracer.instance import HARDWARE_TRIGGER_COUNT, ESP32C3Instance
 from tracer.instance.esp32c3_debug import (
     DCSR_CAUSE_OFFSET,
-    HARDWARE_TRIGGER_COUNT,
     MCONTROL_ACCESS_MASK,
     MCONTROL_CONTROL_MASK,
     DCSRCause,
     DCSRMask,
     MControlFlag,
 )
-from tracer.instance.esp32c3_instance import ESP32C3Instance, ReadTrigger
+from tracer.instance.esp32c3_instance import ReadTrigger
 
 
 def configuration():

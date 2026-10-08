@@ -4,12 +4,8 @@ from copy import deepcopy
 from pathlib import Path
 from unittest.mock import patch
 
-from tracer import trace
-from tracer.gdb_tracer import GDBTracer
-from tracer.instance.esp32c3_instance import ESP32C3Instance
-from tracer.instance.hardware_instance import HardwareInstance
-from tracer.instance.msp430_instance import MSP430Instance
-from tracer.instance.stm32_instance import STM32Instance
+from tracer import GDBTracer, trace
+from tracer.instance import ESP32C3Instance, HardwareInstance, MSP430Instance, STM32Instance
 from util import load_config
 from util.config import _validate_config
 

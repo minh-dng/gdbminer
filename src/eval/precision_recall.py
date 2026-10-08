@@ -12,7 +12,7 @@ from pathlib import Path
 import cmimid.fuzz as F
 from eval import resolve_grammar_file
 from eval.grammar import accepts
-from tracer.gdb_tracer import GDBTracer
+from tracer import GDBTracer
 from util import find_output_directory, load_config, setup_logging
 
 PRECISION_SIZE = int(os.environ.get("PRECISION_SET_SIZE", "1000"))
