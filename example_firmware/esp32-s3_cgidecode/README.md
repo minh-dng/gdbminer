@@ -28,7 +28,8 @@ Arduino core's start-up banner differ.
 
 ## Tracing
 
-As in `stm32_cgidecode`, the entry point is `percent::decode` and nothing is skipped. Two read
-watchpoints per run, at least 4 bytes apart (`watchpoint_min_distance = 4`). No exit breakpoint or
-`finish` is needed. The method is in the [S3 setup
+As in `stm32_cgidecode`, the entry point is `percent::decode` and nothing is skipped. No exit
+breakpoint or `finish` is needed. `configuration.1-watchpoint.toml` watches one byte per run;
+`configuration.2-watchpoints.toml` watches two, at least 4 bytes apart
+(`watchpoint_min_distance = 4`). The method is in the [S3 setup
 guide](../ESP32-S3-Zero.md#tracing-the-paper-replica-method).

@@ -28,9 +28,9 @@ Arduino core's start-up banner differ.
 
 ## Tracing
 
-`configuration/configuration.toml` follows `stm32_arduinojson`: same entry point (`cJSON_Parse`) and
-the same `ignore_functions_regex`, skipped with GDB `finish`; `__aeabi_dadd` is written as
-`__adddf3`. `strlen` and `memset` run from mask ROM and are reached through ROM jump stubs, which
-the adapter follows to the routine's `ENTRY`. Each `finish` takes one instruction breakpoint: the
-ELF has no `_Unwind_DebugHook`. The method is in the [S3 setup
-guide](../ESP32-S3-Zero.md#tracing-the-paper-replica-method).
+Both configurations (`configuration.1-watchpoint.toml`, `configuration.2-watchpoints.toml`) follow
+`stm32_arduinojson`: same entry point (`cJSON_Parse`) and the same `ignore_functions_regex`, skipped
+with GDB `finish`; `__aeabi_dadd` is written as `__adddf3`. `strlen` and `memset` run from mask ROM
+and are reached through ROM jump stubs, which the adapter follows to the routine's `ENTRY`. Each
+`finish` takes one instruction breakpoint: the ELF has no `_Unwind_DebugHook`. The method is in the
+[S3 setup guide](../ESP32-S3-Zero.md#tracing-the-paper-replica-method).

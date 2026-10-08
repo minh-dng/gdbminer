@@ -37,5 +37,6 @@ Arduino core's start-up banner differ.
 
 The ignore list is the STM32 one, with `__aeabi_dadd` written as its libgcc name `__adddf3`.
 `yxml_parse` reaches only LibYxml functions, so no `finish` occurs in practice. The exit breakpoint
-takes one of the two instruction breakpoints; the two data breakpoints observe input bytes. The
+takes one of the two instruction breakpoints. `configuration.1-watchpoint.toml` observes one input
+byte per run with DBREAK0; `configuration.2-watchpoints.toml` observes two with both DBREAKs. The
 method is in the [S3 setup guide](../ESP32-S3-Zero.md#tracing-the-paper-replica-method).
