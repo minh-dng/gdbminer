@@ -128,7 +128,7 @@ and read. Board-specific fields and setup instructions live in the
 To evaluate GDBMiner, we generate inputs using a grammar. For instance, create 1000 inputs for evaluation:
 
 ```sh
-uv run src/eval/generate_inputs.py --config ./example_programs/json/configuration/configuration.toml --grammar ./example_programs/json/json.grammar ./example_programs/json/eval 1000
+uv run src/eval/generate_inputs.py --config ./example_programs/json/configuration/configuration.toml --grammar ./example_programs/json/json.grammar --prefix eval ./example_programs/json/eval 1000
 ```
 
 ## Run local
