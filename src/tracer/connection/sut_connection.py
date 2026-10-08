@@ -38,6 +38,7 @@ class InputChannel(StrEnum):
 
     SERIAL = "serial"
     ESP32_UART = "esp32-uart"
+    ESP32_USB_SERIAL_JTAG = "esp32-usb-serial-jtag"
 
 
 class SUTConnection:
@@ -67,6 +68,14 @@ class SUTConnection:
                 from tracer.connection.esp32_serial_connection import ESP32UARTConnection
 
                 connection = ESP32UARTConnection(config, self.inputs, self.responses, self.ready)
+            case InputChannel.ESP32_USB_SERIAL_JTAG:
+                from tracer.connection.esp32_serial_connection import (
+                    ESP32USBSerialJTAGConnection,
+                )
+
+                connection = ESP32USBSerialJTAGConnection(
+                    config, self.inputs, self.responses, self.ready
+                )
 
         connection.daemon = True
         connection.start()

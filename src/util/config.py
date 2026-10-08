@@ -57,16 +57,25 @@ def _validate_config(config: Config) -> None:
     for key in ("gdb_server_path", "gdb_server_address"):
         _require(gdb, key, str)
     connection = _require(config, "Connection", dict)
-    if _require(connection, "input_channel", str) not in InputChannel:
-        raise ValueError(f"Unsupported Connection.input_channel: {connection['input_channel']!r}")
+    channel = _require(connection, "input_channel", str)
+    if channel not in InputChannel:
+        raise ValueError(f"Unsupported Connection.input_channel: {channel!r}")
     _require(connection, "port", str)
-    if _require(connection, "baud_rate", int) <= 0:
+    if channel == InputChannel.ESP32_USB_SERIAL_JTAG:
+        if "baud_rate" in connection:
+            raise ValueError(f"Remove Connection.baud_rate: the '{channel}' port has no baud rate")
+    elif _require(connection, "baud_rate", int) <= 0:
         raise ValueError("Connection.baud_rate must be positive")
-    if connection["input_channel"] == InputChannel.ESP32_UART:
+    if "write_gap_sec" in connection and channel != InputChannel.ESP32_USB_SERIAL_JTAG:
+        raise ValueError(
+            f"Connection.write_gap_sec applies only to '{InputChannel.ESP32_USB_SERIAL_JTAG}'"
+        )
+    esp32_channels = (InputChannel.ESP32_UART, InputChannel.ESP32_USB_SERIAL_JTAG)
+    if channel in esp32_channels:
         for key in ("dtr", "rts", "reset_pulse"):
             if key in connection:
                 _require(connection, key, bool)
-        for key in ("quiet_sec", "grace_sec", "reset_pulse_sec"):
+        for key in ("quiet_sec", "grace_sec", "reset_pulse_sec", "write_gap_sec"):
             if key in connection:
                 seconds = _require(connection, key, (int, float))
                 if not math.isfinite(seconds) or seconds <= 0:
@@ -86,9 +95,10 @@ def _validate_config(config: Config) -> None:
     elif instance == GDBInstance.ESP32C3:
         from tracer.instance.esp32c3_debug import HARDWARE_TRIGGER_COUNT
 
-        if connection["input_channel"] != InputChannel.ESP32_UART:
+        if channel not in esp32_channels:
             raise ValueError(
-                f"ESP32-C3 Connection.input_channel must be '{InputChannel.ESP32_UART}'"
+                "ESP32-C3 Connection.input_channel must be one of "
+                + ", ".join(f"'{value}'" for value in esp32_channels)
             )
         for key in ("boot_delay", "max_input_size"):
             if key in connection:

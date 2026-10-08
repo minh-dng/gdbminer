@@ -184,6 +184,30 @@ def test_config():
     assert instance.gdb_server_path_with_args == ["/opt/tool chain/mspdebug", "gdb"]
 
 
+def test_esp32_usb_serial_jtag_settings():
+    uart = load_config(C3_CONFIG)
+    usb = deepcopy(uart)
+    usb["Connection"].pop("baud_rate")
+    usb["Connection"].update(input_channel="esp32-usb-serial-jtag", write_gap_sec=0.001)
+    _validate_config(usb)
+
+    invalid = [(usb, "baud_rate", 9600), (uart, "write_gap_sec", 0.002)]
+    invalid += [
+        (usb, "write_gap_sec", value)
+        for value in (True, "0.002", 0, -1, float("inf"), float("nan"))
+    ]
+    for base, key, value in invalid:
+        config = deepcopy(base)
+        config["Connection"][key] = value
+        try:
+            _validate_config(config)
+        except (TypeError, ValueError) as exc:
+            assert key in str(exc), str(exc)
+        else:
+            raise AssertionError(f"Accepted Connection.{key} = {value!r}")
+
+
 if __name__ == "__main__":
     test_config()
+    test_esp32_usb_serial_jtag_settings()
     print("Configuration regression checks passed")

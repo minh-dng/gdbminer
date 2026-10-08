@@ -1,25 +1,25 @@
-# (2) USB cable option. Build with CDCOnBoot=default into build-2/.
+# (1) USB cable option. Build with CDCOnBoot=cdc into build-1/.
 # GDBMiner configuration for ESP32-C3-DevKitM-1 json adapter.
 # Paper replica (Eisele et al. 2025, Section 5.4) of stm32_arduinojson:
 # same library, entry point, seeds and ignore list; raw hardware read triggers.
 # Do not mix these outputs with any custom-parser traces or grammars.
 [BASIC]
 seed_directory = "./example_firmware/esp32-c3_json/seeds"
-output_directory = "./output/esp32-c3_json/"
-binary_file = "./example_firmware/esp32-c3_json/build-2/esp32-c3_json.ino.elf"
+output_directory = "./output/esp32-c3_json-1-cable/"
+binary_file = "./example_firmware/esp32-c3_json/build-1/esp32-c3_json.ino.elf"
 eval_directory = "./example_firmware/esp32-c3_json/eval"
 
 [Connection]
-input_channel = "esp32-uart"
-port = "/dev/cu.usbserial-110"
-baud_rate = 9600
+input_channel = "esp32-usb-serial-jtag"
+# CDC port of the native USB-Serial/JTAG device; OpenOCD uses its JTAG function.
+port = "/dev/cu.usbmodem2101"
 rts = true
 reset_pulse = true
 
 [GDB]
 gdb_path = "/Users/dan173/Library/Arduino15/packages/esp32/tools/riscv32-esp-elf-gdb/17.1_20260402/bin/riscv32-esp-elf-gdb"
 instance = "esp32c3"
-# Requires the separate USB-JTAG link; the DevKitM-1 Micro-USB port is UART-only.
+# The same native USB link as the inputs; the Micro-USB (UART) port stays unused.
 # 40 MHz is the USB-JTAG base clock used in the recorded runs.
 gdb_server_path = '''/Users/dan173/.espressif/openocd-esp32/bin/openocd
   -s /Users/dan173/.espressif/openocd-esp32/share/openocd/scripts
@@ -43,7 +43,7 @@ input_buffer = "buf"
 rom_elf = "/Users/dan173/.espressif/tools/esp-rom-elfs/20241011/esp32c3_rev101_rom.elf"
 # GDB finish needs slots 0-1 for its return and C++ exception-hook breakpoints.
 hardware_trigger_slot = 2
-# The serial EN pulse already restarts firmware before GDB connects.
+# The serial reset pulse already restarts firmware before GDB connects.
 reset_on_connect = false
 
 [LOGS]
