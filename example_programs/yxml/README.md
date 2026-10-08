@@ -3,4 +3,4 @@
   clang -g -O0 -o yxml yxml.c 
   
 ## Debug 
-  gdb --args ./yxml seeds/yxml.input.1
+  gdb --args ./yxml seeds/seed.1.in

@@ -3,4 +3,4 @@
   clang -g -O0 -o json json.c 
   
 ## Debug 
-  gdb --args ./json seeds/json.input.1
+  gdb --args ./json seeds/seed.1.in
