@@ -91,6 +91,12 @@ class ESP32S3Instance(ESP32Instance[_DataBreak]):
         # GDB inserts the watchpoints, so they must stay in DBREAK while the core is halted: every
         # step reads them back. GDB would otherwise remove them at each stop.
         self.breakpoint_always_inserted = True
+        # After OpenOCD's `reset halt`, the USB device re-enumerated on the board and the open serial
+        # port failed ("Device not configured"). The serial reset pulse restarts the firmware
+        # instead, at start-up and after a reconnect.
+        if self.chip_config.get("reset_on_connect", False):
+            raise ValueError("S3 reset_on_connect must be false: a reset closes the serial port")
+        self.reset_on_connect = False
         self.startup_delay = self.chip_config.get("startup_delay", 3.0)
         """Seconds between the serial reset and OpenOCD's start (`GDB.esp32s3.startup_delay`).
 

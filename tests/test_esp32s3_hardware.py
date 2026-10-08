@@ -387,3 +387,11 @@ class TestAttach:
 
     def test_watchpoints_stay_inserted_while_halted(self):
         assert ESP32S3Instance(configuration(), "unused").breakpoint_always_inserted
+
+    def test_no_debugger_reset_by_default_and_none_allowed(self):
+        # OpenOCD's reset re-enumerates the USB device and closes the serial port.
+        assert not ESP32S3Instance(configuration(), "unused").reset_on_connect
+        config = configuration()
+        config["GDB"]["esp32s3"]["reset_on_connect"] = True
+        with pytest.raises(ValueError, match="reset_on_connect"):
+            ESP32S3Instance(config, "unused")

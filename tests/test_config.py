@@ -432,6 +432,7 @@ def test_esp32s3_settings():
         ("esp32s3", "usb_reset_command", ["reset"]),
         ("esp32s3", "rom_elf", 123),
         ("esp32s3", "reset_on_connect", "false"),
+        ("esp32s3", "reset_on_connect", True),
         ("esp32s3", "hardware_trigger_slot", 0),
         ("esp32s3", "breakpoint_always_inserted", False),
         ("esp32s3", "dwt_watchpoint_workaround", False),

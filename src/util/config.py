@@ -141,6 +141,11 @@ def _validate_config(config: Config) -> None:
                 raise ValueError("GDB.esp32s3.startup_delay must be non-negative and finite")
         if "usb_reset_command" in s3:
             _require(s3, "usb_reset_command", str)
+        if s3.get("reset_on_connect", False):
+            raise ValueError(
+                "ESP32-S3 reset_on_connect must be false: after OpenOCD's reset, the "
+                "USB-Serial/JTAG device re-enumerates and the serial port fails"
+            )
         if gdb["watchpoint_count"] > DATA_BREAKPOINT_COUNT:
             raise ValueError(
                 f"ESP32-S3 watchpoint_count must be at most {DATA_BREAKPOINT_COUNT} (DBREAK pairs)"
