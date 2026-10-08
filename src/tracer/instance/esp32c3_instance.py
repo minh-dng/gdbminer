@@ -13,8 +13,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import NotRequired, TypedDict, cast, override
 
-from tracer.connection.sut_connection import SUTConnection
-from tracer.instance.esp32c3_debug import (
+from tracer.connection import SUTConnection
+from util import Config
+
+from .esp32c3_debug import (
     DCSR_CAUSE_OFFSET,
     HARDWARE_TRIGGER_COUNT,
     MCONTROL_ACCESS_MASK,
@@ -23,8 +25,7 @@ from tracer.instance.esp32c3_debug import (
     DCSRMask,
     MControlFlag,
 )
-from tracer.instance.hardware_instance import HardwareInstance, MIReason
-from util import Config
+from .hardware_instance import HardwareInstance, MIReason
 
 
 class StopFrame(TypedDict, total=False):
