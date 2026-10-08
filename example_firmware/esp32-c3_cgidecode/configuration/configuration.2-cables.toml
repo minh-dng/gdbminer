@@ -1,11 +1,11 @@
-# (2) USB cable option. Build with CDCOnBoot=default.
+# (2) USB cable option. Build with CDCOnBoot=default into build-2/.
 # GDBMiner configuration for ESP32-C3-DevKitM-1 cgidecode adapter.
 # Paper replica (Eisele et al. 2025, Section 5.4) of stm32_cgidecode:
 # same percent_encode library, entry point, seeds and (empty) ignore list.
 [BASIC]
 seed_directory = "./example_firmware/esp32-c3_cgidecode/seeds"
 output_directory = "./output/esp32-c3_cgidecode/"
-binary_file = "./example_firmware/esp32-c3_cgidecode/build/esp32-c3_cgidecode.ino.elf"
+binary_file = "./example_firmware/esp32-c3_cgidecode/build-2/esp32-c3_cgidecode.ino.elf"
 eval_directory = "./example_firmware/esp32-c3_cgidecode/eval"
 
 [Connection]

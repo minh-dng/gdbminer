@@ -175,18 +175,18 @@ arduino-cli compile \
   -b esp32:esp32:esp32c3:CDCOnBoot=default,FlashMode=dio \
   --build-property 'compiler.optimization_flags=-O0 -g3 -ggdb3' \
   --build-property "runtime.tools.ctags.path=$HOME/.local/opt/arduino-ctags/5.8-arduino11/bin" \
-  --build-path "$PWD/example_firmware/$TARGET/build" \
+  --build-path "$PWD/example_firmware/$TARGET/build-2" \
   -v "example_firmware/$TARGET"
 
 arduino-cli upload \
   -b esp32:esp32:esp32c3:CDCOnBoot=default,FlashMode=dio \
   -p /dev/cu.usbserial-<n> \
-  --input-dir "$PWD/example_firmware/$TARGET/build" \
+  --input-dir "$PWD/example_firmware/$TARGET/build-2" \
   "example_firmware/$TARGET"
 ```
 
-The expected ELF is `build/$TARGET.ino.elf`. `-O0` and debug information apply to source compiled by
-this command, including the parser. They do not rebuild Espressif's precompiled SDK libraries.
+The expected ELF is `build-2/$TARGET.ino.elf`. `-O0` and debug information apply to source compiled
+by this command, including the parser. They do not rebuild Espressif's precompiled SDK libraries.
 
 `CDCOnBoot=default` keeps CDC-on-boot disabled: input uses the UART, while the separate native USB
 connection provides JTAG. No upload is needed for each seed or mining query.
@@ -218,7 +218,7 @@ are unchanged.
 Check a debugger against an ELF without a board:
 
 ```sh
-gdb -batch -nx -ex 'break cJSON_Parse' example_firmware/esp32-c3_json/build/esp32-c3_json.ino.elf
+gdb -batch -nx -ex 'break cJSON_Parse' example_firmware/esp32-c3_json/build-2/esp32-c3_json.ino.elf
 ```
 
 Result (checked 2026-09-30, json ELF `f6cf61b7…`): Homebrew GDB exits with 139. Espressif's GDB
@@ -409,7 +409,7 @@ temporary entry breakpoint fires. This lets CGI reach its parser before reservin
     `esptool` as one set. That set is the reason for this migration: the earlier build mixed a
     manually chosen GCC 16.1 with an older prebuilt framework and needed `toolchain_stubs.c` to
     link. The STM32 reference targets also use the Arduino framework, so the wrapper keeps the
-    structure of the paper's setup. Arduino CLI records its options in `build/build.options.json`,
+    structure of the paper's setup. Arduino CLI records its options in `build-2/build.options.json`,
     so one pinned command repeats the build.
 
 [gdb-instance]: ../src/tracer/instance/sut_instance.py

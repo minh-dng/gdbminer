@@ -24,7 +24,7 @@ Confirm library 0.2.0 before building.
 ## Build and upload
 
 Build and flash as in [Build and upload](../ESP32-C3%20DevKitM-1-N4X.md#build-and-upload)
-with `TARGET=esp32-c3_json`. The expected ELF is `build/esp32-c3_json.ino.elf`.
+with `TARGET=esp32-c3_json`. The expected ELF is `build-2/esp32-c3_json.ino.elf`.
 
 ## Tracing
 

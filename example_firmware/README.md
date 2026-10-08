@@ -59,7 +59,7 @@ same port.
 Follow the [C3 setup guide][c3-setup] for the Arduino CLI toolchain, dual USB connections,
 Espressif GDB, OpenOCD and chip-revision-specific ROM symbols. Then follow the chosen target's
 README to install its parser library, build and upload. The expected firmware ELF is
-`example_firmware/<target>/build/<target>.ino.elf`.
+`example_firmware/<target>/build-2/<target>.ino.elf`.
 
 Use the target's existing watchpoint budget and trigger window as the starting point. The C3's
 hardware breakpoints and read triggers share eight slots; assigning all eight to input reads is

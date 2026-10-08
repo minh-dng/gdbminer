@@ -1,4 +1,4 @@
-# (2) USB cable option. Build with CDCOnBoot=default.
+# (2) USB cable option. Build with CDCOnBoot=default into build-2/.
 # GDBMiner configuration for ESP32-C3-DevKitM-1 json adapter.
 # Paper replica (Eisele et al. 2025, Section 5.4) of stm32_arduinojson:
 # same library, entry point, seeds and ignore list; raw hardware read triggers.
@@ -6,7 +6,7 @@
 [BASIC]
 seed_directory = "./example_firmware/esp32-c3_json/seeds"
 output_directory = "./output/esp32-c3_json/"
-binary_file = "./example_firmware/esp32-c3_json/build/esp32-c3_json.ino.elf"
+binary_file = "./example_firmware/esp32-c3_json/build-2/esp32-c3_json.ino.elf"
 eval_directory = "./example_firmware/esp32-c3_json/eval"
 
 [Connection]

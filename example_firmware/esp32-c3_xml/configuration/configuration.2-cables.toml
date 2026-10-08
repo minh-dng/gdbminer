@@ -1,11 +1,11 @@
-# (2) USB cable option. Build with CDCOnBoot=default.
+# (2) USB cable option. Build with CDCOnBoot=default into build-2/.
 # GDBMiner configuration for ESP32-C3-DevKitM-1 xml adapter.
 # Paper replica (Eisele et al. 2025, Section 5.4) of stm32_libyxml:
 # same LibYxml library, entry/exit lines, seeds and ignore list.
 [BASIC]
 seed_directory = "./example_firmware/esp32-c3_xml/seeds"
 output_directory = "./output/esp32-c3_xml/"
-binary_file = "./example_firmware/esp32-c3_xml/build/esp32-c3_xml.ino.elf"
+binary_file = "./example_firmware/esp32-c3_xml/build-2/esp32-c3_xml.ino.elf"
 eval_directory = "./example_firmware/esp32-c3_xml/eval"
 
 [Connection]
