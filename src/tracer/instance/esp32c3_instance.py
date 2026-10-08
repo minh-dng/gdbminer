@@ -669,11 +669,22 @@ class ESP32C3Instance(HardwareInstance):
         c3 = self.config["GDB"]["esp32c3"]
         interval = c3.get("startup_retry_interval", 0.2)
         deadline = time.monotonic() + self.timeout
-        # OpenOCD executes `-c` commands in order: emit readiness only after `init` succeeds,
-        # including target examination and the GDB listener. A temporary file avoids blocking on a
-        # full pipe and retains failure diagnostics.
+        # OpenOCD runs `-c` commands in order, so the marker follows `init` and the GDB listener.
+        # `init` also returns when target examination fails (openocd-esp32, `src/openocd.c`,
+        # `handle_init_command`), and a GDB attach then aborts OpenOCD. The state check raises an
+        # error first; OpenOCD exits on it (`openocd_thread`), and the loop below retries.
+        # `was_examined` is an internal target command, absent from the OpenOCD manual; OpenOCD's
+        # reset procedure uses it the same way (`src/target/startup.tcl`, `ocd_process_reset_inner`).
+        # A temporary file avoids blocking on a full pipe and retains failure diagnostics.
         marker = "GDBMINER_C3_READY"
-        command = [*self.gdb_server_path_with_args, "-c", f"init; echo {marker}"]
+        command = [
+            *self.gdb_server_path_with_args,
+            "-c",
+            (
+                'init; if {![[target current] was_examined]} {error "target examination failed"}; '
+                f"echo {marker}"
+            ),
+        ]
         last_output = ""
         while time.monotonic() < deadline:
             with tempfile.TemporaryFile(mode="w+b") as output:

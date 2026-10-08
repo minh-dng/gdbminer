@@ -359,7 +359,9 @@ for one. C3 settings live in `[GDB.esp32c3]`:
 | `Connection` | `write_gap_sec` | USB only: optional positive finite seconds, default `0.002`. |
 
 After the UART EN reset (two cables), native USB/JTAG can disappear briefly. The C3 backend starts
-OpenOCD with an explicit `init` followed by a readiness marker. It retries exited startup
+OpenOCD with an explicit `init`, checks the target's `was_examined` state, then emits a readiness
+marker. `init` can return after examination fails; the state check makes that attempt exit instead
+of accepting a GDB connection against an unexamined target. It retries exited startup
 attempts at `startup_retry_interval` until `GDB.timeout` expires; GDB attaches only after
 successful initialization. Timeout or initialization failure closes the serial worker and
 terminates/reaps only the OpenOCD/GDB processes owned by that instance. A stalled OpenOCD

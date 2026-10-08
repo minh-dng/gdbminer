@@ -18,7 +18,13 @@ def test_retry_waits_for_successful_init_before_gdb_attach():
 
     def spawn(command, *, stdout, stderr):
         process = next(processes)
-        assert command[-2:] == ["-c", "init; echo GDBMINER_C3_READY"]
+        assert command[-2:] == [
+            "-c",
+            (
+                'init; if {![[target current] was_examined]} {error "target examination failed"}; '
+                "echo GDBMINER_C3_READY"
+            ),
+        ]
         stdout.write(b"device missing\n" if process is failed else b"GDBMINER_C3_READY\n")
         stdout.flush()
         return process
