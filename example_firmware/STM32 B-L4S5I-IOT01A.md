@@ -78,7 +78,7 @@ and do not declare `[GDB]` twice.
 [GDB]
 instance = "stm32"
 gdb_server_path = "st-util -p 4243"
-gdb_server_address = ":4243"
+gdb_port = 4243
 
 [GDB.stm32]
 dwt_function_reg = "0xe0001028"

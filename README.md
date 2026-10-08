@@ -114,7 +114,7 @@ STM32, MSP430 and ESP32-C3 require the following server fields in `[GDB]` and se
 | Table | Field | Type and meaning |
 | --- | --- | --- |
 | `GDB` | `gdb_server_path` | str, server command and arguments, using shell quoting rules. |
-| `GDB` | `gdb_server_address` | str, GDB remote address, such as `":4242"`. |
+| `GDB` | `gdb_port` | int, port of the GDB server and of GDB's connection to it. |
 | `Connection` | `input_channel` | str, value from the [`InputChannel` enum][input-channel]. |
 | `Connection` | `port` | str, serial device path. |
 | `Connection` | `baud_rate` | positive int, baud rate; omit for `esp32-usb-serial-jtag`. |

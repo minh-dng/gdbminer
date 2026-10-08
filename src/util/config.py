@@ -54,8 +54,11 @@ def _validate_config(config: Config) -> None:
     if instance == GDBInstance.VALGRIND:
         return
 
-    for key in ("gdb_server_path", "gdb_server_address"):
-        _require(gdb, key, str)
+    _require(gdb, "gdb_server_path", str)
+    if "gdb_server_address" in gdb:
+        raise ValueError("Replace GDB.gdb_server_address with GDB.gdb_port, such as 3333")
+    if not 0 < _require(gdb, "gdb_port", int) < 65536:
+        raise ValueError("GDB.gdb_port must be between 1 and 65535")
     connection = _require(config, "Connection", dict)
     channel = _require(connection, "input_channel", str)
     if channel not in InputChannel:

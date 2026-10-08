@@ -203,7 +203,23 @@ def test_esp32_usb_serial_jtag_settings():
             raise AssertionError(f"Accepted Connection.{key} = {value!r}")
 
 
+def test_gdb_port_validation():
+    for key, value in (
+        ("gdb_server_address", ":3333"),
+        *[("gdb_port", value) for value in (0, -1, 65536, "3333", True)],
+    ):
+        config = load_config(C3_CONFIG)
+        config["GDB"][key] = value
+        try:
+            _validate_config(config)
+        except (TypeError, ValueError) as exc:
+            assert key in str(exc), str(exc)
+        else:
+            raise AssertionError(f"Accepted GDB.{key} = {value!r}")
+
+
 if __name__ == "__main__":
     test_config()
     test_esp32_usb_serial_jtag_settings()
+    test_gdb_port_validation()
     print("Configuration regression checks passed")

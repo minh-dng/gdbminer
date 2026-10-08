@@ -26,7 +26,7 @@ gdb_server_path = '''/Users/dan173/.espressif/openocd-esp32/bin/openocd
   -f board/esp32c3-builtin.cfg
   -c "adapter serial A0:F2:62:01:70:28"
   -c "adapter speed 40000"'''
-gdb_server_address = ":3333"
+gdb_port = 3333
 
 # Same as stm32_cgidecode: nothing is skipped, so all eight trigger slots are available.
 watchpoint_type = "(char*)"
