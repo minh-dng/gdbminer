@@ -23,7 +23,7 @@ from tracer.instance.esp32c3_debug import (
     DCSRMask,
     MControlFlag,
 )
-from tracer.instance.hardware_instance import HardwareInstance
+from tracer.instance.hardware_instance import HardwareInstance, MIReason
 from util import Config
 
 
@@ -354,7 +354,8 @@ class ESP32C3Instance(HardwareInstance):
         stop = self._wait_stop()
         # A step that lands on the exit breakpoint is reported as its hit; the tracer checks the
         # breakpoint number and ends the window.
-        if self._payload(stop).get("reason") not in {"end-stepping-range", "breakpoint-hit"}:
+        reason = self._payload(stop).get("reason")
+        if reason not in {MIReason.END_STEPPING_RANGE, MIReason.BREAKPOINT_HIT}:
             raise RuntimeError(f"Unexpected C3 step stop: {stop}")
         return stop
 
@@ -409,7 +410,7 @@ class ESP32C3Instance(HardwareInstance):
                 cause == DCSRCause.STEP
                 or (
                     cause == DCSRCause.TRIGGER
-                    and self._payload(stop).get("reason") == "breakpoint-hit"
+                    and self._payload(stop).get("reason") == MIReason.BREAKPOINT_HIT
                 )
             ):
                 # Managed instruction breakpoints also use RISC-V triggers. The shared tracer
@@ -441,7 +442,7 @@ class ESP32C3Instance(HardwareInstance):
                     "type": "notify",
                     "message": "stopped",
                     "payload": {
-                        "reason": "read-watchpoint-trigger",
+                        "reason": MIReason.READ_WATCHPOINT_TRIGGER,
                         "offset": trigger.offset,
                     },
                 }
@@ -521,8 +522,8 @@ class ESP32C3Instance(HardwareInstance):
         )
         # As in `_step_stop`: code run by the skipped function can reach the exit breakpoint; the
         # tracer checks its number and ends the window.
-        exit_hit = reason == "breakpoint-hit" and cause == DCSRCause.TRIGGER
-        if reason != "function-finished" and not unlabelled_return and not exit_hit:
+        exit_hit = reason == MIReason.BREAKPOINT_HIT and cause == DCSRCause.TRIGGER
+        if reason != MIReason.FUNCTION_FINISHED and not unlabelled_return and not exit_hit:
             raise RuntimeError(f"Unexpected C3 finish stop: dcsr={dcsr:#x}, {stop}")
         self._pending.append(stop)
 
