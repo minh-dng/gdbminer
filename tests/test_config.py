@@ -295,10 +295,35 @@ def test_example_configs_template_gdb_port():
             assert "{gdb_port}" in gdb["gdb_server_path"], path
 
 
+def test_openocd_console_ports():
+    for path in ROOT.glob("example_firmware/esp32-c3_*/configuration/configuration*.toml"):
+        for flags, telnet, tcl in (
+            ((), "disabled", "disabled"),
+            (("--telnet-port", "4444"), "4444", "disabled"),
+            (("--tcl-port", "6666"), "disabled", "6666"),
+            (("--telnet-port", "4445", "--tcl-port", "6667"), "4445", "6667"),
+        ):
+            config = load_config(path)
+            _override(config, "--adapter-serial", "AA:BB", *flags)
+            command = ESP32C3Instance(config, "").gdb_server_path_with_args
+            assert f"telnet port {telnet}" in command, path
+            assert f"tcl port {tcl}" in command, path
+
+    for flag in ("--telnet-port", "--tcl-port"):
+        for config in (_templated(), load_config(STM32_CONFIG), load_config(JSON_CONFIG)):
+            try:
+                _override(config, flag, "4444")
+            except ValueError as exc:
+                assert flag in str(exc), str(exc)
+            else:
+                raise AssertionError(f"Accepted {flag} without its server placeholder")
+
+
 if __name__ == "__main__":
     test_config()
     test_gdb_port_validation()
     test_apply_overrides()
     test_example_configs_template_gdb_port()
+    test_openocd_console_ports()
     test_esp32_usb_serial_jtag_settings()
     print("Configuration regression checks passed")

@@ -294,7 +294,7 @@ device names from the recording Mac. Change these in each:
 |                         | One cable: native USB serial port, `/dev/cu.usbmodem<n>`.        |
 | `[GDB] gdb_path`        | Espressif `riscv32-esp-elf-gdb` from the Arduino core.           |
 | `[GDB.esp32c3] rom_elf` | ROM symbol file matching the chip revision.                      |
-| `[GDB] gdb_server_path` | OpenOCD executable and scripts folder; keep both placeholders.   |
+| `[GDB] gdb_server_path` | OpenOCD executable and scripts folder; keep all placeholders.    |
 
 ### Debug register values
 
@@ -448,13 +448,20 @@ is logged to `out.log`, with a warning when it replaces a different value from t
 whose placeholder is not in `gdb_server_path`, an invalid or missing GDB port, or an
 `{adapter_serial}` without `--adapter-serial` stops the stage before any server starts.
 
-The configurations switch off OpenOCD's telnet and tcl ports with `-c "telnet port disabled"` and
-`-c "tcl port disabled"`. The tracer reaches OpenOCD only through GDB's `monitor` command, over the
-GDB port, so it needs neither. They are off because every OpenOCD that keeps the defaults (telnet
-4444, tcl 6666) blocks a second one: `Error: couldn't bind tcl to socket on port 6666: Address
-already in use`. To use them, for example to run `telnet localhost 4444` against a running trace
-for `reset halt` or `reg`, replace `disabled` with a port number in `gdb_server_path`. Give each
-parallel instance its own numbers, as with `--gdb-port`.
+The configurations use `-c "telnet port {telnet_port}"` and `-c "tcl port {tcl_port}"`. Each
+placeholder becomes `disabled` unless you pass `--telnet-port` or `--tcl-port`, so parallel
+OpenOCD instances do not clash on the default console ports, 4444 and 6666. The tracer reaches
+OpenOCD through GDB's `monitor` command and needs neither console. To inspect a running trace,
+append `--telnet-port 4444 --tcl-port 6666` to the Python command, then connect from another terminal:
+
+```sh
+telnet localhost 4444
+```
+
+Telnet provides an interactive console; Tcl provides the scripting/RPC interface. Enable either
+independently. Give each parallel instance its own numbers, as with `--gdb-port`. `poll` shows
+target state, and `reg` reads registers while halted. Commands such as `halt`, `resume` and `reset`
+interfere with the tracer's control of execution.
 
 `trace.py` creates the next free `output/<target>/trial-<n>/`. `mine.py` and `precision_recall.py`
 use the newest `trial-<n>`, and `mine.py` pairs traces with seeds by sorted file name. Mine only

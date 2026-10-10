@@ -26,8 +26,8 @@ gdb_server_path = '''/Users/dan173/.espressif/openocd-esp32/bin/openocd
   -c "set ESP_RTOS none"
   -f board/esp32c3-builtin.cfg
   -c "gdb port {gdb_port}"
-  -c "telnet port disabled"
-  -c "tcl port disabled"
+  -c "telnet port {telnet_port}"
+  -c "tcl port {tcl_port}"
   -c "adapter serial {adapter_serial}"
   -c "adapter speed 40000"'''
 gdb_port = 3333

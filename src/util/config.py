@@ -11,6 +11,8 @@ type Config = dict[str, Any]
 
 GDB_PORT_PLACEHOLDER = "{gdb_port}"
 ADAPTER_SERIAL_PLACEHOLDER = "{adapter_serial}"
+TELNET_PORT_PLACEHOLDER = "{telnet_port}"
+TCL_PORT_PLACEHOLDER = "{tcl_port}"
 
 
 def _require(table: Config, key: str, expected: type | tuple[type, ...]) -> Any:
@@ -184,6 +186,12 @@ def add_override_arguments(parser: argparse.ArgumentParser) -> None:
         type=int,
         help="Override GDB.gdb_port, the port of the GDB server and of the GDB connection to it.",
     )
+    for console in ("telnet", "tcl"):
+        parser.add_argument(
+            f"--{console}-port",
+            type=int,
+            help=f"Fill {{{console}_port}} in GDB.gdb_server_path; disabled when omitted.",
+        )
 
 
 def apply_overrides(config: Config, args: argparse.Namespace) -> None:
@@ -192,18 +200,25 @@ def apply_overrides(config: Config, args: argparse.Namespace) -> None:
     Call it after the logging setup: it logs each value it uses. `Connection.port` and
     `GDB.gdb_port` are replaced by `--port` and `--gdb-port`, then validated with the
     configuration's rules. `{gdb_port}` and `{adapter_serial}` in `gdb_server_path` are replaced by
-    the GDB port and `--adapter-serial`. A flag overriding a different configured value is logged
-    as a warning.
+    the GDB port and `--adapter-serial`. `{telnet_port}` and `{tcl_port}` take their flags' port
+    numbers, or `disabled` when omitted so parallel OpenOCD instances do not share console ports.
+    A flag overriding a different configured value is logged as a warning.
 
     Raises if no GDB port is set, a flag has no placeholder in `gdb_server_path` to reach the
     server, or `{adapter_serial}` stays unfilled: a silent fallback would start the server on the
     wrong board or port.
     """
     port, adapter_serial, gdb_port = args.port, args.adapter_serial, args.gdb_port
+    telnet_port, tcl_port = args.telnet_port, args.tcl_port
     gdb = config["GDB"]
     if "gdb_server_path" not in gdb:
-        if (port, adapter_serial, gdb_port) != (None, None, None):
-            raise ValueError("--port, --adapter-serial and --gdb-port apply to hardware targets")
+        if any(
+            value is not None for value in (port, adapter_serial, gdb_port, telnet_port, tcl_port)
+        ):
+            raise ValueError(
+                "--port, --adapter-serial, --gdb-port, --telnet-port and --tcl-port "
+                "apply to hardware targets"
+            )
         return
 
     if port is not None:
@@ -220,12 +235,16 @@ def apply_overrides(config: Config, args: argparse.Namespace) -> None:
     for placeholder, flag, value in (
         (GDB_PORT_PLACEHOLDER, "--gdb-port", gdb_port),
         (ADAPTER_SERIAL_PLACEHOLDER, "--adapter-serial", adapter_serial),
+        (TELNET_PORT_PLACEHOLDER, "--telnet-port", telnet_port),
+        (TCL_PORT_PLACEHOLDER, "--tcl-port", tcl_port),
     ):
         if value is not None and placeholder not in path:
             raise ValueError(f"{flag} needs {placeholder} in GDB.gdb_server_path")
     for placeholder, value in (
         (GDB_PORT_PLACEHOLDER, gdb["gdb_port"]),
         (ADAPTER_SERIAL_PLACEHOLDER, adapter_serial),
+        (TELNET_PORT_PLACEHOLDER, telnet_port if telnet_port is not None else "disabled"),
+        (TCL_PORT_PLACEHOLDER, tcl_port if tcl_port is not None else "disabled"),
     ):
         if placeholder in path:
             if value is None:
