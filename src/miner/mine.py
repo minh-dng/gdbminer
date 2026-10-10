@@ -23,7 +23,13 @@ from miner.token_generalizer import TokenGeneralizer
 
 # If we stick to original mimid structure
 from miner.tree_builder import TreeBuilder
-from util import find_output_directory, load_config, setup_logging
+from util import (
+    add_override_arguments,
+    apply_overrides,
+    find_output_directory,
+    load_config,
+    setup_logging,
+)
 
 
 def squash_consecutive_conditions(
@@ -222,8 +228,10 @@ def main() -> None:
     # cli
     parser = argparse.ArgumentParser(description="Generate a context free grammar")
     parser.add_argument("--config", required=True, type=str, help="Path to a config file.")
+    add_override_arguments(parser)
+    args = parser.parse_args()
 
-    config_file_path = Path(parser.parse_args().config)
+    config_file_path = Path(args.config)
 
     config = load_config(config_file_path)
 
@@ -231,6 +239,8 @@ def main() -> None:
     seed_directory = Path(config["BASIC"]["seed_directory"])
 
     setup_logging(output_directory, config["LOGS"]["log_level"])
+    # The generalizers run queries on the target, so they need the same settings as the trace.
+    apply_overrides(config, args)
 
     trace_files = sorted(output_directory.glob("*.trace"))
     seed_files = sorted(seed_directory.glob("*"))

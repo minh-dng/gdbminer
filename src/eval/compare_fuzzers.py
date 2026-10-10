@@ -11,7 +11,13 @@ from pathlib import Path
 from eval import resolve_grammar_file
 from eval.grammar import CoverageFuzzer, MutationFuzzer, trim_grammar
 from tracer import GDBTracer
-from util import find_output_directory, load_config, setup_logging
+from util import (
+    add_override_arguments,
+    apply_overrides,
+    find_output_directory,
+    load_config,
+    setup_logging,
+)
 
 PRECISION_SIZE = int(os.environ.get("PRECISION_SET_SIZE", "1000"))
 
@@ -27,6 +33,8 @@ def main() -> None:
 
     parser.add_argument("--grammar", required=False, type=str, help="Path to a grammar file.")
 
+    add_override_arguments(parser)
+
     # Execute the parse_args() methode
     args = parser.parse_args()
     config_file_path = Path(args.config)
@@ -36,6 +44,7 @@ def main() -> None:
     output_directory = find_output_directory(Path(config["BASIC"]["output_directory"]))
 
     setup_logging(output_directory, config["LOGS"]["log_level"])
+    apply_overrides(config, args)
 
     seeds_directory = Path(config["BASIC"]["seed_directory"])
 

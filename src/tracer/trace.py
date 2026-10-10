@@ -7,10 +7,11 @@ import dataclasses
 import json
 import logging
 import time
+from logging.handlers import MemoryHandler
 from pathlib import Path
 
 from tracer import GDBTracer
-from util import Config, load_config, setup_logging
+from util import Config, add_override_arguments, apply_overrides, load_config, setup_logging
 
 
 def create_output_dir(output_dir_base: Path) -> Path:
@@ -42,14 +43,29 @@ def main() -> None:
     # cli
     parser = argparse.ArgumentParser(description="Generate traces of a program")
     parser.add_argument("--config", required=True, type=str, help="Path to a config file.")
+    add_override_arguments(parser)
+    args = parser.parse_args()
 
-    config_file_path = Path(parser.parse_args().config)
+    config = load_config(Path(args.config))
 
-    config = load_config(config_file_path)
+    # Buffer override logs until validation succeeds and a trial can safely be allocated.
+    logger = logging.getLogger()
+    previous_level = logger.level
+    override_log = MemoryHandler(capacity=100)
+    logger.addHandler(override_log)
+    logger.setLevel(config["LOGS"]["log_level"])
+    try:
+        apply_overrides(config, args)
+    finally:
+        logger.removeHandler(override_log)
+        logger.setLevel(previous_level)
+        override_log.close()
 
     # Setup logging
     output_directory = create_output_dir(Path(config["BASIC"]["output_directory"]))
     setup_logging(output_directory, config["LOGS"]["log_level"])
+    for record in override_log.buffer:
+        logger.handle(record)
 
     seed_directory = Path(config["BASIC"]["seed_directory"])
     # list_of_traces = []

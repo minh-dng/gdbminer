@@ -28,7 +28,7 @@ def configuration():
             "timeout": 1,
             "gdb_path": "gdb",
             "gdb_server_path": "openocd",
-            "gdb_server_address": ":3334",
+            "gdb_port": 3334,
             "watchpoint_count": 1,
             "esp32c3": {"hardware_trigger_slot": 0},
             "exitpoint": "",

@@ -65,7 +65,7 @@ class HardwareInstance(SUTInstance, ABC):
     def __init__(self, config: Config, input_file: Path | str) -> None:
         super().__init__(config)
         self.gdb_server_path_with_args = shlex.split(config["GDB"]["gdb_server_path"])
-        self.gdb_server_address = config["GDB"]["gdb_server_address"]
+        self.gdb_server_address = f":{config['GDB']['gdb_port']}"
         self.watchpoint_count = config["GDB"]["watchpoint_count"]
         self.input_file = Path(input_file)
 

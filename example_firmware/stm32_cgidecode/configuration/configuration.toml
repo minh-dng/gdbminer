@@ -18,10 +18,9 @@ baud_rate = 9600
 
 # This section contains configurations which are relevant for GDB
 [GDB]
-gdb_server_path = "st-util"
+gdb_server_path = "st-util -p {gdb_port}"
 
-#Written in address:port
-gdb_server_address = ":4242"
+gdb_port = 4242
 
 gdb_path = "../.platformio/packages/toolchain-gccarmnoneeabi/bin/arm-none-eabi-gdb"
 instance = "stm32"

@@ -9,7 +9,7 @@ from pathlib import Path
 from eval import resolve_grammar_file
 from eval.grammar import CoverageFuzzer, trim_grammar
 from tracer import GDBTracer
-from util import load_config
+from util import add_override_arguments, apply_overrides, load_config
 
 PRECISION_SIZE = 1000
 
@@ -25,11 +25,14 @@ def main() -> None:
     )
     parser.add_argument("out", type=str, help="Path to output folder.")
     parser.add_argument("count", type=int, help="Number of files to generate.")
+    add_override_arguments(parser)
 
     args = parser.parse_args()
     config_file_path = Path(args.config)
 
     config = load_config(config_file_path)
+    # No log file here: warnings about replaced values still reach stderr.
+    apply_overrides(config, args)
 
     output_directory = Path(args.out)
 

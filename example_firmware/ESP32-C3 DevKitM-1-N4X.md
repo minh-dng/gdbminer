@@ -108,9 +108,9 @@ Values for this board (checked 2026-09-30):
 | JTAG | `/dev/cu.usbmodem1101`  | `0x303A:0x1001` | `A0:F2:62:01:70:28` (the chip's MAC) |
 | UART | `/dev/cu.usbserial-210` | `0x10C4:0xEA60` | `8afe88d078bcf0119b5f157148e9de0f`   |
 
-Copy the JTAG serial number into `-c "adapter serial <MAC>"` in `gdb_server_path`. The UART serial
-number is not used. The `esp32-c3_json`, `esp32-c3_cgidecode` and `esp32-c3_xml` configuration files
-all carry it.
+Pass the JTAG serial number as `--adapter-serial <MAC>` to `trace.py`, `mine.py` and
+`precision_recall.py`: the configuration files carry `-c "adapter serial {adapter_serial}"` in
+`gdb_server_path` and each stage fills it in. The UART serial number is not used.
 
 ## Firmware wrappers
 
@@ -294,7 +294,7 @@ device names from the recording Mac. Change these in each:
 |                         | One cable: native USB serial port, `/dev/cu.usbmodem<n>`.        |
 | `[GDB] gdb_path`        | Espressif `riscv32-esp-elf-gdb` from the Arduino core.           |
 | `[GDB.esp32c3] rom_elf` | ROM symbol file matching the chip revision.                      |
-| `[GDB] gdb_server_path` | OpenOCD executable, scripts folder and board's `adapter serial`. |
+| `[GDB] gdb_server_path` | OpenOCD executable and scripts folder; keep all placeholders.    |
 
 ### Debug register values
 
@@ -429,20 +429,52 @@ order:
 ```sh
 TARGET=esp32-c3_json
 CONFIG=example_firmware/$TARGET/configuration/configuration.2-cables.toml  # or .1-cable.toml
-PYTHONPATH=src .venv/bin/python src/tracer/trace.py --config "$CONFIG"
-PYTHONPATH=src .venv/bin/python src/miner/mine.py --config "$CONFIG"
+BOARD=(--adapter-serial A0:F2:62:01:70:28)  # add --port and --gdb-port as needed
+PYTHONPATH=src .venv/bin/python src/tracer/trace.py --config "$CONFIG" "${BOARD[@]}"
+PYTHONPATH=src .venv/bin/python src/miner/mine.py --config "$CONFIG" "${BOARD[@]}"
 PYTHONPATH=src .venv/bin/python src/eval/precision_recall.py \
-  --config "$CONFIG" --out evaluation.json
+  --config "$CONFIG" "${BOARD[@]}" --out evaluation.json
 ```
 
-`trace.py` creates the next free `output/<target>/trial-<n>/`. `mine.py` and `precision_recall.py`
-use the newest `trial-<n>`, and `mine.py` pairs traces with seeds by sorted file name. Mine only
-after a trace run has written a trace for every seed. A failed or stopped trace run still leaves its
-`trial-<n>`, which mining would then select. Pass `--out` to keep the scores; without it, they are
-only in the log. Before each stage, check that no earlier process still holds the input port
-(`lsof /dev/cu.usbserial-<n>` or `lsof /dev/cu.usbmodem<n>`): stopping `trace.py` or `mine.py` can
-leave its serial worker running. With one cable, an orphaned worker also blocks esptool.
-The one-cable traces go to `output/<target>-1-cable/`, so a trial never mixes the two builds.
+All three stages start OpenOCD and run inputs on the board, so pass them the same flags. Besides
+`--adapter-serial`, each accepts `--port` (replaces `[Connection] port`, which changes when you plug
+into another socket) and `--gdb-port` (replaces `[GDB] gdb_port`, the port that fills `{gdb_port}`
+in `gdb_server_path` and that GDB connects to). To run two boards in parallel, give each its own
+`--adapter-serial`, `--port` and `--gdb-port`, for example `--gdb-port 3334` for the second. Two
+runs of the same target share `BASIC.output_directory`, and mining and evaluation read its newest
+`trial-<n>`, so such runs still need a second file with its own output directory. Omit `gdb_port`
+from the configuration file to make `--gdb-port` required. Each value taken from a flag
+is logged to `out.log`. Omit `Connection.port` or leave it empty to require `--port`. Each value
+that replaces a different value from the file produces a warning. A flag whose placeholder is not
+in `gdb_server_path`, an invalid or missing GDB port, or an
+`{adapter_serial}` without `--adapter-serial` stops the stage before any server starts.
+
+The configurations use `-c "telnet port {telnet_port}"` and `-c "tcl port {tcl_port}"`. Each
+placeholder becomes `disabled` unless you pass `--telnet-port` or `--tcl-port`, so parallel
+OpenOCD instances do not clash on the default console ports, 4444 and 6666. The tracer reaches
+OpenOCD through GDB's `monitor` command and needs neither console. To inspect a running trace,
+append `--telnet-port 4444 --tcl-port 6666` to the Python command, then connect from another
+terminal:
+
+```sh
+telnet localhost 4444
+```
+
+Telnet provides an interactive console; Tcl provides the scripting/RPC interface. Enable either
+independently. Give each parallel instance its own numbers, as with `--gdb-port`. Enabled console
+ports must be in 1-65535 and differ from each other and the GDB port. `poll` shows target state,
+and `reg` reads registers while halted. Commands such as `halt`, `resume` and `reset`
+interfere with the tracer's control of execution.
+
+`trace.py` resolves and validates machine overrides before creating the next free
+`output/<target>/trial-<n>/`; invalid overrides leave no trial behind. `mine.py` and
+`precision_recall.py` use the newest `trial-<n>`, and `mine.py` pairs traces with seeds by sorted
+file name. Mine only after a trace run has written a trace for every seed. A failed or stopped trace
+run still leaves its `trial-<n>`, which mining would then select. Pass `--out` to keep the scores;
+without it, they are only in the log. Before each stage, check for a process holding the input port.
+`lsof /dev/cu.usbserial-<n>` or `lsof /dev/cu.usbmodem<n>` lists them. Stopping `trace.py` or
+`mine.py` can leave a serial worker running, which also blocks esptool with one cable. The
+one-cable traces go to `output/<target>-1-cable/`, so a trial never mixes the two builds.
 
 ### Tracing: the paper replica method
 

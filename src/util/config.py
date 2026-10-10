@@ -1,5 +1,6 @@
 """Load TOML and validate shared settings plus the selected backend's settings."""
 
+import argparse
 import logging
 import math
 import tomllib
@@ -7,6 +8,11 @@ from pathlib import Path
 from typing import Any
 
 type Config = dict[str, Any]
+
+GDB_PORT_PLACEHOLDER = "{gdb_port}"
+ADAPTER_SERIAL_PLACEHOLDER = "{adapter_serial}"
+TELNET_PORT_PLACEHOLDER = "{telnet_port}"
+TCL_PORT_PLACEHOLDER = "{tcl_port}"
 
 
 def _require(table: Config, key: str, expected: type | tuple[type, ...]) -> Any:
@@ -54,13 +60,18 @@ def _validate_config(config: Config) -> None:
     if instance == GDBInstance.VALGRIND:
         return
 
-    for key in ("gdb_server_path", "gdb_server_address"):
-        _require(gdb, key, str)
+    _require(gdb, "gdb_server_path", str)
+    if "gdb_server_address" in gdb:
+        raise ValueError("Replace GDB.gdb_server_address with GDB.gdb_port, such as 3333")
+    # Optional: `--gdb-port` can supply it, and `apply_overrides` then requires one.
+    if "gdb_port" in gdb and not 0 < _require(gdb, "gdb_port", int) < 65536:
+        raise ValueError("GDB.gdb_port must be between 1 and 65535")
     connection = _require(config, "Connection", dict)
     channel = _require(connection, "input_channel", str)
     if channel not in InputChannel:
         raise ValueError(f"Unsupported Connection.input_channel: {channel!r}")
-    _require(connection, "port", str)
+    if "port" in connection:
+        _require(connection, "port", str)
     if channel == InputChannel.ESP32_USB_SERIAL_JTAG:
         if "baud_rate" in connection:
             raise ValueError(f"Remove Connection.baud_rate: the '{channel}' port has no baud rate")
@@ -152,3 +163,102 @@ def load_config(path: Path) -> Config:
         config = tomllib.load(config_file)
     _validate_config(config)
     return config
+
+
+def _log_override(key: str, old: object, new: object, flag: str) -> None:
+    if old is None:
+        logging.info(f"{key} = {new!r} from {flag} (not set in the configuration)")
+    elif old != new:
+        logging.warning(f"{key}: {old!r} overridden by {flag} = {new!r}")
+    else:
+        logging.info(f"{key} = {new!r} from {flag} (same as the configuration)")
+
+
+def add_override_arguments(parser: argparse.ArgumentParser) -> None:
+    """Add the flags for the machine-specific settings that `apply_overrides` fills in."""
+    parser.add_argument("--port", type=str, help="Override Connection.port, the serial device.")
+    parser.add_argument(
+        "--adapter-serial",
+        type=str,
+        help="Fill {adapter_serial} in GDB.gdb_server_path, the debug adapter's serial number.",
+    )
+    parser.add_argument(
+        "--gdb-port",
+        type=int,
+        help="Override GDB.gdb_port, the port of the GDB server and of the GDB connection to it.",
+    )
+    for console in ("telnet", "tcl"):
+        parser.add_argument(
+            f"--{console}-port",
+            type=int,
+            help=f"Fill {{{console}_port}} in GDB.gdb_server_path; disabled when omitted.",
+        )
+
+
+def apply_overrides(config: Config, args: argparse.Namespace) -> None:
+    """Fill the machine-specific settings from `add_override_arguments` flags, in place.
+
+    Configure or buffer logging first: it logs each value it uses. `Connection.port` and
+    `GDB.gdb_port` are replaced by `--port` and `--gdb-port`, then validated with the
+    configuration's rules. `{gdb_port}` and `{adapter_serial}` in `gdb_server_path` are replaced by
+    the GDB port and `--adapter-serial`. `{telnet_port}` and `{tcl_port}` take their flags' port
+    numbers, or `disabled` when omitted so parallel OpenOCD instances do not share console ports.
+    A flag overriding a different configured value is logged as a warning.
+
+    Raises if no GDB port is set, a flag has no placeholder in `gdb_server_path` to reach the
+    server, or `{adapter_serial}` stays unfilled: a silent fallback would start the server on the
+    wrong board or port.
+    """
+    port, adapter_serial, gdb_port = args.port, args.adapter_serial, args.gdb_port
+    telnet_port, tcl_port = args.telnet_port, args.tcl_port
+    gdb = config["GDB"]
+    if "gdb_server_path" not in gdb:
+        if any(
+            value is not None for value in (port, adapter_serial, gdb_port, telnet_port, tcl_port)
+        ):
+            raise ValueError(
+                "--port, --adapter-serial, --gdb-port, --telnet-port and --tcl-port "
+                "apply to hardware targets"
+            )
+        return
+
+    if port is not None:
+        connection = config["Connection"]
+        _log_override("Connection.port", connection.get("port"), port, "--port")
+        connection["port"] = port
+    if gdb_port is not None:
+        _log_override("GDB.gdb_port", gdb.get("gdb_port"), gdb_port, "--gdb-port")
+        gdb["gdb_port"] = gdb_port
+    _validate_config(config)
+    if "gdb_port" not in gdb:
+        raise ValueError("Set GDB.gdb_port in the configuration or pass --gdb-port")
+    if not config["Connection"].get("port"):
+        raise ValueError("Set Connection.port in the configuration or pass --port")
+    for flag, value in (("--telnet-port", telnet_port), ("--tcl-port", tcl_port)):
+        if value is not None and not 0 < value < 65536:
+            raise ValueError(f"{flag} must be between 1 and 65535")
+    ports = [value for value in (gdb["gdb_port"], telnet_port, tcl_port) if value is not None]
+    if len(ports) != len(set(ports)):
+        raise ValueError("GDB, Telnet and Tcl ports must be distinct")
+    path = gdb["gdb_server_path"]
+    for placeholder, flag, value in (
+        (GDB_PORT_PLACEHOLDER, "--gdb-port", gdb_port),
+        (ADAPTER_SERIAL_PLACEHOLDER, "--adapter-serial", adapter_serial),
+        (TELNET_PORT_PLACEHOLDER, "--telnet-port", telnet_port),
+        (TCL_PORT_PLACEHOLDER, "--tcl-port", tcl_port),
+    ):
+        if value is not None and placeholder not in path:
+            raise ValueError(f"{flag} needs {placeholder} in GDB.gdb_server_path")
+    for placeholder, value in (
+        (GDB_PORT_PLACEHOLDER, gdb["gdb_port"]),
+        (ADAPTER_SERIAL_PLACEHOLDER, adapter_serial),
+        (TELNET_PORT_PLACEHOLDER, telnet_port if telnet_port is not None else "disabled"),
+        (TCL_PORT_PLACEHOLDER, tcl_port if tcl_port is not None else "disabled"),
+    ):
+        if placeholder in path:
+            if value is None:
+                raise ValueError(f"GDB.gdb_server_path needs a value for {placeholder}")
+            logging.info(f"GDB.gdb_server_path: {placeholder} -> {value}")
+            path = path.replace(placeholder, str(value))
+    gdb["gdb_server_path"] = path
+    logging.info(f"GDB server command: {path}")
