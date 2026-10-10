@@ -355,6 +355,25 @@ def test_openocd_console_ports():
             else:
                 raise AssertionError(f"Accepted {flag} without its server placeholder")
 
+        for port in ("0", "-5", "65536", "99999", "3333"):
+            config = load_config(C3_CONFIG)
+            try:
+                _override(config, "--adapter-serial", "AA:BB", flag, port)
+            except ValueError as exc:
+                assert flag in str(exc) or "distinct" in str(exc), str(exc)
+            else:
+                raise AssertionError(f"Accepted {flag} {port}")
+
+    config = load_config(C3_CONFIG)
+    try:
+        _override(
+            config, "--adapter-serial", "AA:BB", "--telnet-port", "4444", "--tcl-port", "4444"
+        )
+    except ValueError as exc:
+        assert "distinct" in str(exc), str(exc)
+    else:
+        raise AssertionError("Accepted colliding console ports")
+
 
 if __name__ == "__main__":
     test_config()

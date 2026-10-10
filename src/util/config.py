@@ -234,6 +234,12 @@ def apply_overrides(config: Config, args: argparse.Namespace) -> None:
         raise ValueError("Set GDB.gdb_port in the configuration or pass --gdb-port")
     if not config["Connection"].get("port"):
         raise ValueError("Set Connection.port in the configuration or pass --port")
+    for flag, value in (("--telnet-port", telnet_port), ("--tcl-port", tcl_port)):
+        if value is not None and not 0 < value < 65536:
+            raise ValueError(f"{flag} must be between 1 and 65535")
+    ports = [value for value in (gdb["gdb_port"], telnet_port, tcl_port) if value is not None]
+    if len(ports) != len(set(ports)):
+        raise ValueError("GDB, Telnet and Tcl ports must be distinct")
     path = gdb["gdb_server_path"]
     for placeholder, flag, value in (
         (GDB_PORT_PLACEHOLDER, "--gdb-port", gdb_port),
