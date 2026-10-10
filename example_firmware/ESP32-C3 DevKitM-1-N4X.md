@@ -444,33 +444,37 @@ in `gdb_server_path` and that GDB connects to). To run two boards in parallel, g
 runs of the same target share `BASIC.output_directory`, and mining and evaluation read its newest
 `trial-<n>`, so such runs still need a second file with its own output directory. Omit `gdb_port`
 from the configuration file to make `--gdb-port` required. Each value taken from a flag
-is logged to `out.log`, with a warning when it replaces a different value from the file. A flag
-whose placeholder is not in `gdb_server_path`, an invalid or missing GDB port, or an
+is logged to `out.log`. Omit `Connection.port` or leave it empty to require `--port`. Each value
+that replaces a different value from the file produces a warning. A flag whose placeholder is not
+in `gdb_server_path`, an invalid or missing GDB port, or an
 `{adapter_serial}` without `--adapter-serial` stops the stage before any server starts.
 
 The configurations use `-c "telnet port {telnet_port}"` and `-c "tcl port {tcl_port}"`. Each
 placeholder becomes `disabled` unless you pass `--telnet-port` or `--tcl-port`, so parallel
 OpenOCD instances do not clash on the default console ports, 4444 and 6666. The tracer reaches
 OpenOCD through GDB's `monitor` command and needs neither console. To inspect a running trace,
-append `--telnet-port 4444 --tcl-port 6666` to the Python command, then connect from another terminal:
+append `--telnet-port 4444 --tcl-port 6666` to the Python command, then connect from another
+terminal:
 
 ```sh
 telnet localhost 4444
 ```
 
 Telnet provides an interactive console; Tcl provides the scripting/RPC interface. Enable either
-independently. Give each parallel instance its own numbers, as with `--gdb-port`. `poll` shows
-target state, and `reg` reads registers while halted. Commands such as `halt`, `resume` and `reset`
+independently. Give each parallel instance its own numbers, as with `--gdb-port`. Enabled console
+ports must be in 1-65535 and differ from each other and the GDB port. `poll` shows target state,
+and `reg` reads registers while halted. Commands such as `halt`, `resume` and `reset`
 interfere with the tracer's control of execution.
 
-`trace.py` creates the next free `output/<target>/trial-<n>/`. `mine.py` and `precision_recall.py`
-use the newest `trial-<n>`, and `mine.py` pairs traces with seeds by sorted file name. Mine only
-after a trace run has written a trace for every seed. A failed or stopped trace run still leaves its
-`trial-<n>`, which mining would then select. Pass `--out` to keep the scores; without it, they are
-only in the log. Before each stage, check that no earlier process still holds the input port
-(`lsof /dev/cu.usbserial-<n>` or `lsof /dev/cu.usbmodem<n>`): stopping `trace.py` or `mine.py` can
-leave its serial worker running. With one cable, an orphaned worker also blocks esptool.
-The one-cable traces go to `output/<target>-1-cable/`, so a trial never mixes the two builds.
+`trace.py` resolves and validates machine overrides before creating the next free
+`output/<target>/trial-<n>/`; invalid overrides leave no trial behind. `mine.py` and
+`precision_recall.py` use the newest `trial-<n>`, and `mine.py` pairs traces with seeds by sorted
+file name. Mine only after a trace run has written a trace for every seed. A failed or stopped trace
+run still leaves its `trial-<n>`, which mining would then select. Pass `--out` to keep the scores;
+without it, they are only in the log. Before each stage, check for a process holding the input port.
+`lsof /dev/cu.usbserial-<n>` or `lsof /dev/cu.usbmodem<n>` lists them. Stopping `trace.py` or
+`mine.py` can leave a serial worker running, which also blocks esptool with one cable. The
+one-cable traces go to `output/<target>-1-cable/`, so a trial never mixes the two builds.
 
 ### Tracing: the paper replica method
 

@@ -107,33 +107,37 @@ TOML literal strings preserve regex backslashes.
 
 ### MCU settings
 
-STM32, MSP430 and ESP32-C3 require the following server fields in `[GDB]` and serial fields in
-`[Connection]`. Valgrind supplies input through a file and does not require these fields or a
-`[Connection]` table.
+STM32, MSP430 and ESP32-C3 use the following server fields in `[GDB]` and serial fields in
+`[Connection]`. Machine-specific fields can be supplied through CLI flags as described below.
+Valgrind supplies input through a file and does not require these fields or a `[Connection]` table.
 
 | Table | Field | Type and meaning |
 | --- | --- | --- |
 | `GDB` | `gdb_server_path` | str, server command and arguments, using shell quoting rules. |
-| `GDB` | `gdb_port` | int, port of the GDB server and of GDB's connection to it. |
+| `GDB` | `gdb_port` | int in 1-65535; omit to require `--gdb-port`. |
 | `Connection` | `input_channel` | str, value from the [`InputChannel` enum][input-channel]. |
-| `Connection` | `port` | str, serial device path. |
+| `Connection` | `port` | optional str, serial device; `--port` is required if absent or empty. |
 | `Connection` | `baud_rate` | positive int, baud rate; omit for `esp32-usb-serial-jtag`. |
 
-`gdb_server_path` passes the port to the server through the `{gdb_port}` placeholder, as in
-`st-util -p {gdb_port}`, so the server and GDB always use the same port. It may also contain
+Include `{gdb_port}` in `gdb_server_path`, as in `st-util -p {gdb_port}`, to pass the same port
+to the server and GDB. The example configurations use this placeholder. Literal server commands
+remain supported; keep their port settings in sync manually. The command may also contain
 `{adapter_serial}`, the debug adapter's serial number, to pick one board when several are attached.
 
 The serial device, the GDB port and the adapter serial change from machine to machine and board to
 board. `trace.py`, `mine.py` and the evaluation scripts all start the target, so each accepts the
 same flags: `--port` replaces `Connection.port`, `--gdb-port` replaces `GDB.gdb_port`, and
-`--adapter-serial` fills `{adapter_serial}`. Leave `gdb_port` out of the file to make `--gdb-port`
-required. Each value taken from a flag is logged, with a warning when it replaces a different value
-from the file.
+`--adapter-serial` fills `{adapter_serial}`. Leave `gdb_port` out of the file to require
+`--gdb-port`. Omit `Connection.port` or leave it empty to require `--port`. Each value taken from
+a flag is logged, with a warning when it replaces a different value from the file. Tracing resolves
+and validates overrides before creating its trial directory, then writes the buffered messages to
+`out.log`. Invalid overrides leave no trial directory behind.
 
 For OpenOCD, add `-c "telnet port {telnet_port}"` and `-c "tcl port {tcl_port}"` to
 `gdb_server_path`. These consoles stay disabled unless you pass `--telnet-port 4444` or
 `--tcl-port 6666`. The ESP32-C3 configurations include both placeholders. Give each parallel
 instance its own console ports when enabling them; otherwise OpenOCD's default ports would clash.
+Enabled console ports must be in 1-65535 and differ from each other and the GDB port.
 Connect with `telnet localhost 4444` to inspect target state.
 Commands that halt, resume or reset the target can disrupt tracing.
 
