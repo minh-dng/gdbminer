@@ -9,8 +9,8 @@ from typing import override
 
 import serial
 
-from tracer.connection.connection_base_class import ConnectionBaseClass
-from tracer.connection.sut_connection import LENGTH_PREFIX, READY_BYTE, ParserResult
+from .connection_base_class import ConnectionBaseClass
+from .sut_connection import LENGTH_PREFIX, READY_BYTE, ParserResult
 
 
 class SerialConnection(ConnectionBaseClass):

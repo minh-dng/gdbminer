@@ -8,8 +8,9 @@ import time
 from pathlib import Path
 from typing import override
 
-from tracer.instance.hardware_instance import HardwareInstance
 from util import Config
+
+from .hardware_instance import HardwareInstance
 
 
 class STM32Instance(HardwareInstance):

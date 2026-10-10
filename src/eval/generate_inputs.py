@@ -8,7 +8,7 @@ from pathlib import Path
 
 from eval import resolve_grammar_file
 from eval.grammar import CoverageFuzzer, trim_grammar
-from tracer.gdb_tracer import GDBTracer
+from tracer import GDBTracer
 from util import load_config
 
 PRECISION_SIZE = 1000

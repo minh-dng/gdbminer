@@ -4,8 +4,8 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from tracer.gdb_tracer import GDBTracer
-from tracer.instance.sut_instance import SUTInstance
+from tracer import GDBTracer
+from tracer.instance import SUTInstance
 
 
 @pytest.mark.parametrize("breakpoint", ["2", "99", None])

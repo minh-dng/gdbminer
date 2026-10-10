@@ -9,11 +9,14 @@ from collections import deque
 from dataclasses import dataclass
 from pathlib import Path
 
-from tracer.instance.esp32c3_instance import ESP32C3Instance
-from tracer.instance.msp430_instance import MSP430Instance
-from tracer.instance.stm32_instance import STM32Instance
-from tracer.instance.sut_instance import GDBInstance, SUTInstance
-from tracer.instance.valgrind_instance import ValgrindInstance
+from tracer.instance import (
+    ESP32C3Instance,
+    GDBInstance,
+    MSP430Instance,
+    STM32Instance,
+    SUTInstance,
+    ValgrindInstance,
+)
 from util import Config
 
 

@@ -3,8 +3,8 @@
 import queue
 from unittest.mock import Mock, call, patch
 
-from tracer.connection.sut_connection import SUTConnection
-from tracer.instance.msp430_instance import MSP430Instance
+from tracer.connection import SUTConnection
+from tracer.instance import MSP430Instance
 
 
 def test_connection_startup():

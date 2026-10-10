@@ -13,8 +13,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import NotRequired, TypedDict, cast, override
 
-from tracer.connection.sut_connection import SUTConnection
-from tracer.instance.esp32c3_debug import (
+from tracer.connection import SUTConnection
+from util import Config
+
+from .esp32c3_debug import (
     DCSR_CAUSE_OFFSET,
     HARDWARE_TRIGGER_COUNT,
     MCONTROL_ACCESS_MASK,
@@ -23,46 +25,45 @@ from tracer.instance.esp32c3_debug import (
     DCSRMask,
     MControlFlag,
 )
-from tracer.instance.hardware_instance import HardwareInstance, MIReason
-from util import Config
+from .hardware_instance import HardwareInstance, MIReason
 
 
-class StopFrame(TypedDict, total=False):
+class _StopFrame(TypedDict, total=False):
     """Frame fields read from a stopped notification; GDB may provide others."""
 
     addr: str
     func: str
 
 
-class Breakpoint(TypedDict):
+class _Breakpoint(TypedDict):
     """Breakpoint field read from a successful insertion result."""
 
     number: str
 
 
-class MIPayload(TypedDict, total=False):
+class _MIPayload(TypedDict, total=False):
     """Dictionary payload fields used here; GDB may provide others."""
 
     reason: str
-    frame: StopFrame
+    frame: _StopFrame
     offset: int
     value: str
-    bkpt: Breakpoint
-    stack: list[StopFrame]
+    bkpt: _Breakpoint
+    stack: list[_StopFrame]
 
 
-class GDBResponse(TypedDict):
+class _GDBResponse(TypedDict):
     """Queued MI record; payload shape depends on the GDB command or event."""
 
     type: str
     message: str | None
-    payload: MIPayload | str | None
+    payload: _MIPayload | str | None
     token: NotRequired[int | None]
     stream: NotRequired[str]
 
 
 @dataclass
-class ReadTrigger:
+class _ReadTrigger:
     """One raw read trigger owned by `ESP32C3Instance`."""
 
     slot: int
@@ -92,7 +93,7 @@ class ESP32C3Instance(HardwareInstance):
     unrelated MI messages stay queued. This keeps CSR polling out of response normalization.
     """
 
-    MCONTROL = (
+    _MCONTROL = (
         MControlFlag.TYPE_MCONTROL
         | MControlFlag.DMODE
         | MControlFlag.ACTION_DEBUG_MODE
@@ -105,13 +106,13 @@ class ESP32C3Instance(HardwareInstance):
     in machine mode. The fields left at zero select `timing` = before and `match` = equal: the hart
     halts before a load from the address in `tdata2` executes.
     """
-    WATCHPOINT_PREFIX = "c3-read-"
+    _WATCHPOINT_PREFIX = "c3-read-"
     """Prefix of the ids of raw triggers handed to the tracer.
 
     GDB does not know these triggers, so `delete_breakpoint` tells them apart from GDB breakpoint
     numbers.
     """
-    POLL_SEC = 0.001
+    _POLL_SEC = 0.001
     """Timeout of each pygdbmi read.
 
     pygdbmi keeps reading until the timeout expires, even after output arrives, so this is a latency
@@ -146,10 +147,10 @@ class ESP32C3Instance(HardwareInstance):
         GDB echoes the token on the matching result record (`10001^done`), which separates that
         result from stop records and from the results of earlier commands.
         """
-        self._pending: list[GDBResponse] = []
+        self._pending: list[_GDBResponse] = []
         """MI records read while waiting for something else, in arrival order, for `_wait_stop`
         and for the tracer (`get_gdb_responses`)."""
-        self._triggers: dict[str, ReadTrigger] = {}
+        self._triggers: dict[str, _ReadTrigger] = {}
         """Raw read triggers owned by this instance, by watchpoint id."""
         self._pc = "unknown"
         """Program counter of the last reported stop."""
@@ -168,22 +169,22 @@ class ESP32C3Instance(HardwareInstance):
             self._command(f"-interpreter-exec console {json.dumps(command)}")
 
     @staticmethod
-    def _payload(response: GDBResponse) -> MIPayload:
+    def _payload(response: _GDBResponse) -> _MIPayload:
         payload = response["payload"]
         if not isinstance(payload, dict):
             raise TypeError(f"Expected a C3 MI dictionary payload: {response}")
         return payload
 
-    def _read_responses(self) -> list[GDBResponse]:
+    def _read_responses(self) -> list[_GDBResponse]:
         # pygdbmi is untyped; keep the assertion at the parser boundary.
         return cast(
-            list[GDBResponse],
+            list[_GDBResponse],
             self.gdb_controller.get_gdb_response(
-                timeout_sec=self.POLL_SEC, raise_error_on_timeout=False
+                timeout_sec=self._POLL_SEC, raise_error_on_timeout=False
             ),
         )
 
-    def _command(self, command: str) -> tuple[GDBResponse, str]:
+    def _command(self, command: str) -> tuple[_GDBResponse, str]:
         """Run one bounded MI transaction, preserving other results and events."""
         self._token += 1
         token = self._token
@@ -246,26 +247,26 @@ class ESP32C3Instance(HardwareInstance):
             states[slot] = (control, address)
         return states, int(values[-1][1], 16)
 
-    def _check_armed(self, trigger: ReadTrigger, control: int, address: int, *, hit: bool = False):
+    def _check_armed(self, trigger: _ReadTrigger, control: int, address: int, *, hit: bool = False):
         """Fail unless the slot holds `trigger`, armed.
 
         Compares the control bits that this adapter wrote, without the read-only `maskmax` field.
         `HIT` is allowed only where the caller expects a match.
         """
-        expected = self.MCONTROL | (MControlFlag.HIT if hit else 0)
+        expected = self._MCONTROL | (MControlFlag.HIT if hit else 0)
         if control & MCONTROL_CONTROL_MASK != expected or address != trigger.address:
             raise RuntimeError(
                 f"C3 trigger changed/stale: pc={self._pc}, slot={trigger.slot}, "
                 f"tdata1={control:#x}, tdata2={address:#x}, expected={expected:#x}"
             )
 
-    def _set_triggers(self, triggers: list[ReadTrigger], enabled: bool):
+    def _set_triggers(self, triggers: list[_ReadTrigger], enabled: bool):
         """Arm or disable `triggers`, and verify each slot by readback.
 
         `tdata1` = 0 (type 0, no trigger) disables a slot. The C3 keeps `tdata2`, which the readback
         checks, so re-arming only rewrites `tdata1`.
         """
-        value = self.MCONTROL if enabled else 0
+        value = self._MCONTROL if enabled else 0
         self._monitor("; ".join(f"reg tselect {t.slot}; reg tdata1 {value:#x}" for t in triggers))
         states, _ = self._read_registers([t.slot for t in triggers])
         for trigger in triggers:
@@ -314,8 +315,8 @@ class ESP32C3Instance(HardwareInstance):
             # slot N for the breakpoints and watchpoints that GDB asks it to insert.
             window = range(self.trigger_slot, self.trigger_slot + self.watchpoint_count)
             self._monitor("; ".join(f"riscv reserve_trigger {index} on" for index in window))
-        watchpoint_id = f"{self.WATCHPOINT_PREFIX}{slot}"
-        trigger = ReadTrigger(slot, watch_address, offset, control, old_address)
+        watchpoint_id = f"{self._WATCHPOINT_PREFIX}{slot}"
+        trigger = _ReadTrigger(slot, watch_address, offset, control, old_address)
         self._triggers[watchpoint_id] = trigger  # Reserve before writes for partial-init cleanup.
         try:
             # Disable the slot before changing `tdata2`, so it never matches a half-written address;
@@ -328,7 +329,7 @@ class ESP32C3Instance(HardwareInstance):
         logging.info("C3 owns slot %d at %#x (window offset %d)", slot, watch_address, offset)
         return watchpoint_id
 
-    def _wait_stop(self) -> GDBResponse:
+    def _wait_stop(self) -> _GDBResponse:
         """Return the next stop record within `timeout`, from the queue or from GDB.
 
         `_command` queues every record that is not its own result, so a stop may already be waiting;
@@ -348,7 +349,7 @@ class ESP32C3Instance(HardwareInstance):
             self._pending.extend(self._read_responses())
         raise TimeoutError(f"C3 stop timeout: pc={self._pc}, slot={self.trigger_slot}")
 
-    def _step_stop(self) -> GDBResponse:
+    def _step_stop(self) -> _GDBResponse:
         self._halted = False
         self._command("-exec-step-instruction")
         stop = self._wait_stop()
@@ -380,7 +381,7 @@ class ESP32C3Instance(HardwareInstance):
         triggers = list(self._triggers.values())
         slots = [t.slot for t in triggers]
         before_pc = self._pc
-        observed: dict[int, ReadTrigger] = {}
+        observed: dict[int, _ReadTrigger] = {}
         # Each before-load halt must reveal at least one new hardware match. Keep unmatched triggers
         # armed during recovery; never infer wide-load byte hits from address arithmetic. At most N
         # hits plus one retirement.
@@ -566,8 +567,8 @@ class ESP32C3Instance(HardwareInstance):
 
     @override
     def delete_breakpoint(self, breakpoint_id):
-        """Delete a GDB breakpoint, or release a raw trigger by its `WATCHPOINT_PREFIX` id."""
-        if not breakpoint_id.startswith(self.WATCHPOINT_PREFIX):
+        """Delete a GDB breakpoint, or release a raw trigger by its `_WATCHPOINT_PREFIX` id."""
+        if not breakpoint_id.startswith(self._WATCHPOINT_PREFIX):
             self._command(f"-break-delete {breakpoint_id}")
             return
         trigger = self._triggers.get(breakpoint_id)
@@ -602,7 +603,7 @@ class ESP32C3Instance(HardwareInstance):
         sent them."""
         responses = self._pending
         self._pending = []
-        responses.extend(cast(list[GDBResponse], super().get_gdb_responses()))
+        responses.extend(cast(list[_GDBResponse], super().get_gdb_responses()))
         for response in responses:
             if self.is_stop_message(response):
                 payload = self._payload(response)
@@ -624,7 +625,7 @@ class ESP32C3Instance(HardwareInstance):
             responses = self.get_gdb_responses()
             if responses:
                 return responses
-            time.sleep(self.POLL_SEC)
+            time.sleep(self._POLL_SEC)
         raise TimeoutError("C3 response timeout")
 
     def _interrupt(self) -> None:

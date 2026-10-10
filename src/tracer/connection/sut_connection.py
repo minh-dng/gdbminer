@@ -10,8 +10,9 @@ import struct
 from collections.abc import Callable
 from enum import IntEnum, StrEnum, unique
 
-from tracer.connection.connection_base_class import ConnectionBaseClass
 from util import Config
+
+from .connection_base_class import ConnectionBaseClass
 
 READY_BYTE = ord("A")
 """Byte ('A') that the SUT sends whenever it requests an input."""
@@ -61,17 +62,15 @@ class SUTConnection:
     def init_connection(self, config: Config, *, reset: bool) -> ConnectionBaseClass:
         match InputChannel(config["Connection"]["input_channel"]):
             case InputChannel.SERIAL:
-                from tracer.connection.serial_connection import SerialConnection
+                from .serial_connection import SerialConnection
 
                 connection = SerialConnection(config, self.inputs, self.responses, self.ready)
             case InputChannel.ESP32_UART:
-                from tracer.connection.esp32_serial_connection import ESP32UARTConnection
+                from .esp32_serial_connection import ESP32UARTConnection
 
                 connection = ESP32UARTConnection(config, self.inputs, self.responses, self.ready)
             case InputChannel.ESP32_USB_SERIAL_JTAG:
-                from tracer.connection.esp32_serial_connection import (
-                    ESP32USBSerialJTAGConnection,
-                )
+                from .esp32_serial_connection import ESP32USBSerialJTAGConnection
 
                 connection = ESP32USBSerialJTAGConnection(
                     config, self.inputs, self.responses, self.ready

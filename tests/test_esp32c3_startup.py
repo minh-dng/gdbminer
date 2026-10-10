@@ -6,7 +6,7 @@ from unittest.mock import Mock, patch
 import pytest
 from test_esp32c3_hardware import configuration
 
-from tracer.instance.esp32c3_instance import ESP32C3Instance
+from tracer.instance import ESP32C3Instance
 
 
 def test_retry_waits_for_successful_init_before_gdb_attach():

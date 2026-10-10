@@ -7,7 +7,7 @@ import subprocess
 import time
 from typing import override
 
-from tracer.instance.hardware_instance import HardwareInstance
+from .hardware_instance import HardwareInstance
 
 
 class MSP430Instance(HardwareInstance):

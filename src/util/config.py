@@ -45,8 +45,8 @@ def _validate_config(config: Config) -> None:
         raise ValueError("GDB.timeout must be positive and finite")
 
     # Imported here: the tracer modules import Config from this module.
-    from tracer.connection.sut_connection import InputChannel
-    from tracer.instance.sut_instance import GDBInstance
+    from tracer.connection import InputChannel
+    from tracer.instance import GDBInstance
 
     instance = gdb["instance"]
     if instance not in GDBInstance:
@@ -93,7 +93,7 @@ def _validate_config(config: Config) -> None:
         if stm32.get("dwt_watchpoint_workaround", True) or "dwt_function_reg" in stm32:
             _require(stm32, "dwt_function_reg", str)
     elif instance == GDBInstance.ESP32C3:
-        from tracer.instance.esp32c3_debug import HARDWARE_TRIGGER_COUNT
+        from tracer.instance import HARDWARE_TRIGGER_COUNT
 
         if channel not in esp32_channels:
             raise ValueError(

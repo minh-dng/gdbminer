@@ -3,7 +3,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from tracer.connection.sut_connection import SUTConnection
+from tracer.connection import SUTConnection
 
 
 def test_timeout_discards_pending_input_before_retry():

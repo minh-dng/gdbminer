@@ -133,7 +133,7 @@ any others:
 explicit assignments. `auto()` would assign different values. The existing `READY_BYTE = ord("A")`
 names the request marker.
 
-The UART transfer estimate uses `UART_BITS_PER_BYTE = 10`, matching PySerial's default 8N1
+The UART transfer estimate uses `_UART_BITS_PER_BYTE = 10`, matching PySerial's default 8N1
 framing: one start bit, eight data bits and one stop bit. Baud rate and reset/recovery timings
 remain TOML settings. The [PySerial constructor reference][pyserial-api] defines those defaults.
 

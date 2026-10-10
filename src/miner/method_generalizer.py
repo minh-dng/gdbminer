@@ -17,8 +17,8 @@ from miner.active_learning_utils import (
     is_a_replaceable_with_b,
     register_node,
 )
-from tracer.gdb_tracer import GDBTracer
-from tracer.instance.sut_instance import SUTInstance
+from tracer import GDBTracer
+from tracer.instance import SUTInstance
 from util import Config
 
 

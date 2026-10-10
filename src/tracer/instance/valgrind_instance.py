@@ -9,8 +9,9 @@ import time
 from pathlib import Path
 from typing import override
 
-from tracer.instance.sut_instance import SUTInstance
 from util import Config
+
+from .sut_instance import SUTInstance
 
 
 class ValgrindInstance(SUTInstance):

@@ -3,7 +3,7 @@
 import unittest
 from unittest.mock import Mock
 
-from tracer.connection.connection_base_class import ConnectionBaseClass
+from tracer.connection import ConnectionBaseClass
 
 
 class ConnectionOrderTests(unittest.TestCase):

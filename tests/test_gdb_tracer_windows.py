@@ -2,7 +2,7 @@
 
 import pytest
 
-from tracer.gdb_tracer import GDBTracer
+from tracer import GDBTracer
 
 
 def entry(address="0x10", function="parser", hits=()):
