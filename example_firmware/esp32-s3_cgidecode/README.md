@@ -8,7 +8,8 @@ above 127. The TOML reads the seeds and the evaluation corpus from `stm32_cgidec
 ## Differences from the C3 port
 
 `src/main.cpp` is the [C3 port](../esp32-c3_cgidecode/README.md), with its changes to the STM32
-wrapper, and one [S3 change](../ESP32-S3-Zero.md#firmware-wrappers): the LED toggle uses GPIO21.
+wrapper, and one [S3 change](../ESP32-S3-Zero.md#status-led): the GPIO21 RGB LED shows input and
+parser status.
 
 ## Build and upload
 
@@ -24,7 +25,8 @@ arduino-cli lib list
 The expected ELF is `build/esp32-s3_cgidecode.ino.elf`. A build on 2026-10-08 gave SHA-256
 `5a32668b52eda4e50b145f66da87d2ccded837a9e7f6f0e00f56b929dcc926ae`. Its code and data sections are
 byte-identical to the ELF of the recorded S3 runs (`31b93a18…`); only the build date and time in the
-Arduino core's start-up banner differ.
+Arduino core's start-up banner differ. That historical hash predates the status-LED changes;
+rebuild and flash the current firmware together with its matching ELF before tracing.
 
 ## Tracing
 

@@ -14,8 +14,8 @@ and `main.ino:53` (`return ret_val`) are the STM32 entry and exit points.
 ## Differences from the C3 port
 
 `main.ino` is the [C3 port](../esp32-c3_xml/README.md), with its changes to the STM32 wrapper, and
-one [S3 change](../ESP32-S3-Zero.md#firmware-wrappers): the LED toggle uses GPIO21. The three
-replaced lines keep the line count.
+one [S3 change](../ESP32-S3-Zero.md#status-led): the GPIO21 RGB LED shows input and parser status.
+The edits before the parser preserve its source-line breakpoints.
 
 ## Build and upload
 
@@ -31,7 +31,8 @@ arduino-cli lib list
 The expected ELF is `build/esp32-s3_xml.ino.elf`. A build on 2026-10-08 gave SHA-256
 `290bdb582a895c58730a095f448870b860abd5fc7d643ef1c7adf94b2be351e9`. Its code and data sections are
 byte-identical to the ELF of the recorded S3 runs (`72d23117…`); only the build date and time in the
-Arduino core's start-up banner differ.
+Arduino core's start-up banner differ. That historical hash predates the status-LED changes;
+rebuild and flash the current firmware together with its matching ELF before tracing.
 
 ## Tracing
 

@@ -106,12 +106,32 @@ debug unit. Switching the S3 to JTAG on its GPIO pads would need an irreversible
 
 ## Firmware wrappers
 
-The three wrappers are copies of the [C3 ports](ESP32-C3%20DevKitM-1-N4X.md#firmware-wrappers):
-same parser libraries, acceptance rule, serial protocol and 2,048-byte capacity. The only change:
-the LED toggle drives GPIO21, the WS2812's data pin, as a plain GPIO. The generic S3 Arduino
-variant defines `LED_BUILTIN` as an RGB LED driven through the RMT peripheral, which the C3
-ports' fallback would then use. The toggle does not light the WS2812. The xml wrapper replaces the
-three LED lines with three lines, so `main.ino:46` and `main.ino:53` stay valid.
+The three wrappers retain the [C3 ports](ESP32-C3%20DevKitM-1-N4X.md#firmware-wrappers)' parser
+libraries, acceptance rule, serial protocol and 2,048-byte capacity. They drive the Waveshare
+WS2812 on GPIO21 with Arduino's built-in `rgbLedWrite`, rather than toggling its data pin as a
+plain GPIO. The generic variant's RGB pin is not used.
+
+### Status LED
+
+| Colour | Firmware state |
+| --- | --- |
+| Blue | Startup complete enough to initialize the LED; waiting for the first input |
+| Amber | Length header received; receiving the payload |
+| Cyan | About to parse, parsing, or halted by GDB inside the parser |
+| Green | Last input accepted |
+| Red | Last input rejected by the parser |
+| Magenta | Oversized packet being drained, or last packet rejected for size |
+
+The last result stays visible while waiting for the next packet. Colours use low brightness
+(channel values at most 16 out of 255). There is no blink task or added delay. LED writes run
+outside the traced parser, using the core's RMT driver; XML's entry and exit remain
+`main.ino:46` and `main.ino:53`. The first driver initialization happens during setup, before
+input handling.
+
+These are firmware states, not host stages: the existing protocol does not identify tracing,
+mining or precision/recall evaluation. Amber and cyan can be too brief to see during normal
+execution; cyan persists while GDB holds the parser. A retained colour is not a heartbeat or
+proof of progress. The parser itself remains uninstrumented.
 
 Seeds and evaluation corpora are the authors' STM32 directories, which the TOML files name
 directly. The C3 targets keep byte-identical copies.
@@ -358,6 +378,9 @@ DBREAK1 (`DBREAKC = 0x80000020`); the backend reported `S3 DBREAK1 changed` and 
 watchpoint. These checks cover selected parser paths and do not repeat the 20-seed campaigns,
 mining or evaluation. The report, scripts and captured artifacts are on the `docs/thesis` branch
 (`docs/thesis/esp32s3-watchpoint-review-2026-10-08/`).
+
+On 2026-10-12 the status-LED firmware traced cgidecode seeds 4, 10, 11 and 20 on S3 B with both
+options. All eight traces were byte-identical to the trial-0 traces of the same firmware on S3 A.
 
 [waveshare]: https://docs.waveshare.com/ESP32-S3-zero
 [openocd-release]: https://github.com/espressif/openocd-esp32/releases/tag/v0.12.0-esp32-20260831

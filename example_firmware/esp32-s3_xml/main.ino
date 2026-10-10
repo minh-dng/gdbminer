@@ -4,20 +4,20 @@
 
 #include "Arduino.h"
 
-#undef LED_BUILTIN // The generic S3 variant routes it to its RGB LED driver; use a plain GPIO.
-#define LED_BUILTIN 21 // ESP32-S3-Zero: data pin of the WS2812; toggling it does not light it.
-// (Line kept so the following lines keep their numbers.)
+constexpr uint8_t STATUS_LED_PIN = 21; // Waveshare ESP32-S3-Zero WS2812, not generic RGB_BUILTIN.
+// Update only outside the parser: no RMT calls or LED delays in the traced region.
+// Keep these lines so XML's source-line breakpoints remain unchanged.
 
 #define FUZZ_INPUT_SIZE 2048
 char buf[FUZZ_INPUT_SIZE + 1]; // One extra byte for the terminating NUL.
 size_t input_len = 0;
-int led_state = 0;
+// The last result stays visible while waiting for the next packet.
 
 
 void setup()
 {
-    pinMode(LED_BUILTIN, OUTPUT);
-    digitalWrite(LED_BUILTIN, HIGH);
+    rgbLedWrite(STATUS_LED_PIN, 0, 0, 16); // Blue: booted, waiting for the first input.
+    // The Arduino core provides the WS2812 driver; no additional library is needed.
     Serial.begin(9600); 
 }
 
@@ -54,13 +54,7 @@ int parser(uint8_t *input, size_t input_size)
 }
 
 void loop() {
-    if (led_state == 0) {
-        digitalWrite(LED_BUILTIN, HIGH);
-        led_state = 1;
-    } else {
-        digitalWrite(LED_BUILTIN, LOW);
-        led_state = 0;
-    }
+    // Do not overwrite the previous result while waiting for a new input.
 
     // Notify that we request a new input
     Serial.write('A');
@@ -68,8 +62,10 @@ void loop() {
 
     uint32_t response_length = 0;
     serial_read_bytes((uint8_t*)&response_length, 4);
+    rgbLedWrite(STATUS_LED_PIN, 16, 8, 0); // Amber: receiving the payload.
 
     if (response_length > FUZZ_INPUT_SIZE) {
+        rgbLedWrite(STATUS_LED_PIN, 16, 0, 16); // Magenta: oversized packet, draining.
         // Reject oversized packets without overflowing or losing packet alignment.
         uint8_t discard[64];
         while (response_length > 0) {
@@ -84,7 +80,9 @@ void loop() {
     //socket_read_bytes(connection_fd, (void *)buf, response_length);
     serial_read_bytes((uint8_t*)buf, (size_t)response_length);
     buf[response_length] = 0; //nullify string
+    rgbLedWrite(STATUS_LED_PIN, 0, 16, 16); // Cyan: parsing (also while halted in GDB).
     int ret = parser((uint8_t*) buf, (size_t)response_length);
+    rgbLedWrite(STATUS_LED_PIN, ret == 0 ? 0 : 16, ret == 0 ? 16 : 0, 0); // Green/red: accept/reject.
     // Send result if parsing was successfully or not
     Serial.write(ret);
     Serial.flush();
