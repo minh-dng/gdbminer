@@ -70,7 +70,8 @@ def _validate_config(config: Config) -> None:
     channel = _require(connection, "input_channel", str)
     if channel not in InputChannel:
         raise ValueError(f"Unsupported Connection.input_channel: {channel!r}")
-    _require(connection, "port", str)
+    if "port" in connection:
+        _require(connection, "port", str)
     if channel == InputChannel.ESP32_USB_SERIAL_JTAG:
         if "baud_rate" in connection:
             raise ValueError(f"Remove Connection.baud_rate: the '{channel}' port has no baud rate")
@@ -223,7 +224,7 @@ def apply_overrides(config: Config, args: argparse.Namespace) -> None:
 
     if port is not None:
         connection = config["Connection"]
-        _log_override("Connection.port", connection["port"], port, "--port")
+        _log_override("Connection.port", connection.get("port"), port, "--port")
         connection["port"] = port
     if gdb_port is not None:
         _log_override("GDB.gdb_port", gdb.get("gdb_port"), gdb_port, "--gdb-port")
@@ -231,6 +232,8 @@ def apply_overrides(config: Config, args: argparse.Namespace) -> None:
     _validate_config(config)
     if "gdb_port" not in gdb:
         raise ValueError("Set GDB.gdb_port in the configuration or pass --gdb-port")
+    if not config["Connection"].get("port"):
+        raise ValueError("Set Connection.port in the configuration or pass --port")
     path = gdb["gdb_server_path"]
     for placeholder, flag, value in (
         (GDB_PORT_PLACEHOLDER, "--gdb-port", gdb_port),

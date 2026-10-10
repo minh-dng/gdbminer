@@ -266,6 +266,22 @@ def test_apply_overrides():
     _override(config, "--adapter-serial", "AA:BB", "--gdb-port", "5000")
     assert config["GDB"]["gdb_port"] == 5000
 
+    for port in (None, ""):
+        config = _templated()
+        if port is None:
+            del config["Connection"]["port"]
+        else:
+            config["Connection"]["port"] = port
+        _validate_config(config)
+        try:
+            _override(config, "--adapter-serial", "AA:BB")
+        except ValueError as exc:
+            assert "Connection.port" in str(exc), str(exc)
+        else:
+            raise AssertionError("Accepted a missing serial port")
+        _override(config, "--port", "/dev/ttyB", "--adapter-serial", "AA:BB")
+        assert config["Connection"]["port"] == "/dev/ttyB"
+
     # A missing or invalid value, and a flag without its placeholder, must not start a server.
     plain = load_config(STM32_CONFIG)
     plain["GDB"]["gdb_server_path"] = "st-util"
