@@ -7,6 +7,7 @@ import dataclasses
 import json
 import logging
 import time
+from logging.handlers import MemoryHandler
 from pathlib import Path
 
 from tracer import GDBTracer
@@ -47,12 +48,24 @@ def main() -> None:
 
     config = load_config(Path(args.config))
 
+    # Buffer override logs until validation succeeds and a trial can safely be allocated.
+    logger = logging.getLogger()
+    previous_level = logger.level
+    override_log = MemoryHandler(capacity=100)
+    logger.addHandler(override_log)
+    logger.setLevel(config["LOGS"]["log_level"])
+    try:
+        apply_overrides(config, args)
+    finally:
+        logger.removeHandler(override_log)
+        logger.setLevel(previous_level)
+        override_log.close()
+
     # Setup logging
     output_directory = create_output_dir(Path(config["BASIC"]["output_directory"]))
     setup_logging(output_directory, config["LOGS"]["log_level"])
-
-    # After the logging setup, so that out.log records which values the flags replaced.
-    apply_overrides(config, args)
+    for record in override_log.buffer:
+        logger.handle(record)
 
     seed_directory = Path(config["BASIC"]["seed_directory"])
     # list_of_traces = []

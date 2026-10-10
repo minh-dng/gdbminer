@@ -3,6 +3,7 @@
 from argparse import ArgumentParser
 from copy import deepcopy
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
 from tracer import GDBTracer, trace
@@ -295,6 +296,26 @@ def test_example_configs_template_gdb_port():
             assert "{gdb_port}" in gdb["gdb_server_path"], path
 
 
+def test_invalid_overrides_do_not_create_trial():
+    with TemporaryDirectory() as directory:
+        config = load_config(C3_CONFIG)
+        output = Path(directory) / "runs"
+        config["BASIC"]["output_directory"] = str(output)
+        with (
+            patch("sys.argv", ["trace", "--config", str(C3_CONFIG)]),
+            patch("util.config.tomllib.load", return_value=config),
+            patch("tracer.trace.generate_trace") as generate_trace,
+        ):
+            try:
+                trace.main()
+            except ValueError as exc:
+                assert "{adapter_serial}" in str(exc), str(exc)
+            else:
+                raise AssertionError("Accepted a missing adapter serial")
+            generate_trace.assert_not_called()
+        assert not output.exists(), "Invalid overrides left a trial directory behind"
+
+
 def test_openocd_console_ports():
     for path in ROOT.glob("example_firmware/esp32-c3_*/configuration/configuration*.toml"):
         for flags, telnet, tcl in (
@@ -324,6 +345,7 @@ if __name__ == "__main__":
     test_gdb_port_validation()
     test_apply_overrides()
     test_example_configs_template_gdb_port()
+    test_invalid_overrides_do_not_create_trial()
     test_openocd_console_ports()
     test_esp32_usb_serial_jtag_settings()
     print("Configuration regression checks passed")

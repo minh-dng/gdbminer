@@ -197,7 +197,7 @@ def add_override_arguments(parser: argparse.ArgumentParser) -> None:
 def apply_overrides(config: Config, args: argparse.Namespace) -> None:
     """Fill the machine-specific settings from `add_override_arguments` flags, in place.
 
-    Call it after the logging setup: it logs each value it uses. `Connection.port` and
+    Configure or buffer logging first: it logs each value it uses. `Connection.port` and
     `GDB.gdb_port` are replaced by `--port` and `--gdb-port`, then validated with the
     configuration's rules. `{gdb_port}` and `{adapter_serial}` in `gdb_server_path` are replaced by
     the GDB port and `--adapter-serial`. `{telnet_port}` and `{tcl_port}` take their flags' port
