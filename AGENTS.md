@@ -73,7 +73,7 @@ Treat configuration files as the execution contract: set binary paths, seed/outp
 
 ## Markdown
 
-Manual line break at 100 characters. Markdown for GitHub descriptions should not have manual line wrap as they will render on separate lines.
+Manual line break at 100 characters. Markdown for GitHub descriptions and Obsidian should not have manual line wrap as they will render on separate lines.
 
 ## Agent skills
 
