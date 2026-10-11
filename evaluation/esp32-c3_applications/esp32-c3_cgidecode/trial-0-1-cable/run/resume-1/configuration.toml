@@ -1,0 +1,48 @@
+# (1) USB cable option. Build with CDCOnBoot=cdc into build-1/.
+# GDBMiner configuration for ESP32-C3-DevKitM-1 cgidecode adapter.
+# Paper replica (Eisele et al. 2025, Section 5.4) of stm32_cgidecode:
+# same percent_encode library, entry point, seeds and (empty) ignore list.
+[BASIC]
+seed_directory = "/Users/dan173/projects/worktrees/gdbminer/misty-finch/output/c3-eval/cgidecode-1-cable/resume-1/seeds"
+output_directory = "/Users/dan173/projects/worktrees/gdbminer/misty-finch/output/c3-eval/cgidecode-1-cable/resume-1/"
+binary_file = "./example_firmware/esp32-c3_cgidecode/build-1/esp32-c3_cgidecode.ino.elf"
+eval_directory = "./example_firmware/esp32-c3_cgidecode/eval"
+
+[Connection]
+input_channel = "esp32-usb-serial-jtag"
+# CDC port of the native USB-Serial/JTAG device; OpenOCD uses its JTAG function.
+port = "/dev/cu.usbmodem211101"
+rts = true
+reset_pulse = true
+
+[GDB]
+gdb_path = "/Users/dan173/Library/Arduino15/packages/esp32/tools/riscv32-esp-elf-gdb/17.1_20260402/bin/riscv32-esp-elf-gdb"
+instance = "esp32c3"
+# The same native USB link as the inputs; the Micro-USB (UART) port stays unused.
+# 40 MHz is the USB-JTAG base clock used in the recorded runs.
+gdb_server_path = '''/Users/dan173/.espressif/openocd-esp32/bin/openocd
+  -s /Users/dan173/.espressif/openocd-esp32/share/openocd/scripts
+  -c "set ESP_RTOS none"
+  -f board/esp32c3-builtin.cfg
+  -c "adapter serial A0:F2:62:01:70:28"
+  -c "adapter speed 40000"'''
+gdb_server_address = ":3333"
+
+# Same as stm32_cgidecode: nothing is skipped, so all eight trigger slots are available.
+watchpoint_type = "(char*)"
+watchpoint_count = 8
+timeout = 30
+entrypoint = "percent::decode"
+input_buffer = "buf"
+
+[GDB.esp32c3]
+# Symbols for code already in mask ROM, loaded alongside firmware symbols, not flashed.
+# Match the chip revision: the recorded v1.1 board uses esp32c3_rev101_rom.elf.
+rom_elf = "/Users/dan173/.espressif/tools/esp-rom-elfs/20241011/esp32c3_rev101_rom.elf"
+# No finish or exit breakpoint: observe bytes with slots 0-7.
+hardware_trigger_slot = 0
+# The serial reset pulse already restarts firmware before GDB connects.
+reset_on_connect = false
+
+[LOGS]
+log_level = "INFO"

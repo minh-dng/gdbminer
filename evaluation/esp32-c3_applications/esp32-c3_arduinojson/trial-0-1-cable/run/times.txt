@@ -1,0 +1,6 @@
+flash exit=0 seconds=10
+trace exit=1 seconds=1009
+flash exit=0 seconds=8
+trace-resume-1 exit=0 seconds=1245
+mine exit=0 seconds=33
+eval exit=0 seconds=12

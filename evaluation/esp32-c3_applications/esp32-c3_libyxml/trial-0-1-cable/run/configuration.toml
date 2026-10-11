@@ -1,0 +1,53 @@
+# (1) USB cable option. Build with CDCOnBoot=cdc into build-1/.
+# GDBMiner configuration for ESP32-C3-DevKitM-1 xml adapter.
+# Paper replica (Eisele et al. 2025, Section 5.4) of stm32_libyxml:
+# same LibYxml library, entry/exit lines, seeds and ignore list.
+[BASIC]
+seed_directory = "./example_firmware/esp32-c3_xml/seeds"
+output_directory = "./output/c3-eval/xml-1-cable/"
+binary_file = "./example_firmware/esp32-c3_xml/build-1/esp32-c3_xml.ino.elf"
+eval_directory = "./example_firmware/esp32-c3_xml/eval"
+
+[Connection]
+input_channel = "esp32-usb-serial-jtag"
+# CDC port of the native USB-Serial/JTAG device; OpenOCD uses its JTAG function.
+port = "/dev/cu.usbmodem1101"
+rts = true
+reset_pulse = true
+
+[GDB]
+gdb_path = "/Users/dan173/Library/Arduino15/packages/esp32/tools/riscv32-esp-elf-gdb/17.1_20260402/bin/riscv32-esp-elf-gdb"
+instance = "esp32c3"
+# The same native USB link as the inputs; the Micro-USB (UART) port stays unused.
+# 40 MHz is the USB-JTAG base clock used in the recorded runs.
+gdb_server_path = '''/Users/dan173/.espressif/openocd-esp32/bin/openocd
+  -s /Users/dan173/.espressif/openocd-esp32/share/openocd/scripts
+  -c "set ESP_RTOS none"
+  -f board/esp32c3-builtin.cfg
+  -c "adapter serial A0:F2:62:01:70:28"
+  -c "adapter speed 40000"'''
+gdb_server_address = ":3333"
+
+# STM32 ignore list; __aeabi_dadd is the ARM EABI name of libgcc __adddf3.
+ignore_functions_regex = "_malloc|_strtod_l|__adddf3"
+watchpoint_type = "(char*)"
+watchpoint_count = 7
+timeout = 30
+entrypoint = "main.ino:46"
+# Same source lines as stm32_libyxml; main.ino keeps lines 1-54 unchanged.
+exitpoint = "main.ino:53"
+input_buffer = "buf"
+
+[GDB.esp32c3]
+# Symbols for code already in mask ROM, loaded alongside firmware symbols, not flashed.
+# Match the chip revision: the recorded v1.1 board uses esp32c3_rev101_rom.elf.
+rom_elf = "/Users/dan173/.espressif/tools/esp-rom-elfs/20241011/esp32c3_rev101_rom.elf"
+# Slot 0 stays free for the exit breakpoint; the ignore list does not fire in this parser.
+hardware_trigger_slot = 1
+# The serial reset pulse already restarts firmware before GDB connects.
+reset_on_connect = false
+# Keep the exit breakpoint inserted across steps, as in the measured XML run.
+breakpoint_always_inserted = true
+
+[LOGS]
+log_level = "INFO"
