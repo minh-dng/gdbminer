@@ -1,0 +1,205 @@
+2026-10-09 02:09:42,091 [INFO tree_builder.py:62 __init__()] Functions: percent__decode (anonymous_namespace)__indexOf
+2026-10-09 02:09:42,091 [INFO tree_builder.py:63 __init__()] Using original Mimid algo: False
+2026-10-09 02:09:42,108 [INFO method_generalizer.py:98 generalize_method_trees()] progress: example_firmware/esp32-c3_cgidecode/seeds/seed.1.in 0/20
+2026-10-09 02:09:42,108 [INFO method_generalizer.py:98 generalize_method_trees()] progress: example_firmware/esp32-c3_cgidecode/seeds/seed.10.in 1/20
+2026-10-09 02:09:42,108 [INFO method_generalizer.py:98 generalize_method_trees()] progress: example_firmware/esp32-c3_cgidecode/seeds/seed.11.in 2/20
+2026-10-09 02:09:42,108 [INFO method_generalizer.py:98 generalize_method_trees()] progress: example_firmware/esp32-c3_cgidecode/seeds/seed.12.in 3/20
+2026-10-09 02:09:42,108 [INFO method_generalizer.py:98 generalize_method_trees()] progress: example_firmware/esp32-c3_cgidecode/seeds/seed.13.in 4/20
+2026-10-09 02:09:42,108 [INFO method_generalizer.py:98 generalize_method_trees()] progress: example_firmware/esp32-c3_cgidecode/seeds/seed.14.in 5/20
+2026-10-09 02:09:42,108 [INFO method_generalizer.py:98 generalize_method_trees()] progress: example_firmware/esp32-c3_cgidecode/seeds/seed.15.in 6/20
+2026-10-09 02:09:42,108 [INFO method_generalizer.py:98 generalize_method_trees()] progress: example_firmware/esp32-c3_cgidecode/seeds/seed.16.in 7/20
+2026-10-09 02:09:42,108 [INFO method_generalizer.py:98 generalize_method_trees()] progress: example_firmware/esp32-c3_cgidecode/seeds/seed.17.in 8/20
+2026-10-09 02:09:42,108 [INFO method_generalizer.py:98 generalize_method_trees()] progress: example_firmware/esp32-c3_cgidecode/seeds/seed.18.in 9/20
+2026-10-09 02:09:42,108 [INFO method_generalizer.py:98 generalize_method_trees()] progress: example_firmware/esp32-c3_cgidecode/seeds/seed.19.in 10/20
+2026-10-09 02:09:42,108 [INFO method_generalizer.py:98 generalize_method_trees()] progress: example_firmware/esp32-c3_cgidecode/seeds/seed.2.in 11/20
+2026-10-09 02:09:42,109 [INFO method_generalizer.py:98 generalize_method_trees()] progress: example_firmware/esp32-c3_cgidecode/seeds/seed.20.in 12/20
+2026-10-09 02:09:42,109 [INFO method_generalizer.py:98 generalize_method_trees()] progress: example_firmware/esp32-c3_cgidecode/seeds/seed.3.in 13/20
+2026-10-09 02:09:42,109 [INFO method_generalizer.py:98 generalize_method_trees()] progress: example_firmware/esp32-c3_cgidecode/seeds/seed.4.in 14/20
+2026-10-09 02:09:42,109 [INFO method_generalizer.py:98 generalize_method_trees()] progress: example_firmware/esp32-c3_cgidecode/seeds/seed.5.in 15/20
+2026-10-09 02:09:42,109 [INFO method_generalizer.py:98 generalize_method_trees()] progress: example_firmware/esp32-c3_cgidecode/seeds/seed.6.in 16/20
+2026-10-09 02:09:42,109 [INFO method_generalizer.py:98 generalize_method_trees()] progress: example_firmware/esp32-c3_cgidecode/seeds/seed.7.in 17/20
+2026-10-09 02:09:42,109 [INFO method_generalizer.py:98 generalize_method_trees()] progress: example_firmware/esp32-c3_cgidecode/seeds/seed.8.in 18/20
+2026-10-09 02:09:42,109 [INFO method_generalizer.py:98 generalize_method_trees()] progress: example_firmware/esp32-c3_cgidecode/seeds/seed.9.in 19/20
+2026-10-09 02:09:42,870 [INFO hardware_instance.py:94 _stop_gdb_server()] GDB Server terminated
+2026-10-09 02:09:42,871 [WARNING esp32c3_instance.py:703 _start_gdb_server()] C3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_PIPE'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+
+Error: [esp32c3] Unsupported DTM version: -1
+Error: [esp32c3] Could not identify target type.
+2026-10-09 02:09:43,296 [INFO esp32c3_instance.py:696 _start_gdb_server()] C3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (A0:F2:62:01:70:28)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32c3.tap0 tap/device found: 0x00005c25 (mfg: 0x612 (Espressif Systems), part: 0x0005, ver: 0x0)
+Info : [esp32c3] datacount=2 progbufsize=16
+Info : [esp32c3] Examined RISC-V core
+Info : [esp32c3]  XLEN=32, misa=0x40101104
+Info : [esp32c3] Chip revision v1.1
+Info : [esp32c3] Examination succeed
+Info : [esp32c3] starting gdb server on 3333
+Info : Listening on port 3333 for gdb connections
+GDBMINER_C3_READY
+Info : Listening on port 6666 for tcl connections
+Info : Listening on port 4444 for telnet connections
+2026-10-09 02:09:43,312 [INFO sut_instance.py:38 init_gdb_controller()] GDB started
+2026-10-09 02:09:43,313 [INFO sut_instance.py:41 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-c3_cgidecode/build-2/esp32-c3_cgidecode.ino.elf' successfully
+2026-10-09 02:09:44,511 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <percent__decode> 0/4
+2026-10-09 02:09:44,512 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 20 from 20 nodes for pattern recognition
+2026-10-09 02:09:45,523 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <percent__decode_b1c0> 1/4
+2026-10-09 02:09:45,523 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 21 from 21 nodes for pattern recognition
+2026-10-09 02:09:45,865 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <percent__decode_d520> 2/4
+2026-10-09 02:09:45,866 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 21 from 21 nodes for pattern recognition
+2026-10-09 02:09:49,202 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <percent__decode_9620> 3/4
+2026-10-09 02:09:49,203 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 11 from 11 nodes for pattern recognition
+2026-10-09 02:09:51,109 [INFO hardware_instance.py:94 _stop_gdb_server()] GDB Server terminated
+2026-10-09 02:09:51,109 [INFO method_generalizer.py:117 generalize_method_trees()] Used 287 requests to generalize methods
+2026-10-09 02:09:51,109 [INFO method_generalizer.py:120 generalize_method_trees()] update: <percent__decode> 0/4
+2026-10-09 02:09:51,109 [INFO method_generalizer.py:120 generalize_method_trees()] update: <percent__decode_b1c0> 1/4
+2026-10-09 02:09:51,109 [INFO method_generalizer.py:120 generalize_method_trees()] update: <percent__decode_d520> 2/4
+2026-10-09 02:09:51,109 [INFO method_generalizer.py:120 generalize_method_trees()] update: <percent__decode_9620> 3/4
+2026-10-09 02:09:51,770 [INFO hardware_instance.py:94 _stop_gdb_server()] GDB Server terminated
+2026-10-09 02:09:51,770 [WARNING esp32c3_instance.py:703 _start_gdb_server()] C3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+adapter speed: 40000 kHz
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+
+Error: [esp32c3] Unsupported DTM version: -1
+Error: [esp32c3] Could not identify target type.
+2026-10-09 02:09:52,204 [INFO esp32c3_instance.py:696 _start_gdb_server()] C3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (A0:F2:62:01:70:28)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32c3.tap0 tap/device found: 0x00005c25 (mfg: 0x612 (Espressif Systems), part: 0x0005, ver: 0x0)
+Info : [esp32c3] datacount=2 progbufsize=16
+Info : [esp32c3] Examined RISC-V core
+Info : [esp32c3]  XLEN=32, misa=0x40101104
+Info : [esp32c3] Chip revision v1.1
+Info : [esp32c3] Examination succeed
+Info : [esp32c3] starting gdb server on 3333
+Info : Listening on port 3333 for gdb connections
+GDBMINER_C3_READY
+Info : Listening on port 6666 for tcl connections
+Info : Listening on port 4444 for telnet connections
+2026-10-09 02:09:52,212 [INFO sut_instance.py:38 init_gdb_controller()] GDB started
+2026-10-09 02:09:52,213 [INFO sut_instance.py:41 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-c3_cgidecode/build-2/esp32-c3_cgidecode.ino.elf' successfully
+2026-10-09 02:09:53,328 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <percent__decode-.0:while_0,0 ?#[]> 0/3
+2026-10-09 02:09:53,328 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 32 from 32 nodes for pattern recognition
+2026-10-09 02:10:00,564 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <percent__decode-.0:if_1,0 ?#["-1"]> 1/3
+2026-10-09 02:10:00,564 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 21 from 21 nodes for pattern recognition
+2026-10-09 02:10:00,630 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <percent__decode-.0:if_1,1 ?#["-1"]> 2/3
+2026-10-09 02:10:00,630 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 11 from 11 nodes for pattern recognition
+2026-10-09 02:10:00,711 [INFO hardware_instance.py:94 _stop_gdb_server()] GDB Server terminated
+2026-10-09 02:10:00,711 [INFO loop_generalizer.py:107 generalize_loop_trees()] Used 307 requests to generalize loops
+2026-10-09 02:10:00,711 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <percent__decode-.0:while_0,0 ?#[]> 0/3
+2026-10-09 02:10:00,711 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <percent__decode-.0:if_1,0 ?#["-1"]> 1/3
+2026-10-09 02:10:00,711 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <percent__decode-.0:if_1,1 ?#["-1"]> 2/3
+2026-10-09 02:10:00,720 [INFO token_generalizer.py:267 generalize_tokens_in_grammar()] Generalize 46 tokens
+2026-10-09 02:10:01,270 [INFO hardware_instance.py:94 _stop_gdb_server()] GDB Server terminated
+2026-10-09 02:10:01,271 [WARNING esp32c3_instance.py:703 _start_gdb_server()] C3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+adapter speed: 40000 kHz
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+
+Error: [esp32c3] Unsupported DTM version: -1
+Error: [esp32c3] Could not identify target type.
+2026-10-09 02:10:01,895 [INFO esp32c3_instance.py:696 _start_gdb_server()] C3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (A0:F2:62:01:70:28)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32c3.tap0 tap/device found: 0x00005c25 (mfg: 0x612 (Espressif Systems), part: 0x0005, ver: 0x0)
+Info : [esp32c3] datacount=2 progbufsize=16
+Info : [esp32c3] Examined RISC-V core
+Info : [esp32c3]  XLEN=32, misa=0x40101104
+Info : [esp32c3] Chip revision v1.1
+Info : [esp32c3] Examination succeed
+Info : [esp32c3] starting gdb server on 3333
+Info : Listening on port 3333 for gdb connections
+GDBMINER_C3_READY
+Info : Listening on port 6666 for tcl connections
+Info : Listening on port 4444 for telnet connections
+2026-10-09 02:10:01,900 [INFO sut_instance.py:38 init_gdb_controller()] GDB started
+2026-10-09 02:10:01,901 [INFO sut_instance.py:41 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-c3_cgidecode/build-2/esp32-c3_cgidecode.ino.elf' successfully
+2026-10-09 02:10:04,634 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:05,534 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:06,509 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:06,584 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:07,510 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:08,396 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:09,351 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:09,418 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:10,333 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:11,222 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:11,283 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:12,205 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:12,266 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:12,328 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:13,241 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:13,304 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:14,690 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-09 02:10:15,503 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:16,907 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-09 02:10:16,972 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:18,382 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-09 02:10:18,448 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:19,863 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-09 02:10:19,929 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:21,337 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-09 02:10:21,407 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:22,808 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-09 02:10:22,866 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:22,925 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:22,983 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:23,900 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:23,969 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:24,026 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:24,089 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:24,862 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:24,927 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:24,966 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:25,019 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:25,075 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:25,131 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:25,191 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:25,251 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:25,311 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:25,393 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-09 02:10:26,981 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-09 02:10:27,066 [INFO hardware_instance.py:94 _stop_gdb_server()] GDB Server terminated
+2026-10-09 02:10:27,066 [INFO token_generalizer.py:290 generalize_tokens_in_grammar()] Used 1593 requests to generalize tokens
+2026-10-09 02:10:27,069 [INFO mine.py:317 main()] Mining time: 45.00313591957092 seconds
