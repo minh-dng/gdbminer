@@ -3,14 +3,17 @@
 # SPDX-License-Identifier: AGPL-3.0
 
 import logging
+import math
 import re
 import time
 from collections import deque
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
 from tracer.instance import (
     ESP32C3Instance,
+    ESP32S3Instance,
     GDBInstance,
     MSP430Instance,
     STM32Instance,
@@ -36,6 +39,13 @@ class GDBTracer:
         self.input_buffer = config["GDB"]["input_buffer"]
         self.ignore_functions_regex = config["GDB"].get("ignore_functions_regex", "")
         self.watchpoint_count = config["GDB"]["watchpoint_count"]
+        self.watchpoint_min_distance = 1
+        if config["GDB"].get("instance") == GDBInstance.ESP32S3:
+            self.watchpoint_min_distance = config["GDB"]["esp32s3"].get(
+                "watchpoint_min_distance", 1
+            )
+        """Smallest distance between two bytes watched in the same run; 1 keeps the paper's
+        contiguous window (`GDB.esp32s3.watchpoint_min_distance` applies only to the S3)."""
         self.config = config
 
     def trace_instruction(
@@ -89,6 +99,8 @@ class GDBTracer:
                 return STM32Instance(config, input_file)
             case GDBInstance.ESP32C3:
                 return ESP32C3Instance(config, input_file)
+            case GDBInstance.ESP32S3:
+                return ESP32S3Instance(config, input_file)
             case GDBInstance.MSP430:
                 return MSP430Instance(config, input_file)
 
@@ -117,33 +129,52 @@ class GDBTracer:
             result.append(new_entry)
         return result
 
+    def watch_windows(self, input_len: int) -> list[list[int]]:
+        """Input offsets watched in each run; every offset is watched in exactly one run.
+
+        By default a contiguous window of `watchpoint_count` bytes slides over the input (paper,
+        Section 4.1). With `watchpoint_min_distance` d > 1, run j watches j, j + s, j + 2s, ...
+        with stride s = max(ceil(n / count), min(n, d)), so two bytes watched in one run are at
+        least d apart. For n > count * (d - 1) this needs as many runs as the contiguous
+        window; a shorter input needs at most d - 1 more.
+
+        The ESP32-S3 needs d = 4: one halt names one data breakpoint, so two watched bytes must
+        not be read by one aligned word load.
+        """
+        count = self.watchpoint_count
+        if self.watchpoint_min_distance == 1:
+            return [
+                list(range(start, min(start + count, input_len)))
+                for start in range(0, input_len, count)
+            ]
+        stride = max(math.ceil(input_len / count), min(input_len, self.watchpoint_min_distance))
+        return [list(range(first, input_len, stride)) for first in range(stride)]
+
     def trace_input(self, filename: Path | str) -> list[TraceEntry]:
         input_len = Path(filename).stat().st_size
 
         logging.info(f"Seed length: {input_len}")
 
-        watchpoint_window_offset = 0
-
         merged_trace: list[GDBTracer.TraceEntry] | None = None
 
-        # Sliding window according to watchpoint count
-        while watchpoint_window_offset < input_len:
+        # One run per watchpoint window; the runs are merged per instruction.
+        # TODO: Investigate backend support for unlimited watchpoints (-1).
+        for window in self.watch_windows(input_len):
             with GDBTracer.open_sut_instance(self.config, filename) as instance:
-                trace = self.trace_input_slice(instance, input_len, watchpoint_window_offset)
+                trace = self.trace_input_slice(instance, window)
 
             if not trace or any(not entry.stack for entry in trace):
-                raise ValueError(f"Incomplete trace window at offset {watchpoint_window_offset}")
+                raise ValueError(f"Incomplete trace {window=}")
             merged_trace = trace if merged_trace is None else self.merge_traces(merged_trace, trace)
-            # TODO: Investigate backend support for unlimited watchpoints (-1) and window advancement.
-            watchpoint_window_offset += self.watchpoint_count
 
         if merged_trace is None:
             raise ValueError("Cannot trace an empty seed")
         return merged_trace
 
-    def trace_input_slice(
-        self, instance: SUTInstance, input_len: int, watchpoint_window_offset: int = 0
-    ) -> list[TraceEntry]:
+    def trace_input_slice(self, instance: SUTInstance, window: Sequence[int]) -> list[TraceEntry]:
+        """Trace one run that watches the input offsets in `window`."""
+        if not window or len(window) > self.watchpoint_count:
+            raise ValueError(f"Watch {window=} does not fit {self.watchpoint_count} slots")
         instruction_trace_list: list[GDBTracer.TraceEntry] = []
         watchpoint_offset = {}
 
@@ -164,10 +195,8 @@ class GDBTracer:
         if entry_breakpoint is not None and response["payload"].get("bkptno") != entry_breakpoint:
             raise RuntimeError(f"Unexpected entry breakpoint: {response}")
 
-        string_range = range(input_len)
-        watchpoint_range = range(self.watchpoint_count)
         # Set watchpoints
-        for i, _ in zip(string_range[watchpoint_window_offset:], watchpoint_range):
+        for i in window:
             if self.input_buffer.startswith("0x"):
                 watchpoint_address = hex(int(self.input_buffer, 16) + i)
             else:
@@ -210,7 +239,7 @@ class GDBTracer:
         run = True
         while run:
             if time.monotonic() >= deadline:
-                raise TimeoutError(f"Trace stalled at window {watchpoint_window_offset}")
+                raise TimeoutError(f"Trace stalled at {window=}")
             responses = deque(instance.get_gdb_responses())
             while responses:
                 response = responses.popleft()
@@ -324,7 +353,8 @@ class GDBTracer:
                             instance.step_instruction()
 
                         elif "offset" in response["payload"]:
-                            offset = watchpoint_window_offset + response["payload"]["offset"]
+                            # Backends that poll their comparators report the index in the window.
+                            offset = window[response["payload"]["offset"]]
                             logging.info(f"Watchpoint triggered: {offset} ")
                             instruction_trace_list[-1].watchpoint_hits.append(offset)
 

@@ -12,14 +12,8 @@ unused `input_len` variable and some redundant casts.
 
 ## Install the library
 
-After the [toolchain](../ESP32-C3%20DevKitM-1-N4X.md#toolchain) is installed:
-
-```sh
-arduino-cli lib install 'Arduino_JSON@0.2.0'
-arduino-cli lib list
-```
-
-Confirm library 0.2.0 before building.
+Follow the shared [Arduino CLI JSON library setup](../Arduino-CLI.md#json), then
+[verify the installed version](../Arduino-CLI.md#verify-installed-versions) before building.
 
 ## Build and upload
 

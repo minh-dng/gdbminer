@@ -6,10 +6,11 @@ Build and flash one target before running the tracing, mining and evaluation sta
 
 ## Boards
 
-| Board          | SoC       | Architecture  | Debug interface | Documentation              |
-| -------------- | --------- | ------------- | --------------- | -------------------------- |
-| B-L4S5I-IOT01A | STM32L4S5 | Arm Cortex-M4 | ST-Link/SWD     | [ST docs][stm32-board]     |
-| DevKitM-1-N4X  | ESP32-C3  | 32-bit RISC-V | USB Serial/JTAG | [Espressif docs][c3-board] |
+| Board          | SoC       | Architecture    | Debug interface | Documentation              |
+| -------------- | --------- | --------------- | --------------- | -------------------------- |
+| B-L4S5I-IOT01A | STM32L4S5 | Arm Cortex-M4   | ST-Link/SWD     | [ST docs][stm32-board]     |
+| DevKitM-1-N4X  | ESP32-C3  | 32-bit RISC-V   | USB Serial/JTAG | [Espressif docs][c3-board] |
+| ESP32-S3-Zero  | ESP32-S3  | Xtensa LX7 (×2) | USB Serial/JTAG | [Waveshare docs][s3-board] |
 
 The STM32 reference targets use the B-L4S5I-IOT01A Discovery kit, with an STM32L4S5 MCU
 supporting a 120 MHz core clock.
@@ -19,24 +20,32 @@ workflow needs a USB connection wired to the native USB pins, for the debugger a
 one-cable setup, also for the inputs. Follow the [hardware setup][c3-setup] before connecting the
 debugger.
 
+The Waveshare ESP32-S3-Zero has no USB-to-UART bridge: its USB-C port is wired to the native USB
+pins, so one cable carries both the debugger and the inputs. Follow the [S3 setup
+guide][s3-setup].
+
 ## Parser targets
 
 Each target includes firmware, seed inputs, an evaluation corpus and a TOML file in
-`configuration/`: `configuration.toml` for STM32, and `configuration.2-cables.toml` and
-`configuration.1-cable.toml` for the C3 two-cable and one-cable setups. The C3 targets port the
-corresponding STM32 parser wrappers; platform differences and validation notes are documented in
-their READMEs.
+`configuration/`: `configuration.toml` for STM32, `configuration.2-cables.toml` and
+`configuration.1-cable.toml` for the C3 two-cable and one-cable setups, and
+`configuration.1-watchpoint.toml` and `configuration.2-watchpoints.toml` for the S3 options. The C3
+and S3 targets use the corresponding STM32 parser libraries and acceptance rules; build and
+validation notes are documented in their READMEs. The S3 targets read the STM32 seeds and evaluation
+corpora.
 
-| Parser                        | STM32 reference              | ESP32-C3 port                |
-| ----------------------------- | ---------------------------- | ---------------------------- |
-| JSON (`Arduino_JSON` / cJSON) | [stm32_arduinojson][st-json] | [esp32-c3_json][c3-json]     |
-| CGI (`percent_encode`)        | [stm32_cgidecode][st-cgi]    | [esp32-c3_cgidecode][c3-cgi] |
-| XML (`LibYxml`)               | [stm32_libyxml][st-xml]      | [esp32-c3_xml][c3-xml]       |
+| Parser                        | STM32 reference              | ESP32-C3 port                | ESP32-S3 port                |
+| ----------------------------- | ---------------------------- | ---------------------------- | ---------------------------- |
+| JSON (`Arduino_JSON` / cJSON) | [stm32_arduinojson][st-json] | [esp32-c3_json][c3-json]     | [esp32-s3_json][s3-json]     |
+| CGI (`percent_encode`)        | [stm32_cgidecode][st-cgi]    | [esp32-c3_cgidecode][c3-cgi] | [esp32-s3_cgidecode][s3-cgi] |
+| XML (`LibYxml`)               | [stm32_libyxml][st-xml]      | [esp32-c3_xml][c3-xml]       | [esp32-s3_xml][s3-xml]       |
 
 ## Build and flash
 
 First install GDBMiner's Python environment as described in the [repository README](../README.md).
-Run the commands below from the repository root.
+Run the commands below from the repository root. For both ESP32 boards, follow the shared
+[Arduino CLI setup](Arduino-CLI.md) for the toolchain, parser libraries and Apple Silicon
+prerequisite before using the board-specific build commands.
 
 ### STM32
 
@@ -68,6 +77,17 @@ Use the target's existing watchpoint budget and trigger window as the starting p
 hardware breakpoints and read triggers share eight slots; assigning all eight to input reads is
 not safe for every parser.
 
+### ESP32-S3
+
+Follow the [S3 setup guide][s3-setup] for the build options
+(`CDCOnBoot=cdc,USBMode=hwcdc,LoopCore=0`), Espressif's Xtensa GDB, the OpenOCD options and the ROM
+symbols. Then follow the chosen target's README. The expected firmware
+ELF is `example_firmware/<target>/build/<target>.ino.elf`.
+
+The S3 has two data breakpoints per core, separate from its two instruction breakpoints. One
+watchpoint leaves the second to the firmware's stack guard; two watchpoints need about half the
+runs. Two require `watchpoint_min_distance = 4`.
+
 ## Running GDBMiner on the firmware
 
 Follow the root README's [trace and mine workflow](../README.md#run-local) and
@@ -79,7 +99,8 @@ Before running:
 
 - Update the target's TOML with your local paths and device identifiers.
 - Ensure the flashed firmware and configured ELF come from the same build.
-- Keep the board connected throughout tracing, mining and evaluation. The C3 needs both USB links.
+- Keep the board connected throughout tracing, mining and evaluation. The C3's two-cable setup
+  needs both USB links.
 - Run one stage at a time and release the serial port before starting the next; an interrupted
   run can leave a serial worker holding the port.
 - Mine only after every seed has a trace. Mining selects the newest trial, including incomplete
@@ -97,3 +118,8 @@ Before running:
 [c3-json]: esp32-c3_json/README.md
 [c3-cgi]: esp32-c3_cgidecode/README.md
 [c3-xml]: esp32-c3_xml/README.md
+[s3-board]: https://docs.waveshare.com/ESP32-S3-zero
+[s3-setup]: ESP32-S3-Zero.md
+[s3-json]: esp32-s3_json/README.md
+[s3-cgi]: esp32-s3_cgidecode/README.md
+[s3-xml]: esp32-s3_xml/README.md

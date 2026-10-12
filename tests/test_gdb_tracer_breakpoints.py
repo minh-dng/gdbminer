@@ -55,9 +55,9 @@ def test_exit_breakpoint_identity(breakpoint):
     )
     with patch("tracer.gdb_tracer.time.sleep"):
         if breakpoint == "2":
-            tracer.trace_input_slice(instance, 1)
+            tracer.trace_input_slice(instance, [0])
             instance.delete_breakpoint.assert_called_once()
         else:
             with pytest.raises(RuntimeError, match="Unexpected exit breakpoint"):
-                tracer.trace_input_slice(instance, 1)
+                tracer.trace_input_slice(instance, [0])
             instance.delete_breakpoint.assert_not_called()

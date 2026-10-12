@@ -80,7 +80,7 @@ class SUTConnection:
         connection.start()
         try:
             try:
-                connected = self.ready.get(block=True, timeout=self.timeout)
+                connected = self.ready.get(timeout=self.timeout)
             except queue.Empty as exc:
                 raise TimeoutError("Timed out connecting to SUT") from exc
             if not connected:
@@ -102,7 +102,7 @@ class SUTConnection:
         while True:
             self.inputs.put(fuzz_input)
             try:
-                return self.responses.get(block=True, timeout=self.timeout)
+                return self.responses.get(timeout=self.timeout)
             except queue.Empty:
                 logging.warning("Connection timeout!")
                 self.disconnect()

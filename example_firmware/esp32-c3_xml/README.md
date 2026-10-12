@@ -25,13 +25,8 @@ ports](../ESP32-C3%20DevKitM-1-N4X.md#firmware-wrappers).
 ## Build and upload
 
 Install the toolchain and build as in the [C3 setup
-README](../ESP32-C3%20DevKitM-1-N4X.md#arduino-build) with `TARGET=esp32-c3_xml`. Install the
-library at the base version that `stm32_libyxml/platformio.ini` declares (`^1.0.2`):
-
-```sh
-arduino-cli lib install 'LibYxml@1.0.2'
-arduino-cli lib list
-```
+README](../ESP32-C3%20DevKitM-1-N4X.md#arduino-build) with `TARGET=esp32-c3_xml`. Install and verify the parser library using the shared
+[Arduino CLI XML library setup](../Arduino-CLI.md#xml).
 
 The expected ELF is `build-2/esp32-c3_xml.ino.elf` for two cables and
 `build-1/esp32-c3_xml.ino.elf` for one cable.

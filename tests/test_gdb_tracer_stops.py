@@ -48,7 +48,7 @@ def trace(*batches: list[dict]) -> Mock:
     instance.is_stop_message.side_effect = lambda r: SUTInstance.is_stop_message(instance, r)
     instance.get_gdb_responses.side_effect = [*batches, Done()]
     with patch("tracer.gdb_tracer.time.sleep"), pytest.raises(Done):
-        GDBTracer(CONFIG).trace_input_slice(instance, 1)
+        GDBTracer(CONFIG).trace_input_slice(instance, [0])
     return instance
 
 
@@ -145,4 +145,4 @@ def test_truncated_unwind_is_not_parser_return(function, caller):
     instance.continue_execution = Mock()
     instance.send_input = Mock()
     with patch("tracer.gdb_tracer.time.sleep"), pytest.raises(RuntimeError):
-        tracer.trace_input_slice(instance, 1, 0)
+        tracer.trace_input_slice(instance, [0])

@@ -105,16 +105,25 @@ TOML literal strings preserve regex backslashes.
 
 `watchpoint_count = -1` is not supported. The tracer advances through the input by this count, so it must be positive.
 
+Window selection stays in the generic tracer. Non-S3 targets always use distance `1`: each pass
+watches the next `watchpoint_count` bytes, as in the paper. On ESP32-S3,
+`GDB.esp32s3.watchpoint_min_distance` defaults to `1`, but two-watchpoint configurations must
+explicitly set it to at least `4`, because one hardware halt cannot name two watched bytes read
+by the same load. A larger distance `d` spreads each pass: pass `j` watches bytes `j`, `j + s`,
+`j + 2s`, … with stride `s = max(ceil(n / watchpoint_count), min(n, d))` for an input of `n`
+bytes. Every byte is still watched in exactly one pass.
+
 ### MCU settings
 
-STM32, MSP430 and ESP32-C3 use the following server fields in `[GDB]` and serial fields in
-`[Connection]`. Machine-specific fields can be supplied through CLI flags as described below.
+STM32, MSP430, ESP32-C3 and ESP32-S3 use the following server fields in `[GDB]` and serial fields
+in `[Connection]`. Machine-specific fields can be supplied through CLI flags as described below.
 Valgrind supplies input through a file and does not require these fields or a `[Connection]` table.
 
 | Table | Field | Type and meaning |
 | --- | --- | --- |
 | `GDB` | `gdb_server_path` | str, server command and arguments, using shell quoting rules. |
 | `GDB` | `gdb_port` | int in 1-65535; omit to require `--gdb-port`. |
+| `GDB.esp32s3` | `watchpoint_min_distance` | optional positive int, smallest distance between two bytes watched in one pass; defaults to `1`. S3 only; must explicitly be at least `4` with two watchpoints. |
 | `Connection` | `input_channel` | str, value from the [`InputChannel` enum][input-channel]. |
 | `Connection` | `port` | optional str, serial device; `--port` is required if absent or empty. |
 | `Connection` | `baud_rate` | positive int, baud rate; omit for `esp32-usb-serial-jtag`. |
@@ -123,6 +132,8 @@ Include `{gdb_port}` in `gdb_server_path`, as in `st-util -p {gdb_port}`, to pas
 to the server and GDB. The example configurations use this placeholder. Literal server commands
 remain supported; keep their port settings in sync manually. The command may also contain
 `{adapter_serial}`, the debug adapter's serial number, to pick one board when several are attached.
+The ESP32-S3's `GDB.esp32s3.usb_reset_command` may contain it too, so that the USB reset hits the
+board that OpenOCD debugs.
 
 The serial device, the GDB port and the adapter serial change from machine to machine and board to
 board. `trace.py`, `mine.py` and the evaluation scripts all start the target, so each accepts the
@@ -135,7 +146,7 @@ and validates overrides before creating its trial directory, then writes the buf
 
 For OpenOCD, add `-c "telnet port {telnet_port}"` and `-c "tcl port {tcl_port}"` to
 `gdb_server_path`. These consoles stay disabled unless you pass `--telnet-port 4444` or
-`--tcl-port 6666`. The ESP32-C3 configurations include both placeholders. Give each parallel
+`--tcl-port 6666`. The ESP32 configurations include both placeholders. Give each parallel
 instance its own console ports when enabling them; otherwise OpenOCD's default ports would clash.
 Enabled console ports must be in 1-65535 and differ from each other and the GDB port.
 Connect with `telnet localhost 4444` to inspect target state.

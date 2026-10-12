@@ -25,12 +25,8 @@ into bytes left from earlier inputs. The STM32 reference does the same.
 
 Install the toolchain and build as in the [C3 setup
 README](../ESP32-C3%20DevKitM-1-N4X.md#arduino-build) with `TARGET=esp32-c3_cgidecode`.
-Install the library at the base version that `stm32_cgidecode/platformio.ini` declares (`^2.0.1`):
-
-```sh
-arduino-cli lib install 'percent_encode@2.0.1'
-arduino-cli lib list
-```
+Install and verify the parser library using the shared
+[Arduino CLI CGI library setup](../Arduino-CLI.md#cgi).
 
 The expected ELF is `build-2/esp32-c3_cgidecode.ino.elf` for two cables and
 `build-1/esp32-c3_cgidecode.ino.elf` for one cable.
