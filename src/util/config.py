@@ -23,7 +23,7 @@ def _require(table: Config, key: str, expected: type | tuple[type, ...]) -> Any:
     # Exact types exclude booleans from numeric settings.
     if type(value) not in types:
         names = " or ".join(t.__name__ for t in types)
-        raise TypeError(f"Config key {key!r} must be {names}, got {type(value).__name__}")
+        raise TypeError(f"Config {key=!r} must be {names}, got {type(value).__name__}")
     return value
 
 

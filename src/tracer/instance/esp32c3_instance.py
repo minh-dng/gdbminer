@@ -109,14 +109,14 @@ class ESP32C3Instance(ESP32Instance[_ReadTrigger]):
         values = re.findall(r"\b(tselect|tdata1|tdata2|dcsr) \(/32\): (0x[0-9a-fA-F]+)", text)
         expected_names = ["tselect", "tselect", "tdata1", "tdata2"] * len(slots) + ["dcsr"]
         if [name for name, _ in values] != expected_names:
-            raise RuntimeError(f"Incomplete C3 register transaction for slots {slots}: {text}")
+            raise RuntimeError(f"Incomplete C3 register transaction for {slots=}: {text}")
         states = {}
         for index, slot in enumerate(slots):
             selected, control, address = [
                 int(value, 16) for _, value in values[index * 4 + 1 : index * 4 + 4]
             ]
             if selected != slot:
-                raise RuntimeError(f"C3 trigger slot {slot} is unavailable (read back {selected})")
+                raise RuntimeError(f"C3 trigger {slot=} is unavailable (read back {selected})")
             states[slot] = (control, address)
         return states, int(values[-1][1], 16)
 
@@ -130,7 +130,7 @@ class ESP32C3Instance(ESP32Instance[_ReadTrigger]):
         if control & MCONTROL_CONTROL_MASK != expected or address != trigger.address:
             raise RuntimeError(
                 f"C3 trigger changed/stale: pc={self._pc}, slot={trigger.slot}, "
-                f"tdata1={control:#x}, tdata2={address:#x}, expected={expected:#x}"
+                f"tdata1={control:#x}, tdata2={address:#x}, {expected=:#x}"
             )
 
     def _set_triggers(self, triggers: list[_ReadTrigger], enabled: bool):
@@ -176,7 +176,7 @@ class ESP32C3Instance(ESP32Instance[_ReadTrigger]):
         states, dcsr = self._read_registers([slot])
         control, old_address = states[slot]
         if control & MCONTROL_ACCESS_MASK:
-            raise RuntimeError(f"C3 slot {slot} already has an active owner")
+            raise RuntimeError(f"C3 {slot=} already has an active owner")
         # With `dcsr.stepie` = 1 an interrupt could run during each single step, and the handler's
         # instructions and loads would enter the trace.
         if dcsr & DCSRMask.STEPIE:
@@ -261,7 +261,7 @@ class ESP32C3Instance(ESP32Instance[_ReadTrigger]):
                 break
             if cause != DCSRCause.TRIGGER or not hits or self._pc != before_pc:
                 raise RuntimeError(
-                    f"Unexplained C3 halt: pc={before_pc}->{self._pc}, dcsr={dcsr:#x}, {states}"
+                    f"Unexplained C3 halt: pc={before_pc}->{self._pc}, {dcsr=:#x}, {states}"
                 )
             for trigger in hits:
                 observed[trigger.slot] = trigger
@@ -323,7 +323,7 @@ class ESP32C3Instance(ESP32Instance[_ReadTrigger]):
         if hit:
             # A load trigger halts in debug mode, so any other cause leaves the hit unexplained.
             if cause != DCSRCause.TRIGGER:
-                raise RuntimeError(f"Unexplained C3 finish stop: dcsr={dcsr:#x}, {stop}")
+                raise RuntimeError(f"Unexplained C3 finish stop: {dcsr=:#x}, {stop}")
             # The load has not executed yet; stepping re-fires and retires it.
             self._step(report=False)
             return
@@ -341,7 +341,7 @@ class ESP32C3Instance(ESP32Instance[_ReadTrigger]):
         # tracer checks its number and ends the window.
         exit_hit = reason == MIReason.BREAKPOINT_HIT and cause == DCSRCause.TRIGGER
         if reason != MIReason.FUNCTION_FINISHED and not unlabelled_return and not exit_hit:
-            raise RuntimeError(f"Unexpected C3 finish stop: dcsr={dcsr:#x}, {stop}")
+            raise RuntimeError(f"Unexpected C3 finish stop: {dcsr=:#x}, {stop}")
         self._pending.append(stop)
 
     def _release_slot(self, watchpoint_id: str) -> None:
