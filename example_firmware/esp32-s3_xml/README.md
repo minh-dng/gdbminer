@@ -7,15 +7,15 @@ reads the seeds and the evaluation corpus from `stm32_libyxml`.
 
 ## Layout and line numbers
 
-As on the C3, the wrapper stays in `main.ino`, and the comment-only `esp32-s3_xml.ino` is the sketch
-entry that Arduino CLI requires. Lines 1-54 keep their numbers, so `main.ino:46` (the `for` loop)
+The wrapper is in `main.ino`, and the comment-only `esp32-s3_xml.ino` is the sketch entry that
+Arduino CLI requires. Lines 1-54 keep their numbers, so `main.ino:46` (the `for` loop)
 and `main.ino:53` (`return ret_val`) are the STM32 entry and exit points.
 
-## Differences from the C3 port
+## Firmware wrapper
 
-`main.ino` is the [C3 port](../esp32-c3_xml/README.md), with its changes to the STM32 wrapper, and
-one [S3 change](../ESP32-S3-Zero.md#status-led): the GPIO21 RGB LED shows input and parser status.
-The edits before the parser preserve its source-line breakpoints.
+`main.ino` receives inputs over USB serial and reports parser results. The
+[GPIO21 RGB LED](../ESP32-S3-Zero.md#status-led) shows input and parser status. LED writes stay
+outside the parser and preserve its source-line breakpoints.
 
 ## Build and upload
 

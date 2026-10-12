@@ -5,11 +5,10 @@ on the Waveshare ESP32-S3-Zero. The parser is the reference `percent_encode` lib
 the reference `parser()` acceptance rule: `percent::decode`, then reject if any decoded byte is
 above 127. The TOML reads the seeds and the evaluation corpus from `stm32_cgidecode`.
 
-## Differences from the C3 port
+## Firmware wrapper
 
-`src/main.cpp` is the [C3 port](../esp32-c3_cgidecode/README.md), with its changes to the STM32
-wrapper, and one [S3 change](../ESP32-S3-Zero.md#status-led): the GPIO21 RGB LED shows input and
-parser status.
+`src/main.cpp` receives inputs over USB serial and reports parser results. The
+[GPIO21 RGB LED](../ESP32-S3-Zero.md#status-led) shows input and parser status.
 
 ## Build and upload
 

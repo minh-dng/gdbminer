@@ -5,11 +5,10 @@ on the Waveshare ESP32-S3-Zero. The parser is `Arduino_JSON@0.2.0`. The TOML rea
 evaluation corpus from `stm32_arduinojson`. The empty `.ino` file lets Arduino CLI build the C++
 source in `src/main.cpp` without rewriting it.
 
-## Differences from the C3 port
+## Firmware wrapper
 
-`src/main.cpp` is the [C3 port](../esp32-c3_json/README.md), with its changes to the STM32 wrapper,
-and one [S3 change](../ESP32-S3-Zero.md#status-led): the GPIO21 RGB LED shows input and parser
-status.
+`src/main.cpp` receives inputs over USB serial and reports parser results. The
+[GPIO21 RGB LED](../ESP32-S3-Zero.md#status-led) shows input and parser status.
 
 ## Build and upload
 

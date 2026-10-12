@@ -6,10 +6,9 @@ and the tracing method shared by the three S3 targets (`esp32-s3_cgidecode`, `es
 
 The S3-Zero uses **one USB-C cable**. The cable carries both the inputs
 (`input_channel = "esp32-usb-serial-jtag"`) and the debugger, through the chip's built-in
-USB-Serial/JTAG peripheral. The board has no USB-to-UART bridge, so the two-cable setup of the
-[C3 board](ESP32-C3%20DevKitM-1-N4X.md) does not exist here.
+USB-Serial/JTAG peripheral. The board has no USB-to-UART bridge.
 
-Each target has two configurations instead, one per watchpoint count. Both use the same build and
+Each target has two configurations, one per watchpoint count. Both use the same build and
 the same firmware; they differ in the data breakpoints that GDBMiner takes from the firmware.
 
 | Option                | TOML file                          | Data breakpoints     | Runs per seed of n bytes     |
@@ -46,14 +45,13 @@ watchpoints belongs to the CPU's debug unit, not to the probe (see
 [Debug resources](#debug-resources-per-core)).
 
 The pads TX (GPIO43) and RX (GPIO44) are UART0. An external USB-to-UART adapter there could carry
-the inputs over the `esp32-uart` channel, as the C3's two-cable setup does. That setup was not
-built or tested.
+the inputs over the `esp32-uart` channel. That setup was not built or tested.
 
 ### Finding the identifiers
 
-The port name depends on the Mac's USB socket (`ls /dev/cu.usbmodem*`). The C3 uses the same
-vendor and product ID (`0x303A:0x1001`), so with several boards attached only the USB serial number
-in `adapter serial` tells them apart. For these chips the serial number is the chip's MAC address.
+The port name depends on the Mac's USB socket (`ls /dev/cu.usbmodem*`). The USB vendor and product
+ID is `0x303A:0x1001`; with several boards attached, use the USB serial number in `adapter serial`
+to select the target. The serial number is the chip's MAC address.
 
 ```sh
 ioreg -p IOUSB -w0 -l | grep -E '"(USB Product Name|USB Serial Number)"'
@@ -74,8 +72,8 @@ one board while OpenOCD debugs the other. `--port` replaces `[Connection] port`.
 
 ### Reset and serial behaviour
 
-The CDC port behaves as on the C3 in its one-cable setup (see
-[`ESP32USBSerialJTAGConnection`](../src/tracer/connection/esp32_serial_connection.py)):
+[`ESP32USBSerialJTAGConnection`](../src/tracer/connection/esp32_serial_connection.py) handles the
+CDC port:
 
 - Opening the port resets the chip (RTS asserted, DTR released), and the firmware then prints the
   ready byte `A`.
@@ -95,21 +93,24 @@ so BOOT is needed only when the running firmware has disabled its USB function.
 | Data breakpoints (DBREAK)        | 2     | read watchpoints; the firmware also uses DBREAK1 as a FreeRTOS end-of-stack guard |
 
 Source: `xtensa-core-esp32s3.cfg` (`ibreaknum 2`, `dbreaknum 2`) in Espressif OpenOCD. The two
-units are separate, so breakpoints never take a watchpoint. This differs from the C3, whose eight
-trigger slots are shared by breakpoints and watchpoints. `finish` needs one instruction breakpoint
-here: GDB also breaks on the C++ exception hook `_Unwind_DebugHook` when the ELF has one, and these
-ELFs do not. The xml exit breakpoint and a `finish` return breakpoint fit the two IBREAKs.
+units are separate, so breakpoints never take a watchpoint. `finish` needs one instruction
+breakpoint: GDB also breaks on the C++ exception hook `_Unwind_DebugHook` when the ELF has one,
+and these ELFs do not. The xml exit breakpoint and a `finish` return breakpoint fit the two IBREAKs.
 
-A second ESP32-S3 or the C3 as JTAG probe would not add breakpoints: they belong to the target's
-debug unit. Switching the S3 to JTAG on its GPIO pads would need an irreversible eFuse burn
-(`DIS_USB_JTAG` or `STRAP_JTAG_SEL`).
+An external JTAG probe would not add breakpoints: they belong to the target's debug unit. Switching
+the S3 to JTAG on its GPIO pads would need an irreversible eFuse burn (`DIS_USB_JTAG` or
+`STRAP_JTAG_SEL`).
 
 ## Firmware wrappers
 
-The three wrappers retain the [C3 ports](ESP32-C3%20DevKitM-1-N4X.md#firmware-wrappers)' parser
-libraries, acceptance rule, serial protocol and 2,048-byte capacity. They drive the Waveshare
-WS2812 on GPIO21 with Arduino's built-in `rgbLedWrite`, rather than toggling its data pin as a
-plain GPIO. The generic variant's RGB pin is not used.
+The three wrappers use the paper's STM32 parser libraries and acceptance rules. Each accepts up
+to 2,048 input bytes, with an extra buffer byte for the terminating NUL. They yield with `delay(1)`
+while waiting for input, flush ready and result bytes, and drain oversized packets before rejecting
+them with `0xff`. The serial protocol uses `A` as the ready marker, a four-byte little-endian length
+followed by the payload, and `0` (accepted) or `0xff` (rejected) as the result.
+
+The wrappers drive the Waveshare WS2812 on GPIO21 with Arduino's built-in `rgbLedWrite`. The generic
+variant's RGB pin is not used.
 
 ### Status LED
 
@@ -134,14 +135,43 @@ execution; cyan persists while GDB holds the parser. A retained colour is not a 
 proof of progress. The parser itself remains uninstrumented.
 
 Seeds and evaluation corpora are the authors' STM32 directories, which the TOML files name
-directly. The C3 targets keep byte-identical copies.
+directly.
 
 ## Arduino build
 
-Use the [C3 toolchain](ESP32-C3%20DevKitM-1-N4X.md#toolchain): Arduino CLI 1.5.1, core
-`esp32:esp32@3.3.12`, and on Apple Silicon the natively built `ctags`
-([prerequisite](ESP32-C3%20DevKitM-1-N4X.md#apple-silicon-host-prerequisite)). Install the
-target's library as its README says.
+Use [Arduino CLI 1.5.1](https://github.com/arduino/arduino-cli/releases/tag/v1.5.1) and Espressif's
+Arduino-ESP32 core `esp32:esp32@3.3.12`. Install the core before building:
+
+```sh
+arduino-cli core update-index \
+  --additional-urls https://espressif.github.io/arduino-esp32/package_esp32_index.json
+arduino-cli core install esp32:esp32@3.3.12 \
+  --additional-urls https://espressif.github.io/arduino-esp32/package_esp32_index.json
+arduino-cli core list
+```
+
+Confirm core 3.3.12, then install the target's library as its README says.
+
+### Apple Silicon prerequisite
+
+Arduino CLI 1.5.1 installs an Intel-only `ctags` 5.8-arduino11
+([upstream issue](https://github.com/arduino/ctags/issues/20)). On a Mac without Rosetta, build the
+unmodified upstream release natively:
+
+```sh
+curl -fL -o /tmp/arduino-ctags.tar.xz \
+  https://github.com/arduino/ctags/releases/download/5.8-arduino11/ctags-5.8-arduino11.tar.xz
+PREFIX="$HOME/.local/opt/arduino-ctags/5.8-arduino11"
+mkdir -p "$PREFIX/source"
+tar -xf /tmp/arduino-ctags.tar.xz -C "$PREFIX/source" --strip-components=1
+(cd "$PREFIX/source" && ./configure --prefix="$PREFIX" && \
+  make -j4 CFLAGS='-O2 -include dirent.h' && make install)
+```
+
+Pre-including the system header avoids the old `ctags` `__unused__` macro colliding with the macOS
+SDK header. The build property below selects this executable; omit it where the packaged one works.
+
+### Build and upload
 
 From the repository root, set `TARGET` to `esp32-s3_json`, `esp32-s3_cgidecode` or
 `esp32-s3_xml`:
@@ -188,7 +218,7 @@ OpenOCD options in `gdb_server_path`, all required:
 | `set ESP_RTOS none`     | GDB sees the CPU, not FreeRTOS tasks        | OpenOCD reads the task lists at every halt, which slows every step  |
 | `set ESP_ONLYCPU 1`     | Debug core 0 only                           | OpenOCD hands GDB the first halted core it polls, not the parser's  |
 | `set ESP_FLASH_SIZE 0`  | No flash support; every breakpoint hardware | A third breakpoint is written into flash, which changes the program |
-| `adapter serial {adapter_serial}` | Select this board's USB device    | OpenOCD opens the first Espressif device it finds, possibly the C3  |
+| `adapter serial {adapter_serial}` | Select this board's USB device    | OpenOCD may open a different attached Espressif device  |
 
 ### Values to change on another machine
 
@@ -222,9 +252,20 @@ OpenOCD attaches, and again after a serial reconnect. With `reset_on_connect = t
 (2026-10-08), the USB device re-enumerated after OpenOCD's `reset halt`: the open serial port
 failed with `Device not configured`, and the trace stopped at the entry breakpoint.
 
-The serial settings in `[Connection]` are those of the [C3 one-cable
-setup](ESP32-C3%20DevKitM-1-N4X.md#target-settings-in-toml). The loader rejects unknown or misplaced
-S3 keys, ARM DWT settings, more than two watchpoints, two watchpoints without the minimum distance,
+Serial settings live in `[Connection]`:
+
+| Field | Type and meaning |
+| --- | --- |
+| `dtr` | optional bool, defaults to `false`. |
+| `rts` | optional bool, defaults to `true`. |
+| `reset_pulse` | optional bool, defaults to `true`; setting it to `false` requires `rts = false`. |
+| `reset_pulse_sec` | optional positive finite seconds, default `0.05`. |
+| `quiet_sec` | optional positive finite seconds after the latest ready marker, default `0.2`. |
+| `grace_sec` | optional positive finite seconds to wait after a reboot before resending, default `1.0`. |
+| `write_gap_sec` | optional positive finite seconds between 64-byte writes, default `0.002`. |
+
+The USB channel rejects `baud_rate`. The loader also rejects unknown or misplaced S3 keys, ARM DWT
+settings, more than two watchpoints, two watchpoints without the minimum distance,
 `reset_on_connect = true` and a non-byte `watchpoint_type`.
 
 ### Debug register values
@@ -262,8 +303,8 @@ uv run src/eval/precision_recall.py --config "$CONFIG" "${BOARD[@]}" --out evalu
 ```
 
 All three stages start OpenOCD and run inputs on the board, so pass them the same flags. The
-configurations use the same `{gdb_port}`, `{telnet_port}` and `{tcl_port}` placeholders as the C3
-ones; the [configuration reference](../README.md#writing-up-configuration-tomls) lists the flags
+configurations use `{gdb_port}`, `{telnet_port}` and `{tcl_port}` placeholders; the
+[configuration reference](../README.md#writing-up-configuration-tomls) lists the flags
 and how to enable the OpenOCD consoles. A missing `--adapter-serial` stops the stage before any
 server starts.
 
@@ -311,7 +352,7 @@ FreeRTOS overwrite of DBREAK1 and verified that this recovery path restored it.
 **Register-window exceptions are not trace entries.** A step at `retw` or a call can end at the
 same pc because OpenOCD stepped through a WindowUnderflow or WindowOverflow handler, which returns
 to the instruction. A same-pc step with a changed `WindowStart` is repeated, so the trace keeps one
-entry per executed instruction, as on the STM32 and the C3.
+entry per executed instruction.
 
 **ROM jump stubs are followed.** The S3 calls ROM routines (`strlen`, `strncmp`, `memcpy`,
 `memset`) through two-instruction stubs: `l32r aN, <routine>; jx aN`. A stub has no `ENTRY`, so
@@ -355,11 +396,10 @@ revisions do not identify the exact source of every resumed trace.
 | json, one watchpoint | 99.5 % | 94.3 % | 96.8 % | 99.3 %   | 88.1 %       |
 | xml       | 97.9 %       | 67.2 %    | 79.7 % | 99.4 %          | 93.5 %       |
 
-The cgidecode and xml traces read the input exactly like the C3 traces and the authors' STM32
-traces (function, input offset and order, 20 of 20 seeds each); json matches the STM32 reads on 17
-of 20 seeds. The xml recall equals the historical C3 sample's (67.2 %); the matching reads provide
-no evidence of an S3-specific tracing cause for that gap. For json, both options matched addresses,
-functions, stacks and read sets on all 20 seeds. Their different scores are unseeded samples.
+The cgidecode and xml traces match the authors' STM32 reads (function, input offset and order,
+20 of 20 seeds each); json matches the STM32 reads on 17 of 20 seeds. For json, both watchpoint
+options matched addresses, functions, stacks and read sets on all 20 seeds. Their different scores
+are unseeded samples.
 
 ### Check of this backend on the board
 

@@ -30,9 +30,9 @@ Each target includes firmware, seed inputs, an evaluation corpus and a TOML file
 `configuration/`: `configuration.toml` for STM32, `configuration.2-cables.toml` and
 `configuration.1-cable.toml` for the C3 two-cable and one-cable setups, and
 `configuration.1-watchpoint.toml` and `configuration.2-watchpoints.toml` for the S3 options. The C3
-targets port the corresponding STM32 parser wrappers, and the S3 targets port the C3 ones; platform
-differences and validation notes are documented in their READMEs. The S3 targets read the STM32
-seeds and evaluation corpora.
+and S3 targets use the corresponding STM32 parser libraries and acceptance rules; build and
+validation notes are documented in their READMEs. The S3 targets read the STM32 seeds and evaluation
+corpora.
 
 | Parser                        | STM32 reference              | ESP32-C3 port                | ESP32-S3 port                |
 | ----------------------------- | ---------------------------- | ---------------------------- | ---------------------------- |
@@ -79,7 +79,7 @@ not safe for every parser.
 
 Follow the [S3 setup guide][s3-setup] for the build options
 (`CDCOnBoot=cdc,USBMode=hwcdc,LoopCore=0`), Espressif's Xtensa GDB, the OpenOCD options and the ROM
-symbols. The toolchain is the C3's. Then follow the chosen target's README. The expected firmware
+symbols. Then follow the chosen target's README. The expected firmware
 ELF is `example_firmware/<target>/build/<target>.ino.elf`.
 
 The S3 has two data breakpoints per core, separate from its two instruction breakpoints. One
