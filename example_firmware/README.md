@@ -43,7 +43,9 @@ corpora.
 ## Build and flash
 
 First install GDBMiner's Python environment as described in the [repository README](../README.md).
-Run the commands below from the repository root.
+Run the commands below from the repository root. For both ESP32 boards, follow the shared
+[Arduino CLI setup](Arduino-CLI.md) for the toolchain, parser libraries and Apple Silicon
+prerequisite before using the board-specific build commands.
 
 ### STM32
 

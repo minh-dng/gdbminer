@@ -20,13 +20,8 @@ outside the parser and preserve its source-line breakpoints.
 ## Build and upload
 
 Install the toolchain and build as in the [S3 setup guide](../ESP32-S3-Zero.md#arduino-build) with
-`TARGET=esp32-s3_xml`. Install the library at the base version that `stm32_libyxml/platformio.ini`
-declares (`^1.0.2`):
-
-```sh
-arduino-cli lib install 'LibYxml@1.0.2'
-arduino-cli lib list
-```
+`TARGET=esp32-s3_xml`. Install and verify the parser library using the shared
+[Arduino CLI XML library setup](../Arduino-CLI.md#xml).
 
 The expected ELF is `build/esp32-s3_xml.ino.elf`. A build on 2026-10-08 gave SHA-256
 `290bdb582a895c58730a095f448870b860abd5fc7d643ef1c7adf94b2be351e9`. Its code and data sections are

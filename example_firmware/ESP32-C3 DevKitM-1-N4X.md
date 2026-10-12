@@ -143,43 +143,15 @@ The steps in this part are specific to Arduino CLI and the Arduino-ESP32 core.
 
 ### Toolchain
 
-Build with Espressif's official Arduino-ESP32 distribution and its declared compiler/runtime
-dependencies.
-
-Use Arduino CLI 1.5.1 ([GitHub](https://github.com/arduino/arduino-cli/releases/tag/v1.5.1))
-[^arduino-cli]. It runs used the archive, unpacked to `~/.local/opt/arduino-cli/1.5.1/`.
-Run these commands before building:
-
-```sh
-arduino-cli core update-index \
-  --additional-urls https://espressif.github.io/arduino-esp32/package_esp32_index.json
-arduino-cli core install esp32:esp32@3.3.12 \
-  --additional-urls https://espressif.github.io/arduino-esp32/package_esp32_index.json
-arduino-cli core list
-```
-
-Confirm core 3.3.12 before building. The official package index selects matching compiler and
-runtime versions. Then install the target's library as its README says, and check it with
-`arduino-cli lib list`.
+Follow the shared [toolchain setup](Arduino-CLI.md#toolchain) for Arduino CLI and Espressif's
+Arduino-ESP32 core[^arduino-cli], then the [parser library setup](Arduino-CLI.md#parser-libraries).
+The recorded runs used the CLI archive unpacked to `~/.local/opt/arduino-cli/1.5.1/`.
 
 ### Apple Silicon host prerequisite
 
-Arduino CLI 1.5.1 installs an Intel-only `ctags` 5.8-arduino11 ([GitHub issue](https://github.com/arduino/ctags/issues/20)).
-On a Mac without Rosetta, compile the same unmodified upstream release natively.
-
-```sh
-curl -fL -o /tmp/arduino-ctags.tar.xz \
-  https://github.com/arduino/ctags/releases/download/5.8-arduino11/ctags-5.8-arduino11.tar.xz
-PREFIX="$HOME/.local/opt/arduino-ctags/5.8-arduino11"
-mkdir -p "$PREFIX/source"
-tar -xf /tmp/arduino-ctags.tar.xz -C "$PREFIX/source" --strip-components=1
-(cd "$PREFIX/source" && ./configure --prefix="$PREFIX" && \
-  make -j4 CFLAGS='-O2 -include dirent.h' && make install)
-```
-
-Pre-including the system header avoids the old ctags `__unused__` macro colliding with the current
-macOS SDK header. No ctags source or installed Arduino package is patched. The build property below
-selects this native executable. Omit that property on hosts where the packaged executable works.
+Follow the shared [Apple Silicon host prerequisite](Arduino-CLI.md#apple-silicon-host-prerequisite)
+for native `ctags`. The build property below selects that executable; omit it on hosts where the
+packaged executable works.
 
 ### Build and upload
 

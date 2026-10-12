@@ -13,13 +13,8 @@ source in `src/main.cpp` without rewriting it.
 ## Build and upload
 
 Install the toolchain and build as in the [S3 setup guide](../ESP32-S3-Zero.md#arduino-build) with
-`TARGET=esp32-s3_json`. Install the library at the base version that
-`stm32_arduinojson/platformio.ini` declares (`^0.2.0`):
-
-```sh
-arduino-cli lib install 'Arduino_JSON@0.2.0'
-arduino-cli lib list
-```
+`TARGET=esp32-s3_json`. Install and verify the parser library using the shared
+[Arduino CLI JSON library setup](../Arduino-CLI.md#json).
 
 The expected ELF is `build/esp32-s3_json.ino.elf`. A build on 2026-10-08 gave SHA-256
 `29ea3fa3d804422cf68f0b74d3b1f2cb31303283538b92782e13d059d5cdac65`. Its code and data sections are

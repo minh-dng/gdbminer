@@ -139,37 +139,14 @@ directly.
 
 ## Arduino build
 
-Use [Arduino CLI 1.5.1](https://github.com/arduino/arduino-cli/releases/tag/v1.5.1) and Espressif's
-Arduino-ESP32 core `esp32:esp32@3.3.12`. Install the core before building:
-
-```sh
-arduino-cli core update-index \
-  --additional-urls https://espressif.github.io/arduino-esp32/package_esp32_index.json
-arduino-cli core install esp32:esp32@3.3.12 \
-  --additional-urls https://espressif.github.io/arduino-esp32/package_esp32_index.json
-arduino-cli core list
-```
-
-Confirm core 3.3.12, then install the target's library as its README says.
+Follow the shared [toolchain setup](Arduino-CLI.md#toolchain) for Arduino CLI and Espressif's
+Arduino-ESP32 core, then the [parser library setup](Arduino-CLI.md#parser-libraries).
 
 ### Apple Silicon prerequisite
 
-Arduino CLI 1.5.1 installs an Intel-only `ctags` 5.8-arduino11
-([upstream issue](https://github.com/arduino/ctags/issues/20)). On a Mac without Rosetta, build the
-unmodified upstream release natively:
-
-```sh
-curl -fL -o /tmp/arduino-ctags.tar.xz \
-  https://github.com/arduino/ctags/releases/download/5.8-arduino11/ctags-5.8-arduino11.tar.xz
-PREFIX="$HOME/.local/opt/arduino-ctags/5.8-arduino11"
-mkdir -p "$PREFIX/source"
-tar -xf /tmp/arduino-ctags.tar.xz -C "$PREFIX/source" --strip-components=1
-(cd "$PREFIX/source" && ./configure --prefix="$PREFIX" && \
-  make -j4 CFLAGS='-O2 -include dirent.h' && make install)
-```
-
-Pre-including the system header avoids the old `ctags` `__unused__` macro colliding with the macOS
-SDK header. The build property below selects this executable; omit it where the packaged one works.
+Follow the shared [Apple Silicon host prerequisite](Arduino-CLI.md#apple-silicon-host-prerequisite)
+for native `ctags`. The build property below selects that executable; omit it where the packaged
+one works.
 
 ### Build and upload
 

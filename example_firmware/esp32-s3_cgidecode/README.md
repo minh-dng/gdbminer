@@ -13,13 +13,8 @@ above 127. The TOML reads the seeds and the evaluation corpus from `stm32_cgidec
 ## Build and upload
 
 Install the toolchain and build as in the [S3 setup guide](../ESP32-S3-Zero.md#arduino-build) with
-`TARGET=esp32-s3_cgidecode`. Install the library at the base version that
-`stm32_cgidecode/platformio.ini` declares (`^2.0.1`):
-
-```sh
-arduino-cli lib install 'percent_encode@2.0.1'
-arduino-cli lib list
-```
+`TARGET=esp32-s3_cgidecode`. Install and verify the parser library using the shared
+[Arduino CLI CGI library setup](../Arduino-CLI.md#cgi).
 
 The expected ELF is `build/esp32-s3_cgidecode.ino.elf`. A build on 2026-10-08 gave SHA-256
 `5a32668b52eda4e50b145f66da87d2ccded837a9e7f6f0e00f56b929dcc926ae`. Its code and data sections are
