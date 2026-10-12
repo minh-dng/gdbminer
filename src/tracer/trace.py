@@ -21,7 +21,7 @@ def create_output_dir(output_dir_base: Path) -> Path:
     while True:
         output_directory = base / f"trial-{counter}"
         try:
-            output_directory.mkdir(parents=True, exist_ok=False)
+            output_directory.mkdir(parents=True)
             return output_directory
         except FileExistsError:
             counter += 1

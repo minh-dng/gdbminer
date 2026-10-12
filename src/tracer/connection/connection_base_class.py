@@ -55,7 +55,7 @@ class ConnectionBaseClass(mp.Process):
 
         self.ready.put(True)
         while self.running:
-            fuzz_input = self.inputs.get(block=True)
+            fuzz_input = self.inputs.get()
             self.wait_for_input_request()
             self.response.put(self.send_input(fuzz_input))
 
