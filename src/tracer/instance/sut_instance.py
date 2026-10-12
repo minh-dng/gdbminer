@@ -5,6 +5,7 @@
 import logging
 import shlex
 from enum import StrEnum, unique
+from pathlib import Path
 from types import TracebackType
 from typing import Self
 
@@ -29,6 +30,7 @@ class SUTInstance:
         self.timeout = config["GDB"]["timeout"]
         self.elf_file = config["BASIC"]["binary_file"]
         self.gdb_with_args = shlex.split(config["GDB"]["gdb_path"])
+        self.gdb_with_args[0] = str(Path(self.gdb_with_args[0]).expanduser())
         self.config = config
         self.number_of_tested_inputs: int = 0
 
