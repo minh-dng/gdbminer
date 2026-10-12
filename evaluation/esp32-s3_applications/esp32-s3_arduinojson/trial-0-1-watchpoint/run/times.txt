@@ -1,0 +1,6 @@
+flash exit=0 seconds=12
+flash exit=0 seconds=12
+flash exit=0 seconds=12
+trace-resume-1 exit=0 seconds=18331 seeds=1,2,3,4,5,6,12,13,16,17,18,19
+mine exit=0 seconds=32
+eval exit=0 seconds=52
