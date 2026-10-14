@@ -26,13 +26,12 @@ guide][s3-setup].
 
 ## Parser targets
 
-Each target includes firmware, seed inputs, an evaluation corpus and a TOML file in
-`configuration/`: `configuration.toml` for STM32, `configuration.2-cables.toml` and
-`configuration.1-cable.toml` for the C3 two-cable and one-cable setups, and
-`configuration.1-watchpoint.toml` and `configuration.2-watchpoints.toml` for the S3 options. The C3
-and S3 targets use the corresponding STM32 parser libraries and acceptance rules; build and
-validation notes are documented in their READMEs. The S3 targets read the STM32 seeds and evaluation
-corpora.
+Each target includes firmware and TOML files in `configuration/`: `configuration.toml` for STM32,
+`configuration.2-cables.toml` and `configuration.1-cable.toml` for the C3 two-cable and one-cable
+setups, and `configuration.1-watchpoint.toml` and `configuration.2-watchpoints.toml` for the S3
+options. Only the STM32 targets hold seed inputs and an evaluation corpus, as provided by the
+authors. The C3 and S3 targets use the corresponding STM32 parser libraries, acceptance rules,
+seeds and evaluation corpora; build and validation notes are documented in their READMEs.
 
 | Parser                        | STM32 reference              | ESP32-C3 port                | ESP32-S3 port                |
 | ----------------------------- | ---------------------------- | ---------------------------- | ---------------------------- |

@@ -4,11 +4,12 @@ Hardware links, firmware wrappers, the Arduino build, the debugger and the traci
 by all C3 targets. See the [C3 setup README](../ESP32-C3%20DevKitM-1-N4X.md). This page
 covers what is specific to json.
 
-The parser remains `Arduino_JSON@0.2.0`. The source in `src/main.cpp`, seeds and evaluation corpus
-are unchanged by this build migration. The empty `.ino` file lets Arduino CLI build that existing
-C++ source without rewriting it. Compared with `stm32_arduinojson`, the wrapper has the [changes
-shared by all C3 ports](../ESP32-C3%20DevKitM-1-N4X.md#firmware-wrappers) and also drops the
-unused `input_len` variable and some redundant casts.
+The parser remains `Arduino_JSON@0.2.0`. The source in `src/main.cpp` is unchanged by this build
+migration, and the configurations read the STM32 seeds and evaluation corpus. The empty `.ino` file
+lets Arduino CLI build that existing C++ source without rewriting it. Compared with
+`stm32_arduinojson`, the wrapper has the [changes shared by all C3
+ports](../ESP32-C3%20DevKitM-1-N4X.md#firmware-wrappers) and also drops the unused `input_len`
+variable and some redundant casts.
 
 ## Install the library
 
