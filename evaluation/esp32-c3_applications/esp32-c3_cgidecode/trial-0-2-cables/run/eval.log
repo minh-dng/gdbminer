@@ -1,0 +1,58 @@
+2026-10-09 02:11:00,439 [INFO hardware_instance.py:94 _stop_gdb_server()] GDB Server terminated
+2026-10-09 02:11:00,440 [WARNING esp32c3_instance.py:703 _start_gdb_server()] C3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+adapter speed: 40000 kHz
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+
+Error: [esp32c3] Unsupported DTM version: -1
+Error: [esp32c3] Could not identify target type.
+2026-10-09 02:11:01,068 [INFO esp32c3_instance.py:696 _start_gdb_server()] C3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (A0:F2:62:01:70:28)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32c3.tap0 tap/device found: 0x00005c25 (mfg: 0x612 (Espressif Systems), part: 0x0005, ver: 0x0)
+Info : [esp32c3] datacount=2 progbufsize=16
+Info : [esp32c3] Examined RISC-V core
+Info : [esp32c3]  XLEN=32, misa=0x40101104
+Info : [esp32c3] Chip revision v1.1
+Info : [esp32c3] Examination succeed
+Info : [esp32c3] starting gdb server on 3333
+Info : Listening on port 3333 for gdb connections
+GDBMINER_C3_READY
+Info : Listening on port 6666 for tcl connections
+Info : Listening on port 4444 for telnet connections
+2026-10-09 02:11:01,079 [INFO sut_instance.py:38 init_gdb_controller()] GDB started
+2026-10-09 02:11:01,079 [INFO sut_instance.py:41 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-c3_cgidecode/build-2/esp32-c3_cgidecode.ino.elf' successfully
+2026-10-09 02:11:04,924 [INFO precision_recall.py:64 main()] Generated non accepting input: '? %uy3'
+2026-10-09 02:11:05,487 [INFO precision_recall.py:64 main()] Generated non accepting input: "7,'sIMVvXt%>_Gca"
+2026-10-09 02:11:05,569 [INFO precision_recall.py:64 main()] Generated non accepting input: 'g8%VT'
+2026-10-09 02:11:05,780 [INFO precision_recall.py:64 main()] Generated non accepting input: 'OEuO=];}KAj%Y8n'
+2026-10-09 02:11:07,360 [INFO precision_recall.py:64 main()] Generated non accepting input: 'pRRCqsjN%a\x0c{2P'
+2026-10-09 02:11:08,044 [INFO precision_recall.py:64 main()] Generated non accepting input: '%AU_t'
+2026-10-09 02:11:08,182 [INFO precision_recall.py:64 main()] Generated non accepting input: '%F$qujKMG'
+2026-10-09 02:11:09,006 [INFO precision_recall.py:64 main()] Generated non accepting input: 'M>5%il!MJ'
+2026-10-09 02:11:09,267 [INFO precision_recall.py:64 main()] Generated non accepting input: '%q'
+2026-10-09 02:11:09,462 [INFO precision_recall.py:64 main()] Generated non accepting input: 'ZG_uD%I'
+2026-10-09 02:11:10,183 [INFO precision_recall.py:64 main()] Generated non accepting input: '%u\x0c\tDJ=#VN$\nKAqE'
+2026-10-09 02:11:10,297 [INFO precision_recall.py:64 main()] Generated non accepting input: 'Bv0%`]IZE17pxzo'
+2026-10-09 02:11:10,601 [INFO precision_recall.py:64 main()] Generated non accepting input: '%l'
+2026-10-09 02:11:13,970 [INFO precision_recall.py:64 main()] Generated non accepting input: 'ut%NA'
+2026-10-09 02:11:14,393 [INFO precision_recall.py:64 main()] Generated non accepting input: '%[i'
+2026-10-09 02:11:14,991 [INFO precision_recall.py:64 main()] Generated non accepting input: 'B3%Ow7'
+2026-10-09 02:11:16,402 [INFO precision_recall.py:64 main()] Generated non accepting input: 'v%f5GY;"UdQuffp'
+2026-10-09 02:11:18,122 [INFO precision_recall.py:64 main()] Generated non accepting input: '%wN6U'
+2026-10-09 02:11:18,263 [INFO precision_recall.py:64 main()] Generated non accepting input: 'z\x0b%awC'
+2026-10-09 02:11:18,368 [INFO precision_recall.py:64 main()] Generated non accepting input: '@RJT%OUpJs'
+2026-10-09 02:11:19,776 [INFO hardware_instance.py:94 _stop_gdb_server()] GDB Server terminated
+2026-10-09 02:11:22,218 [INFO precision_recall.py:95 main()] {'precision': 0.98, 'recall': 0.971, 'f1': 0.9754792414146591, 'no_tested_inputs': 2187}

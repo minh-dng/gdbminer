@@ -1,0 +1,35 @@
+2026-10-09 02:25:26,574 [INFO esp32c3_instance.py:696 _start_gdb_server()] C3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (A0:F2:62:01:70:28)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32c3.tap0 tap/device found: 0x00005c25 (mfg: 0x612 (Espressif Systems), part: 0x0005, ver: 0x0)
+Info : [esp32c3] datacount=2 progbufsize=16
+Info : [esp32c3] Examined RISC-V core
+Info : [esp32c3]  XLEN=32, misa=0x40101104
+Info : [esp32c3] Chip revision v1.1
+Info : [esp32c3] Examination succeed
+Info : [esp32c3] starting gdb server on 3333
+Info : Listening on port 3333 for gdb connections
+GDBMINER_C3_READY
+Info : Listening on port 6666 for tcl connections
+Info : Listening on port 4444 for telnet connections
+2026-10-09 02:25:26,582 [INFO sut_instance.py:38 init_gdb_controller()] GDB started
+2026-10-09 02:25:26,582 [INFO sut_instance.py:41 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-c3_cgidecode/build-1/esp32-c3_cgidecode.ino.elf' successfully
+2026-10-09 02:25:28,421 [INFO precision_recall.py:64 main()] Generated non accepting input: "!)8'i-x%Amms"
+2026-10-09 02:25:28,715 [INFO precision_recall.py:64 main()] Generated non accepting input: '%n7hu'
+2026-10-09 02:25:29,028 [INFO precision_recall.py:64 main()] Generated non accepting input: '%EzrJtU'
+2026-10-09 02:25:29,039 [INFO precision_recall.py:64 main()] Generated non accepting input: '2C%}wXF'
+2026-10-09 02:25:29,142 [INFO precision_recall.py:64 main()] Generated non accepting input: '%^GAXtv'
+2026-10-09 02:25:29,165 [INFO precision_recall.py:64 main()] Generated non accepting input: 'Pp%*4|H_zrI'
+2026-10-09 02:25:29,320 [INFO precision_recall.py:64 main()] Generated non accepting input: '%]7FAiaBYY'
+2026-10-09 02:25:29,408 [INFO precision_recall.py:64 main()] Generated non accepting input: ' %A'
+2026-10-09 02:25:29,414 [INFO precision_recall.py:64 main()] Generated non accepting input: '%F4T'
+2026-10-09 02:25:29,422 [INFO precision_recall.py:64 main()] Generated non accepting input: 'UAN%QGl6'
+2026-10-09 02:25:29,549 [INFO hardware_instance.py:94 _stop_gdb_server()] GDB Server terminated
+2026-10-09 02:25:31,953 [INFO precision_recall.py:95 main()] {'precision': 0.99, 'recall': 0.971, 'f1': 0.9804079551249363, 'no_tested_inputs': 2186}
