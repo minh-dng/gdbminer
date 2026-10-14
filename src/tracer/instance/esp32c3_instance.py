@@ -49,8 +49,11 @@ class ESP32C3Instance(ESP32Instance[_ReadTrigger]):
     Never mix this path with ARM DWT polling. The C3 has eight trigger slots shared by breakpoints
     and watchpoints. Slots below `GDB.esp32c3.hardware_trigger_slot` stay free for GDB's managed
     hardware breakpoints: an exit point needs one, and each `finish` needs two (return address and
-    the C++ exception hook `_Unwind_DebugHook`). The raw window is reserved in OpenOCD, so a
-    breakpoint that does not fit fails to insert.
+    the C++ exception hook `_Unwind_DebugHook`). The raw window is reserved in OpenOCD. A breakpoint
+    that finds no free slot fails to insert only while OpenOCD's flash support is off (`set
+    ESP_FLASH_SIZE 0`, as in the example configurations). With flash support on, Espressif's OpenOCD
+    writes that breakpoint into flash instead (`esp_riscv_breakpoint_add`), which changes the
+    program under test.
     """
 
     CHIP = "C3"
@@ -305,7 +308,8 @@ class ESP32C3Instance(ESP32Instance[_ReadTrigger]):
             raise RuntimeError("C3 finish needs a halted target and owned triggers")
         # `finish` runs to the caller. GDB inserts breakpoints at the return address and at
         # `_Unwind_DebugHook` (C++ exceptions); both take trigger slots outside the reserved read
-        # window. If no slot is free, GDB fails the command and `_command` raises.
+        # window. With OpenOCD's flash support off, a breakpoint that finds no free slot makes GDB
+        # abort the command, and `_wait_stop` raises.
         self._halted = False
         self._command("-exec-finish")
         stop = self._wait_stop()

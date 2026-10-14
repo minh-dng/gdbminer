@@ -25,12 +25,13 @@ USB-Serial/JTAG controller accepts from the host (ESP32-C3 TRM v1.4, §30.3.1)."
 class ESP32SerialConnection(ConnectionBaseClass, ABC):
     """Request/response exchange that survives target resets between packets.
 
-    When GDB attaches while the C3's memory protection is enabled, OpenOCD resets the core to
-    disable it, after this process may already have seen the firmware's first ready marker. The
-    firmware then reboots, prints boot noise and a new marker. A packet sent during the reboot can
-    be lost; one that arrives after the serial port is set up is still answered. Resending on every
-    marker therefore made the firmware answer one packet twice, and every later answer belonged to
-    the previous query.
+    When GDB attaches while the C3's memory protection is enabled and OpenOCD's flash support is on,
+    OpenOCD resets the core to disable it, after this process may already have seen the firmware's
+    first ready marker. The firmware then reboots, prints boot noise and a new marker. A packet sent
+    during the reboot can be lost; one that arrives after the serial port is set up is still
+    answered. Resending on every marker therefore made the firmware answer one packet twice, and
+    every later answer belonged to the previous query. The example configurations turn flash
+    support off, which skips this reset; the exchange still handles it.
 
     Connection process                     ESP32 / debugger
             │                                      │
