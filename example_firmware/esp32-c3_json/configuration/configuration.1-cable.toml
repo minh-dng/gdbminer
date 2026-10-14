@@ -4,10 +4,11 @@
 # same library, entry point, seeds and ignore list; raw hardware read triggers.
 # Do not mix these outputs with any custom-parser traces or grammars.
 [BASIC]
-seed_directory = "./example_firmware/esp32-c3_json/seeds"
+# The authors' seeds and evaluation corpus, unchanged.
+seed_directory = "./example_firmware/stm32_arduinojson/seeds"
 output_directory = "./output/esp32-c3_json-1-cable/"
 binary_file = "./example_firmware/esp32-c3_json/build-1/esp32-c3_json.ino.elf"
-eval_directory = "./example_firmware/esp32-c3_json/eval"
+eval_directory = "./example_firmware/stm32_arduinojson/eval"
 
 [Connection]
 input_channel = "esp32-usb-serial-jtag"

@@ -3,10 +3,11 @@
 # Paper replica (Eisele et al. 2025, Section 5.4) of stm32_libyxml:
 # same LibYxml library, entry/exit lines, seeds and ignore list.
 [BASIC]
-seed_directory = "./example_firmware/esp32-c3_xml/seeds"
+# The authors' seeds and evaluation corpus, unchanged.
+seed_directory = "./example_firmware/stm32_libyxml/seeds"
 output_directory = "./output/esp32-c3_xml-1-cable/"
 binary_file = "./example_firmware/esp32-c3_xml/build-1/esp32-c3_xml.ino.elf"
-eval_directory = "./example_firmware/esp32-c3_xml/eval"
+eval_directory = "./example_firmware/stm32_libyxml/eval"
 
 [Connection]
 input_channel = "esp32-usb-serial-jtag"

@@ -3,10 +3,11 @@
 # Paper replica (Eisele et al. 2025, Section 5.4) of stm32_cgidecode:
 # same percent_encode library, entry point, seeds and (empty) ignore list.
 [BASIC]
-seed_directory = "./example_firmware/esp32-c3_cgidecode/seeds"
+# The authors' seeds and evaluation corpus, unchanged.
+seed_directory = "./example_firmware/stm32_cgidecode/seeds"
 output_directory = "./output/esp32-c3_cgidecode/"
 binary_file = "./example_firmware/esp32-c3_cgidecode/build-2/esp32-c3_cgidecode.ino.elf"
-eval_directory = "./example_firmware/esp32-c3_cgidecode/eval"
+eval_directory = "./example_firmware/stm32_cgidecode/eval"
 
 [Connection]
 input_channel = "esp32-uart"
