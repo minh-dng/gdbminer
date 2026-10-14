@@ -26,8 +26,7 @@ instance = "esp32s3"
 # (LoopCore=0); with both cores, OpenOCD hands GDB whichever core it polls first after a halt.
 # ESP_FLASH_SIZE 0: every breakpoint is a hardware breakpoint, so a third one fails instead of
 # rewriting flash. 40 MHz is the USB-JTAG base clock used in the recorded runs.
-gdb_server_path = '''/Users/dan173/.espressif/openocd-esp32/bin/openocd
-  -s /Users/dan173/.espressif/openocd-esp32/share/openocd/scripts
+gdb_server_path = '''~/.espressif/openocd-esp32/bin/openocd
   -c "set ESP_RTOS none"
   -c "set ESP_ONLYCPU 1"
   -c "set ESP_FLASH_SIZE 0"
@@ -49,7 +48,7 @@ input_buffer = "buf"
 [GDB.esp32s3]
 # Symbols for code already in mask ROM, loaded alongside firmware symbols, not flashed.
 # Chip revision v0.2 uses the rev0 ROM: esp32s3_rev0_rom.elf covers all v0.x chips.
-rom_elf = "/Users/dan173/.espressif/tools/esp-rom-elfs/20241011/esp32s3_rev0_rom.elf"
+rom_elf = "~/.espressif/tools/esp-rom-elfs/20241011/esp32s3_rev0_rom.elf"
 # Must be false: after OpenOCD's reset the USB device re-enumerates and the input port fails.
 # The serial reset pulse restarts the firmware instead.
 reset_on_connect = false

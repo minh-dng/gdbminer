@@ -112,7 +112,9 @@ class ESP32Instance[Trigger](HardwareInstance, ABC):
         if rom_elf:
             # Name built-in ROM routines so the tracer's ignore regex can match them. Symbols alone
             # do not guarantee that GDB can unwind a ROM call.
-            command = "add-symbol-file " + json.dumps(str(Path(rom_elf).resolve(strict=True)))
+            command = "add-symbol-file " + json.dumps(
+                str(Path(rom_elf).expanduser().resolve(strict=True))
+            )
             self._command(f"-interpreter-exec console {json.dumps(command)}")
 
     def _payload(self, response: GDBResponse) -> _MIPayload:

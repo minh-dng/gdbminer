@@ -17,12 +17,11 @@ rts = true
 reset_pulse = true
 
 [GDB]
-gdb_path = "/Users/dan173/Library/Arduino15/packages/esp32/tools/riscv32-esp-elf-gdb/17.1_20260402/bin/riscv32-esp-elf-gdb"
+gdb_path = "~/Library/Arduino15/packages/esp32/tools/riscv32-esp-elf-gdb/17.1_20260402/bin/riscv32-esp-elf-gdb"
 instance = "esp32c3"
 # Requires the separate USB-JTAG link; the DevKitM-1 Micro-USB port is UART-only.
 # 40 MHz is the USB-JTAG base clock used in the recorded runs.
-gdb_server_path = '''/Users/dan173/.espressif/openocd-esp32/bin/openocd
-  -s /Users/dan173/.espressif/openocd-esp32/share/openocd/scripts
+gdb_server_path = '''~/.espressif/openocd-esp32/bin/openocd
   -c "set ESP_RTOS none"
   -f board/esp32c3-builtin.cfg
   -c "gdb port {gdb_port}"
@@ -43,7 +42,7 @@ input_buffer = "buf"
 [GDB.esp32c3]
 # Symbols for code already in mask ROM, loaded alongside firmware symbols, not flashed.
 # Match the chip revision: the recorded v1.1 board uses esp32c3_rev101_rom.elf.
-rom_elf = "/Users/dan173/.espressif/tools/esp-rom-elfs/20241011/esp32c3_rev101_rom.elf"
+rom_elf = "~/.espressif/tools/esp-rom-elfs/20241011/esp32c3_rev101_rom.elf"
 # GDB finish needs slots 0-1 for its return and C++ exception-hook breakpoints.
 hardware_trigger_slot = 2
 # The serial EN pulse already restarts firmware before GDB connects.
