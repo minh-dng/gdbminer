@@ -77,10 +77,12 @@ class ESP32Instance[Trigger](HardwareInstance, ABC):
         self.chip_config: Config = config["GDB"][self.CONFIG_TABLE]
         """The chip's settings table, `[GDB.<CONFIG_TABLE>]`."""
         self.reset_on_connect = self.chip_config.get("reset_on_connect", True)
-        """Reset the target through GDB at start-up and after a serial reconnect.
+        """Reset the target through GDB after the attach and after a serial reconnect.
 
-        The example configurations set it to false: the serial connection's reset pulse already
-        restarts the firmware.
+        The C3 configurations set it to true. OpenOCD's target examination halts and resumes a
+        running C3, and its failed probes of absent CSRs leave register `a0` at the debug module's
+        base address. A firmware that is still booting after the serial reset pulse then faults.
+        The reset starts the traced boot after the examination.
         """
         self.breakpoint_always_inserted = self.chip_config.get("breakpoint_always_inserted", False)
         """Keep breakpoints inserted while the target is halted (`set breakpoint always-inserted`).
@@ -405,6 +407,7 @@ class ESP32Instance[Trigger](HardwareInstance, ABC):
             self._command(f"-target-select extended-remote {self.gdb_server_address}")
             self.wait_for_any_stop_message()
             if self.reset_on_connect:
+                # OpenOCD has examined the core; restart the firmware from a clean boot.
                 self.reset()
             if self.breakpoint_always_inserted:
                 # Same breakpoints, written once instead of around every stop.
