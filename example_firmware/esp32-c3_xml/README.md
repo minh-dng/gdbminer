@@ -2,8 +2,8 @@
 
 Port of `example_firmware/stm32_libyxml` for the paper replica (Eisele et al. 2025, Section 5.4).
 The parser is the reference `LibYxml` library, called through the unchanged `parser()` wrapper:
-`yxml_parse` per byte, reject on the first negative return. Seeds and the evaluation corpus are
-byte-identical to the STM32 copies.
+`yxml_parse` per byte, reject on the first negative return. The configurations read the STM32
+seeds and evaluation corpus.
 
 This replaces an earlier adapter (115,200 baud, 128-byte buffer, `0xa5` ready byte, toolchain
 stubs). That project is archived under

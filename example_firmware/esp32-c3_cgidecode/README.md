@@ -2,8 +2,8 @@
 
 Port of `example_firmware/stm32_cgidecode` for the paper replica (Eisele et al. 2025, Section 5.4).
 The parser is the reference `percent_encode` library, called through the reference `parser()`
-acceptance rule: `percent::decode`, then reject if any decoded byte is above 127. Seeds and the
-evaluation corpus are byte-identical to the STM32 copies.
+acceptance rule: `percent::decode`, then reject if any decoded byte is above 127. The
+configurations read the STM32 seeds and evaluation corpus.
 
 This replaces an earlier custom diagnostic parser (115,200 baud, 128-byte buffer, `0xa5` ready byte,
 toolchain stubs). That project is archived under
