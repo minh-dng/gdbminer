@@ -51,7 +51,7 @@ f6cf61b78578edf6b69a4dd9b6aae29597064bbae64e6620f38a29cd6947bd8e
 Migration evidence is kept under:
 
 ```text
-/Users/dan173/Documents/Uni/thesis/experiments/esp32c3-official-arduino-2026-09-29/
+~/Documents/Uni/thesis/experiments/esp32c3-official-arduino-2026-09-29/
 ```
 
 The previous complete project is archived there as `before/esp32-c3_json.tgz`. The older full-corpus

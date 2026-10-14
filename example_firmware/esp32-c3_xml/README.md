@@ -7,7 +7,7 @@ byte-identical to the STM32 copies.
 
 This replaces an earlier adapter (115,200 baud, 128-byte buffer, `0xa5` ready byte, toolchain
 stubs). That project is archived under
-`/Users/dan173/Documents/Uni/thesis/experiments/esp32c3-paper-replica-2026-09-30/before/`.
+`~/Documents/Uni/thesis/experiments/esp32c3-paper-replica-2026-09-30/before/`.
 
 ## Layout and line numbers
 
