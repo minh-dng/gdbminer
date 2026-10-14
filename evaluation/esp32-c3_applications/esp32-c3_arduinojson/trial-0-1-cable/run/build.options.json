@@ -1,0 +1,9 @@
+{
+  "additionalFiles": "../..,../../..",
+  "compiler.optimization_flags": "-O0 -g3 -ggdb3",
+  "customBuildProperties": "compiler.optimization_flags=-O0 -g3 -ggdb3,runtime.tools.ctags.path=/Users/dan173/.local/opt/arduino-ctags/5.8-arduino11/bin",
+  "fqbn": "esp32:esp32:esp32c3:CDCOnBoot=cdc,FlashMode=dio",
+  "hardwareFolders": "/Users/dan173/Library/Arduino15/packages/esp32/hardware/esp32/3.3.12,/Users/dan173/Library/Arduino15/packages/esp32/hardware/esp32/3.3.12",
+  "otherLibrariesFolders": "/Users/dan173/Documents/Arduino/libraries",
+  "sketchLocation": "/Users/dan173/projects/worktrees/gdbminer/misty-finch/example_firmware/esp32-c3_json"
+}
