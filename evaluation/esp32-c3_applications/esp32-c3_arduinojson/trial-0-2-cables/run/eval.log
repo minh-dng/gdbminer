@@ -1,0 +1,42 @@
+2026-10-09 03:10:56,516 [INFO hardware_instance.py:94 _stop_gdb_server()] GDB Server terminated
+2026-10-09 03:10:56,519 [WARNING esp32c3_instance.py:703 _start_gdb_server()] C3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_PIPE'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+
+Error: [esp32c3] Unsupported DTM version: -1
+Error: [esp32c3] Could not identify target type.
+2026-10-09 03:10:56,942 [INFO esp32c3_instance.py:696 _start_gdb_server()] C3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (A0:F2:62:01:70:28)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32c3.tap0 tap/device found: 0x00005c25 (mfg: 0x612 (Espressif Systems), part: 0x0005, ver: 0x0)
+Info : [esp32c3] datacount=2 progbufsize=16
+Info : [esp32c3] Examined RISC-V core
+Info : [esp32c3]  XLEN=32, misa=0x40101104
+Info : [esp32c3] Chip revision v1.1
+Info : [esp32c3] Examination succeed
+Info : [esp32c3] starting gdb server on 3333
+Info : Listening on port 3333 for gdb connections
+GDBMINER_C3_READY
+Info : Listening on port 6666 for tcl connections
+Info : Listening on port 4444 for telnet connections
+2026-10-09 03:10:56,952 [INFO sut_instance.py:38 init_gdb_controller()] GDB started
+2026-10-09 03:10:56,952 [INFO sut_instance.py:41 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-c3_json/build-2/esp32-c3_json.ino.elf' successfully
+2026-10-09 03:10:59,018 [INFO precision_recall.py:64 main()] Generated non accepting input: ']'
+2026-10-09 03:11:02,562 [INFO precision_recall.py:64 main()] Generated non accepting input: '])!'
+2026-10-09 03:11:09,220 [INFO precision_recall.py:64 main()] Generated non accepting input: ']Lq'
+2026-10-09 03:11:18,914 [INFO hardware_instance.py:94 _stop_gdb_server()] GDB Server terminated
+2026-10-09 03:11:25,212 [INFO precision_recall.py:95 main()] {'precision': 0.997, 'recall': 0.936, 'f1': 0.9655375064666322, 'no_tested_inputs': 4061}
