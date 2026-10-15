@@ -476,6 +476,33 @@ class TestHardwareContract:
         )
         instance._command.assert_any_call("-gdb-set breakpoint always-inserted on")
 
+    @pytest.mark.parametrize("same_read", [False, True])
+    def test_aborted_finish_leaves_the_target_halted_for_cleanup(self, same_read):
+        # With OpenOCD's flash support off, a breakpoint that finds no free slot makes GDB abort
+        # the command after `^running`; both replies may arrive in one read. The target never
+        # ran, so cleanup must release the triggers without interrupting it.
+        instance = self.hardware(7, first_slot=1)
+        running = {"type": "result", "token": 10001, "message": "running", "payload": None}
+        aborted = {
+            "type": "result",
+            "token": 10001,
+            "message": "error",
+            "payload": {"msg": "Command aborted."},
+        }
+        instance.gdb_controller = Mock()
+        instance.gdb_controller.get_gdb_response.side_effect = (
+            [[running, aborted]] if same_read else [[running], [aborted]]
+        )
+        with pytest.raises(RuntimeError, match="Command aborted"):
+            instance.step_out_of_function()
+        assert instance._halted
+        assert instance._pending == []
+        instance._interrupt = Mock()
+        instance._clear_triggers = Mock()
+        instance.__exit__(None, None, None)
+        instance._interrupt.assert_not_called()
+        instance._clear_triggers.assert_called_once_with()
+
     def test_cleanup_attempts_every_slot_even_after_a_failure(self):
         instance = self.hardware(8)
         instance.delete_breakpoint = Mock(side_effect=[RuntimeError("slot 0 changed"), *[None] * 7])

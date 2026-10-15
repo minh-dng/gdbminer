@@ -145,7 +145,14 @@ class ESP32Instance[Trigger](HardwareInstance, ABC):
                 raise TimeoutError(f"{self.CHIP} command timeout: {command}; pc={self._pc}")
             responses = self._read_responses()
             for response in responses:
-                if response.get("type") == "result" and response.get("token") == token:
+                # Only the first result answers the command. An execution command that GDB aborts
+                # after `^running` gets a second, `^error`, which may arrive in the same read; it
+                # is queued for `_wait_stop`, as when it arrives later.
+                if (
+                    result is None
+                    and response.get("type") == "result"
+                    and response.get("token") == token
+                ):
                     result = response
                 elif response.get("type") in {"console", "target", "log"}:
                     streams.append(str(response.get("payload", "")))
@@ -183,6 +190,11 @@ class ESP32Instance[Trigger](HardwareInstance, ABC):
                     self._pc = payload.get("frame", {}).get("addr", "unknown")
                     return response
                 if response.get("type") == "result" and response.get("message") == "error":
+                    # GDB rejected the execution command before resuming the target, for example
+                    # when a breakpoint finds no free trigger, so the target is still halted and
+                    # `__exit__` can release the triggers without interrupting it.
+                    self._pending.pop(i)
+                    self._halted = True
                     raise RuntimeError(f"{self.CHIP} asynchronous command failed: {response}")
             self._pending.extend(self._read_responses())
         raise TimeoutError(f"{self.CHIP} stop timeout: pc={self._pc}")

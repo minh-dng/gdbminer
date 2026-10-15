@@ -22,8 +22,11 @@ gdb_path = "~/Library/Arduino15/packages/esp32/tools/riscv32-esp-elf-gdb/17.1_20
 instance = "esp32c3"
 # Requires the separate USB-JTAG link; the DevKitM-1 Micro-USB port is UART-only.
 # 40 MHz is the USB-JTAG base clock used in the recorded runs.
+# ESP_FLASH_SIZE 0: every breakpoint is a hardware breakpoint, so one that finds no free trigger
+# fails instead of being written into flash. OpenOCD then also skips its reset at GDB attach.
 gdb_server_path = '''~/.espressif/openocd-esp32/bin/openocd
   -c "set ESP_RTOS none"
+  -c "set ESP_FLASH_SIZE 0"
   -f board/esp32c3-builtin.cfg
   -c "gdb port {gdb_port}"
   -c "telnet port {telnet_port}"

@@ -473,6 +473,17 @@ temporary entry breakpoint fires. This lets CGI reach its parser before reservin
 | `esp32-c3_cgidecode` | nothing                                                                                       | 8 (slots 0-7)                                     |
 | `esp32-c3_xml`       | list never fires                                                                              | 7 (slots 1-7); the exit breakpoint takes one slot |
 
+The reservation alone does not make a breakpoint that finds no free slot fail. With flash support
+on, Espressif's OpenOCD writes that breakpoint into flash instead (`esp_riscv_breakpoint_add`),
+which changes the program under test. The C3 configurations therefore start OpenOCD with
+`set ESP_FLASH_SIZE 0`: OpenOCD has no flash bank, `esp_common.cfg` turns every breakpoint into a
+hardware breakpoint (`gdb breakpoint_override hard`), and the GDB command that needs the extra
+breakpoint fails (`finish` and steps report `Command aborted.`), which stops the trace. Without
+flash support, OpenOCD also skips its reset of the chip when GDB attaches to firmware that has
+locked its memory protection, and does not run its flasher stub on the chip at each attach.
+Flash the board with `arduino-cli upload`, as above; OpenOCD without flash support cannot program
+it.
+
 [^arduino-cli]:
     Arduino CLI drives the build, but the compiler is still Espressif's GCC from the core package.
     The core's `platform.txt` defines the build: about 70 compiler and archiver calls, the link
