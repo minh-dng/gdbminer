@@ -114,16 +114,19 @@ Pass the JTAG serial number as `--adapter-serial <MAC>` to `trace.py`, `mine.py`
 
 ## Firmware wrappers
 
-Each C3 target ports the wrapper of its STM32 reference (`stm32_arduinojson`, `stm32_cgidecode`,
-`stm32_libyxml`) with the same parser library, acceptance rule and serial protocol. Diffing each
-wrapper against its reference shows these five changes in all three ports; the target READMEs list
-any others:
+The JSON, CGI and XML C3 targets port their STM32 reference wrappers (`stm32_arduinojson`,
+`stm32_cgidecode`, `stm32_libyxml`) with the same parser library, acceptance rule and serial
+protocol. Diffing each wrapper against its reference shows these five changes in all three ports;
+the target READMEs list any others:
 
 - LED on GPIO8.
 - `buf` has one extra byte, so a 2,048-byte input can be NUL-terminated inside the array.
 - `delay(1)` while waiting for UART input, so the ESP32 runtime can run.
 - `Serial.flush()` after the ready and result bytes.
 - An oversized packet is drained and rejected with `0xff` instead of hanging the board.
+
+The [calc target](esp32-c3_calc/README.md) uses this serial protocol with the desktop calc parser
+and corpus. It compiles the desktop `calc.c` and requires no Arduino parser library.
 
 ### Serial protocol values
 
@@ -155,7 +158,8 @@ packaged executable works.
 
 ### Build and upload
 
-From the repository root, set `TARGET` to `esp32-c3_json`, `esp32-c3_cgidecode` or `esp32-c3_xml`.
+From the repository root, set `TARGET` to `esp32-c3_json`, `esp32-c3_cgidecode`, `esp32-c3_xml` or
+`esp32-c3_calc` (after creating its `calc.c`).
 For the two-cable setup, build into `build-2/` and upload over the UART port (see
 [UART link](#uart-link-micro-usb)):
 
@@ -217,7 +221,7 @@ it flashes.
 
 ### Choosing the debugger
 
-The `[GDB] gdb_path` of all three C3 targets points to Espressif's own `riscv32-esp-elf-gdb`
+The `[GDB] gdb_path` of every C3 target points to Espressif's own `riscv32-esp-elf-gdb`
 17.1_20260402. Arduino CLI installs it with the `esp32:esp32` core:
 
 ```text
@@ -257,7 +261,7 @@ Two more files are not installed by Arduino CLI:
 
 ### Values to change on another machine
 
-The three `configuration.2-cables.toml` and three `configuration.1-cable.toml` files hold paths and
+Each target's `configuration.2-cables.toml` and `configuration.1-cable.toml` hold paths and
 device names from the recording Mac. Change these in each:
 
 | Table and key           | Value to change                                                  |
@@ -460,8 +464,8 @@ one-cable traces go to `output/<target>-1-cable/`, so a trial never mixes the tw
 
 ### Tracing: the paper replica method
 
-Each target's TOML follows the paper's embedded setup (Eisele et al. 2025, §4.1 and §5.4) and the
-configuration of its STM32 reference: same entry point and the same `ignore_functions_regex`,
+The JSON, CGI and XML TOMLs follow the paper's embedded setup (Eisele et al. 2025, §4.1 and §5.4)
+and their STM32 reference configurations: same entry point and the same `ignore_functions_regex`,
 skipped with GDB `finish`. The only name change is `__aeabi_dadd`, the ARM
 EABI alias of libgcc `__adddf3`. `strlen`, `memset` and the soft-float helpers run from the chip's
 mask ROM. The adapter loads `GDB.esp32c3.rom_elf` with GDB's `add-symbol-file`, alongside the
@@ -482,6 +486,10 @@ temporary entry breakpoint fires. This lets CGI reach its parser before reservin
 | `esp32-c3_json`      | `malloc`, `free`, `_strtod_l`, `__adddf3`, `__floatdidf`, `__floatundidf`, `strlen`, `memset` | 6 (slots 2-7); slots 0-1 stay free                |
 | `esp32-c3_cgidecode` | nothing                                                                                       | 8 (slots 0-7)                                     |
 | `esp32-c3_xml`       | list never fires                                                                              | 7 (slots 1-7); the exit breakpoint takes one slot |
+| `esp32-c3_calc`      | nothing                                                                                       | 8 (slots 0-7)                                     |
+
+Calc keeps ROM number-conversion reads visible. Its
+[target README](esp32-c3_calc/README.md) documents the debugger unwind metadata and smoke checks.
 
 The reservation alone does not make a breakpoint that finds no free slot fail. With flash support
 on, Espressif's OpenOCD writes that breakpoint into flash instead (`esp_riscv_breakpoint_add`),
