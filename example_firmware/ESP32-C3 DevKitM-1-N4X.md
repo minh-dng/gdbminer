@@ -374,18 +374,28 @@ For JSON:
 [GDB.esp32c3]
 rom_elf = "/path/to/esp32c3_rev101_rom.elf"
 hardware_trigger_slot = 2
-reset_on_connect = false
+reset_on_connect = true
 ```
 
 The six JSON watchpoints occupy slots 2-7. CGI starts at slot 0 with eight watchpoints; XML starts
 at slot 1 with seven. XML also sets `breakpoint_always_inserted = true` in this table to keep its
 exit breakpoint inserted across steps, as in the measured run.
 
-`reset_on_connect = false` avoids a second reset after the serial adapter's reset pulse. It also
-leaves reconnect recovery to that adapter. Keep the serial control-line and reset settings in
-`[Connection]`. The adapter waits for
-the firmware's ready marker, so no `boot_delay` setting is needed. If you disable `reset_pulse`,
-also set `rts = false` so EN is released.
+`reset_on_connect = true` resets the chip through OpenOCD (`monitor reset halt`) after GDB
+attaches, so the firmware boots a second time after the serial reset pulse. The first boot can be
+damaged: OpenOCD's target examination halts the running core, probes two CSRs that the C3 lacks
+(`vlenb`, `mtopi`), and each failed probe leaves register `a0` at the debug module's base address
+`0x20000000`. OpenOCD then resumes the core without restoring `a0`. In the idle loop this is
+harmless; while the firmware still boots, it faults on a later load, and ESP-IDF parks it on
+breakpoint 0, which the tracer reports as `Unexpected stop before parser entry` (SIGTRAP). The
+serial reset pulse starts that boot about 130 ms before OpenOCD examines the core, so this happened
+in about 1 of 10 tracer sessions. The reset after the attach starts the traced boot once examination
+is over; ESP-IDF waits 200 ms at start-up when a debugger is attached, and the firmware is ready
+about 0.3 s after the resume, within the tracer's 1 s wait. A serial reconnect during the
+evaluation also resets through OpenOCD, then resumes the target. Keep the serial control-line and
+reset settings in `[Connection]`. The adapter waits for the firmware's ready marker, so no
+`boot_delay` setting is needed. If you disable `reset_pulse`, also set `rts = false` so EN is
+released.
 
 ARM DWT registers and `dwt_watchpoint_workaround` belong only in `[GDB.stm32]`. The C3 uses RISC-V
 read triggers and requires no DWT placeholder or workaround flag. The loader rejects unknown or

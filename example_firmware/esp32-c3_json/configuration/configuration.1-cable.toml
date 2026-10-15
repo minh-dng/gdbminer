@@ -49,8 +49,9 @@ input_buffer = "buf"
 rom_elf = "~/.espressif/tools/esp-rom-elfs/20241011/esp32c3_rev101_rom.elf"
 # GDB finish needs slots 0-1 for its return and C++ exception-hook breakpoints.
 hardware_trigger_slot = 2
-# The serial reset pulse already restarts firmware before GDB connects.
-reset_on_connect = false
+# Restart the firmware after GDB attaches: OpenOCD's target examination can corrupt register a0
+# of a core that is still booting.
+reset_on_connect = true
 
 [LOGS]
 log_level = "INFO"

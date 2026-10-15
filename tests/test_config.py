@@ -123,7 +123,7 @@ def test_config():
     assert issubclass(ESP32Instance, HardwareInstance)
     assert STM32Instance.__bases__ == (HardwareInstance,)
     assert not hasattr(instance, "dwt_watchpoint_workaround")
-    assert not instance.reset_on_connect
+    assert instance.reset_on_connect
     assert (instance.trigger_slot, instance.watchpoint_count) == (2, 6)
     assert instance.gdb_server_path_with_args[-2:] == ["-c", "adapter speed 40000"]
 
