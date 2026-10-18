@@ -1,0 +1,26 @@
+flash exit=0 seconds=11
+trace exit=1 seconds=25006
+flash exit=0 seconds=9
+trace-resume-1 exit=1 seconds=128449 seeds=1,2,3,4,5,6,7,8,10,11,12,13,14,16,19,20
+flash exit=0 seconds=9
+flash exit=0 seconds=9
+trace-resume-2 exit=1 seconds=59750 seeds=1,2,3,4,5,6,7,12,13,14,16,19
+flash exit=0 seconds=12
+flash exit=0 seconds=10
+trace-resume-3 exit=1 seconds=45257 seeds=4,12,13,16
+flash exit=0 seconds=13
+trace-resume-4 exit=1 seconds=38 seeds=12,16,17,18
+flash exit=0 seconds=10
+trace-resume-5 exit=1 seconds=85 seeds=12,16,17,18
+flash exit=0 seconds=9
+trace-resume-6 exit=1 seconds=85 seeds=12,16,17,18
+flash exit=0 seconds=6
+flash exit=0 seconds=10
+flash exit=0 seconds=9
+flash exit=0 seconds=8
+flash exit=0 seconds=7
+trace-resume-7 exit=1 seconds=4050 seeds=18
+flash exit=0 seconds=10
+trace-resume-8 exit=0 seconds=48196 seeds=18
+mine exit=0 seconds=397
+eval exit=0 seconds=14

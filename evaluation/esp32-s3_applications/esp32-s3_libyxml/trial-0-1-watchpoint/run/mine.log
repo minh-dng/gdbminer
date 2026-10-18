@@ -1,0 +1,214 @@
+2026-10-18 08:24:04,653 [WARNING config.py:227 _log_override()] Connection.port: '/dev/cu.usbmodem2101' overridden by --port = '/dev/cu.usbmodem1301'
+2026-10-18 08:24:04,653 [WARNING config.py:227 _log_override()] GDB.gdb_port: 3333 overridden by --gdb-port = 3335
+2026-10-18 08:24:04,653 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {gdb_port} -> 3335
+2026-10-18 08:24:04,653 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {adapter_serial} -> E8:06:90:95:F2:70
+2026-10-18 08:24:04,653 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {telnet_port} -> disabled
+2026-10-18 08:24:04,653 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {tcl_port} -> disabled
+2026-10-18 08:24:04,653 [INFO config.py:320 apply_overrides()] GDB server command: /Users/dan173/.espressif/openocd-esp32/bin/openocd
+  -s /Users/dan173/.espressif/openocd-esp32/share/openocd/scripts
+  -c "set ESP_RTOS none"
+  -c "set ESP_ONLYCPU 1"
+  -c "set ESP_FLASH_SIZE 0"
+  -f board/esp32s3-builtin.cfg
+  -c "gdb port 3335"
+  -c "telnet port disabled"
+  -c "tcl port disabled"
+  -c "adapter serial E8:06:90:95:F2:70"
+  -c "adapter speed 40000"
+2026-10-18 08:24:04,653 [INFO config.py:330 apply_overrides()] GDB.esp32s3.usb_reset_command: {adapter_serial} -> E8:06:90:95:F2:70
+2026-10-18 08:24:05,000 [INFO tree_builder.py:62 __init__()] Functions: parser yxml_parse yxml_elemstart yxml_pushstack yxml_elemnameend yxml_attrstart yxml_attrnameend yxml_dataattr yxml_setchar yxml_attrvalend yxml_popstack yxml_datacontent yxml_elemclose yxml_elemcloseend yxml_selfclose yxml_attrname yxml_pushstackc
+2026-10-18 08:24:05,000 [INFO tree_builder.py:63 __init__()] Using original Mimid algo: False
+2026-10-18 08:24:10,284 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/dan173/projects/worktrees/gdbminer/sable-heron/example_firmware/stm32_libyxml/seeds/seed.1.in 0/20
+2026-10-18 08:24:10,284 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/dan173/projects/worktrees/gdbminer/sable-heron/example_firmware/stm32_libyxml/seeds/seed.10.in 1/20
+2026-10-18 08:24:10,286 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/dan173/projects/worktrees/gdbminer/sable-heron/example_firmware/stm32_libyxml/seeds/seed.11.in 2/20
+2026-10-18 08:24:10,287 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/dan173/projects/worktrees/gdbminer/sable-heron/example_firmware/stm32_libyxml/seeds/seed.12.in 3/20
+2026-10-18 08:24:10,287 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/dan173/projects/worktrees/gdbminer/sable-heron/example_firmware/stm32_libyxml/seeds/seed.13.in 4/20
+2026-10-18 08:24:10,288 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/dan173/projects/worktrees/gdbminer/sable-heron/example_firmware/stm32_libyxml/seeds/seed.14.in 5/20
+2026-10-18 08:24:10,288 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/dan173/projects/worktrees/gdbminer/sable-heron/example_firmware/stm32_libyxml/seeds/seed.15.in 6/20
+2026-10-18 08:24:10,289 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/dan173/projects/worktrees/gdbminer/sable-heron/example_firmware/stm32_libyxml/seeds/seed.16.in 7/20
+2026-10-18 08:24:10,289 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/dan173/projects/worktrees/gdbminer/sable-heron/example_firmware/stm32_libyxml/seeds/seed.17.in 8/20
+2026-10-18 08:24:10,290 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/dan173/projects/worktrees/gdbminer/sable-heron/example_firmware/stm32_libyxml/seeds/seed.18.in 9/20
+2026-10-18 08:24:10,291 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/dan173/projects/worktrees/gdbminer/sable-heron/example_firmware/stm32_libyxml/seeds/seed.19.in 10/20
+2026-10-18 08:24:10,291 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/dan173/projects/worktrees/gdbminer/sable-heron/example_firmware/stm32_libyxml/seeds/seed.2.in 11/20
+2026-10-18 08:24:10,291 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/dan173/projects/worktrees/gdbminer/sable-heron/example_firmware/stm32_libyxml/seeds/seed.20.in 12/20
+2026-10-18 08:24:10,292 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/dan173/projects/worktrees/gdbminer/sable-heron/example_firmware/stm32_libyxml/seeds/seed.3.in 13/20
+2026-10-18 08:24:10,292 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/dan173/projects/worktrees/gdbminer/sable-heron/example_firmware/stm32_libyxml/seeds/seed.4.in 14/20
+2026-10-18 08:24:10,293 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/dan173/projects/worktrees/gdbminer/sable-heron/example_firmware/stm32_libyxml/seeds/seed.5.in 15/20
+2026-10-18 08:24:10,293 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/dan173/projects/worktrees/gdbminer/sable-heron/example_firmware/stm32_libyxml/seeds/seed.6.in 16/20
+2026-10-18 08:24:10,293 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/dan173/projects/worktrees/gdbminer/sable-heron/example_firmware/stm32_libyxml/seeds/seed.7.in 17/20
+2026-10-18 08:24:10,293 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/dan173/projects/worktrees/gdbminer/sable-heron/example_firmware/stm32_libyxml/seeds/seed.8.in 18/20
+2026-10-18 08:24:10,293 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/dan173/projects/worktrees/gdbminer/sable-heron/example_firmware/stm32_libyxml/seeds/seed.9.in 19/20
+2026-10-18 08:24:13,822 [INFO esp32_instance.py:351 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:F2:70)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3335
+Info : Listening on port 3335 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-18 08:24:13,850 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-18 08:24:13,850 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-18 08:24:15,343 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <parser> 0/2
+2026-10-18 08:24:15,343 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 20 from 20 nodes for pattern recognition
+2026-10-18 08:24:16,027 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <parser_b1c0> 1/2
+2026-10-18 08:24:16,027 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 357 from 357 nodes for pattern recognition
+2026-10-18 08:25:40,749 [INFO hardware_instance.py:95 _stop_gdb_server()] GDB Server terminated
+2026-10-18 08:25:40,749 [INFO method_generalizer.py:117 generalize_method_trees()] Used 18908 requests to generalize methods
+2026-10-18 08:25:40,749 [INFO method_generalizer.py:120 generalize_method_trees()] update: <parser> 0/2
+2026-10-18 08:25:40,751 [INFO method_generalizer.py:120 generalize_method_trees()] update: <parser_b1c0> 1/2
+2026-10-18 08:25:44,342 [INFO esp32_instance.py:351 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:F2:70)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3335
+Info : Listening on port 3335 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-18 08:25:44,352 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-18 08:25:44,352 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-18 08:25:45,529 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parser-.0:while_0,0 ?#[]> 0/1
+2026-10-18 08:25:45,530 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 357 from 357 nodes for pattern recognition
+2026-10-18 08:26:43,119 [WARNING sut_connection.py:107 input_accepted()] Connection timeout!
+2026-10-18 08:27:57,368 [WARNING sut_connection.py:107 input_accepted()] Connection timeout!
+2026-10-18 08:30:30,308 [INFO hardware_instance.py:95 _stop_gdb_server()] GDB Server terminated
+2026-10-18 08:30:30,309 [INFO loop_generalizer.py:107 generalize_loop_trees()] Used 81175 requests to generalize loops
+2026-10-18 08:30:30,309 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parser-.0:while_0,0 ?#[]> 0/1
+2026-10-18 08:30:30,342 [INFO token_generalizer.py:267 generalize_tokens_in_grammar()] Generalize 82 tokens
+2026-10-18 08:30:34,210 [INFO esp32_instance.py:351 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:F2:70)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3335
+Info : Listening on port 3335 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-18 08:30:34,223 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-18 08:30:34,223 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-18 08:30:35,899 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:36,034 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:36,084 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:36,127 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:36,168 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:36,209 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:36,252 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:36,294 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:36,338 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:36,381 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:36,422 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:36,463 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:36,504 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:36,546 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:36,587 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:36,628 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:36,669 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:36,711 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:36,753 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:36,806 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:36,894 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:36,940 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:36,982 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:37,026 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:37,069 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:37,114 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:37,165 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:37,213 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:37,273 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:37,317 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:37,362 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:37,407 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:37,452 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:37,496 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:37,537 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:37,582 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:37,630 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:37,670 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:37,712 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:37,753 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:37,797 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:37,883 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:37,957 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:37,988 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:38,017 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:38,044 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:38,071 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:38,098 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:38,126 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:38,153 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:38,183 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:38,210 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:38,237 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:38,266 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:38,293 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:38,320 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:38,347 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:38,376 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:38,403 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:38,430 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:38,457 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:38,487 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:38,515 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:38,545 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:38,573 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:38,600 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:38,733 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:38,792 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:38,823 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:38,843 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:38,864 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:38,976 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-18 08:30:38,996 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:39,015 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-18 08:30:39,036 [INFO hardware_instance.py:95 _stop_gdb_server()] GDB Server terminated
+2026-10-18 08:30:39,036 [INFO token_generalizer.py:290 generalize_tokens_in_grammar()] Used 590 requests to generalize tokens
+2026-10-18 08:30:39,045 [INFO mine.py:327 main()] Mining time: 394.39392709732056 seconds
