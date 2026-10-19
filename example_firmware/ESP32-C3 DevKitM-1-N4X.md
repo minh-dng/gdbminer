@@ -128,7 +128,8 @@ the target READMEs list any others:
 - An oversized packet is drained and rejected with `0xff` instead of hanging the board.
 
 The [calc target](esp32-c3_calc/README.md) uses this serial protocol with the desktop calc parser
-and corpus. It compiles the desktop `calc.c` and requires no Arduino parser library.
+and corpus. It compiles the desktop `calc.c` and requires no Arduino parser library. Over native
+USB it skips the `Serial.flush()` calls; see its README.
 
 ### Serial protocol values
 

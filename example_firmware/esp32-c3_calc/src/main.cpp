@@ -1,4 +1,4 @@
-// Serial wrapper shared with esp32-c3_json; parser comes from the desktop calc target.
+// Serial protocol shared with esp32-c3_json; parser comes from the desktop calc target.
 // src/calc.c links to the desktop example_programs/calc/calc.c from fetch_example_programs.sh.
 // Copyright (c) 2023 Robert Bosch GmbH
 // SPDX-License-Identifier: AGPL-3.0
@@ -39,11 +39,22 @@ void setup() {
     Serial.begin(9600);
 }
 
+// Native USB (`HWCDC`) skips the flush: `write` queues the byte and the driver's interrupt sends it
+// once the host has collected the previous packet. `HWCDC::flush` discards the queue instead when
+// the driver sees no connection or the TX ring stays unchanged for 100 one-millisecond checks. The
+// ready byte follows a result at once, so it can still be in the queue that such a flush discards.
+void serial_write_byte(uint8_t value) {
+    Serial.write(value);
+#if !(ARDUINO_USB_MODE && ARDUINO_USB_CDC_ON_BOOT) // The condition for `HWCDC` in HWCDC.h.
+    Serial.flush();
+#endif
+}
+
 void serial_read_bytes(uint8_t *buf, size_t length) {
     size_t bytes_read = 0;
     while (bytes_read < length) {
         if (!Serial.available()) {
-            delay(1); // Yield to the ESP32 runtime while waiting for UART input.
+            delay(1); // Yield to the ESP32 runtime while waiting for input.
             continue;
         }
         char byte = Serial.read();
@@ -61,8 +72,7 @@ void loop() {
         led_state = 0;
     }
 
-    Serial.write('A');
-    Serial.flush();
+    serial_write_byte('A');
 
     uint32_t response_length = 0;
     serial_read_bytes((uint8_t*)&response_length, 4);
@@ -74,14 +84,12 @@ void loop() {
             serial_read_bytes(discard, chunk);
             response_length -= chunk;
         }
-        Serial.write((uint8_t)0xff);
-        Serial.flush();
+        serial_write_byte(0xff);
         return;
     }
 
     serial_read_bytes(buf, response_length);
     buf[response_length] = 0;
     int res = parser((char*)buf);
-    Serial.write((uint8_t)res);
-    Serial.flush();
+    serial_write_byte((uint8_t)res);
 }
