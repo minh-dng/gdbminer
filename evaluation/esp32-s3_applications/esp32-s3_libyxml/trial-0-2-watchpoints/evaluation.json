@@ -4,14 +4,6 @@
   "f1": 0.7992665862484922,
   "no_tested_inputs": 100673,
   "watchpoint_count": 2,
-  "units": {
-    "duration": "seconds",
-    "throughput": "board requests per second",
-    "execution_duration": "tracing.duration + mining.duration",
-    "tracing.duration": "sum of tracing.seeds; start-up and a seed lost to a stop are not counted",
-    "mining.duration": "the miner's own timer",
-    "evaluation_duration": "wall time of precision_recall.py, which has no timer of its own"
-  },
   "execution_duration": 138285.8,
   "tracing": {
     "duration": 138016.9,
