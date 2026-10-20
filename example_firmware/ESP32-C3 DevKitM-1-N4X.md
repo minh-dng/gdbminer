@@ -21,7 +21,8 @@ The firmware source is the same in both setups. The build option `CDCOnBoot` dec
 | ------------- | ----------------------------------- | ------------------------------------------ |
 | Chip side     | CP2102N USB-to-UART bridge on UART0 | Built-in USB-Serial/JTAG on GPIO18 and 19  |
 | Connection    | The board's Micro-USB port          | A USB breakout wired to the pins (below)   |
-| Mac device    | `/dev/cu.usbserial-<n>`             | `/dev/cu.usbmodem<n>`                      |
+| macOS device  | `/dev/cu.usbserial-<n>`             | `/dev/cu.usbmodem<n>`                      |
+| Linux device  | `/dev/ttyUSB<n>`                    | `/dev/ttyACM<n>`                           |
 | Two cables    | Flashing, each input and its answer | OpenOCD and GDB (debugging)                |
 | One cable     | Not used                            | Debugging, flashing, each input and answer |
 | Configured in | `[Connection] port`                 | `adapter serial`; one cable: also `port`   |
@@ -35,12 +36,13 @@ as "USB JTAG_serial debug unit".
 ### UART link (Micro-USB)
 
 Plug a USB cable into the board's Micro-USB port. The CP2102N bridge appears as
-`/dev/cu.usbserial-<n>`. Set that path as `port` in the `[Connection]` section of the target's
-`configuration.2-cables.toml`. The number `<n>` changes when you re-plug the board or use another
-USB port, so check it before each session.
+`/dev/cu.usbserial-<n>` on macOS and `/dev/ttyUSB<n>` on Linux. Set that path as `port` in the
+`[Connection]` section of the target's `configuration.2-cables.toml`. The number `<n>` changes when
+you re-plug the board or use another USB port, so check it before each session.
 
 To find the port, list the serial ports. `arduino-cli` comes from the [Toolchain](#toolchain) step;
-without it, compare `ls /dev/cu.*` before and after plugging in the cable.
+without it, compare `ls /dev/cu.*` (Linux: `ls /dev/ttyUSB* /dev/ttyACM*`) before and after
+plugging in the cable. The example output below is from macOS.
 
 ```sh
 arduino-cli board list
@@ -249,8 +251,9 @@ only.
 Two more files are not installed by Arduino CLI:
 
 - **OpenOCD:** Espressif's fork, release [`v0.12.0-esp32-20260831`][openocd-release]. The recorded
-  runs unpacked its macOS arm64 archive to `~/.espressif/openocd-esp32/`. The Arduino core bundles
-  an older build (`v0.12.0-esp32-20260424`); it was not used. Check with
+  runs unpacked its macOS arm64 archive to `~/.espressif/openocd-esp32/`. On Linux, use the
+  `linux-amd64` or `linux-arm64` archive of the same release. The Arduino core bundles an older
+  build (`v0.12.0-esp32-20260424`); it was not used. Check with
   `~/.espressif/openocd-esp32/bin/openocd --version`.
 - **ROM symbol file:** [`esp-rom-elfs`
   20241011](https://github.com/espressif/esp-rom-elfs/releases/tag/20241011) (installed here by the
@@ -259,15 +262,21 @@ Two more files are not installed by Arduino CLI:
   `esp32c3_rev101_rom.elf`. Symbols for another revision can assign incorrect names to addresses and
   make `ignore_functions_regex` matches unreliable.
 
+On Linux, two permissions are needed without root. OpenOCD opens the USB-Serial/JTAG device
+(`0x303A:0x1001`) only with the udev rules shipped in the OpenOCD archive: copy
+`share/openocd/contrib/60-openocd.rules` to `/etc/udev/rules.d/` and replug the board. The serial
+ports need membership of the group that owns them (`ls -l /dev/ttyUSB0`), usually `dialout`.
+
 ### Values to change on another machine
 
 Each target's `configuration.2-cables.toml` and `configuration.1-cable.toml` hold paths and
-device names from the recording Mac. Change these in each:
+device names from the recording Mac. Change these in each, including on Linux:
 
 | Table and key           | Value to change                                                  |
 | ----------------------- | ---------------------------------------------------------------- |
 | `[Connection] port`     | Two cables: UART device, such as `/dev/cu.usbserial-<n>`.        |
 |                         | One cable: native USB serial port, `/dev/cu.usbmodem<n>`.        |
+|                         | Linux: `/dev/ttyUSB<n>` and `/dev/ttyACM<n>`.                    |
 | `[GDB] gdb_path`        | Espressif `riscv32-esp-elf-gdb` from the Arduino core.           |
 | `[GDB.esp32c3] rom_elf` | ROM symbol file matching the chip revision.                      |
 | `[GDB] gdb_server_path` | OpenOCD executable and scripts folder; keep all placeholders.    |

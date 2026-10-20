@@ -5,6 +5,10 @@ versions below. Install each library once per Arduino CLI user environment, not 
 If you use separate CLI configurations or user directories, install the libraries in each one.
 The STM32 examples use PlatformIO and declare their dependencies in `platformio.ini` instead.
 
+The paths in these guides and in the checked-in TOMLs are macOS paths, such as
+`~/Library/Arduino15`. On Linux, the Arduino data directory is `~/.arduino15`;
+`arduino-cli config get directories.data` prints it on either system.
+
 Board options, build paths and upload ports differ. After setup, follow the
 [C3 build guide](ESP32-C3%20DevKitM-1-N4X.md#build-and-upload) or the
 [S3 build guide](ESP32-S3-Zero.md#build-and-upload).
