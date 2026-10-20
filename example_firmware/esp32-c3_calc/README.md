@@ -14,6 +14,21 @@ The desktop `main()` reads a file; the firmware never calls it, and the linker d
 exits with status 3), call the desktop `strip_input()`, establish `setjmp`, call
 `rdp_parse_expression` and convert `longjmp` to rejection.
 
+## Nesting limit
+
+The parser is recursive. Each `(` adds four calls, `parse_primary`, `parse_expr`, `parse_sum` and
+`parse_mult`, and at `-O0` each uses a 48-byte stack frame. The wrapper sets the stack of Arduino's
+loop task, which runs the parser, to 32 KiB with `SET_LOOP_TASK_STACK_SIZE`. Both builds answer
+like the desktop up to 168 levels of nesting. At 169 levels the stack overflows: the board reports
+a stack protection fault and restarts without an answer. The default 8 KiB stack held 40 levels
+(issue [#63](https://github.com/minh-dng/gdbminer/issues/63)).
+
+GDBMiner stays far below the limit. The 70,185 calc mining queries recorded on 2026-10-20 nest at
+most 6 levels, and the seeds and evaluation inputs at most 3. No stack size removes the limit: a
+2,048-byte input can nest 2,048 levels, which would need more than 384 KiB, nearly all of the C3's
+400 KiB of SRAM. The wrapper does not check the depth itself, because it would then reject valid
+inputs that the desktop accepts.
+
 ## Build and upload
 
 Follow the shared [Arduino CLI toolchain setup](../Arduino-CLI.md#toolchain) and
