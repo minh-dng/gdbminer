@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+# macOS debug symbols that clang -g writes next to each binary it links
+*.dSYM/
+
 # Distribution / packaging
 .Python
 build/
