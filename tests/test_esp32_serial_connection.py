@@ -145,6 +145,30 @@ def test_marker_then_silence_resends_once(cls):
 
 
 @PORTS
+def test_restart_after_the_resend_raises_instead_of_sending_again(cls):
+    # The input crashes the firmware: its panic text holds an 'A', and so does the boot after each
+    # crash. Sending it a third time would crash the firmware again.
+    conn = connection([READY, b""], [READY, *[b""] * 5, READY], cls)
+    clock = iter(range(100))
+    with (
+        patch("tracer.connection.esp32_serial_connection.time.monotonic", lambda: next(clock)),
+        pytest.raises(RuntimeError, match="both sends"),
+    ):
+        exchange(conn, b"((1))")
+    assert sent(conn) == packet(b"((1))") * 2
+
+
+@PORTS
+def test_marker_then_result_after_the_resend_is_accepted(cls):
+    # A second restart that the resent packet survives: its answer still counts.
+    conn = connection([READY, b""], [READY, *[b""] * 5, READY, b"\x00"], cls)
+    clock = iter(range(100))
+    with patch("tracer.connection.esp32_serial_connection.time.monotonic", lambda: next(clock)):
+        assert exchange(conn, b"1+2")
+    assert sent(conn) == packet(b"1+2") * 2
+
+
+@PORTS
 def test_buffered_result_after_a_host_delay_is_not_resent(cls):
     # This process stalls past the grace deadline; the answer is already buffered.
     conn = connection([READY, b""], [READY, b"\x00"], cls)
