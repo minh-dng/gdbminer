@@ -1,0 +1,13 @@
+date: 2026-10-13 10:53:13 AEDT
+git HEAD: 6e8c42dfc4a0d9041d96ab4032284d81b1a24ac0 (docs/esp32-s3-evaluation-trial-1)
+ELF sha256: 3219a327acd3e2b51f117805afc2908de871621ce31fb787e28ed1a2225d967c
+board: E8:06:90:95:F2:70 on /dev/cu.usbmodem1301, GDB port 3335
+gdb: GNU gdb (esp-gdb) 17.1_20260402
+openocd: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+python: Python 3.12.14
+libraries:
+Name           Installed Available   Location Description
+Arduino_JSON   0.2.0     0.2.2       user     [BETA] Process JSON in your Arduino s...
+LibYxml        1.0.2     -           user     -
+percent_encode 2.0.1     2.0.6       user     Convert between URL-unsafe string and...
+
