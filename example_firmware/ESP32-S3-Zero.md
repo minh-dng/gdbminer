@@ -35,9 +35,9 @@ variant has more flash and PSRAM; it was not tested.
 The native USB pins carry the USB-Serial/JTAG peripheral. It is one USB device with two functions,
 used at the same time:
 
-| Function | Mac side                                             | Used for                           | Configured in                              |
+| Function | Host side                                            | Used for                           | Configured in                              |
 | -------- | ---------------------------------------------------- | ---------------------------------- | ------------------------------------------ |
-| CDC-ACM  | `/dev/cu.usbmodem<n>` ("USB JTAG_serial debug unit") | Flashing, each input and its answer | `[Connection] port`                        |
+| CDC-ACM  | macOS `/dev/cu.usbmodem<n>`, Linux `/dev/ttyACM<n>`  | Flashing, each input and its answer | `[Connection] port`                        |
 | JTAG     | No `/dev` path; OpenOCD finds it over USB            | OpenOCD and GDB                    | `[GDB] gdb_server_path` (`--adapter-serial`) |
 
 No external JTAG probe is needed, and one would not help: the number of breakpoints and
@@ -49,9 +49,11 @@ the inputs over the `esp32-uart` channel. That setup was not built or tested.
 
 ### Finding the identifiers
 
-The port name depends on the Mac's USB socket (`ls /dev/cu.usbmodem*`). The USB vendor and product
-ID is `0x303A:0x1001`; with several boards attached, use the USB serial number in `adapter serial`
-to select the target. The serial number is the chip's MAC address.
+The port name depends on the USB socket (`ls /dev/cu.usbmodem*` on macOS, `ls /dev/ttyACM*` on
+Linux). The USB vendor and product ID is `0x303A:0x1001`; with several boards attached, use the USB
+serial number in `adapter serial` to select the target. The serial number is the chip's MAC
+address. `arduino-cli board list --format json` lists each port with its `serialNumber` on both
+systems; on macOS, `ioreg` shows it too:
 
 ```sh
 ioreg -p IOUSB -w0 -l | grep -E '"(USB Product Name|USB Serial Number)"'
@@ -201,11 +203,18 @@ OpenOCD options in `gdb_server_path`, all required:
 
 | Table and key                    | Value to change                                                   |
 | -------------------------------- | ----------------------------------------------------------------- |
-| `[Connection] port`              | The CDC port, `/dev/cu.usbmodem<n>`                               |
-| `[GDB] gdb_path`                 | Espressif `xtensa-esp32s3-elf-gdb` from the Arduino core          |
+| `[Connection] port`              | The CDC port, `/dev/cu.usbmodem<n>` (Linux: `/dev/ttyACM<n>`)     |
+| `[GDB] gdb_path`                 | Espressif `xtensa-esp32s3-elf-gdb` from the Arduino core |
 | `[GDB] gdb_server_path`          | OpenOCD executable and scripts folder; keep all placeholders      |
 | `[GDB.esp32s3] rom_elf`          | ROM symbol file matching the chip revision                        |
 | `[GDB.esp32s3] usb_reset_command` | The script path; keep `{adapter_serial}` after `--serial`         |
+
+On Linux, use the `linux-amd64` or `linux-arm64` OpenOCD archive of the same release. Copy its
+`share/openocd/contrib/60-openocd.rules` to `/etc/udev/rules.d/` and replug the board, so OpenOCD
+can open the USB device without root, and join the group that owns `/dev/ttyACM<n>` (usually
+`dialout`). `scripts/esp32_usb_reset.py` reads the USB device tree with macOS `ioreg`, so it does
+not run on Linux; set `usb_reset_command = ""` there, which attaches once without a reset between
+attempts.
 
 ### Target settings in TOML
 

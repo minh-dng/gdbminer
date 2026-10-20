@@ -29,15 +29,16 @@ guide][s3-setup].
 Each target includes firmware and TOML files in `configuration/`: `configuration.toml` for STM32,
 `configuration.2-cables.toml` and `configuration.1-cable.toml` for the C3 two-cable and one-cable
 setups, and `configuration.1-watchpoint.toml` and `configuration.2-watchpoints.toml` for the S3
-options. Only the STM32 targets hold seed inputs and an evaluation corpus, as provided by the
-authors. The C3 and S3 targets use the corresponding STM32 parser libraries, acceptance rules,
-seeds and evaluation corpora; build and validation notes are documented in their READMEs.
+options. The JSON, CGI and XML ports use the corresponding STM32 parser libraries, acceptance
+rules, seeds and evaluation corpora. The C3 calc target uses the desktop calc parser and corpus.
+Build and validation notes are documented in each target's README.
 
-| Parser                        | STM32 reference              | ESP32-C3 port                | ESP32-S3 port                |
-| ----------------------------- | ---------------------------- | ---------------------------- | ---------------------------- |
-| JSON (`Arduino_JSON` / cJSON) | [stm32_arduinojson][st-json] | [esp32-c3_json][c3-json]     | [esp32-s3_json][s3-json]     |
-| CGI (`percent_encode`)        | [stm32_cgidecode][st-cgi]    | [esp32-c3_cgidecode][c3-cgi] | [esp32-s3_cgidecode][s3-cgi] |
-| XML (`LibYxml`)               | [stm32_libyxml][st-xml]      | [esp32-c3_xml][c3-xml]       | [esp32-s3_xml][s3-xml]       |
+| Parser                           | STM32 reference              | ESP32-C3 port                | ESP32-S3 port                |
+| -------------------------------- | ---------------------------- | ---------------------------- | ---------------------------- |
+| JSON (`Arduino_JSON` / cJSON)    | [stm32_arduinojson][st-json] | [esp32-c3_json][c3-json]     | [esp32-s3_json][s3-json]     |
+| CGI (`percent_encode`)           | [stm32_cgidecode][st-cgi]    | [esp32-c3_cgidecode][c3-cgi] | [esp32-s3_cgidecode][s3-cgi] |
+| XML (`LibYxml`)                  | [stm32_libyxml][st-xml]      | [esp32-c3_xml][c3-xml]       | [esp32-s3_xml][s3-xml]       |
+| Calc (desktop recursive descent) | —                            | [esp32-c3_calc][c3-calc]     | —                            |
 
 ## Build and flash
 
@@ -117,6 +118,7 @@ Before running:
 [c3-json]: esp32-c3_json/README.md
 [c3-cgi]: esp32-c3_cgidecode/README.md
 [c3-xml]: esp32-c3_xml/README.md
+[c3-calc]: esp32-c3_calc/README.md
 [s3-board]: https://docs.waveshare.com/ESP32-S3-zero
 [s3-setup]: ESP32-S3-Zero.md
 [s3-json]: esp32-s3_json/README.md

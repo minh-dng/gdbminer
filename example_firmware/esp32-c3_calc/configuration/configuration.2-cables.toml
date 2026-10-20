@@ -1,0 +1,54 @@
+# (2) USB cable option. Build with CDCOnBoot=default into build-2/.
+# GDBMiner configuration for ESP32-C3-DevKitM-1 calc adapter.
+# Extension of the embedded evaluation using the paper's desktop calc parser and corpus.
+[BASIC]
+# The authors' seeds and evaluation corpus, unchanged.
+seed_directory = "./example_programs/calc/seeds"
+output_directory = "./output/esp32-c3_calc/"
+binary_file = "./example_firmware/esp32-c3_calc/build-2/esp32-c3_calc.ino.elf"
+eval_directory = "./example_programs/calc/eval"
+
+[Connection]
+input_channel = "esp32-uart"
+port = "/dev/cu.usbserial-110"
+baud_rate = 9600
+rts = true
+reset_pulse = true
+
+[GDB]
+gdb_path = "~/Library/Arduino15/packages/esp32/tools/riscv32-esp-elf-gdb/17.1_20260402/bin/riscv32-esp-elf-gdb"
+instance = "esp32c3"
+# Requires the separate USB-JTAG link; the DevKitM-1 Micro-USB port is UART-only.
+# 40 MHz is the USB-JTAG base clock used in the recorded runs.
+# ESP_FLASH_SIZE 0: every breakpoint is a hardware breakpoint, so one that finds no free trigger
+# fails instead of being written into flash. OpenOCD then also skips its reset at GDB attach.
+gdb_server_path = '''~/.espressif/openocd-esp32/bin/openocd
+  -c "set ESP_RTOS none"
+  -c "set ESP_FLASH_SIZE 0"
+  -f board/esp32c3-builtin.cfg
+  -c "gdb port {gdb_port}"
+  -c "telnet port {telnet_port}"
+  -c "tcl port {tcl_port}"
+  -c "adapter serial {adapter_serial}"
+  -c "adapter speed 40000"'''
+gdb_port = 3333
+
+# Keep strtol visible: it consumes the original input digits. Nothing is skipped.
+watchpoint_type = "(char*)"
+watchpoint_count = 8
+timeout = 30
+entrypoint = "rdp_parse_expression"
+input_buffer = "buf"
+
+[GDB.esp32c3]
+# Run prepare_debug.sh: this copy adds unwind metadata for the pinned v1.1 ROM strtol.
+# Symbols and CFI describe existing mask ROM; this file is never flashed.
+rom_elf = "./example_firmware/esp32-c3_calc/build/debug/esp32c3_rev101_rom.elf"
+# No finish or exit breakpoint: observe bytes with slots 0-7.
+hardware_trigger_slot = 0
+# Restart the firmware after GDB attaches: OpenOCD's target examination can corrupt register a0
+# of a core that is still booting.
+reset_on_connect = true
+
+[LOGS]
+log_level = "INFO"
