@@ -103,6 +103,12 @@ TOML literal strings preserve regex backslashes.
 [input-channel]: src/tracer/connection/sut_connection.py
 [logging-levels]: https://docs.python.org/3/library/logging.html#levels
 
+Mining keeps every nonempty combination of the symbols marked optional by deletion checks
+([#58](https://github.com/minh-dng/gdbminer/issues/58)). Original unmarked symbols stay
+nonempty. Recorded evaluations used the older removal, which omitted all optional symbols
+together and lost partial combinations. Re-mining can therefore change the resulting grammar;
+the original implementation remains on `archive/orig-boschresearch` for reproduction.
+
 `watchpoint_count = -1` is not supported. The tracer advances through the input by this count, so it must be positive.
 
 Window selection stays in the generic tracer. Non-S3 targets always use distance `1`: each pass

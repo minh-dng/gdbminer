@@ -4,6 +4,7 @@
 
 
 import argparse
+import itertools
 import logging
 import sys
 import time
@@ -150,41 +151,74 @@ def eliminate_non_terminating_vars(grammar):
     return new_grammar
 
 
+# At most 2**5 - 1 variants per rule: 4 optional symbols and the symbol for the rest of the chain.
+MAX_OPTIONAL_PER_RULE = 4
+
+
+def is_optional(key):
+    """Whether a deletion check marked the symbol as optional ("-" in its name)."""
+    if cmimid.util.is_node_method([key]):
+        return cmimid.util.parse_method_name(key)[0].endswith(cmimid.util.Epsilon)
+    if ":if_" in key or ":while_" in key:
+        return key.split("#")[0].endswith(cmimid.util.Epsilon)
+    return False
+
+
+def split_long_rules(grammar, optional):
+    """Split rules with more than MAX_OPTIONAL_PER_RULE optional symbols into chains.
+
+    A rule with n optional symbols has up to 2**n - 1 nonempty variants. Each part of the chain
+    ends in a new symbol for the rest of the rule, so the variants grow linearly in n instead
+    (Lange and Leiß 2009). The new symbol is optional if all of the rest is. Desktop mjs has rules
+    with up to 67 optional symbols; the other recorded grammars have at most 3 per rule, so this
+    leaves them unchanged. Returns the new grammar and its optional symbols.
+    """
+    new_grammar = {k: [] for k in grammar}
+    optional = set(optional)
+    for k, rules in grammar.items():
+        for i, rule in enumerate(rules):
+            chain, key, part, count = [], k, [], 0
+            for j, p in enumerate(rule):
+                if p in optional:
+                    if count == MAX_OPTIONAL_PER_RULE:
+                        rest = f"<{k[1:-1]} rule {i} from {j}>"
+                        assert rest not in grammar, rest
+                        chain.append((key, [*part, rest]))
+                        key, part, count = rest, [], 0
+                    count += 1
+                part.append(p)
+            chain.append((key, part))
+            for key, body in reversed(chain[1:]):
+                if all(p in optional for p in body):
+                    optional.add(key)
+            for key, body in chain:
+                new_grammar.setdefault(key, []).append(body)
+    return new_grammar, optional
+
+
 def check_empty_rules(grammar):
+    """Make the symbols that a deletion check marked as optional omissible.
+
+    Each rule gains every nonempty variant that omits a subset of its optional symbols
+    (Hopcroft, Motwani and Ullman 2006, section 7.1.3). An original unmarked symbol stays
+    nonempty: at least one deletion in its observed pattern group was rejected. START is
+    unmarked, so the empty input stays excluded. This preserves the nonempty strings of the
+    marked grammar under that policy (issue #58). Input rules come first to keep the rule
+    order used by later stages.
+    """
+    optional = {k for k in grammar if is_optional(k)}
+    grammar, optional = split_long_rules(grammar, optional)
+
     new_grammar = {}
-    for k in grammar:
-        new_grammar[k] = grammar[k]
-        if cmimid.util.is_node_method([k]):
-            if cmimid.util.parse_method_name(k)[0].endswith(cmimid.util.Epsilon):
-                new_grammar[k].append([])  # empty rule
-        elif ":if_" in k or ":while_" in k:
-            name, _ = k.split("#")
-            if name.endswith(cmimid.util.Epsilon):
-                new_grammar[k].append([])  # empty rule
-
-    while True:  # Remove epsilon productions
-        # Find epsilon production rules
-        epsilon_variables = set()
-        for k, rules in new_grammar.items():
-            keep_rules = []
-            for rule in rules:
-                if len(rule) == 0:
-                    epsilon_variables.add(k)
-                else:
-                    keep_rules.append(rule)
-            rules.clear()
-            rules.extend(keep_rules)
-
-        if not epsilon_variables:
-            break
-
-        # Add rules without epsilon variables
-        for k, rules in new_grammar.items():
-            for rule in rules:
-                new_rule = [p for p in rule if p not in epsilon_variables]
-                if len(new_rule) < len(rule) and len(new_rule) > 0:
-                    rules.append(new_rule)
-
+    for k, rules in grammar.items():
+        new_rules = list(rules)
+        for rule in rules:
+            choices = [[[p], []] if p in optional else [[p]] for p in rule]
+            for parts in itertools.product(*choices):
+                variant = [p for part in parts for p in part]
+                if variant and variant not in new_rules:
+                    new_rules.append(variant)
+        new_grammar[k] = new_rules
     return new_grammar
 
 
