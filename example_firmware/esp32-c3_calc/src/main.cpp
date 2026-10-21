@@ -25,6 +25,11 @@ int parser(char *input) {
     return rdp_parse_expression(input, &res);
 }
 
+// The parser runs in Arduino's loop task. Each '(' adds four parser calls, 192 bytes of stack at
+// -O0, so the default 8 KiB stack overflowed at 41 levels (issue #63). 32 KiB holds 168
+// levels. No stack holds the 2,048 levels of a full buffer: that would need over 384 KiB.
+SET_LOOP_TASK_STACK_SIZE(32 * 1024);
+
 #ifndef LED_BUILTIN
 #define LED_BUILTIN 8
 #endif
