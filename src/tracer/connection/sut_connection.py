@@ -102,7 +102,10 @@ class SUTConnection:
         while True:
             self.inputs.put(fuzz_input)
             try:
-                return self.responses.get(timeout=self.timeout)
+                response = self.responses.get(timeout=self.timeout)
+                if isinstance(response, Exception):
+                    raise response  # The connection process failed; see `ConnectionBaseClass.run`.
+                return response
             except queue.Empty:
                 logging.warning("Connection timeout!")
                 self.disconnect()

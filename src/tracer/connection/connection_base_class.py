@@ -56,8 +56,17 @@ class ConnectionBaseClass(mp.Process):
         self.ready.put(True)
         while self.running:
             fuzz_input = self.inputs.get()
-            self.wait_for_input_request()
-            self.response.put(self.send_input(fuzz_input))
+            try:
+                self.wait_for_input_request()
+                accepted = self.send_input(fuzz_input)
+            except Exception as exc:
+                # Without the error, the waiting `SUTConnection.input_accepted` would take this
+                # process's end for a timeout, reconnect and send the same input again. Send its
+                # text: the queue pickles messages, and some exceptions cannot be rebuilt from a
+                # pickle (PySerial's `PortNotOpenError`).
+                self.response.put(RuntimeError(f"Connection process failed: {exc!r}"))
+                raise
+            self.response.put(accepted)
 
     def connect(self, config: Config): ...
 

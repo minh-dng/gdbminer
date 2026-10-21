@@ -46,7 +46,9 @@ class ESP32SerialConnection(ConnectionBaseClass, ABC):
             │ Queue acceptance result              │
 
     After synchronisation, readiness is the next 'A' after the previous result. A restart during
-    transmission is handled by `send_input`'s recovery loop.
+    transmission is handled by `send_input`'s recovery loop. It sends a lost packet once more. If
+    a restart loses that send too, the input itself is taken as the cause, for example a parser
+    that overflows its stack, and `send_input` raises instead of sending it a third time.
 
     Limits: the protocol has no framing, so the recovery assumes a restart loses a packet whole.
     If the restarted firmware receives only the rest of a packet, it reads payload bytes as the next
@@ -155,6 +157,7 @@ class ESP32SerialConnection(ConnectionBaseClass, ABC):
         self._write(packet)
         # Tracing can hold the parser at a breakpoint for much longer than any timeout.
         result = self._read_result(None)
+        resent = False
         while result == READY_BYTE:
             self._synced = False
             # The firmware restarted. If it still received the packet, the result follows; silence
@@ -162,7 +165,11 @@ class ESP32SerialConnection(ConnectionBaseClass, ABC):
             # silent too, so this path assumes no tracing stop after a restart.
             result = self._read_result(time.monotonic() + self.grace_sec + transfer)
             if result is None:
+                if resent:
+                    # A third send would most likely crash the firmware again, without end.
+                    raise RuntimeError(f"Firmware restarted and lost both sends of input {input!r}")
                 self._write(packet)
+                resent = True
                 result = self._read_result(None)
         return result == ParserResult.ACCEPTED
 
