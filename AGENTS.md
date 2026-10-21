@@ -30,6 +30,7 @@ mise run lint                       # ruff check  (mise-managed, no venv needed)
 mise run fmt:check                  # ruff format --check
 mise run typecheck                  # basedpyright (pipx-managed)
 mise run check                      # lint + fmt:check + typecheck
+mise run test                       # hardware-free pytest suite
 mise run trace                      # example_programs/json default config
 mise run mine
 mise run eval
@@ -57,7 +58,10 @@ Preserve existing type hints and logging patterns. In `src/` (tracer/miner/eval/
 
 ## Testing Guidelines
 
-There is no configured automated test suite. Validate with the smallest affected workflow: trace and mine an existing example, then run `precision_recall.py` when grammar output changes. Keep generated results out of source changes unless intentional.
+Run `mise run test` for the hardware-free Python regression suite. CI runs it alongside the static
+checks. For changes to tracing or grammar output, also validate with the smallest affected workflow:
+trace and mine an existing example, then run `precision_recall.py` when grammar output changes. Keep
+generated results out of source changes unless intentional.
 
 If the test can be verified with a linting / type-hint check then do not test it.
 

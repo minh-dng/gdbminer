@@ -1,0 +1,45 @@
+name: Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checks-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Python tests and static checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: jdx/mise-action@v4
+        with:
+          install_args: --locked
+
+      - name: Install Python dependencies
+        run: mise run install:dev
+
+      - name: Run tests
+        run: mise run test
+
+      - name: Check lint
+        run: mise run lint
+
+      - name: Check formatting
+        run: mise run fmt:check
+
+      - name: Check types
+        run: mise run typecheck
+
+      - name: Check workflows
+        run: mise exec -- actionlint

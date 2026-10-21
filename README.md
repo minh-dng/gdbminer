@@ -34,6 +34,21 @@ mise run shfmt      # format shell scripts (shfmt -w)
 mise run shfmt:check
 ```
 
+## Testing and CI
+
+Run the Python regression suite and static checks locally:
+
+```sh
+mise run test       # pytest, with locked dev dependencies
+mise run check      # lint, formatting, and type checking
+```
+
+The Checks workflow runs these commands and validates GitHub Actions workflows on PRs and pushes to
+`main`. The tests in `tests/` use mocks for debugger and serial interactions, including the ESP32
+backend checks; they require no attached boards. The separate Docker workflow builds and runs the
+small JSON experiment on native amd64 and arm64 runners. Live firmware validation and
+grammar-quality thresholds remain outside these checks.
+
 ## Git worktrees
 
 To copy your local Docker notes into new worktrees, create `docs/DOCKER.local.md` in the primary

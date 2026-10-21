@@ -93,6 +93,10 @@ run = "basedpyright"
 description = "All static checks (lint + fmt:check + typecheck)"
 depends = ["lint", "fmt:check", "typecheck"]
 
+[tasks.test]
+description = "Run the hardware-free Python regression suite"
+run = "uv run --frozen --group dev python -m pytest"
+
 [tasks.shellcheck]
 description = "Lint shell scripts (run_experiment.sh, scripts/*.sh)"
 run = "shellcheck run_experiment.sh scripts/*.sh"
