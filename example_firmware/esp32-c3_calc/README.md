@@ -1,7 +1,9 @@
 # ESP32-C3 calc target
 
 This target uses the paper's desktop [calc parser](../../example_programs/calc/), its 20 seeds and
-1,000 evaluation inputs.
+1,000 evaluation inputs. It uses the same serial protocol as the C3 JSON target. Over native USB,
+calc skips `Serial.flush()` because `HWCDC::flush` can discard a queued ready byte
+(issue [#60](https://github.com/minh-dng/gdbminer/issues/60)). UART builds keep the flush.
 
 ## Prepare the parser
 
