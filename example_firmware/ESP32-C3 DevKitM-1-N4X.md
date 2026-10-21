@@ -123,8 +123,10 @@ the target READMEs list any others:
 
 - LED on GPIO8.
 - `buf` has one extra byte, so a 2,048-byte input can be NUL-terminated inside the array.
-- `delay(1)` while waiting for UART input, so the ESP32 runtime can run.
-- `Serial.flush()` after the ready and result bytes.
+- `delay(1)` while waiting for input, so the ESP32 runtime can run.
+- `Serial.flush()` after the ready and result bytes, in UART builds only. Over native USB,
+  `HWCDC::flush` can discard a queued ready byte
+  (issue [#60](https://github.com/minh-dng/gdbminer/issues/60)).
 - An oversized packet is drained and rejected with `0xff` instead of hanging the board.
 
 The [calc target](esp32-c3_calc/README.md) uses this serial protocol with the desktop calc parser

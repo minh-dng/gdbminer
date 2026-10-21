@@ -107,9 +107,11 @@ the S3 to JTAG on its GPIO pads would need an irreversible eFuse burn (`DIS_USB_
 
 The three wrappers use the paper's STM32 parser libraries and acceptance rules. Each accepts up
 to 2,048 input bytes, with an extra buffer byte for the terminating NUL. They yield with `delay(1)`
-while waiting for input, flush ready and result bytes, and drain oversized packets before rejecting
-them with `0xff`. The serial protocol uses `A` as the ready marker, a four-byte little-endian length
-followed by the payload, and `0` (accepted) or `0xff` (rejected) as the result.
+while waiting for input and drain oversized packets before rejecting them with `0xff`. They send
+the ready and result bytes without `Serial.flush()`: `HWCDC::flush` can discard a queued ready
+byte (issue [#60](https://github.com/minh-dng/gdbminer/issues/60)). The serial protocol uses `A`
+as the ready marker, a four-byte little-endian length followed by the payload, and `0` (accepted)
+or `0xff` (rejected) as the result.
 
 The wrappers drive the Waveshare WS2812 on GPIO21 with Arduino's built-in `rgbLedWrite`. The generic
 variant's RGB pin is not used.

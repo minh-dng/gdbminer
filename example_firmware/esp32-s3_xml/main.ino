@@ -53,12 +53,22 @@ int parser(uint8_t *input, size_t input_size)
     return ret_val;
 }
 
+// Native USB (`HWCDC`) skips the flush: `write` queues the byte and the driver's interrupt sends it
+// once the host has collected the previous packet. `HWCDC::flush` discards the queue instead when
+// the driver sees no connection or the TX ring stays unchanged for 100 one-millisecond checks. The
+// ready byte follows a result at once, so it can still be in the queue that such a flush discards.
+void serial_write_byte(uint8_t value) {
+    Serial.write(value);
+#if !(ARDUINO_USB_MODE && ARDUINO_USB_CDC_ON_BOOT) // The condition for `HWCDC` in HWCDC.h.
+    Serial.flush();
+#endif
+}
+
 void loop() {
     // Do not overwrite the previous result while waiting for a new input.
 
     // Notify that we request a new input
-    Serial.write('A');
-    Serial.flush();
+    serial_write_byte('A');
 
     uint32_t response_length = 0;
     serial_read_bytes((uint8_t*)&response_length, 4);
@@ -73,8 +83,7 @@ void loop() {
             serial_read_bytes(discard, chunk);
             response_length -= chunk;
         }
-        Serial.write((uint8_t)0xff);
-        Serial.flush();
+        serial_write_byte(0xff);
         return;
     }
     //socket_read_bytes(connection_fd, (void *)buf, response_length);
@@ -84,8 +93,7 @@ void loop() {
     int ret = parser((uint8_t*) buf, (size_t)response_length);
     rgbLedWrite(STATUS_LED_PIN, ret == 0 ? 0 : 16, ret == 0 ? 16 : 0, 0); // Green/red: accept/reject.
     // Send result if parsing was successfully or not
-    Serial.write(ret);
-    Serial.flush();
+    serial_write_byte((uint8_t)ret);
 }
 
 
