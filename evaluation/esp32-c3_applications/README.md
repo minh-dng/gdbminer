@@ -29,7 +29,7 @@ capture revision and firmware, and `run/` adds the record of the later mining. T
 | `execution_duration` | seconds | `tracing.duration` + `mining.duration`. |
 | `tracing.duration` | seconds | Sum of `tracing.seeds`. Start-up and a seed lost to a stop are not counted. |
 | `tracing.seeds` | seconds | One `{seed, duration}` entry per written trace, sorted by seed number. |
-| `mining.duration` | seconds | The miner's own timer (`Mining time` in `run/mine.log`). |
+| `mining.duration` | seconds | Miner timer, or phase-time sum for resumed calc (below). |
 | `mining.requests` | requests | Board requests per step: `methods`, `loops`, `tokens` and their `total`. |
 | `mining.throughput` | requests per second | `mining.requests.total` / `mining.duration`. |
 | `evaluation_duration` | seconds | Wall time of `precision_recall.py`, which has no timer of its own. |
@@ -40,7 +40,11 @@ The statistics are derived from the logs in `run/`:
   `trace.log`. A seed that was interrupted and traced again counts once, for the run that wrote its
   trace. The logs of the resumed `trace.py` calls are not published; the `trace-resume-N` rows of
   `times.txt` list the seeds each resume traced (`seeds=`).
-- `mining.requests` adds up the `Used N requests to generalize` lines of `mine.log`.
+- `mining.requests` adds up the `Used N requests to generalize` lines of `mine.log`
+  and, for resumed calc, `mine-resume-1.log`.
+- Resumed calc `mining.duration` adds the methods duration derived from timestamps in
+  `mine.log` and the resumed timer in `mine-resume-1.log`. Failed startup and waiting time are
+  excluded; the result README explains the split and `times.txt` keeps the invocation wall times.
 - `evaluation_duration` is the sum of the `eval` rows of `times.txt`.
 
 ## Comparison with the Linux results

@@ -93,7 +93,8 @@ to the resumed capture campaign.
 The trees, grammars, `out.log`, `evaluation.json` and the new files in `run/` come from mining
 these traces on `main` `05aa19f9`, which includes the optional-symbol fix of #59. Precision, recall
 and F1 are reported as 1.0. Recall uses the 1,000 inputs of `example_programs/calc/eval`; precision
-defaults to 1,000 generated inputs, but the log does not record its exact query count.
+defaults to 1,000 generated inputs, but the log does not record its exact query count. Precision
+1.0 remains provisional until that count is independently confirmed.
 
 Mining ran in two parts. `mine.py` (`run/mine.log`) finished the methods phase with 154,455
 queries at 22:10:02 and stopped 35 s later, when OpenOCD did not start for the loop phase (#69).

@@ -1,8 +1,8 @@
 # ESP32-C3 calc: reusable native USB trial-0 traces
 
 These twenty completed traces and their exact seed files are inputs for mining on another
-computer. Tracing finished on 18 October 2026. The later mining attempts stopped before producing
-a full grammar or evaluation score.
+computer. Tracing finished on 18 October 2026. The mining attempts before 22 October stopped
+before producing a full grammar or evaluation score. The completed mining is documented below.
 
 ## Provenance
 
@@ -57,7 +57,8 @@ test ! -e "$calc_reuse_output" &&
   cp "$calc_trace_dataset"/seed.*.in.trace "$calc_reuse_output/trial-0/"
 ```
 
-Use a copy of the other computer's working native USB calc TOML with these settings:
+Use a copy of
+`example_firmware/esp32-c3_calc/configuration/configuration.1-cable.toml` with these settings:
 
 - `BASIC.output_directory`: `./output/esp32-c3_calc-reused-trial0`.
 - `BASIC.seed_directory`: the included `run/seeds` directory. Write its expanded repository path
