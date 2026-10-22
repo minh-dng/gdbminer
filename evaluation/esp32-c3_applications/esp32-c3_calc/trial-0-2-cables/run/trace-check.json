@@ -1,0 +1,102 @@
+{
+  "seed.12.in.trace": {
+    "instructions": 1981,
+    "bytes_covered": 24,
+    "sha256": "7f1061c2d1f9859d0a9e07ea3427ad924167430bc8751139263aa12031219864"
+  },
+  "seed.13.in.trace": {
+    "instructions": 2973,
+    "bytes_covered": 33,
+    "sha256": "32205b02222db45525ae96ba16d5f2f895c55f3f23c45b4e8644bb3edb6f52fc"
+  },
+  "seed.18.in.trace": {
+    "instructions": 12511,
+    "bytes_covered": 145,
+    "sha256": "3ea92d25f8593dddcd75c2a549acd0354dcd233df6ec0e92e059c8fb02b8b6cc"
+  },
+  "seed.19.in.trace": {
+    "instructions": 228,
+    "bytes_covered": 1,
+    "sha256": "9c429adf42b0cfe4c5fd4e9c71ec838a42ed79b48b3e2226d76c02df3facaad2"
+  },
+  "seed.9.in.trace": {
+    "instructions": 11097,
+    "bytes_covered": 130,
+    "sha256": "ac676c8f6f0d880efd0261e261c78d0678b885bb2cd086e127368cd7d69e63c7"
+  },
+  "seed.8.in.trace": {
+    "instructions": 936,
+    "bytes_covered": 12,
+    "sha256": "eee1a1279ad46ef80d24e3a97b195d5d131ede898774ee9e82d691c18280bfc0"
+  },
+  "seed.3.in.trace": {
+    "instructions": 6784,
+    "bytes_covered": 75,
+    "sha256": "ba17977c961bf27ff516505ac62d9050068b3a7b569d1d017959db884d6dda86"
+  },
+  "seed.2.in.trace": {
+    "instructions": 2457,
+    "bytes_covered": 29,
+    "sha256": "02ace97b3e07e7ce12549a53e2b80473c7020eb6a63a80095b3648f4af20594a"
+  },
+  "seed.4.in.trace": {
+    "instructions": 8246,
+    "bytes_covered": 90,
+    "sha256": "621d19b158b92f3937bb079a075e0678297802a2c81252d067930c36f4c47609"
+  },
+  "seed.5.in.trace": {
+    "instructions": 15276,
+    "bytes_covered": 169,
+    "sha256": "d38d17af95f0ddc932179f6584e760771a3d5c8daaaa7dd201de377345b0adb5"
+  },
+  "seed.15.in.trace": {
+    "instructions": 5116,
+    "bytes_covered": 60,
+    "sha256": "d9e1423ec2e1ae6fedb32f4d3631ce32713297f0d018a58f295019243e623caf"
+  },
+  "seed.14.in.trace": {
+    "instructions": 8722,
+    "bytes_covered": 97,
+    "sha256": "eee58ece7857f1b568e13edc7e59bd2867b3b77807df16c995bc5c6d345e8099"
+  },
+  "seed.20.in.trace": {
+    "instructions": 4227,
+    "bytes_covered": 46,
+    "sha256": "14fe8926fb69a42464373bb647fe3a39a91156f4efdfd4db42cc313e2c89696d"
+  },
+  "seed.1.in.trace": {
+    "instructions": 445,
+    "bytes_covered": 3,
+    "sha256": "23207cf26d526bc7015790fbbd48e85e3ce590529b22ef9519c9a638f3250f3a"
+  },
+  "seed.11.in.trace": {
+    "instructions": 1520,
+    "bytes_covered": 15,
+    "sha256": "6e925cfff693a9d990ac01fef4d7c2315c335296d6418f5c496bfc2d0a231d3a"
+  },
+  "seed.10.in.trace": {
+    "instructions": 1189,
+    "bytes_covered": 15,
+    "sha256": "684a7156b1723b84a8bfe754538b1f2c64339161f506f435d45fdb7854f87a1e"
+  },
+  "seed.16.in.trace": {
+    "instructions": 10934,
+    "bytes_covered": 127,
+    "sha256": "b3582cf52ab731be1cb7e4e9a7507a645c60ff0899b88f2108abf6b2b4ff1696"
+  },
+  "seed.17.in.trace": {
+    "instructions": 7230,
+    "bytes_covered": 85,
+    "sha256": "e4604e3c2cc00d98455225c6c175348c523ba7b35534caae32f175fd0c5b6823"
+  },
+  "seed.7.in.trace": {
+    "instructions": 8294,
+    "bytes_covered": 91,
+    "sha256": "01bc5cd60b1935767d8872ea759c1c261e3c9098ca60dddcf0a2dad2cc69ad12"
+  },
+  "seed.6.in.trace": {
+    "instructions": 4964,
+    "bytes_covered": 58,
+    "sha256": "3a54548884a20ad6e8245de8bfb2ca920162883612314176e72e37740f2ed40d"
+  }
+}
