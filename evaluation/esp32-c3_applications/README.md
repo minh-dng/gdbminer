@@ -12,8 +12,12 @@ esp32-c3_<target>/trial-<n>-<setup>/
 └── run/                 # provenance: configuration, build, flash and stage logs, times.txt
 ```
 
-`<target>` is `cgidecode`, `arduinojson` or `libyxml`. `<setup>` is `1-cable` (USB-Serial/JTAG,
-one cable) or `2-cables` (UART bridge next to the JTAG cable).
+`<target>` is `cgidecode`, `arduinojson`, `libyxml` or `calc`. `<setup>` is `1-cable`
+(USB-Serial/JTAG, one cable) or `2-cables` (UART bridge next to the JTAG cable).
+
+The `calc` folders hold traces from one run and the mining of another: their `README.md` names the
+capture revision and firmware, and `run/` adds the record of the later mining. Their
+`evaluation.json` has no `tracing` or `execution_duration` field.
 
 ## evaluation.json
 
