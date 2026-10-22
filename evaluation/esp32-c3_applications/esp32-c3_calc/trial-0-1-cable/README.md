@@ -83,8 +83,13 @@ The original tracing durations belong to the resumed capture campaign.
 The trees, grammars, `out.log`, `evaluation.json` and the new files in `run/` (`state.txt`,
 `times.txt`, `configuration.toml`, `build.options.json`, `mine.log`, `eval.log`, `run.sh`) come
 from mining these traces on `main` `05aa19f9`, which includes the optional-symbol fix of #59.
-Mining took 7,977 s and 196,728 board queries; precision, recall and F1 are 1.0 on 1,000 generated
-inputs and the 1,000 inputs of `example_programs/calc/eval`.
+Mining took 7,977 s and 196,728 board queries; precision, recall and F1 are reported as 1.0.
+Recall uses the 1,000 inputs of `example_programs/calc/eval`.
+
+The evaluation lasted 4 s. The code defaults to 1,000 precision queries and the runner does not
+set `PRECISION_SET_SIZE`, but the inherited environment and per-input answers were not recorded.
+The log confirms the score, not the exact query count. Precision 1.0 remains provisional until
+that count is independently confirmed.
 
 The rebuilt ELF (`47e7c923...844c`) differs from the capture ELF above. Only 5 of the 332 distinct
 traced addresses resolve to the traced function name in it (`addr2line -f`). The miner builds its

@@ -92,7 +92,8 @@ to the resumed capture campaign.
 
 The trees, grammars, `out.log`, `evaluation.json` and the new files in `run/` come from mining
 these traces on `main` `05aa19f9`, which includes the optional-symbol fix of #59. Precision, recall
-and F1 are 1.0 on 1,000 generated inputs and the 1,000 inputs of `example_programs/calc/eval`.
+and F1 are reported as 1.0. Recall uses the 1,000 inputs of `example_programs/calc/eval`; precision
+defaults to 1,000 generated inputs, but the log does not record its exact query count.
 
 Mining ran in two parts. `mine.py` (`run/mine.log`) finished the methods phase with 154,455
 queries at 22:10:02 and stopped 35 s later, when OpenOCD did not start for the loop phase (#69).
@@ -107,9 +108,11 @@ The loop phase sent 102,375 queries; the one-cable mining of the same campaign a
 mining of these traces sent 42,164 each, with the same 16 loop groups. The miner keeps the answer
 of every query in a dictionary of the running process (`CACHE` in
 `src/miner/active_learning_utils.py`). The resumed process started with an empty dictionary, so
-it had to send again every query that the methods phase had already answered. This explains the
-higher count; the queries are not logged one by one, so it was not checked query by query. The
-method and loop trees are equal to those of the one-cable mining.
+the loop phase could resend queries that the methods phase had already answered. Cache loss is
+a supported explanation for the higher count, but it has not been shown to account for all
+60,211 extra queries: per-input queries and RNG seeds were not recorded. The method and loop
+trees are equal to those of the one-cable mining. The #59 change runs after the loop phase, so it
+cannot directly cause the higher loop-query count.
 
 The rebuilt ELF (`b6b5b107...6536`) differs from the capture ELF above. Only 5 of the 332 distinct
 traced addresses resolve to the traced function name in it (`addr2line -f`). The miner builds its
