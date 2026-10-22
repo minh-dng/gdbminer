@@ -75,8 +75,8 @@ these settings:
 - `BASIC.binary_file`, `GDB.esp32c3.rom_elf`, serial port and debugger paths: the files and devices
   used by that computer's flashed calc firmware.
 - `BASIC.eval_directory`: that campaign's calc evaluation corpus.
-- `BASIC.empty_rule_removal`: `"every-subset"` to apply the PR #59 fix; the default `"released"`
-  reproduces the earlier mining.
+- `main` has no `BASIC.empty_rule_removal` key: the fix of #59 is always applied (`7c2e798c`).
+  The `"released"` mode named above belongs to the miner of the earlier mining.
 
 Run the mining stage, then the evaluation stage, with the copied configuration. Mining derives
 its control-flow graphs from these trace records and sends membership queries to the board.
@@ -87,3 +87,34 @@ Precision evaluation also queries the board; recall uses the corpus offline.
 Report the new run as mining with reused trial-0 traces, and record its own host revision,
 firmware hash, configuration, query policy and RNG seeds. The original tracing durations belong
 to the resumed capture campaign.
+
+## Mining on 22 and 23 October 2026
+
+The trees, grammars, `out.log`, `evaluation.json` and the new files in `run/` come from mining
+these traces on `main` `05aa19f9`, which includes the optional-symbol fix of #59. Precision, recall
+and F1 are 1.0 on 1,000 generated inputs and the 1,000 inputs of `example_programs/calc/eval`.
+
+Mining ran in two parts. `mine.py` (`run/mine.log`) finished the methods phase with 154,455
+queries at 22:10:02 and stopped 35 s later, when OpenOCD did not start for the loop phase (#69).
+`run/resume_mine.py` (`run/mine-resume-1.log`, started by `run/resume.sh`) ran the loop, token and
+grammar steps from the saved `method_trees.json`. It copies the tail of `mine.py` `main()` and
+changes no file in `src/`. `mining.duration` (42,676 s) is the sum of the two parts: 27,018 s for
+the methods phase and 15,658 s for the rest. The time between the stop and the resume is not
+counted. The evaluation that ran right after the stop failed because `parsing_g.json` was missing
+(`run/eval-failed.log`); `run/eval.log` is the evaluation after the resume.
+
+The loop phase sent 102,375 queries; the one-cable mining of the same campaign and the earlier
+mining of these traces sent 42,164 each, with the same 16 loop groups. The miner keeps the answer
+of every query in a dictionary of the running process (`CACHE` in
+`src/miner/active_learning_utils.py`). The resumed process started with an empty dictionary, so
+it had to send again every query that the methods phase had already answered. This explains the
+higher count; the queries are not logged one by one, so it was not checked query by query. The
+method and loop trees are equal to those of the one-cable mining.
+
+The rebuilt ELF (`b6b5b107...6536`) differs from the capture ELF above. Only 5 of the 332 distinct
+traced addresses resolve to the traced function name in it (`addr2line -f`). The miner builds its
+control-flow graphs from the traces alone (`src/miner/tree_builder.py:58`); the ELF gives GDB its
+symbols, and the board answers the queries. The address shift should therefore not change the
+mined grammar. This is a reading of the code, not a test.
+
+`evaluation.json` has no `tracing` or `execution_duration` field, because these runs did not trace.

@@ -1,0 +1,13 @@
+date: 2026-10-22 11:56:51 AEDT (start of mining)
+written: 2026-10-23, from the run's logs, after the run (the runner of these two runs kept no state.txt)
+git HEAD: 05aa19f9ebc55889bcbc60235890a82b817219f1 (t3/esp32-evaluation-trial-2)
+stages: mining and evaluation only; the traces are the trial-0 traces in this folder (capture revision 1baa516251d70c823decc1a49695ad599363e4e8)
+ELF sha256: 47e7c92373f1d4574f55ead9e1aa96a9a9943a12a927eef1aa77112ba5b1844c
+capture ELF sha256: c7f1fde246d85b6280c03f298b75220da7f4395c2264316e5ae7f7993682c02d
+ROM ELF sha256: 342a7d3b8040d842767baff9224879fea67dd7ed3abd2c95d030699c6586644e (equals the capture ROM ELF)
+calc.c sha256: 15a1c58f13b4605e0ffb980d1f15b07bfc6e3d5b165327d50dcf9579023ca100 (rdp.c at c895ba68 with calc.diff applied; untracked)
+board: ESP32-C3 v1.1, adapter serial A0:F2:62:01:70:28, native USB-Serial/JTAG on /dev/cu.usbmodem111201, GDB port 3345
+gdb: GNU gdb (esp-gdb) 17.1_20260402
+openocd: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+python: Python 3.12.14
+arduino core: esp32:esp32 3.3.12

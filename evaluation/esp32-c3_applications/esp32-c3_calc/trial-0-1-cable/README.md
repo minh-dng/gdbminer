@@ -77,3 +77,19 @@ resend handling, native USB flushing, and the calc loop-task stack size. The ins
 collector is unchanged in that comparison. Report the new run as mining with reused trial-0
 traces, and record its own host revision, firmware hash, configuration, query policy and RNG seeds.
 The original tracing durations belong to the resumed capture campaign.
+
+## Mining on 22 October 2026
+
+The trees, grammars, `out.log`, `evaluation.json` and the new files in `run/` (`state.txt`,
+`times.txt`, `configuration.toml`, `build.options.json`, `mine.log`, `eval.log`, `run.sh`) come
+from mining these traces on `main` `05aa19f9`, which includes the optional-symbol fix of #59.
+Mining took 7,977 s and 196,728 board queries; precision, recall and F1 are 1.0 on 1,000 generated
+inputs and the 1,000 inputs of `example_programs/calc/eval`.
+
+The rebuilt ELF (`47e7c923...844c`) differs from the capture ELF above. Only 5 of the 332 distinct
+traced addresses resolve to the traced function name in it (`addr2line -f`). The miner builds its
+control-flow graphs from the traces alone (`src/miner/tree_builder.py:58`); the ELF gives GDB its
+symbols, and the board answers the queries. The address shift should therefore not change the
+mined grammar. This is a reading of the code, not a test.
+
+`evaluation.json` has no `tracing` or `execution_duration` field, because these runs did not trace.

@@ -1,0 +1,13 @@
+{
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1": 1.0,
+  "no_tested_inputs": 196728,
+  "watchpoint_count": 8,
+  "mining": {
+    "duration": 7977.2,
+    "requests": {"methods": 154455, "loops": 42164, "tokens": 109, "total": 196728},
+    "throughput": 24.7
+  },
+  "evaluation_duration": 4
+}

@@ -1,0 +1,4 @@
+mine exit=1 seconds=27055
+eval exit=1 seconds=0
+mine-resume-1 exit=0 seconds=15658
+eval exit=0 seconds=34
