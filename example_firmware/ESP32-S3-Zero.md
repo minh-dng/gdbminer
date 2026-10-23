@@ -1,8 +1,8 @@
 # Setting up the Waveshare ESP32-S3-Zero
 
 This guide covers the ESP32-S3-Zero hardware, the firmware wrappers, the Arduino build, the debugger
-and the tracing method shared by the three S3 targets (`esp32-s3_cgidecode`, `esp32-s3_json`,
-`esp32-s3_xml`). Each target README adds what is specific to it.
+and the tracing method shared by the four S3 targets (`esp32-s3_cgidecode`, `esp32-s3_json`,
+`esp32-s3_xml`, `esp32-s3_calc`). Each target README adds what is specific to it.
 
 The S3-Zero uses **one USB-C cable**. The cable carries both the inputs
 (`input_channel = "esp32-usb-serial-jtag"`) and the debugger, through the chip's built-in
@@ -67,8 +67,9 @@ USB mode USB-Serial/JTAG.
 | S3 A  | `E8:06:90:95:F2:70` | `/dev/cu.usbmodem1101`                |
 | S3 B  | `E8:06:90:95:80:6C` | `/dev/cu.usbmodem2101`                |
 
-The checked-in TOML files name S3 B's port in `[Connection] port` and leave the serial number to
-`--adapter-serial`, which fills `{adapter_serial}` in `adapter serial` and in `usb_reset_command`.
+The calc TOMLs leave `[Connection] port` empty: set it or pass `--port` for your machine. The other
+S3 TOMLs name S3 B's recorded port. All leave the serial number to `--adapter-serial`, which fills
+`{adapter_serial}` in `adapter serial` and in `usb_reset_command`.
 Port and serial number must name the same board. With the port of the other board, the inputs go to
 one board while OpenOCD debugs the other. `--port` replaces `[Connection] port`.
 
@@ -105,12 +106,13 @@ the S3 to JTAG on its GPIO pads would need an irreversible eFuse burn (`DIS_USB_
 
 ## Firmware wrappers
 
-The three wrappers use the paper's STM32 parser libraries and acceptance rules. Each accepts up
-to 2,048 input bytes, with an extra buffer byte for the terminating NUL. They yield with `delay(1)`
-while waiting for input and drain oversized packets before rejecting them with `0xff`. They send
-the ready and result bytes without `Serial.flush()`: `HWCDC::flush` can discard a queued ready
-byte (issue [#60](https://github.com/minh-dng/gdbminer/issues/60)). The serial protocol uses `A`
-as the ready marker, a four-byte little-endian length followed by the payload, and `0` (accepted)
+The cgidecode, json and xml wrappers use the paper's STM32 parser libraries and acceptance rules;
+the calc wrapper uses the desktop calc parser. Each accepts up to 2,048 input bytes, with an extra
+buffer byte for the terminating NUL. They yield with `delay(1)` while waiting for input and drain
+oversized packets before rejecting them with `0xff`. They send the ready and result bytes without
+`Serial.flush()`: `HWCDC::flush` can discard a queued ready byte (issue
+[#60](https://github.com/minh-dng/gdbminer/issues/60)). The serial protocol uses `A` as the ready
+marker, a four-byte little-endian length followed by the payload, and `0` (accepted)
 or `0xff` (rejected) as the result.
 
 The wrappers drive the Waveshare WS2812 on GPIO21 with Arduino's built-in `rgbLedWrite`. The generic
@@ -138,8 +140,8 @@ mining or precision/recall evaluation. Amber and cyan can be too brief to see du
 execution; cyan persists while GDB holds the parser. A retained colour is not a heartbeat or
 proof of progress. The parser itself remains uninstrumented.
 
-Seeds and evaluation corpora are the authors' STM32 directories, which the TOML files name
-directly.
+Seeds and evaluation corpora are the authors' STM32 directories (the desktop calc directories for
+calc), which the TOML files name directly.
 
 ## Arduino build
 
@@ -154,8 +156,8 @@ one works.
 
 ### Build and upload
 
-From the repository root, set `TARGET` to `esp32-s3_json`, `esp32-s3_cgidecode` or
-`esp32-s3_xml`:
+From the repository root, set `TARGET` to `esp32-s3_json`, `esp32-s3_cgidecode`, `esp32-s3_xml`
+or `esp32-s3_calc`:
 
 ```sh
 TARGET=<?>
@@ -306,11 +308,13 @@ stopped `trace.py` or `mine.py` can leave its serial worker, GDB and OpenOCD run
 
 ### Tracing: the paper replica method
 
-Each TOML follows the paper's embedded setup (Eisele et al. 2025, Sections 4.1 and 5.4) and the
-configuration of its STM32 reference: same entry point, exit point and skip list
+Each CGI, JSON and XML TOML follows the paper's embedded setup (Eisele et al. 2025, Sections 4.1
+and 5.4) and the configuration of its STM32 reference: same entry point, exit point and skip list
 (`ignore_functions_regex`, skipped with GDB `finish`; `__aeabi_dadd` written as `__adddf3`). The
-firmware is not instrumented. Window selection stays in the generic tracer; the S3 debugger
-behaviour below is in [`esp32s3_instance.py`](../src/tracer/instance/esp32s3_instance.py).
+calc TOMLs have no STM32 reference: they use the desktop calc seeds, evaluation inputs, entry point
+and an empty skip list. The firmware is not instrumented. Window selection stays in the generic
+tracer; the S3 debugger behaviour below is in
+[`esp32s3_instance.py`](../src/tracer/instance/esp32s3_instance.py).
 
 **Reads are polled after every step.** A DBREAK match halts the core *before* the load executes.
 During a single step OpenOCD reports that halt as an ordinary step (`xtensa_do_step`): GDB shows
@@ -370,6 +374,7 @@ attempts. Nothing has been traced at that point.
 | `esp32-s3_json`      | `malloc`, `free`, `_strtod_l`, `__adddf3`, `__floatdidf`, `__floatundidf`, `strlen`, `memset` | one IBREAK per `finish`            |
 | `esp32-s3_cgidecode` | nothing                                                                                       | none                               |
 | `esp32-s3_xml`       | list never fires                                                                              | one IBREAK for the exit breakpoint |
+| `esp32-s3_calc`      | nothing (ROM `strtol` stays in the trace)                                                     | none                               |
 
 ### Recorded results
 
