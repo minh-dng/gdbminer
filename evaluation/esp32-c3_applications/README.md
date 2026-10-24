@@ -15,9 +15,11 @@ esp32-c3_<target>/trial-<n>-<setup>/
 `<target>` is `cgidecode`, `arduinojson`, `libyxml` or `calc`. `<setup>` is `1-cable`
 (USB-Serial/JTAG, one cable) or `2-cables` (UART bridge next to the JTAG cable).
 
-The `calc` folders hold traces from one run and the mining of another: their `README.md` names the
-capture revision and firmware, and `run/` adds the record of the later mining. Their
-`evaluation.json` has no `tracing` or `execution_duration` field.
+The `calc` trial-0 folders hold 20 reused traces per setup, captured at `1baa5162` and mined on
+22-23 October 2026 at `05aa19f9`. No new tracing ran, so their `evaluation.json` omits `tracing`
+and `execution_duration`. Both precision estimates are provisional because the exact evaluation
+query counts were not logged. [PR #70](https://github.com/minh-dng/gdbminer/pull/70) records the
+capture provenance, firmware hashes, resumed mining and method limitations.
 
 ## evaluation.json
 
@@ -40,11 +42,11 @@ The statistics are derived from the logs in `run/`:
   `trace.log`. A seed that was interrupted and traced again counts once, for the run that wrote its
   trace. The logs of the resumed `trace.py` calls are not published; the `trace-resume-N` rows of
   `times.txt` list the seeds each resume traced (`seeds=`).
-- `mining.requests` adds up the `Used N requests to generalize` lines of `mine.log`
-  and, for resumed calc, `mine-resume-1.log`.
-- Resumed calc `mining.duration` adds the methods duration derived from timestamps in
-  `mine.log` and the resumed timer in `mine-resume-1.log`. Failed startup and waiting time are
-  excluded; the result README explains the split and `times.txt` keeps the invocation wall times.
+- `mining.requests` adds up the `Used N requests to generalize` lines of `mine.log`.
+- Resumed calc `mine.log` concatenates the original and resumed mining logs. Its
+  `mining.duration` adds the methods duration derived from timestamps and the resumed timer.
+  Failed startup and waiting time are excluded; PR #70 explains the split and `times.txt`
+  keeps the invocation wall times. Its `eval.log` includes the failed and successful attempts.
 - `evaluation_duration` is the sum of the `eval` rows of `times.txt`.
 
 ## Comparison with the Linux results

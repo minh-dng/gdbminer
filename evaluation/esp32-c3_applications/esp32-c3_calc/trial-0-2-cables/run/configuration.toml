@@ -3,7 +3,7 @@
 # Extension of the embedded evaluation using the paper's desktop calc parser and corpus.
 [BASIC]
 # The authors' seeds and evaluation corpus, unchanged.
-seed_directory = "./evaluation/esp32-c3_applications/esp32-c3_calc/trial-0-2-cables/run/seeds"
+seed_directory = "./example_programs/calc/seeds"
 output_directory = "./output/esp32-c3_calc-2-cables-reused-trial0"
 binary_file = "./example_firmware/esp32-c3_calc/build-2/esp32-c3_calc.ino.elf"
 eval_directory = "./example_programs/calc/eval"
