@@ -87,3 +87,9 @@ Precision evaluation also queries the board; recall uses the corpus offline.
 Report the new run as mining with reused trial-0 traces, and record its own host revision,
 firmware hash, configuration, query policy and RNG seeds. The original tracing durations belong
 to the resumed capture campaign.
+
+## Capture logs
+
+`run/capture-logs/` holds the tracing, runner, flash and firmware-check logs of the UART capture,
+including the resumed attempts. The archive has no build log for the capture firmware.
+`run/capture-logs/SHA256SUMS` lists each log.
