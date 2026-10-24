@@ -19,7 +19,8 @@ The `calc` trial-0 folders hold 20 reused traces per setup, captured at `1baa516
 22-23 October 2026 at `05aa19f9`. No new tracing ran, so their `evaluation.json` omits `tracing`
 and `execution_duration`. Both precision estimates are provisional because the exact evaluation
 query counts were not logged. [PR #70](https://github.com/minh-dng/gdbminer/pull/70) records the
-capture provenance, firmware hashes, resumed mining and method limitations.
+capture provenance, firmware hashes, resumed mining and method limitations. For calc,
+`build.log` and `flash.log` were not retained, and no new `trace.log` was produced.
 
 ## evaluation.json
 
@@ -31,7 +32,7 @@ capture provenance, firmware hashes, resumed mining and method limitations.
 | `execution_duration` | seconds | `tracing.duration` + `mining.duration`. |
 | `tracing.duration` | seconds | Sum of `tracing.seeds`. Start-up and a seed lost to a stop are not counted. |
 | `tracing.seeds` | seconds | One `{seed, duration}` entry per written trace, sorted by seed number. |
-| `mining.duration` | seconds | Miner timer, or phase-time sum for resumed calc (below). |
+| `mining.duration` | seconds | The miner's own timer (`Mining time` in `run/mine.log`); for resumed calc, see below. |
 | `mining.requests` | requests | Board requests per step: `methods`, `loops`, `tokens` and their `total`. |
 | `mining.throughput` | requests per second | `mining.requests.total` / `mining.duration`. |
 | `evaluation_duration` | seconds | Wall time of `precision_recall.py`, which has no timer of its own. |

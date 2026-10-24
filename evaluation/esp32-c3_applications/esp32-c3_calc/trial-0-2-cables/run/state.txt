@@ -13,4 +13,5 @@ python: Python 3.12.14
 arduino core: esp32:esp32 3.3.12
 mining: two parts. mine.py stopped at the start of the loop phase (2026-10-22 22:10:37, OpenOCD start-up
 timeout, issue #69); resume_mine.py ran the loop, token and grammar steps from method_trees.json
-(2026-10-23 00:18:47 to 04:39:45). The failed evaluation at 22:10:38 is eval-failed.log.
+(2026-10-23 00:18:47 to 04:39:45). The failed evaluation at 22:10:38 is the first attempt in eval.log; the successful attempt follows.
+The published mine.log concatenates the original and resumed mining logs.
