@@ -1,0 +1,2 @@
+mine exit=0 seconds=7977
+eval exit=0 seconds=4
