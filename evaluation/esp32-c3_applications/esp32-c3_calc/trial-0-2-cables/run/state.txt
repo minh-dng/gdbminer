@@ -1,11 +1,10 @@
 date: 2026-10-22 14:39:43 AEDT (start of mining)
 written: 2026-10-23, from the run's logs, after the run (the runner of these two runs kept no state.txt)
-git HEAD: 05aa19f9ebc55889bcbc60235890a82b817219f1 (t3/esp32-evaluation-trial-2)
-stages: mining and evaluation only; the traces are the trial-0 traces in this folder (capture revision 1baa516251d70c823decc1a49695ad599363e4e8)
+stages: mining and evaluation only; the traces are the trial-0 traces in this folder
 ELF sha256: b6b5b1074c9f54f03c28e3dae0fb9423ad99f2d70e479973e7c28f428e316536
 capture ELF sha256: 393ef8a04bbdccc78368aaa1123fe5c15a6f12c1a3046c6dd67351e394dc5839
 ROM ELF sha256: 342a7d3b8040d842767baff9224879fea67dd7ed3abd2c95d030699c6586644e (equals the capture ROM ELF)
-calc.c sha256: 15a1c58f13b4605e0ffb980d1f15b07bfc6e3d5b165327d50dcf9579023ca100 (rdp.c at c895ba68 with calc.diff applied; untracked)
+calc.c sha256: 15a1c58f13b4605e0ffb980d1f15b07bfc6e3d5b165327d50dcf9579023ca100 (rdp.c with calc.diff applied)
 board: ESP32-C3 v1.1, adapter serial A0:F2:62:01:70:28, UART bridge /dev/cu.usbserial-11130 at 9600 baud, GDB port 3345
 gdb: GNU gdb (esp-gdb) 17.1_20260402
 openocd: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
