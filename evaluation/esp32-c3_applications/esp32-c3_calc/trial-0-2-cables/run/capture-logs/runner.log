@@ -1,0 +1,10 @@
+Saved trace-resume-1 status, 0/20 traces, to thesis and Obsidian.
+Saved failed status, 2/20 traces, to thesis and Obsidian.
+Traceback (most recent call last):
+  File "/Users/dan173/projects/worktrees/gdbminer/quiet-heron/output/esp32c3-calc-2-cables-full-trial-0-2026-10-18/run_calc.py", line 167, in <module>
+    main()
+  File "/Users/dan173/projects/worktrees/gdbminer/quiet-heron/output/esp32c3-calc-2-cables-full-trial-0-2026-10-18/run_calc.py", line 93, in main
+    trial.stage("trace-resume-1", str(HERE / "run_calc.py"), "--trace")
+  File "/Users/dan173/projects/worktrees/gdbminer/quiet-heron/output/esp32c3-calc-full-trial-0-2026-10-16/run_trial.py", line 134, in stage
+    raise RuntimeError(f"{name} failed; see {record['log']}")
+RuntimeError: trace-resume-1 failed; see trace-resume-1.log

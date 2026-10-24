@@ -1,0 +1,5 @@
+b'1+2' True PASS
+b'12*(3+4)' True PASS
+b'x' False PASS
+b'' False PASS
+Post-reconnect USB serial controls passed under the frozen reset guard.

@@ -1,0 +1,22 @@
+Created: Uni/Thesis/ESP32-C3 calc full trial-0 2026-10-16.md
+Error: Command "create" not found. Did you mean: base:create?
+Traceback (most recent call last):
+  File "/Users/dan173/projects/worktrees/gdbminer/quiet-heron/output/esp32c3-calc-full-trial-0-2026-10-16/run_trial.py", line 324, in <module>
+    main()
+  File "/Users/dan173/projects/worktrees/gdbminer/quiet-heron/output/esp32c3-calc-full-trial-0-2026-10-16/run_trial.py", line 212, in main
+    stage("trace", "tracer/trace.py")
+  File "/Users/dan173/projects/worktrees/gdbminer/quiet-heron/output/esp32c3-calc-full-trial-0-2026-10-16/run_trial.py", line 132, in stage
+    record["returncode"] = child.wait()
+                           ^^^^^^^^^^^^
+  File "/Users/dan173/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/subprocess.py", line 1264, in wait
+    return self._wait(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dan173/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/subprocess.py", line 2053, in _wait
+    (pid, sts) = self._try_wait(0)
+                 ^^^^^^^^^^^^^^^^^
+  File "/Users/dan173/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/subprocess.py", line 2011, in _try_wait
+    (pid, sts) = os.waitpid(self.pid, wait_flags)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dan173/projects/worktrees/gdbminer/quiet-heron/output/esp32c3-calc-full-trial-0-2026-10-16/run_trial.py", line 255, in interrupted
+    raise KeyboardInterrupt
+KeyboardInterrupt

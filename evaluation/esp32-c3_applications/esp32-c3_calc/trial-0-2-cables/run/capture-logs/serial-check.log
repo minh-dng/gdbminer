@@ -1,0 +1,6 @@
+b'1+2' True
+b'12*(3+4)' True
+b'x' False
+b'' False
+b'1+2' True
+Guarded serial controls passed.

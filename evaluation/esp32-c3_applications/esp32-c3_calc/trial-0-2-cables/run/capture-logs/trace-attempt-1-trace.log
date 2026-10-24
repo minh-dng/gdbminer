@@ -1,0 +1,74 @@
+2026-10-18 10:51:22,288 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {gdb_port} -> 3336
+2026-10-18 10:51:22,288 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {adapter_serial} -> A0:F2:62:01:70:28
+2026-10-18 10:51:22,288 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {telnet_port} -> disabled
+2026-10-18 10:51:22,288 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {tcl_port} -> disabled
+2026-10-18 10:51:22,288 [INFO config.py:320 apply_overrides()] GDB server command: ~/.espressif/openocd-esp32/bin/openocd
+  -c "set ESP_RTOS none"
+  -c "set ESP_FLASH_SIZE 0"
+  -f board/esp32c3-builtin.cfg
+  -c "gdb port 3336"
+  -c "telnet port disabled"
+  -c "tcl port disabled"
+  -c "adapter serial A0:F2:62:01:70:28"
+  -c "adapter speed 40000"
+2026-10-18 10:51:22,290 [INFO trace.py:73 main()] Start generating trace for /Users/dan173/projects/worktrees/gdbminer/quiet-heron/output/esp32c3-calc-2-cables-full-trial-0-2026-10-18/frozen/seeds/seed.15.in
+2026-10-18 10:51:22,290 [INFO gdb_tracer.py:156 trace_input()] Seed length: 60
+2026-10-18 10:51:22,948 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-18 10:51:22,949 [WARNING esp32_instance.py:374 _start_gdb_server()] C3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_PIPE'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+
+Error: [esp32c3] Unsupported DTM version: -1
+Error: [esp32c3] Could not identify target type.
+Traceback (most recent call last):
+  File "/Users/dan173/projects/worktrees/gdbminer/quiet-heron/output/esp32c3-calc-2-cables-full-trial-0-2026-10-18/frozen/src/tracer/trace.py", line 87, in <module>
+    main()
+  File "/Users/dan173/projects/worktrees/gdbminer/quiet-heron/output/esp32c3-calc-2-cables-full-trial-0-2026-10-18/frozen/src/tracer/trace.py", line 74, in main
+    trace = generate_trace(filename, config)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dan173/projects/worktrees/gdbminer/quiet-heron/output/esp32c3-calc-2-cables-full-trial-0-2026-10-18/frozen/src/tracer/trace.py", line 34, in generate_trace
+    trace = gdb_tracer.trace_input(filename)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dan173/projects/worktrees/gdbminer/quiet-heron/output/esp32c3-calc-2-cables-full-trial-0-2026-10-18/frozen/src/tracer/gdb_tracer.py", line 163, in trace_input
+    with GDBTracer.open_sut_instance(self.config, filename) as instance:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dan173/projects/worktrees/gdbminer/quiet-heron/output/esp32c3-calc-2-cables-full-trial-0-2026-10-18/frozen/src/tracer/instance/esp32_instance.py", line 404, in __enter__
+    self._start_gdb_server()
+  File "/Users/dan173/projects/worktrees/gdbminer/quiet-heron/output/esp32c3-calc-2-cables-full-trial-0-2026-10-18/frozen/src/tracer/instance/esp32_instance.py", line 374, in _start_gdb_server
+    logging.warning("%s OpenOCD startup retry: %s", self.CHIP, last_output.strip())
+  File "/Users/dan173/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/logging/__init__.py", line 2201, in warning
+    root.warning(msg, *args, **kwargs)
+  File "/Users/dan173/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/logging/__init__.py", line 1551, in warning
+    self._log(WARNING, msg, args, **kwargs)
+  File "/Users/dan173/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/logging/__init__.py", line 1684, in _log
+    self.handle(record)
+  File "/Users/dan173/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/logging/__init__.py", line 1700, in handle
+    self.callHandlers(record)
+  File "/Users/dan173/projects/worktrees/gdbminer/quiet-heron/output/esp32c3-calc-2-cables-full-trial-0-2026-10-18/guard/sitecustomize.py", line 11, in strict_log
+    raise RuntimeError('Infrastructure diagnostic: ' + record.getMessage())
+RuntimeError: Infrastructure diagnostic: C3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_PIPE'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+
+Error: [esp32c3] Unsupported DTM version: -1
+Error: [esp32c3] Could not identify target type.

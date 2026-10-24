@@ -1,0 +1,10 @@
+Overwrote: Uni/Thesis/ESP32-C3 calc full trial-0 2026-10-16.md
+Overwrote: Uni/Thesis/ESP32-C3 calc full trial-0 2026-10-16.md
+Traceback (most recent call last):
+  File "/Users/dan173/projects/worktrees/gdbminer/quiet-heron/output/esp32c3-calc-full-trial-0-2026-10-16/mine_priority.py", line 151, in <module>
+    main(args.port)
+  File "/Users/dan173/projects/worktrees/gdbminer/quiet-heron/output/esp32c3-calc-full-trial-0-2026-10-16/mine_priority.py", line 106, in main
+    trial.stage("mine-priority-1", str(HERE / "priority_membership.py"), "--port", port)
+  File "/Users/dan173/projects/worktrees/gdbminer/quiet-heron/output/esp32c3-calc-full-trial-0-2026-10-16/run_trial.py", line 134, in stage
+    raise RuntimeError(f"{name} failed; see {record['log']}")
+RuntimeError: mine-priority-1 failed; see mine-priority-1.log

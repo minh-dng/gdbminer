@@ -1,0 +1,9 @@
+{"started": 1792297339.239212, "command": ["/Users/dan173/projects/worktrees/gdbminer/quiet-heron/.venv/bin/python", "/Users/dan173/projects/worktrees/gdbminer/quiet-heron/output/esp32c3-calc-2-cables-full-trial-0-2026-10-18/serial_controls.py", "--config", "/Users/dan173/projects/worktrees/gdbminer/quiet-heron/output/esp32c3-calc-2-cables-full-trial-0-2026-10-18/run.toml", "--port", "/dev/cu.usbserial-1130"], "PYTHONPATH": "/Users/dan173/projects/worktrees/gdbminer/quiet-heron/output/esp32c3-calc-2-cables-full-trial-0-2026-10-18/guard:/Users/dan173/projects/worktrees/gdbminer/quiet-heron/output/esp32c3-calc-2-cables-full-trial-0-2026-10-18/frozen/src"}
+b'1+2' True
+b'12*(3+4)' True
+b'x' False
+b'' False
+b'1+2' True
+Guarded serial controls passed.
+
+{"returncode": 0, "seconds": 0.9530067443847656}
