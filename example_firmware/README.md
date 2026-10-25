@@ -30,7 +30,7 @@ Each target includes firmware and TOML files in `configuration/`: `configuration
 `configuration.2-cables.toml` and `configuration.1-cable.toml` for the C3 two-cable and one-cable
 setups, and `configuration.1-watchpoint.toml` and `configuration.2-watchpoints.toml` for the S3
 options. The JSON, CGI and XML ports use the corresponding STM32 parser libraries, acceptance
-rules, seeds and evaluation corpora. The C3 calc target uses the desktop calc parser and corpus.
+rules, seeds and evaluation corpora. The C3 calc and jsonrs targets use the desktop parsers and corpora.
 Build and validation notes are documented in each target's README.
 
 | Parser                           | STM32 reference              | ESP32-C3 port                | ESP32-S3 port                |
@@ -39,6 +39,7 @@ Build and validation notes are documented in each target's README.
 | CGI (`percent_encode`)           | [stm32_cgidecode][st-cgi]    | [esp32-c3_cgidecode][c3-cgi] | [esp32-s3_cgidecode][s3-cgi] |
 | XML (`LibYxml`)                  | [stm32_libyxml][st-xml]      | [esp32-c3_xml][c3-xml]       | [esp32-s3_xml][s3-xml]       |
 | Calc (desktop recursive descent) | —                            | [esp32-c3_calc][c3-calc]     | —                            |
+| JSON (desktop Rust, `tinyjson`)  | —                            | [esp32-c3_jsonrs][c3-jsonrs] | —                            |
 
 ## Build and flash
 
@@ -119,6 +120,7 @@ Before running:
 [c3-cgi]: esp32-c3_cgidecode/README.md
 [c3-xml]: esp32-c3_xml/README.md
 [c3-calc]: esp32-c3_calc/README.md
+[c3-jsonrs]: esp32-c3_jsonrs/README.md
 [s3-board]: https://docs.waveshare.com/ESP32-S3-zero
 [s3-setup]: ESP32-S3-Zero.md
 [s3-json]: esp32-s3_json/README.md
