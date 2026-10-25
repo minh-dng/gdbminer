@@ -1,0 +1,59 @@
+# One watchpoint (safe option): DBREAK0 only. DBREAK1 stays the firmware's FreeRTOS stack guard,
+# at the cost of twice the runs for seeds over 6 bytes. One USB cable. Build with
+# CDCOnBoot=cdc,USBMode=hwcdc,LoopCore=0 into build/; the ELF is the same for both options.
+# GDBMiner configuration for the Waveshare ESP32-S3-Zero cgidecode target.
+# Paper replica (Eisele et al. 2025, Section 5.4) of stm32_cgidecode: same percent_encode
+# library, entry point, seeds and (empty) ignore list;
+# Xtensa data breakpoints, read back after every step.
+[BASIC]
+# The authors' seeds and evaluation corpus, unchanged.
+seed_directory = "/Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_cgidecode/seeds"
+output_directory = "./output/s3-eval-trial-2/cgidecode-1-watchpoint/"
+binary_file = "./example_firmware/esp32-s3_cgidecode/build/esp32-s3_cgidecode.ino.elf"
+eval_directory = "./example_firmware/stm32_cgidecode/eval"
+
+[Connection]
+input_channel = "esp32-usb-serial-jtag"
+# CDC port of the native USB-Serial/JTAG device; OpenOCD uses its JTAG function.
+port = "/dev/cu.usbmodem2101"
+rts = true
+reset_pulse = true
+
+[GDB]
+gdb_path = "~/Library/Arduino15/packages/esp32/tools/xtensa-esp-elf-gdb/17.1_20260402/bin/xtensa-esp32s3-elf-gdb"
+instance = "esp32s3"
+# The same native USB link as the inputs. ESP_ONLYCPU 1: debug core 0, which runs loop()
+# (LoopCore=0); with both cores, OpenOCD hands GDB whichever core it polls first after a halt.
+# ESP_FLASH_SIZE 0: every breakpoint is a hardware breakpoint, so a third one fails instead of
+# rewriting flash. 40 MHz is the USB-JTAG base clock used in the recorded runs.
+gdb_server_path = '''~/.espressif/openocd-esp32/bin/openocd
+  -c "set ESP_RTOS none"
+  -c "set ESP_ONLYCPU 1"
+  -c "set ESP_FLASH_SIZE 0"
+  -f board/esp32s3-builtin.cfg
+  -c "gdb port {gdb_port}"
+  -c "telnet port {telnet_port}"
+  -c "tcl port {tcl_port}"
+  -c "adapter serial {adapter_serial}"
+  -c "adapter speed 40000"'''
+gdb_port = 3333
+
+watchpoint_type = "(char*)"
+# One data breakpoint (DBREAK0), as a contiguous one-byte window over the input.
+watchpoint_count = 1
+timeout = 30
+entrypoint = "percent::decode"
+input_buffer = "buf"
+
+[GDB.esp32s3]
+# Symbols for code already in mask ROM, loaded alongside firmware symbols, not flashed.
+# Chip revision v0.2 uses the rev0 ROM: esp32s3_rev0_rom.elf covers all v0.x chips.
+rom_elf = "~/.espressif/tools/esp-rom-elfs/20241011/esp32s3_rev0_rom.elf"
+# Must be false: after OpenOCD's reset the USB device re-enumerates and the input port fails.
+# The serial reset pulse restarts the firmware instead.
+reset_on_connect = false
+# If OpenOCD cannot open the USB device, reset this board's USB port and attach again.
+usb_reset_command = "uv run scripts/esp32_usb_reset.py --serial {adapter_serial}"
+
+[LOGS]
+log_level = "INFO"

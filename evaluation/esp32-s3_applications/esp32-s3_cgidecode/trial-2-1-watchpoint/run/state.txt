@@ -1,0 +1,12 @@
+date: 2026-10-22 09:36:36 AEDT
+ELF sha256: 010d8184668ead61624154106dce92f31dab7315c9f872689f9aa192ee7ea95f
+board: E8:06:90:95:F2:70 on /dev/cu.usbmodem101, GDB port 3335
+gdb: GNU gdb (esp-gdb) 17.1_20260402
+openocd: Traceback (most recent call last):
+python: Python 3.12.14
+libraries:
+Name           Installed Available   Location Description
+Arduino_JSON   0.2.0     0.2.2       user     [BETA] Process JSON in your Arduino s...
+LibYxml        1.0.2     -           user     -
+percent_encode 2.0.1     2.0.6       user     Convert between URL-unsafe string and...
+
