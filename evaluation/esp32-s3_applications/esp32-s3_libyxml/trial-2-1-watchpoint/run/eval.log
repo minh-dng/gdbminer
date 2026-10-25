@@ -1,0 +1,51 @@
+2026-10-25 17:37:54,227 [WARNING config.py:227 _log_override()] Connection.port: '/dev/cu.usbmodem2101' overridden by --port = '/dev/cu.usbmodem101'
+2026-10-25 17:37:54,227 [WARNING config.py:227 _log_override()] GDB.gdb_port: 3333 overridden by --gdb-port = 3335
+2026-10-25 17:37:54,227 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {gdb_port} -> 3335
+2026-10-25 17:37:54,227 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {adapter_serial} -> E8:06:90:95:F2:70
+2026-10-25 17:37:54,227 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {telnet_port} -> disabled
+2026-10-25 17:37:54,227 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {tcl_port} -> disabled
+2026-10-25 17:37:54,227 [INFO config.py:320 apply_overrides()] GDB server command: ~/.espressif/openocd-esp32/bin/openocd
+  -c "set ESP_RTOS none"
+  -c "set ESP_ONLYCPU 1"
+  -c "set ESP_FLASH_SIZE 0"
+  -f board/esp32s3-builtin.cfg
+  -c "gdb port 3335"
+  -c "telnet port disabled"
+  -c "tcl port disabled"
+  -c "adapter serial E8:06:90:95:F2:70"
+  -c "adapter speed 40000"
+2026-10-25 17:37:54,227 [INFO config.py:330 apply_overrides()] GDB.esp32s3.usb_reset_command: {adapter_serial} -> E8:06:90:95:F2:70
+2026-10-25 17:37:57,544 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:F2:70)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3335
+Info : Listening on port 3335 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-25 17:37:57,548 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-25 17:37:57,549 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-25 17:37:58,979 [INFO precision_recall.py:73 main()] Generated non accepting input: '<s></j'
+2026-10-25 17:37:59,145 [INFO precision_recall.py:73 main()] Generated non accepting input: '<C></K>'
+2026-10-25 17:37:59,257 [INFO precision_recall.py:73 main()] Generated non accepting input: '<Z></b'
+2026-10-25 17:37:59,433 [INFO precision_recall.py:73 main()] Generated non accepting input: '<qr><z^'
+2026-10-25 17:38:00,153 [INFO precision_recall.py:73 main()] Generated non accepting input: '<lfpbZE></Y>'
+2026-10-25 17:38:00,264 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-25 17:40:11,376 [INFO precision_recall.py:104 main()] {'precision': 0.995, 'recall': 1.0, 'f1': 0.9974937343358395, 'no_tested_inputs': 100726}
