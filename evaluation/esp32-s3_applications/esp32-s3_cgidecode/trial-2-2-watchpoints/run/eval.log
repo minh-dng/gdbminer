@@ -1,0 +1,2230 @@
+2026-10-23 22:02:08,382 [WARNING config.py:227 _log_override()] Connection.port: '/dev/cu.usbmodem2101' overridden by --port = '/dev/cu.usbmodem3101'
+2026-10-23 22:02:08,383 [WARNING config.py:227 _log_override()] GDB.gdb_port: 3333 overridden by --gdb-port = 3334
+2026-10-23 22:02:08,383 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {gdb_port} -> 3334
+2026-10-23 22:02:08,383 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {adapter_serial} -> E8:06:90:95:80:6C
+2026-10-23 22:02:08,383 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {telnet_port} -> disabled
+2026-10-23 22:02:08,383 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {tcl_port} -> disabled
+2026-10-23 22:02:08,383 [INFO config.py:320 apply_overrides()] GDB server command: ~/.espressif/openocd-esp32/bin/openocd
+  -c "set ESP_RTOS none"
+  -c "set ESP_ONLYCPU 1"
+  -c "set ESP_FLASH_SIZE 0"
+  -f board/esp32s3-builtin.cfg
+  -c "gdb port 3334"
+  -c "telnet port disabled"
+  -c "tcl port disabled"
+  -c "adapter serial E8:06:90:95:80:6C"
+  -c "adapter speed 40000"
+2026-10-23 22:02:08,383 [INFO config.py:330 apply_overrides()] GDB.esp32s3.usb_reset_command: {adapter_serial} -> E8:06:90:95:80:6C
+2026-10-23 22:02:11,712 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:11,712 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:12,140 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:12,140 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:12,558 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:12,558 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:12,980 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:12,980 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:13,402 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:13,402 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:13,820 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:13,820 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:14,238 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:14,239 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:14,656 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:14,656 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:15,080 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:15,080 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:15,505 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:15,505 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:15,929 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:15,930 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:16,355 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:16,355 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:16,774 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:16,774 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:17,186 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:17,186 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:17,601 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:17,602 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:18,021 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:18,021 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:18,446 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:18,447 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:18,862 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:18,862 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:19,280 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:19,280 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:19,699 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:19,699 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:20,122 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:20,122 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:20,537 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:20,537 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:20,955 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:20,955 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:21,374 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:21,374 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:21,797 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:21,797 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:22,213 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:22,214 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:22,638 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:22,639 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:23,059 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:23,059 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:23,492 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:23,493 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:23,915 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:23,916 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:24,334 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:24,334 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:24,749 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:24,750 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:25,167 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:25,167 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:25,589 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:25,589 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:26,007 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:26,007 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:26,422 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:26,422 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:26,838 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:26,838 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:27,265 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:27,265 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:27,691 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:27,691 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:28,112 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:28,112 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:28,530 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:28,530 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:28,951 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:28,951 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:29,376 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:29,377 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:29,796 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:29,797 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:30,222 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:30,222 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:30,646 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:30,647 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:31,071 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:31,072 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:31,488 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:31,488 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:31,911 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:31,912 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:32,337 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:32,337 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:32,762 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:32,762 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:33,184 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:33,185 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:33,607 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:33,607 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:34,030 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:34,030 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:34,453 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:34,453 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:34,871 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:34,872 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:35,290 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:35,290 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:35,715 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:35,715 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:36,142 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:36,142 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:36,556 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:36,556 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:36,978 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:36,978 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:37,387 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:37,388 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:37,799 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:37,799 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:38,225 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:38,225 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:38,640 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:38,640 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:39,065 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:39,066 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:39,489 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:39,489 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:39,914 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:39,914 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:40,338 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:40,338 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:40,757 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:40,757 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:41,172 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:41,172 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:41,504 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:41,505 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: 
+2026-10-23 22:02:41,508 [WARNING esp32s3_instance.py:424 __enter__()] S3 attach attempt 1 failed: S3 OpenOCD startup timed out after 30s: ; USB reset
+Reset USB device E8:06:90:95:80:6C
+2026-10-23 22:02:48,316 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:48,316 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:48,740 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:48,740 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:49,166 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:49,166 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:49,588 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:49,588 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:50,005 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:50,005 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:50,429 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:50,430 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:50,850 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:50,850 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:51,270 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:51,271 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:51,688 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:51,688 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:52,095 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:52,095 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:52,517 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:52,517 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:52,938 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:52,938 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:53,361 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:53,362 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:53,787 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:53,787 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:54,211 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:54,211 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:54,630 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:54,630 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:55,052 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:55,052 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:55,463 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:55,463 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:55,884 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:55,885 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:56,303 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:56,303 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:56,721 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:56,721 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:57,140 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:57,140 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:57,547 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:57,547 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:57,960 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:57,960 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:58,380 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:58,380 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:58,796 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:58,796 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:59,212 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:59,213 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:02:59,630 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:02:59,630 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:00,047 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:00,047 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:00,464 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:00,465 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:00,882 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:00,883 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:01,294 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:01,295 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:01,711 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:01,712 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:02,137 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:02,137 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:02,559 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:02,560 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:02,975 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:02,975 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:03,392 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:03,392 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:03,806 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:03,806 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:04,229 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:04,229 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:04,653 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:04,654 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:05,070 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:05,070 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:05,496 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:05,496 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:05,921 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:05,922 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:06,339 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:06,339 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:06,761 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:06,762 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:07,180 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:07,181 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:07,591 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:07,591 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:08,002 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:08,003 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:08,423 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:08,424 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:08,838 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:08,839 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:09,248 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:09,248 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:09,672 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:09,672 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:10,092 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:10,092 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:10,507 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:10,508 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:10,930 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:10,931 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:11,355 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:11,355 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:11,771 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:11,772 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:12,182 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:12,183 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:12,605 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:12,606 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:13,015 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:13,016 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:13,442 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:13,442 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:13,859 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:13,859 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:14,274 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:14,274 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:14,700 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:14,700 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:15,109 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:15,109 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:15,535 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:15,535 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:15,945 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:15,945 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:16,351 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:16,351 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:16,773 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:16,774 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:17,185 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:17,185 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:17,609 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:17,609 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:18,035 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:18,036 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-23 22:03:18,119 [WARNING esp32s3_instance.py:424 __enter__()] S3 attach attempt 2 failed: S3 OpenOCD startup timed out after 30s: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+
+; USB reset
+Reset USB device E8:06:90:95:80:6C
+2026-10-23 22:03:24,892 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-23 22:03:24,896 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-23 22:03:24,896 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_cgidecode/build/esp32-s3_cgidecode.ino.elf' successfully
+2026-10-23 22:03:25,650 [INFO precision_recall.py:73 main()] Generated non accepting input: 'LJ4%0vww?}oJtr'
+2026-10-23 22:03:25,662 [INFO precision_recall.py:73 main()] Generated non accepting input: 'sexwGtp^g%g'
+2026-10-23 22:03:25,875 [INFO precision_recall.py:73 main()] Generated non accepting input: 'RG%Su'
+2026-10-23 22:03:25,962 [INFO precision_recall.py:73 main()] Generated non accepting input: 'g8\x0c%"vfn1qz!,Nzfb'
+2026-10-23 22:03:26,020 [INFO precision_recall.py:73 main()] Generated non accepting input: '5hc1&\r^s%Bc__'
+2026-10-23 22:03:26,032 [INFO precision_recall.py:73 main()] Generated non accepting input: 'a%0ykXcilheZ&aQx'
+2026-10-23 22:03:26,054 [INFO precision_recall.py:73 main()] Generated non accepting input: '|aJ%s'
+2026-10-23 22:03:26,094 [INFO precision_recall.py:73 main()] Generated non accepting input: '%v6D9'
+2026-10-23 22:03:26,126 [INFO precision_recall.py:73 main()] Generated non accepting input: '~71%zR\n*wCP_'
+2026-10-23 22:03:26,131 [INFO precision_recall.py:73 main()] Generated non accepting input: 'FL=LNP.\n%#0_yA'
+2026-10-23 22:03:26,187 [INFO precision_recall.py:73 main()] Generated non accepting input: '%Ib'
+2026-10-23 22:03:26,260 [INFO precision_recall.py:73 main()] Generated non accepting input: 'F%X6P'
+2026-10-23 22:03:26,296 [INFO precision_recall.py:73 main()] Generated non accepting input: '\t%[m'
+2026-10-23 22:03:26,398 [INFO precision_recall.py:73 main()] Generated non accepting input: 'CU]C%skG4'
+2026-10-23 22:03:26,477 [INFO precision_recall.py:73 main()] Generated non accepting input: '$<* fbp%V'
+2026-10-23 22:03:26,486 [INFO precision_recall.py:73 main()] Generated non accepting input: '%l5'
+2026-10-23 22:03:26,545 [INFO precision_recall.py:73 main()] Generated non accepting input: '%kj97d7Fh'
+2026-10-23 22:03:26,641 [INFO precision_recall.py:73 main()] Generated non accepting input: 'x%Bo5HE'
+2026-10-23 22:03:26,655 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 22:03:28,254 [INFO precision_recall.py:104 main()] {'precision': 0.982, 'recall': 0.971, 'f1': 0.9764690220174091, 'no_tested_inputs': 2188}

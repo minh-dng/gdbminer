@@ -1,0 +1,67 @@
+2026-10-22 10:35:28,380 [WARNING config.py:227 _log_override()] Connection.port: '/dev/cu.usbmodem2101' overridden by --port = '/dev/cu.usbmodem101'
+2026-10-22 10:35:28,380 [WARNING config.py:227 _log_override()] GDB.gdb_port: 3333 overridden by --gdb-port = 3335
+2026-10-22 10:35:28,380 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {gdb_port} -> 3335
+2026-10-22 10:35:28,380 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {adapter_serial} -> E8:06:90:95:F2:70
+2026-10-22 10:35:28,380 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {telnet_port} -> disabled
+2026-10-22 10:35:28,380 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {tcl_port} -> disabled
+2026-10-22 10:35:28,380 [INFO config.py:320 apply_overrides()] GDB server command: ~/.espressif/openocd-esp32/bin/openocd
+  -c "set ESP_RTOS none"
+  -c "set ESP_ONLYCPU 1"
+  -c "set ESP_FLASH_SIZE 0"
+  -f board/esp32s3-builtin.cfg
+  -c "gdb port 3335"
+  -c "telnet port disabled"
+  -c "tcl port disabled"
+  -c "adapter serial E8:06:90:95:F2:70"
+  -c "adapter speed 40000"
+2026-10-22 10:35:28,381 [INFO config.py:330 apply_overrides()] GDB.esp32s3.usb_reset_command: {adapter_serial} -> E8:06:90:95:F2:70
+2026-10-22 10:35:31,703 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:F2:70)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3335
+Info : Listening on port 3335 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 10:35:31,705 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 10:35:31,705 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_cgidecode/build/esp32-s3_cgidecode.ino.elf' successfully
+2026-10-22 10:35:32,501 [INFO precision_recall.py:73 main()] Generated non accepting input: '_%VE'
+2026-10-22 10:35:32,797 [INFO precision_recall.py:73 main()] Generated non accepting input: '3ng%*s9Yect5'
+2026-10-22 10:35:32,815 [INFO precision_recall.py:73 main()] Generated non accepting input: 'A %?^BOX'
+2026-10-22 10:35:32,844 [INFO precision_recall.py:73 main()] Generated non accepting input: '\x0bs1%&mM?eWZm'
+2026-10-22 10:35:32,854 [INFO precision_recall.py:73 main()] Generated non accepting input: '\\B% ~VX0ql'
+2026-10-22 10:35:32,881 [INFO precision_recall.py:73 main()] Generated non accepting input: 'jj8G0wCtT\n%t7e2'
+2026-10-22 10:35:32,885 [INFO precision_recall.py:73 main()] Generated non accepting input: '*up-E%U34'
+2026-10-22 10:35:32,900 [INFO precision_recall.py:73 main()] Generated non accepting input: '%ifR'
+2026-10-22 10:35:32,930 [INFO precision_recall.py:73 main()] Generated non accepting input: 'h2>8J%L_Sh'
+2026-10-22 10:35:32,969 [INFO precision_recall.py:73 main()] Generated non accepting input: 'DP+.+j50_%Le~i_'
+2026-10-22 10:35:33,015 [INFO precision_recall.py:73 main()] Generated non accepting input: '~e\t|$X`>3M\x0cr.i%umK;5HrEGl1'
+2026-10-22 10:35:33,066 [INFO precision_recall.py:73 main()] Generated non accepting input: '\rU0(%dJO%lp___'
+2026-10-22 10:35:33,108 [INFO precision_recall.py:73 main()] Generated non accepting input: '%g7__'
+2026-10-22 10:35:33,120 [INFO precision_recall.py:73 main()] Generated non accepting input: '\x0cUSUl%JT)N23D|OyfxXK<KF9_'
+2026-10-22 10:35:33,136 [INFO precision_recall.py:73 main()] Generated non accepting input: '%M1'
+2026-10-22 10:35:33,198 [INFO precision_recall.py:73 main()] Generated non accepting input: 'Jnqn%e_5P\rF'
+2026-10-22 10:35:33,203 [INFO precision_recall.py:73 main()] Generated non accepting input: 'D~J3!%Rv|zf'
+2026-10-22 10:35:33,208 [INFO precision_recall.py:73 main()] Generated non accepting input: 'l~%UhLsM'
+2026-10-22 10:35:33,305 [INFO precision_recall.py:73 main()] Generated non accepting input: '69B%wN9Z_'
+2026-10-22 10:35:33,330 [INFO precision_recall.py:73 main()] Generated non accepting input: 'H%H'
+2026-10-22 10:35:33,463 [INFO precision_recall.py:73 main()] Generated non accepting input: 'I0SayULsL%f_zK'
+2026-10-22 10:35:33,485 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 10:35:35,069 [INFO precision_recall.py:104 main()] {'precision': 0.979, 'recall': 0.971, 'f1': 0.9749835897435897, 'no_tested_inputs': 2185}

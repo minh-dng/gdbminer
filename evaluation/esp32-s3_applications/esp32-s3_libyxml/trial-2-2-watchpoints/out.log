@@ -1,0 +1,2784 @@
+2026-10-22 01:52:53,086 [WARNING config.py:227 _log_override()] Connection.port: '/dev/cu.usbmodem2101' overridden by --port = '/dev/cu.usbmodem3101'
+2026-10-22 01:52:53,086 [WARNING config.py:227 _log_override()] GDB.gdb_port: 3333 overridden by --gdb-port = 3334
+2026-10-22 01:52:53,086 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {gdb_port} -> 3334
+2026-10-22 01:52:53,086 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {adapter_serial} -> E8:06:90:95:80:6C
+2026-10-22 01:52:53,086 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {telnet_port} -> disabled
+2026-10-22 01:52:53,086 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {tcl_port} -> disabled
+2026-10-22 01:52:53,086 [INFO config.py:320 apply_overrides()] GDB server command: ~/.espressif/openocd-esp32/bin/openocd
+  -c "set ESP_RTOS none"
+  -c "set ESP_ONLYCPU 1"
+  -c "set ESP_FLASH_SIZE 0"
+  -f board/esp32s3-builtin.cfg
+  -c "gdb port 3334"
+  -c "telnet port disabled"
+  -c "tcl port disabled"
+  -c "adapter serial E8:06:90:95:80:6C"
+  -c "adapter speed 40000"
+2026-10-22 01:52:53,086 [INFO config.py:330 apply_overrides()] GDB.esp32s3.usb_reset_command: {adapter_serial} -> E8:06:90:95:80:6C
+2026-10-22 01:52:53,086 [INFO trace.py:73 main()] Start generating trace for /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_libyxml/seeds/seed.15.in
+2026-10-22 01:52:53,086 [INFO gdb_tracer.py:156 trace_input()] Seed length: 9
+2026-10-22 01:52:56,424 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 01:52:56,432 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 01:52:56,432 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 01:52:58,618 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc98698 (window index 0)
+2026-10-22 01:52:58,623 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc9869d (window index 1)
+2026-10-22 01:53:00,011 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc98698 slot=0 index=0
+2026-10-22 01:53:00,084 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 0 
+2026-10-22 01:54:51,293 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc9869d slot=1 index=1
+2026-10-22 01:54:51,362 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 5 
+2026-10-22 01:56:17,419 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 01:56:20,739 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 01:56:20,741 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 01:56:20,741 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 01:56:22,646 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc98699 (window index 0)
+2026-10-22 01:56:22,649 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc9869e (window index 1)
+2026-10-22 01:56:43,737 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc98699 slot=0 index=0
+2026-10-22 01:56:43,810 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 1 
+2026-10-22 01:58:29,619 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc9869e slot=1 index=1
+2026-10-22 01:58:29,689 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 6 
+2026-10-22 01:59:37,610 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 01:59:40,936 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 01:59:40,942 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 01:59:40,942 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 01:59:42,868 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc9869a (window index 0)
+2026-10-22 01:59:42,872 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc9869f (window index 1)
+2026-10-22 02:00:29,516 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc9869a slot=0 index=0
+2026-10-22 02:00:29,586 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 2 
+2026-10-22 02:02:05,813 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc9869f slot=1 index=1
+2026-10-22 02:02:05,883 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 7 
+2026-10-22 02:02:58,055 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 02:03:01,373 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 02:03:01,377 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 02:03:01,377 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 02:03:03,318 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc9869b (window index 0)
+2026-10-22 02:03:03,323 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986a0 (window index 1)
+2026-10-22 02:04:14,586 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc9869b slot=0 index=0
+2026-10-22 02:04:14,654 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 3 
+2026-10-22 02:05:48,524 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986a0 slot=1 index=1
+2026-10-22 02:05:48,596 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 8 
+2026-10-22 02:06:17,778 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 02:06:21,115 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 02:06:21,118 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 02:06:21,118 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 02:06:22,990 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc9869c (window index 0)
+2026-10-22 02:07:57,342 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc9869c slot=0 index=0
+2026-10-22 02:07:57,416 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 4 
+2026-10-22 02:09:44,070 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 02:09:44,088 [INFO trace.py:80 main()] Write trace of seed.15.in to output/s3-eval-trial-2/xml-2-watchpoints/trial-0/seed.15.in.trace
+2026-10-22 02:09:44,088 [INFO trace.py:73 main()] Start generating trace for /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_libyxml/seeds/seed.9.in
+2026-10-22 02:09:44,088 [INFO gdb_tracer.py:156 trace_input()] Seed length: 8
+2026-10-22 02:09:47,411 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 02:09:47,414 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 02:09:47,415 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 02:09:49,302 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc98698 (window index 0)
+2026-10-22 02:09:49,306 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc9869c (window index 1)
+2026-10-22 02:09:50,583 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc98698 slot=0 index=0
+2026-10-22 02:09:50,657 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 0 
+2026-10-22 02:11:23,690 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc9869c slot=1 index=1
+2026-10-22 02:11:23,764 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 4 
+2026-10-22 02:12:51,846 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 02:12:55,173 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 02:12:55,177 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 02:12:55,177 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 02:12:57,147 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc98699 (window index 0)
+2026-10-22 02:12:57,151 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc9869d (window index 1)
+2026-10-22 02:13:18,728 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc98699 slot=0 index=0
+2026-10-22 02:13:18,796 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 1 
+2026-10-22 02:14:48,720 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc9869d slot=1 index=1
+2026-10-22 02:14:48,792 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 5 
+2026-10-22 02:16:00,572 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 02:16:03,910 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 02:16:03,913 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 02:16:03,913 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 02:16:05,870 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc9869a (window index 0)
+2026-10-22 02:16:05,874 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc9869e (window index 1)
+2026-10-22 02:16:54,480 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc9869a slot=0 index=0
+2026-10-22 02:16:54,553 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 2 
+2026-10-22 02:18:16,194 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc9869e slot=1 index=1
+2026-10-22 02:18:16,266 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 6 
+2026-10-22 02:19:08,440 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 02:19:11,791 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 02:19:11,795 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 02:19:11,796 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 02:19:13,739 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc9869b (window index 0)
+2026-10-22 02:19:13,744 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc9869f (window index 1)
+2026-10-22 02:20:28,967 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc9869b slot=0 index=0
+2026-10-22 02:20:29,039 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 3 
+2026-10-22 02:21:52,196 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc9869f slot=1 index=1
+2026-10-22 02:21:52,270 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 7 
+2026-10-22 02:22:21,856 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 02:22:21,873 [INFO trace.py:80 main()] Write trace of seed.9.in to output/s3-eval-trial-2/xml-2-watchpoints/trial-0/seed.9.in.trace
+2026-10-22 02:22:21,873 [INFO trace.py:73 main()] Start generating trace for /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_libyxml/seeds/seed.11.in
+2026-10-22 02:22:21,873 [INFO gdb_tracer.py:156 trace_input()] Seed length: 37
+2026-10-22 02:22:25,193 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 02:22:25,196 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 02:22:25,196 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 02:22:27,124 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc98698 (window index 0)
+2026-10-22 02:22:27,129 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986ab (window index 1)
+2026-10-22 02:22:28,420 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc98698 slot=0 index=0
+2026-10-22 02:22:28,495 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 0 
+2026-10-22 02:31:50,237 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986ab slot=1 index=1
+2026-10-22 02:31:50,314 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 19 
+2026-10-22 02:39:56,810 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 02:40:00,150 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 02:40:00,154 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 02:40:00,155 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 02:40:02,081 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc98699 (window index 0)
+2026-10-22 02:40:02,085 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986ac (window index 1)
+2026-10-22 02:40:24,506 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc98699 slot=0 index=0
+2026-10-22 02:40:24,581 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 1 
+2026-10-22 02:49:52,024 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986ac slot=1 index=1
+2026-10-22 02:49:52,099 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 20 
+2026-10-22 02:57:36,074 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 02:57:39,422 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 02:57:39,426 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 02:57:39,426 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 02:57:41,353 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc9869a (window index 0)
+2026-10-22 02:57:41,357 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986ad (window index 1)
+2026-10-22 02:58:29,660 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc9869a slot=0 index=0
+2026-10-22 02:58:29,735 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 2 
+2026-10-22 03:07:58,288 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986ad slot=1 index=1
+2026-10-22 03:07:58,364 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 21 
+2026-10-22 03:15:10,647 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:13,986 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:13,986 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:14,406 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:14,406 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:14,817 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:14,817 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:15,231 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:15,232 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:15,648 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:15,649 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:16,064 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:16,064 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:16,487 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:16,487 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:16,910 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:16,911 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:17,335 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:17,335 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:17,758 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:17,759 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:18,178 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:18,178 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:18,593 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:18,594 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:19,017 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:19,017 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:19,432 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:19,432 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:19,850 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:19,850 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:20,271 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:20,272 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:20,686 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:20,686 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:21,096 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:21,096 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:21,511 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:21,511 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:21,926 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:21,926 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:22,335 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:22,335 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:22,750 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:22,750 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:23,168 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:23,168 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:23,590 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:23,590 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:24,004 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:24,005 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:24,420 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:24,420 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:24,827 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:24,828 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:25,251 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:25,251 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:25,674 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:25,674 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:26,089 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:26,089 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:26,510 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:26,510 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:26,924 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:26,924 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:27,342 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:27,342 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:27,756 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:27,756 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:28,170 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:28,170 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:28,594 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:28,594 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:29,003 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:29,003 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:29,416 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:29,416 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:29,830 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:29,831 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:30,242 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:30,242 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:30,660 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:30,660 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:31,083 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:31,083 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:31,507 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:31,507 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:31,926 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:31,927 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:32,343 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:32,343 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:32,756 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:32,756 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:33,163 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:33,163 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:33,581 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:33,581 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:34,006 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:34,006 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:34,423 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:34,423 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:34,834 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:34,835 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:35,252 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:35,252 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:35,667 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:35,667 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:36,072 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:36,072 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:36,481 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:36,481 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:36,892 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:36,892 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:37,309 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:37,309 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:37,719 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:37,719 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:38,128 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:38,128 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:38,542 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:38,542 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:38,956 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:38,956 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:39,369 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:39,369 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:39,783 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:39,783 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:40,198 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:40,198 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:40,616 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:40,616 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:41,033 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:41,034 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:41,457 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:41,457 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:41,867 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:41,868 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:42,281 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:42,281 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:42,687 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:42,687 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:43,098 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:43,098 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:43,513 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:43,513 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_IO'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+2026-10-22 03:15:43,779 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:15:43,779 [WARNING esp32_instance.py:374 _start_gdb_server()] S3 OpenOCD startup retry: 
+2026-10-22 03:15:43,781 [WARNING esp32s3_instance.py:424 __enter__()] S3 attach attempt 1 failed: S3 OpenOCD startup timed out after 30s: ; USB reset
+2026-10-22 03:15:50,550 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 03:15:50,553 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 03:15:50,553 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 03:15:52,515 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc9869b (window index 0)
+2026-10-22 03:15:52,518 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986ae (window index 1)
+2026-10-22 03:17:06,238 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc9869b slot=0 index=0
+2026-10-22 03:17:06,309 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 3 
+2026-10-22 03:26:38,473 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986ae slot=1 index=1
+2026-10-22 03:26:38,548 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 22 
+2026-10-22 03:33:20,647 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:33:23,985 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 03:33:23,989 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 03:33:23,989 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 03:33:25,877 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc9869c (window index 0)
+2026-10-22 03:33:25,881 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986af (window index 1)
+2026-10-22 03:35:10,982 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc9869c slot=0 index=0
+2026-10-22 03:35:11,056 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 4 
+2026-10-22 03:44:42,905 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986af slot=1 index=1
+2026-10-22 03:44:42,980 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 23 
+2026-10-22 03:51:02,772 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 03:51:06,105 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 03:51:06,109 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 03:51:06,109 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 03:51:08,078 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc9869d (window index 0)
+2026-10-22 03:51:08,083 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986b0 (window index 1)
+2026-10-22 03:53:23,817 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc9869d slot=0 index=0
+2026-10-22 03:53:23,894 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 5 
+2026-10-22 04:02:55,208 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986b0 slot=1 index=1
+2026-10-22 04:02:55,283 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 24 
+2026-10-22 04:08:37,907 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 04:08:41,247 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 04:08:41,252 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 04:08:41,252 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 04:08:43,144 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc9869e (window index 0)
+2026-10-22 04:08:43,148 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986b1 (window index 1)
+2026-10-22 04:11:27,922 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc9869e slot=0 index=0
+2026-10-22 04:11:27,998 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 6 
+2026-10-22 04:21:03,807 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986b1 slot=1 index=1
+2026-10-22 04:21:03,886 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 25 
+2026-10-22 04:26:22,448 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 04:26:25,787 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 04:26:25,791 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 04:26:25,791 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 04:26:27,777 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc9869f (window index 0)
+2026-10-22 04:26:27,781 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986b2 (window index 1)
+2026-10-22 04:29:44,042 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc9869f slot=0 index=0
+2026-10-22 04:29:44,117 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 7 
+2026-10-22 04:39:13,603 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986b2 slot=1 index=1
+2026-10-22 04:39:13,678 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 26 
+2026-10-22 04:44:01,126 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 04:44:04,473 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 04:44:04,476 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 04:44:04,477 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 04:44:06,424 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc986a0 (window index 0)
+2026-10-22 04:44:06,428 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986b3 (window index 1)
+2026-10-22 04:47:52,978 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986a0 slot=0 index=0
+2026-10-22 04:47:53,051 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 8 
+2026-10-22 04:57:23,751 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986b3 slot=1 index=1
+2026-10-22 04:57:23,826 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 27 
+2026-10-22 05:01:43,652 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 05:01:47,006 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 05:01:47,010 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 05:01:47,010 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 05:01:48,966 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc986a1 (window index 0)
+2026-10-22 05:01:48,970 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986b4 (window index 1)
+2026-10-22 05:06:14,058 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986a1 slot=0 index=0
+2026-10-22 05:06:14,134 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 9 
+2026-10-22 05:15:45,752 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986b4 slot=1 index=1
+2026-10-22 05:15:45,828 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 28 
+2026-10-22 05:19:33,230 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 05:19:36,561 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 05:19:36,565 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 05:19:36,565 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 05:19:38,524 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc986a2 (window index 0)
+2026-10-22 05:19:38,530 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986b5 (window index 1)
+2026-10-22 05:24:19,846 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986a2 slot=0 index=0
+2026-10-22 05:24:19,922 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 10 
+2026-10-22 05:33:56,658 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986b5 slot=1 index=1
+2026-10-22 05:33:56,735 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 29 
+2026-10-22 05:37:13,077 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 05:37:16,421 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 05:37:16,425 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 05:37:16,425 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 05:37:18,329 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc986a3 (window index 0)
+2026-10-22 05:37:18,333 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986b6 (window index 1)
+2026-10-22 05:42:31,330 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986a3 slot=0 index=0
+2026-10-22 05:42:31,407 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 11 
+2026-10-22 05:52:06,659 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986b6 slot=1 index=1
+2026-10-22 05:52:06,736 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 30 
+2026-10-22 05:54:53,007 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 05:54:56,325 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 05:54:56,328 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 05:54:56,329 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 05:54:58,136 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc986a4 (window index 0)
+2026-10-22 05:54:58,140 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986b7 (window index 1)
+2026-10-22 06:00:39,940 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986a4 slot=0 index=0
+2026-10-22 06:00:40,016 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 12 
+2026-10-22 06:10:18,296 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986b7 slot=1 index=1
+2026-10-22 06:10:18,372 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 31 
+2026-10-22 06:12:32,558 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 06:12:35,892 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 06:12:35,896 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 06:12:35,896 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 06:12:37,867 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc986a5 (window index 0)
+2026-10-22 06:12:37,871 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986b8 (window index 1)
+2026-10-22 06:18:55,531 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986a5 slot=0 index=0
+2026-10-22 06:18:55,607 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 13 
+2026-10-22 06:28:26,721 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986b8 slot=1 index=1
+2026-10-22 06:28:26,794 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 32 
+2026-10-22 06:30:16,450 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 06:30:19,778 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 06:30:19,782 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 06:30:19,782 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 06:30:21,692 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc986a6 (window index 0)
+2026-10-22 06:30:21,696 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986b9 (window index 1)
+2026-10-22 06:37:13,268 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986a6 slot=0 index=0
+2026-10-22 06:37:13,343 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 14 
+2026-10-22 06:46:26,733 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986b9 slot=1 index=1
+2026-10-22 06:46:26,811 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 33 
+2026-10-22 06:47:57,159 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 06:48:00,487 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 06:48:00,491 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 06:48:00,491 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 06:48:02,445 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc986a7 (window index 0)
+2026-10-22 06:48:02,449 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986ba (window index 1)
+2026-10-22 06:55:19,534 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986a7 slot=0 index=0
+2026-10-22 06:55:19,608 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 15 
+2026-10-22 07:04:16,187 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986ba slot=1 index=1
+2026-10-22 07:04:16,265 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 34 
+2026-10-22 07:05:28,888 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 07:05:32,234 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 07:05:32,238 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 07:05:32,238 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 07:05:34,174 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc986a8 (window index 0)
+2026-10-22 07:05:34,178 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986bb (window index 1)
+2026-10-22 07:13:18,862 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986a8 slot=0 index=0
+2026-10-22 07:13:18,936 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 16 
+2026-10-22 07:22:09,523 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986bb slot=1 index=1
+2026-10-22 07:22:09,598 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 35 
+2026-10-22 07:23:03,119 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 07:23:06,473 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 07:23:06,480 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 07:23:06,482 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 07:23:08,447 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc986a9 (window index 0)
+2026-10-22 07:23:08,451 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986bc (window index 1)
+2026-10-22 07:31:27,042 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986a9 slot=0 index=0
+2026-10-22 07:31:27,119 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 17 
+2026-10-22 07:40:10,444 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986bc slot=1 index=1
+2026-10-22 07:40:10,515 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 36 
+2026-10-22 07:40:40,773 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 07:40:44,127 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 07:40:44,131 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 07:40:44,131 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 07:40:46,104 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc986aa (window index 0)
+2026-10-22 07:49:36,505 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986aa slot=0 index=0
+2026-10-22 07:49:36,580 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 18 
+2026-10-22 07:58:15,156 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 07:58:15,247 [INFO trace.py:80 main()] Write trace of seed.11.in to output/s3-eval-trial-2/xml-2-watchpoints/trial-0/seed.11.in.trace
+2026-10-22 07:58:15,247 [INFO trace.py:73 main()] Start generating trace for /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_libyxml/seeds/seed.8.in
+2026-10-22 07:58:15,247 [INFO gdb_tracer.py:156 trace_input()] Seed length: 4
+2026-10-22 07:58:18,579 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 07:58:18,583 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 07:58:18,583 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 07:58:20,456 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc98698 (window index 0)
+2026-10-22 07:58:21,707 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc98698 slot=0 index=0
+2026-10-22 07:58:21,776 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 0 
+2026-10-22 08:00:01,226 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 08:00:04,555 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 08:00:04,558 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 08:00:04,558 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 08:00:06,521 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc98699 (window index 0)
+2026-10-22 08:00:27,909 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc98699 slot=0 index=0
+2026-10-22 08:00:27,976 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 1 
+2026-10-22 08:01:46,905 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 08:01:50,250 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 08:01:50,253 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 08:01:50,253 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 08:01:52,191 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc9869a (window index 0)
+2026-10-22 08:02:39,939 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc9869a slot=0 index=0
+2026-10-22 08:02:40,010 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 2 
+2026-10-22 08:03:33,276 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 08:03:36,600 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 08:03:36,605 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 08:03:36,605 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 08:03:38,583 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc9869b (window index 0)
+2026-10-22 08:04:52,942 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc9869b slot=0 index=0
+2026-10-22 08:04:53,014 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 3 
+2026-10-22 08:05:20,334 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 08:05:20,345 [INFO trace.py:80 main()] Write trace of seed.8.in to output/s3-eval-trial-2/xml-2-watchpoints/trial-0/seed.8.in.trace
+2026-10-22 08:05:20,346 [INFO trace.py:73 main()] Start generating trace for /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_libyxml/seeds/seed.10.in
+2026-10-22 08:05:20,346 [INFO gdb_tracer.py:156 trace_input()] Seed length: 42
+2026-10-22 08:05:23,666 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 08:05:23,669 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 08:05:23,670 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 08:05:25,540 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc98698 (window index 0)
+2026-10-22 08:05:25,544 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986ad (window index 1)
+2026-10-22 08:05:26,849 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc98698 slot=0 index=0
+2026-10-22 08:05:26,925 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 0 
+2026-10-22 08:15:29,760 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986ad slot=1 index=1
+2026-10-22 08:15:29,835 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 21 
+2026-10-22 08:24:39,027 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 08:24:42,369 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 08:24:42,373 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 08:24:42,373 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 08:24:44,303 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc98699 (window index 0)
+2026-10-22 08:24:44,308 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986ae (window index 1)
+2026-10-22 08:25:05,944 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc98699 slot=0 index=0
+2026-10-22 08:25:06,020 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 1 
+2026-10-22 08:35:13,436 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986ae slot=1 index=1
+2026-10-22 08:35:13,514 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 22 
+2026-10-22 08:43:51,261 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 08:43:54,592 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 08:43:54,595 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 08:43:54,596 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 08:43:56,536 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc9869a (window index 0)
+2026-10-22 08:43:56,542 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986af (window index 1)
+2026-10-22 08:44:45,640 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc9869a slot=0 index=0
+2026-10-22 08:44:45,715 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 2 
+2026-10-22 08:54:58,960 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986af slot=1 index=1
+2026-10-22 08:54:59,047 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 23 
+2026-10-22 09:03:04,538 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 09:03:07,863 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 09:03:07,871 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 09:03:07,872 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 09:03:09,860 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc9869b (window index 0)
+2026-10-22 09:03:09,864 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986b0 (window index 1)
+2026-10-22 09:04:24,158 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc9869b slot=0 index=0
+2026-10-22 09:04:24,232 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 3 
+2026-10-22 09:14:39,181 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986b0 slot=1 index=1
+2026-10-22 09:14:39,259 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 24 
+2026-10-22 09:22:17,014 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 09:22:20,367 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 09:22:20,371 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 09:22:20,371 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 09:22:22,297 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc9869c (window index 0)
+2026-10-22 09:22:22,302 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986b1 (window index 1)
+2026-10-22 09:24:07,732 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc9869c slot=0 index=0
+2026-10-22 09:24:07,827 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 4 
+2026-10-22 09:34:19,344 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986b1 slot=1 index=1
+2026-10-22 09:34:19,438 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 25 
+2026-10-22 09:42:05,381 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 09:42:08,720 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 09:42:08,724 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 09:42:08,724 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 09:42:10,655 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc9869d (window index 0)
+2026-10-22 09:42:10,659 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986b2 (window index 1)
+2026-10-22 09:44:29,603 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc9869d slot=0 index=0
+2026-10-22 09:44:29,679 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 5 
+2026-10-22 09:54:45,446 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986b2 slot=1 index=1
+2026-10-22 09:54:45,520 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 26 
+2026-10-22 10:01:23,708 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 10:01:27,056 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 10:01:27,063 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 10:01:27,063 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 10:01:28,996 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc9869e (window index 0)
+2026-10-22 10:01:29,000 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986b3 (window index 1)
+2026-10-22 10:04:24,879 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc9869e slot=0 index=0
+2026-10-22 10:04:24,970 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 6 
+2026-10-22 10:14:52,117 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986b3 slot=1 index=1
+2026-10-22 10:14:52,190 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 27 
+2026-10-22 10:20:59,090 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 10:21:02,408 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 10:21:02,412 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 10:21:02,412 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 10:21:04,309 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc9869f (window index 0)
+2026-10-22 10:21:04,313 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986b4 (window index 1)
+2026-10-22 10:24:18,375 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc9869f slot=0 index=0
+2026-10-22 10:24:18,451 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 7 
+2026-10-22 10:34:37,134 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986b4 slot=1 index=1
+2026-10-22 10:34:37,228 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 28 
+2026-10-22 10:40:39,144 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 10:40:42,498 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 10:40:42,502 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 10:40:42,502 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 10:40:44,685 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc986a0 (window index 0)
+2026-10-22 10:40:44,689 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986b5 (window index 1)
+2026-10-22 10:44:31,669 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986a0 slot=0 index=0
+2026-10-22 10:44:31,743 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 8 
+2026-10-22 10:54:46,206 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986b5 slot=1 index=1
+2026-10-22 10:54:46,292 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 29 
+2026-10-22 10:59:52,636 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 10:59:55,975 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 10:59:55,979 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 10:59:55,979 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-22 10:59:57,947 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK0 reads 0x3fc986a1 (window index 0)
+2026-10-22 10:59:57,951 [INFO esp32s3_instance.py:203 set_watchpoint_and_get_id()] S3 DBREAK1 reads 0x3fc986b6 (window index 1)
+2026-10-22 11:04:20,578 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986a1 slot=0 index=0
+2026-10-22 11:04:20,654 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 9 
+2026-10-22 11:14:34,421 [INFO esp32s3_instance.py:291 _hit()] S3 hardware read pc=0x42001f8a width=1 address=0x3fc986b6 slot=1 index=1
+2026-10-22 11:14:34,498 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 30 
+2026-10-22 11:17:52,621 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 16:50:55,032 [WARNING config.py:227 _log_override()] Connection.port: '/dev/cu.usbmodem2101' overridden by --port = '/dev/cu.usbmodem3101'
+2026-10-23 16:50:55,033 [WARNING config.py:227 _log_override()] GDB.gdb_port: 3333 overridden by --gdb-port = 3334
+2026-10-23 16:50:55,033 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {gdb_port} -> 3334
+2026-10-23 16:50:55,033 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {adapter_serial} -> E8:06:90:95:80:6C
+2026-10-23 16:50:55,033 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {telnet_port} -> disabled
+2026-10-23 16:50:55,033 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {tcl_port} -> disabled
+2026-10-23 16:50:55,033 [INFO config.py:320 apply_overrides()] GDB server command: ~/.espressif/openocd-esp32/bin/openocd
+  -c "set ESP_RTOS none"
+  -c "set ESP_ONLYCPU 1"
+  -c "set ESP_FLASH_SIZE 0"
+  -f board/esp32s3-builtin.cfg
+  -c "gdb port 3334"
+  -c "telnet port disabled"
+  -c "tcl port disabled"
+  -c "adapter serial E8:06:90:95:80:6C"
+  -c "adapter speed 40000"
+2026-10-23 16:50:55,033 [INFO config.py:330 apply_overrides()] GDB.esp32s3.usb_reset_command: {adapter_serial} -> E8:06:90:95:80:6C
+2026-10-23 16:50:55,318 [INFO tree_builder.py:62 __init__()] Functions: parser yxml_parse yxml_elemstart yxml_pushstack yxml_elemnameend yxml_attrstart yxml_attrnameend yxml_dataattr yxml_setchar yxml_attrvalend yxml_popstack yxml_datacontent yxml_elemclose yxml_elemcloseend yxml_selfclose yxml_attrname yxml_pushstackc
+2026-10-23 16:50:55,318 [INFO tree_builder.py:63 __init__()] Using original Mimid algo: False
+2026-10-23 16:50:59,437 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_libyxml/seeds/seed.1.in 0/20
+2026-10-23 16:50:59,437 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_libyxml/seeds/seed.10.in 1/20
+2026-10-23 16:50:59,438 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_libyxml/seeds/seed.11.in 2/20
+2026-10-23 16:50:59,439 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_libyxml/seeds/seed.12.in 3/20
+2026-10-23 16:50:59,440 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_libyxml/seeds/seed.13.in 4/20
+2026-10-23 16:50:59,440 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_libyxml/seeds/seed.14.in 5/20
+2026-10-23 16:50:59,440 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_libyxml/seeds/seed.15.in 6/20
+2026-10-23 16:50:59,440 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_libyxml/seeds/seed.16.in 7/20
+2026-10-23 16:50:59,440 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_libyxml/seeds/seed.17.in 8/20
+2026-10-23 16:50:59,441 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_libyxml/seeds/seed.18.in 9/20
+2026-10-23 16:50:59,442 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_libyxml/seeds/seed.19.in 10/20
+2026-10-23 16:50:59,442 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_libyxml/seeds/seed.2.in 11/20
+2026-10-23 16:50:59,442 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_libyxml/seeds/seed.20.in 12/20
+2026-10-23 16:50:59,443 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_libyxml/seeds/seed.3.in 13/20
+2026-10-23 16:50:59,443 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_libyxml/seeds/seed.4.in 14/20
+2026-10-23 16:50:59,444 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_libyxml/seeds/seed.5.in 15/20
+2026-10-23 16:50:59,444 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_libyxml/seeds/seed.6.in 16/20
+2026-10-23 16:50:59,444 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_libyxml/seeds/seed.7.in 17/20
+2026-10-23 16:50:59,444 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_libyxml/seeds/seed.8.in 18/20
+2026-10-23 16:50:59,444 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_libyxml/seeds/seed.9.in 19/20
+2026-10-23 16:51:02,811 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-23 16:51:02,817 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-23 16:51:02,817 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-23 16:51:03,184 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <parser> 0/2
+2026-10-23 16:51:03,185 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 20 from 20 nodes for pattern recognition
+2026-10-23 16:51:03,794 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <parser_b1c0> 1/2
+2026-10-23 16:51:03,794 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 357 from 357 nodes for pattern recognition
+2026-10-23 16:52:08,482 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 16:52:08,482 [INFO method_generalizer.py:117 generalize_method_trees()] Used 18908 requests to generalize methods
+2026-10-23 16:52:08,482 [INFO method_generalizer.py:120 generalize_method_trees()] update: <parser> 0/2
+2026-10-23 16:52:08,483 [INFO method_generalizer.py:120 generalize_method_trees()] update: <parser_b1c0> 1/2
+2026-10-23 16:52:11,890 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-23 16:52:11,895 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-23 16:52:11,896 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-23 16:52:12,264 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parser-.0:while_0,0 ?#[]> 0/1
+2026-10-23 16:52:12,264 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 357 from 357 nodes for pattern recognition
+2026-10-23 16:54:31,214 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 16:54:31,214 [INFO loop_generalizer.py:107 generalize_loop_trees()] Used 81175 requests to generalize loops
+2026-10-23 16:54:31,214 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parser-.0:while_0,0 ?#[]> 0/1
+2026-10-23 16:54:31,232 [INFO token_generalizer.py:267 generalize_tokens_in_grammar()] Generalize 82 tokens
+2026-10-23 16:54:34,638 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-23 16:54:34,644 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-23 16:54:34,645 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-23 16:54:35,516 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:35,659 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:35,700 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:35,740 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:35,780 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:35,821 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:35,862 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:35,903 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:35,943 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:35,984 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:36,024 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:36,065 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:36,105 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:36,145 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:36,185 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:36,226 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:36,265 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:36,410 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:36,450 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:36,491 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:36,531 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:36,572 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:36,612 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:36,652 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:36,693 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:36,733 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:36,774 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:36,814 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:36,856 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:36,896 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:36,975 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:37,016 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:37,055 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:37,096 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:37,137 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:37,178 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:37,219 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:37,260 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:37,301 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-23 16:54:37,336 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:37,415 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:37,482 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:37,505 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:37,527 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:37,549 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:37,571 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:37,594 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:37,617 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:37,640 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:37,663 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:37,686 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:37,708 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:37,729 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:37,752 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:37,774 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:37,797 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:37,819 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:37,842 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:37,863 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:37,886 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:37,908 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:37,931 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:37,953 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:37,976 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:37,999 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:38,125 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-23 16:54:38,166 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-23 16:54:38,191 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:38,207 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:38,223 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:38,333 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM__]
+2026-10-23 16:54:38,349 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:38,365 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_LETTER__]
+2026-10-23 16:54:38,372 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 16:54:38,372 [INFO token_generalizer.py:290 generalize_tokens_in_grammar()] Used 643 requests to generalize tokens
+2026-10-23 16:54:38,380 [INFO mine.py:361 main()] Mining time: 223.34825372695923 seconds
+2026-10-23 16:55:10,828 [WARNING config.py:227 _log_override()] Connection.port: '/dev/cu.usbmodem2101' overridden by --port = '/dev/cu.usbmodem3101'
+2026-10-23 16:55:10,828 [WARNING config.py:227 _log_override()] GDB.gdb_port: 3333 overridden by --gdb-port = 3334
+2026-10-23 16:55:10,828 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {gdb_port} -> 3334
+2026-10-23 16:55:10,828 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {adapter_serial} -> E8:06:90:95:80:6C
+2026-10-23 16:55:10,828 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {telnet_port} -> disabled
+2026-10-23 16:55:10,828 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {tcl_port} -> disabled
+2026-10-23 16:55:10,828 [INFO config.py:320 apply_overrides()] GDB server command: ~/.espressif/openocd-esp32/bin/openocd
+  -c "set ESP_RTOS none"
+  -c "set ESP_ONLYCPU 1"
+  -c "set ESP_FLASH_SIZE 0"
+  -f board/esp32s3-builtin.cfg
+  -c "gdb port 3334"
+  -c "telnet port disabled"
+  -c "tcl port disabled"
+  -c "adapter serial E8:06:90:95:80:6C"
+  -c "adapter speed 40000"
+2026-10-23 16:55:10,828 [INFO config.py:330 apply_overrides()] GDB.esp32s3.usb_reset_command: {adapter_serial} -> E8:06:90:95:80:6C
+2026-10-23 16:55:14,141 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:80:6C)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3334
+Info : Listening on port 3334 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-23 16:55:14,144 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-23 16:55:14,144 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_xml/build/esp32-s3_xml.ino.elf' successfully
+2026-10-23 16:55:15,108 [INFO precision_recall.py:73 main()] Generated non accepting input: '<x></d'
+2026-10-23 16:55:15,155 [INFO precision_recall.py:73 main()] Generated non accepting input: '<u></P'
+2026-10-23 16:55:15,203 [INFO precision_recall.py:73 main()] Generated non accepting input: '<F></h'
+2026-10-23 16:55:15,760 [INFO precision_recall.py:73 main()] Generated non accepting input: '<dK></i>'
+2026-10-23 16:55:15,925 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-23 16:57:11,951 [INFO precision_recall.py:104 main()] {'precision': 0.996, 'recall': 1.0, 'f1': 0.9979959919839679, 'no_tested_inputs': 100726}

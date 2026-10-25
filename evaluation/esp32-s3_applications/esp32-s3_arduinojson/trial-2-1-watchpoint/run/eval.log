@@ -1,0 +1,159 @@
+2026-10-22 09:35:35,247 [WARNING config.py:227 _log_override()] Connection.port: '/dev/cu.usbmodem2101' overridden by --port = '/dev/cu.usbmodem101'
+2026-10-22 09:35:35,248 [WARNING config.py:227 _log_override()] GDB.gdb_port: 3333 overridden by --gdb-port = 3335
+2026-10-22 09:35:35,248 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {gdb_port} -> 3335
+2026-10-22 09:35:35,248 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {adapter_serial} -> E8:06:90:95:F2:70
+2026-10-22 09:35:35,248 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {telnet_port} -> disabled
+2026-10-22 09:35:35,248 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {tcl_port} -> disabled
+2026-10-22 09:35:35,248 [INFO config.py:320 apply_overrides()] GDB server command: ~/.espressif/openocd-esp32/bin/openocd
+  -c "set ESP_RTOS none"
+  -c "set ESP_ONLYCPU 1"
+  -c "set ESP_FLASH_SIZE 0"
+  -f board/esp32s3-builtin.cfg
+  -c "gdb port 3335"
+  -c "telnet port disabled"
+  -c "tcl port disabled"
+  -c "adapter serial E8:06:90:95:F2:70"
+  -c "adapter speed 40000"
+2026-10-22 09:35:35,248 [INFO config.py:330 apply_overrides()] GDB.esp32s3.usb_reset_command: {adapter_serial} -> E8:06:90:95:F2:70
+2026-10-22 09:35:38,560 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:F2:70)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3335
+Info : Listening on port 3335 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-22 09:35:38,563 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-22 09:35:38,563 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_json/build/esp32-s3_json.ino.elf' successfully
+2026-10-22 09:35:39,345 [INFO precision_recall.py:73 main()] Generated non accepting input: '\r\t\r{\x0c \t"":{},"":\x0b{}O"":\x0b{}U"":\x0c{}\t"":\r{}G"":{}}'
+2026-10-22 09:35:39,348 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"":\x0b\t{}R"":{}}'
+2026-10-22 09:35:39,368 [INFO precision_recall.py:73 main()] Generated non accepting input: '\x0b\x0b\n{\n"":\t{}e"":{}}'
+2026-10-22 09:35:39,396 [INFO precision_recall.py:73 main()] Generated non accepting input: '\t{\x0c\r"":{}{"":\x0c{}u"":\r{}="":{}}'
+2026-10-22 09:35:39,409 [INFO precision_recall.py:73 main()] Generated non accepting input: '\t\r \t \x0b\n\t\n\r{ \t")":\x0c\x0ctrue\x0b"":\n{}w"":{}}'
+2026-10-22 09:35:39,419 [INFO precision_recall.py:73 main()] Generated non accepting input: '\x0b\r \x0b\x0b\t{"":\x0b\x0cfalse#"":{}}'
+2026-10-22 09:35:39,428 [INFO precision_recall.py:73 main()] Generated non accepting input: '\x0c\t\n{\r\x0c"":\x0c\rnull<"":\r{}."":{}}'
+2026-10-22 09:35:39,440 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"":{}\r"":\x0b{}b"": {}k"":\x0c{}""":\r{}S"":\n{}o"":\n{}^"":\x0c{}j"":{}}'
+2026-10-22 09:35:39,453 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"":\rfalse9"":{}}'
+2026-10-22 09:35:39,460 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"":\x0b""k"":\r{}a"":\x0b{}{"":\r{}e"":\n{}t"":\r{}~"":{}}'
+2026-10-22 09:35:39,467 [INFO precision_recall.py:73 main()] Generated non accepting input: '\t\r \t \x0b{"":false4"":{}}'
+2026-10-22 09:35:39,475 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"":{}Y"":{}}'
+2026-10-22 09:35:39,488 [INFO precision_recall.py:73 main()] Generated non accepting input: '\n{"":\x0c\x0bnull^"":\t{}\n"":\x0b{}`"":{}}'
+2026-10-22 09:35:39,493 [INFO precision_recall.py:73 main()] Generated non accepting input: '{\n\r\x0c "*":{},"":\n{}7"":\n{}1"": {}S"":{}}'
+2026-10-22 09:35:39,497 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"*)":\r\t{}\n"":{}}'
+2026-10-22 09:35:39,499 [INFO precision_recall.py:73 main()] Generated non accepting input: '\n\t\t\t{"*)":{}`"":\t{}Z"":{}}'
+2026-10-22 09:35:39,522 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"": {}6"":\x0c{}u"":\x0b{})"":{}}'
+2026-10-22 09:35:39,527 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"":\t\r\r""z"":\t{}."":{}}'
+2026-10-22 09:35:39,537 [INFO precision_recall.py:73 main()] Generated non accepting input: '{\n\x0c\n\t \t"":\r\t{}\r"":{}}'
+2026-10-22 09:35:39,574 [INFO precision_recall.py:73 main()] Generated non accepting input: '{ "":\n{}f"":\t{}."":{}}'
+2026-10-22 09:35:39,587 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"":true,"":\n{}&"":\n{}~"":\r{}A"":\r{}z"": {}|"":{}}'
+2026-10-22 09:35:39,588 [INFO precision_recall.py:73 main()] Generated non accepting input: '\r\r\r \x0b{\x0b\x0c\x0b"*":{}g"":{}}'
+2026-10-22 09:35:39,590 [INFO precision_recall.py:73 main()] Generated non accepting input: '\t'
+2026-10-22 09:35:39,614 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"":\t{}>"":{}}'
+2026-10-22 09:35:39,629 [INFO precision_recall.py:73 main()] Generated non accepting input: '{\x0b"":\x0b\n{}_"":{}}'
+2026-10-22 09:35:39,632 [INFO precision_recall.py:73 main()] Generated non accepting input: '\n\r'
+2026-10-22 09:35:39,636 [INFO precision_recall.py:73 main()] Generated non accepting input: '\t{"":\t""m"":{}}'
+2026-10-22 09:35:39,654 [INFO precision_recall.py:73 main()] Generated non accepting input: '\x0c\r\x0c\t\x0b\n{\x0b \x0b\x0c"":\x0c{},"":\n{}i"":{}}'
+2026-10-22 09:35:39,661 [INFO precision_recall.py:73 main()] Generated non accepting input: '{")*": ""|"": {}A"":\x0b{}k"":{}}'
+2026-10-22 09:35:39,667 [INFO precision_recall.py:73 main()] Generated non accepting input: '\t\t\t  \x0c{"":\x0b""o"":{}}'
+2026-10-22 09:35:39,670 [INFO precision_recall.py:73 main()] Generated non accepting input: '{ "":\n {}x"":\x0b{}}"":{}}'
+2026-10-22 09:35:39,673 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"":\n\r{}\n"":\x0c{}a"":{}}'
+2026-10-22 09:35:39,680 [INFO precision_recall.py:73 main()] Generated non accepting input: '\r\r\r\r\t\n\x0b\r\r\n{ "*":\t\rtrue\x0c"": {}9"":{}}'
+2026-10-22 09:35:39,683 [INFO precision_recall.py:73 main()] Generated non accepting input: '\t \x0c  {\t"*":{},"":\x0b{}\\"":{}}'
+2026-10-22 09:35:39,700 [INFO precision_recall.py:73 main()] Generated non accepting input: '\n\r{"":\n\x0c trueq"":\t{}i"":\x0c{}+"":\n{}n"":{}}'
+2026-10-22 09:35:39,733 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"":\x0ctrueD"":{}}'
+2026-10-22 09:35:39,740 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"":\x0c""U"":{}}'
+2026-10-22 09:35:39,758 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"": \r\tfalse5"":{}}'
+2026-10-22 09:35:39,761 [INFO precision_recall.py:73 main()] Generated non accepting input: ' \n\r\n\n\x0c\n{"":\r {}*"":{}}'
+2026-10-22 09:35:39,765 [INFO precision_recall.py:73 main()] Generated non accepting input: '{\x0c"*": \x0b{}b"":\x0b{}>"":{}}'
+2026-10-22 09:35:39,771 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"":\n{}<"":{}}'
+2026-10-22 09:35:39,772 [INFO precision_recall.py:73 main()] Generated non accepting input: '\n\n \x0c\t{"":{}%"":\t{}S"":{}}'
+2026-10-22 09:35:39,784 [INFO precision_recall.py:73 main()] Generated non accepting input: '\x0b{"*":\t""N"":\t{}c"":\x0c{}>"":{}}'
+2026-10-22 09:35:39,791 [INFO precision_recall.py:73 main()] Generated non accepting input: '{")":\x0b\x0b""d"":{}}'
+2026-10-22 09:35:39,810 [INFO precision_recall.py:73 main()] Generated non accepting input: '\t\x0b\r\t\x0c\t'
+2026-10-22 09:35:39,814 [INFO precision_recall.py:73 main()] Generated non accepting input: '{\x0c"": \r{}2"":{}}'
+2026-10-22 09:35:39,820 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"": ""~"":{}}'
+2026-10-22 09:35:39,828 [INFO precision_recall.py:73 main()] Generated non accepting input: '\x0c{"":\n\r{}I"":{}}'
+2026-10-22 09:35:39,829 [INFO precision_recall.py:73 main()] Generated non accepting input: '\n\x0b\n\r\x0c\x0b \x0b\t{"":{},"":\n{}R"":{}}'
+2026-10-22 09:35:39,840 [INFO precision_recall.py:73 main()] Generated non accepting input: '\n\x0b\r\x0b{\n\x0b\x0b"":\x0c\n{}W"":\n{}f"":\x0b{}("":\x0c{}F"":\x0b{}("":{}}'
+2026-10-22 09:35:39,843 [INFO precision_recall.py:73 main()] Generated non accepting input: '\x0c\r\x0c\t\r\n{"":\t{}J"":{}}'
+2026-10-22 09:35:39,851 [INFO precision_recall.py:73 main()] Generated non accepting input: '\t\x0b\x0c \x0b\x0c\x0c\t\t\x0c\x0c  ]{}J'
+2026-10-22 09:35:39,862 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"": \n\x0b""{"":{}}'
+2026-10-22 09:35:39,865 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"":null,"":\n{}q"":{}}'
+2026-10-22 09:35:39,874 [INFO precision_recall.py:73 main()] Generated non accepting input: ' \x0c\x0b\x0b\r \x0c{"":\r\r {}O"": {}h"":{}}'
+2026-10-22 09:35:39,892 [INFO precision_recall.py:73 main()] Generated non accepting input: '{\x0b\t\r\x0b\x0b"":\n{}O"":{}}'
+2026-10-22 09:35:39,901 [INFO precision_recall.py:73 main()] Generated non accepting input: '\x0c-\n'
+2026-10-22 09:35:39,904 [INFO precision_recall.py:73 main()] Generated non accepting input: '\n'
+2026-10-22 09:35:39,905 [INFO precision_recall.py:73 main()] Generated non accepting input: 'A\r\t{}!{}f'
+2026-10-22 09:35:39,906 [INFO precision_recall.py:73 main()] Generated non accepting input: '\x0c\r{"":\r""\'"":\n{}%"":{}}'
+2026-10-22 09:35:39,922 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"**":{},"":\x0c{}1"":\n{}o"":{}}'
+2026-10-22 09:35:39,927 [INFO precision_recall.py:73 main()] Generated non accepting input: '\x0c\r\x0c\n\t\x0b{"":\t\tfalseT"":{}}'
+2026-10-22 09:35:39,939 [INFO precision_recall.py:73 main()] Generated non accepting input: ' \r\re'
+2026-10-22 09:35:39,949 [INFO precision_recall.py:73 main()] Generated non accepting input: '-\r'
+2026-10-22 09:35:39,991 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"":nullL"":{}}'
+2026-10-22 09:35:40,012 [INFO precision_recall.py:73 main()] Generated non accepting input: '\x0b\r\r{  \n\x0b\x0b"":\t\x0btruej"":{}}'
+2026-10-22 09:35:40,023 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"":\x0b\r\r{}\x0c"":{}}'
+2026-10-22 09:35:40,024 [INFO precision_recall.py:73 main()] Generated non accepting input: '\n \rM\x0c {}M\n{}|{}f'
+2026-10-22 09:35:40,030 [INFO precision_recall.py:73 main()] Generated non accepting input: '\x0b{"":\tnull\x0b"": {}8"":{}}'
+2026-10-22 09:35:40,033 [INFO precision_recall.py:73 main()] Generated non accepting input: '\t'
+2026-10-22 09:35:40,046 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"":\r""\x0c"":\t{}F"":\r{}U"":\x0c{}h"":{}}'
+2026-10-22 09:35:40,050 [INFO precision_recall.py:73 main()] Generated non accepting input: '\x0b\t\n\r\n{")": \n{}!"":{}}'
+2026-10-22 09:35:40,070 [INFO precision_recall.py:73 main()] Generated non accepting input: '{\t"":\n\x0c{}a"":\x0c{})"":{}}'
+2026-10-22 09:35:40,085 [INFO precision_recall.py:73 main()] Generated non accepting input: '\x0b{\r\r\n"*":\r{}&"":{}}'
+2026-10-22 09:35:40,089 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"":\n{}N"":{}}'
+2026-10-22 09:35:40,095 [INFO precision_recall.py:73 main()] Generated non accepting input: '\t{"":\t\x0b\x0b{}&"":\t{}l"": {}`"":\n{}*"":\n{}\\"": {}!"": {}g"":\x0c{}m"":\n{}-"":{}}'
+2026-10-22 09:35:40,099 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"":\t""""":{}}'
+2026-10-22 09:35:40,110 [INFO precision_recall.py:73 main()] Generated non accepting input: '\r{"*":\r{}["":{}}'
+2026-10-22 09:35:40,125 [INFO precision_recall.py:73 main()] Generated non accepting input: '\t\x0b{"**":\ttrueT"":\x0c{}5"":{}}'
+2026-10-22 09:35:40,126 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"":\x0ctruer"":{}}'
+2026-10-22 09:35:40,132 [INFO precision_recall.py:73 main()] Generated non accepting input: '\t\r\r'
+2026-10-22 09:35:40,144 [INFO precision_recall.py:73 main()] Generated non accepting input: ' \x0b\t{"":\x0b{}\\"":{}}'
+2026-10-22 09:35:40,145 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"": \ntruey"":\x0b{}$"":{}}'
+2026-10-22 09:35:40,154 [INFO precision_recall.py:73 main()] Generated non accepting input: '{\x0c "":{}J"":{}}'
+2026-10-22 09:35:40,159 [INFO precision_recall.py:73 main()] Generated non accepting input: '\x0c \x0b{\x0c"":\n\tnull\r"":\x0b{}S"":\x0b{}7"":\r{}O"":{}}'
+2026-10-22 09:35:40,160 [INFO precision_recall.py:73 main()] Generated non accepting input: '\n\x0c\x0c\r{\x0c\n\n\t")": truei"":\x0c{}@"":{}}'
+2026-10-22 09:35:40,166 [INFO precision_recall.py:73 main()] Generated non accepting input: '\r \r\x0c\t\r\x0b\r\r\x0b{\n"": {}S"":{}}'
+2026-10-22 09:35:40,171 [INFO precision_recall.py:73 main()] Generated non accepting input: ' \x0b \t\x0b\x0b\r\n\n\r\x0c{"":\rnullw"":{}}'
+2026-10-22 09:35:40,175 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"*":\n""&"":{}}'
+2026-10-22 09:35:40,199 [INFO precision_recall.py:73 main()] Generated non accepting input: '\x0c\x0b{"":{}z"":{}}'
+2026-10-22 09:35:40,202 [INFO precision_recall.py:73 main()] Generated non accepting input: '  \x0c\x0b\x0b\t\r\x0b\r\n{"":\r {}{"":\x0b{}6"":{}}'
+2026-10-22 09:35:40,203 [INFO precision_recall.py:73 main()] Generated non accepting input: '{\x0b\t "":\x0b\x0c{}x"":\x0b{}s"":{}}'
+2026-10-22 09:35:40,215 [INFO precision_recall.py:73 main()] Generated non accepting input: '\r{"":true*"":{}}'
+2026-10-22 09:35:40,228 [INFO precision_recall.py:73 main()] Generated non accepting input: '\t\t {"":null{"":{}}'
+2026-10-22 09:35:40,238 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"":\x0b {}8"":\n{}}"": {} "":\t{}/"":\x0c{};"":{}}'
+2026-10-22 09:35:40,240 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"":\x0c\x0c {}U"":{}}'
+2026-10-22 09:35:40,242 [INFO precision_recall.py:73 main()] Generated non accepting input: '\r  \n'
+2026-10-22 09:35:40,244 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"":\t\tnull`"":\t{}0"":\x0b{}V"":{}}'
+2026-10-22 09:35:40,250 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"":{}$"": {}Y"":{}}'
+2026-10-22 09:35:40,251 [INFO precision_recall.py:73 main()] Generated non accepting input: '{\x0c"":{}]"":{}}'
+2026-10-22 09:35:40,262 [INFO precision_recall.py:73 main()] Generated non accepting input: '{\x0c"":{},"":\n{}f"":\n{}F"":\n{}L"":{}}'
+2026-10-22 09:35:40,272 [INFO precision_recall.py:73 main()] Generated non accepting input: '\t\t{"":\t{}c"":\n{}|"":{}}'
+2026-10-22 09:35:40,274 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"":{}1"": {}x"":\n{}j"":\x0c{}p"":{}}'
+2026-10-22 09:35:40,287 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"":{}g"": {}a"":{}}'
+2026-10-22 09:35:40,300 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"))":{},"":\x0c{}b"":\r{}<"":\r{}z"":\n{}c"":\t{}X"":\r{}m"":{}}'
+2026-10-22 09:35:40,313 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"":{},"":\x0c{}\'"":\r{}k"":\x0b{},"": {}h"":{}}'
+2026-10-22 09:35:40,318 [INFO precision_recall.py:73 main()] Generated non accepting input: 'e'
+2026-10-22 09:35:40,322 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"*":\x0b\t {}u"":\n{}\x0b"":\x0c{}B"":{}}'
+2026-10-22 09:35:40,323 [INFO precision_recall.py:73 main()] Generated non accepting input: '\r\x0b{ \n\n\x0c\n\t\x0c"":\n\rtrue["":{}}'
+2026-10-22 09:35:40,325 [INFO precision_recall.py:73 main()] Generated non accepting input: '\x0c\n\r {"":\x0bnullb"":{}}'
+2026-10-22 09:35:40,327 [INFO precision_recall.py:73 main()] Generated non accepting input: '\n\x0b\x0c{"":{},"": {}X"":{}}'
+2026-10-22 09:35:40,331 [INFO precision_recall.py:73 main()] Generated non accepting input: '{"*":\x0b""1"": {}s"":{}}'
+2026-10-22 09:35:40,337 [INFO precision_recall.py:73 main()] Generated non accepting input: 'e'
+2026-10-22 09:35:40,349 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-22 09:36:04,336 [INFO precision_recall.py:104 main()] {'precision': 0.887, 'recall': 0.999, 'f1': 0.9396744432661718, 'no_tested_inputs': 4326}
