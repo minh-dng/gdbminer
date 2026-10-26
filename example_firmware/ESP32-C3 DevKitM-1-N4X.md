@@ -163,7 +163,7 @@ packaged executable works.
 
 ### Build and upload
 
-From the repository root, set `TARGET` to `esp32-c3_json`, `esp32-c3_cgidecode`, `esp32-c3_xml` or
+From the repository root, set `TARGET` to `esp32-c3_json`, `esp32-c3_cgidecode`, `esp32-c3_xml`,
 `esp32-c3_calc` (after creating its `calc.c`) or `esp32-c3_jsonrs` (after building its
 [Rust library](esp32-c3_jsonrs/README.md#build-the-parser)).
 For the two-cable setup, build into `build-2/` and upload over the UART port (see
@@ -507,7 +507,7 @@ temporary entry breakpoint fires. This lets CGI reach its parser before reservin
 | `esp32-c3_cgidecode` | nothing                                                                                       | 8 (slots 0-7)                                     |
 | `esp32-c3_xml`       | list never fires                                                                              | 7 (slots 1-7); the exit breakpoint takes one slot |
 | `esp32-c3_calc`      | nothing                                                                                       | 8 (slots 0-7)                                     |
-| `esp32-c3_jsonrs`    | every function whose name lacks `json`                                                        | 6 (slots 2-7); slots 0-1 stay free                |
+| `esp32-c3_jsonrs`    | every function whose name lacks `json`, `parser`, `Peekable`, `Chars` or `validations`       | 6 (slots 2-7); slots 0-1 stay free                |
 
 Calc keeps ROM number-conversion reads visible. Its
 [target README](esp32-c3_calc/README.md) documents the debugger unwind metadata and smoke checks.

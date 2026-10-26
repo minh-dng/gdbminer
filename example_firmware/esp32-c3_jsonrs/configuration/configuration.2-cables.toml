@@ -2,11 +2,11 @@
 # GDBMiner configuration for ESP32-C3-DevKitM-1 jsonrs adapter.
 # Extension of the embedded evaluation: the desktop Rust parser (tinyjson) and its corpus.
 [BASIC]
-# The desktop jsonrs seeds and evaluation corpus, unchanged.
-seed_directory = "./example_programs/jsonrs/seeds"
+# The corpora named by the desktop jsonrs configuration (the json directories), unchanged.
+seed_directory = "./example_programs/json/seeds"
 output_directory = "./output/esp32-c3_jsonrs/"
 binary_file = "./example_firmware/esp32-c3_jsonrs/build-2/esp32-c3_jsonrs.ino.elf"
-eval_directory = "./example_programs/jsonrs/eval"
+eval_directory = "./example_programs/json/eval"
 
 [Connection]
 input_channel = "esp32-uart"
@@ -33,24 +33,9 @@ gdb_server_path = '''~/.espressif/openocd-esp32/bin/openocd
   -c "adapter speed 40000"'''
 gdb_port = 3333
 
-# The desktop jsonrs rule: skip every function whose name lacks "json" (core, alloc, malloc, the
-# Arduino runtime) with GDB finish, and trace the parser.
-ignore_functions_regex = "^((?!json).)*$"
-watchpoint_type = "(char*)"
-watchpoint_count = 6
-timeout = 30
-entrypoint = "jsonrs_parse"
-input_buffer = "buf"
-
-[GDB.esp32c3]
-# Symbols for code already in mask ROM, loaded alongside firmware symbols, not flashed.
-# Match the chip revision: the recorded v1.1 board uses esp32c3_rev101_rom.elf.
-rom_elf = "~/.espressif/tools/esp-rom-elfs/20241011/esp32c3_rev101_rom.elf"
-# GDB finish needs slots 0-1 for its return and C++ exception-hook breakpoints.
-hardware_trigger_slot = 2
-# Restart the firmware after GDB attaches: OpenOCD's target examination can corrupt register a0
-# of a core that is still booting.
-reset_on_connect = true
-
-[LOGS]
-log_level = "INFO"
+# The desktop jsonrs rule (skip every function whose name lacks "json") with three additions.
+# The hardware backends drop reads that happen inside a skipped function, and tinyjson reads the
+# input only through Peekable<Chars>::peek/next and core::str::validations::next_code_point, so
+# those stay traced. The wrapper `parser` stays traced so that returning from jsonrs_parse reaches
+# the expected caller. Everything else (malloc, fmt, the Arduino runtime) is skipped with finish.
+ignore_functions_regex = "^((?!json|parser|Peekable|Chars|validations).)*$"

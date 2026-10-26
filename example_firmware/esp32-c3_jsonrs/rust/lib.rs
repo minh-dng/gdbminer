@@ -101,15 +101,15 @@ mod json {
 struct CHeap;
 
 extern "C" {
-    fn malloc(size: usize) -> *mut u8;
+    fn memalign(alignment: usize, size: usize) -> *mut u8;
     fn free(ptr: *mut u8);
     fn abort() -> !;
 }
 
 unsafe impl GlobalAlloc for CHeap {
     unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
-        // malloc aligns for 8 bytes, which covers every type in the parser.
-        malloc(layout.size())
+        // malloc aligns to 4 bytes on ESP-IDF, but JsonValue holds an f64.
+        memalign(layout.align(), layout.size())
     }
 
     unsafe fn dealloc(&self, ptr: *mut u8, _layout: Layout) {
@@ -125,17 +125,25 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {
     unsafe { abort() }
 }
 
-/// The desktop main() on one input: 0 when it exits normally, -1 when it panics or fails.
+/// The desktop read_to_string() check: whether the input is UTF-8. It runs before the traced entry
+/// point, as the desktop checks the file before it parses, so its reads of the input are not traced.
+/// The desktop accepts input that is not UTF-8: read_to_string() fails and main() still exits with
+/// status 0.
+#[no_mangle]
+pub extern "C" fn utf8_valid(data: *const u8, length: usize) -> bool {
+    core::str::from_utf8(unsafe { core::slice::from_raw_parts(data, length) }).is_ok()
+}
+
+/// The desktop main() on UTF-8 input: 0 when it exits normally, -1 when it would panic.
 ///
 /// The desktop untyped_example() panics on a parse error or an unprintable number; here those
-/// become -1 so the firmware can answer instead of aborting. Input that is not UTF-8 is accepted,
-/// as on the desktop, where read_to_string() fails and main() returns without an error status.
+/// become -1 so the firmware can answer instead of aborting. Any other panic aborts the firmware.
+///
+/// # Safety
+/// `data` must be `length` bytes of UTF-8, as checked by `utf8_valid`.
 #[no_mangle]
-pub extern "C" fn jsonrs_parse(data: *const u8, length: usize) -> i32 {
-    let bytes = unsafe { core::slice::from_raw_parts(data, length) };
-    let Ok(data) = core::str::from_utf8(bytes) else {
-        return 0;
-    };
+pub unsafe extern "C" fn jsonrs_parse(data: *const u8, length: usize) -> i32 {
+    let data = core::str::from_utf8_unchecked(core::slice::from_raw_parts(data, length));
     match json::JsonValue::from_str(data) {
         Ok(value) => match value.stringify() {
             Ok(_) => 0,

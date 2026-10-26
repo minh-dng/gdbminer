@@ -4,9 +4,14 @@
 
 #include "Arduino.h"
 
+extern "C" bool utf8_valid(const uint8_t *data, size_t length);
 extern "C" int jsonrs_parse(const uint8_t *data, size_t length);
 
 int parser(char *input, size_t length) {
+    // The desktop accepts input that is not UTF-8; the check precedes the traced entry point.
+    if (!utf8_valid((const uint8_t *)input, length)) {
+        return 0;
+    }
     return jsonrs_parse((const uint8_t *)input, length);
 }
 
