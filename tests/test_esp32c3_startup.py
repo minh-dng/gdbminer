@@ -57,3 +57,28 @@ def test_hung_startup_is_killed_and_connection_closed_on_timeout():
     server.kill.assert_called_once()
     connection.disconnect.assert_called_once()
     gdb.assert_not_called()
+
+
+def test_hung_attempt_is_stopped_and_retried_within_the_window():
+    """One attempt that never exits must not use the whole `GDB.timeout` (#69)."""
+    instance = ESP32C3Instance(configuration(), "unused")
+    instance.timeout = 5
+    settings = instance.config["GDB"]["esp32c3"]
+    settings["startup_retry_interval"] = 0.005
+    settings["startup_attempt_timeout"] = 0.02
+    hung, ready = Mock(), Mock()
+    hung.poll.return_value = None
+    ready.poll.return_value = None
+    processes = iter([hung, ready])
+
+    def spawn(command, *, stdout, stderr):
+        process = next(processes)
+        stdout.write(b"No device matches\n" if process is hung else b"GDBMINER_C3_READY\n")
+        stdout.flush()
+        return process
+
+    with patch("tracer.instance.esp32_instance.subprocess.Popen", side_effect=spawn):
+        instance._start_gdb_server()
+    hung.terminate.assert_called_once()
+    ready.terminate.assert_not_called()
+    assert instance.gdb_server is ready

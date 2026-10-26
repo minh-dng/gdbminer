@@ -52,7 +52,10 @@ def test_config():
         (c3, "esp32c3", "reset_on_connect", ("false", 0, 1)),
         (c3, "esp32c3", "reset_on_conect", (False,)),
         (c3, "esp32c3", "breakpoint_always_inserted", ("true", 0, 1)),
-        (c3, "esp32c3", "startup_retry_interval", (True, "0.2", 0, -1, float("inf"), float("nan"))),
+        *[
+            (c3, "esp32c3", key, (True, "0.2", 0, -1, float("inf"), float("nan")))
+            for key in ("startup_retry_interval", "startup_attempt_timeout")
+        ],
         (c3, "Connection", "dtr", ("false", 0, 1)),
         (c3, "Connection", "rts", ("true", 0, 1)),
         (c3, "Connection", "reset_pulse", ("false", False, 0, 1)),
