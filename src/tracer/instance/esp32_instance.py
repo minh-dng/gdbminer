@@ -366,14 +366,16 @@ class ESP32Instance[Trigger](HardwareInstance, ABC):
             with tempfile.TemporaryFile() as output:
                 self.gdb_server = subprocess.Popen(command, stdout=output, stderr=subprocess.STDOUT)
                 attempt_deadline = min(deadline, time.monotonic() + attempt_timeout)
-                while time.monotonic() < attempt_deadline:
+                # Read once more after the last sleep: readiness can arrive just before the limit.
+                while True:
                     last_output = os.pread(output.fileno(), 1024 * 1024, 0).decode(errors="replace")
                     if marker in last_output and self.gdb_server.poll() is None:
                         logging.info("%s OpenOCD initialized: %s", self.CHIP, last_output.strip())
                         return
-                    if self.gdb_server.poll() is not None:
+                    remaining = attempt_deadline - time.monotonic()
+                    if self.gdb_server.poll() is not None or remaining <= 0:
                         break
-                    time.sleep(min(interval, max(0, attempt_deadline - time.monotonic())))
+                    time.sleep(min(interval, remaining))
                 self._stop_gdb_server()
                 del self.gdb_server  # __exit__ must not stop a failed attempt again.
                 logging.warning("%s OpenOCD startup retry: %s", self.CHIP, last_output.strip())

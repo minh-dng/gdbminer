@@ -82,3 +82,38 @@ def test_hung_attempt_is_stopped_and_retried_within_the_window():
     hung.terminate.assert_called_once()
     ready.terminate.assert_not_called()
     assert instance.gdb_server is ready
+
+
+def test_readiness_during_the_last_poll_interval_is_accepted():
+    """The attempt reads its output once more at its limit before it stops the process."""
+    instance = ESP32C3Instance(configuration(), "unused")
+    instance.timeout = 5
+    settings = instance.config["GDB"]["esp32c3"]
+    settings["startup_retry_interval"] = 0.2
+    settings["startup_attempt_timeout"] = 0.1
+    server = Mock()
+    server.poll.return_value = None
+    clock = {"now": 0.0, "ready": False}
+    outputs = []
+
+    def spawn(command, *, stdout, stderr):
+        outputs.append(stdout)
+        return server
+
+    def sleep(seconds):
+        # Simulated clock: OpenOCD reports readiness 0.05 s after its start, inside the limit.
+        clock["now"] += seconds
+        if clock["now"] >= 0.05 and not clock["ready"]:
+            clock["ready"] = True
+            outputs[-1].write(b"GDBMINER_C3_READY\n")
+            outputs[-1].flush()
+
+    with (
+        patch("tracer.instance.esp32_instance.subprocess.Popen", side_effect=spawn) as popen,
+        patch("tracer.instance.esp32_instance.time.monotonic", side_effect=lambda: clock["now"]),
+        patch("tracer.instance.esp32_instance.time.sleep", side_effect=sleep),
+    ):
+        instance._start_gdb_server()
+    popen.assert_called_once()
+    server.terminate.assert_not_called()
+    assert instance.gdb_server is server
