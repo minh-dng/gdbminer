@@ -188,7 +188,8 @@ def _validate_esp32(
     if table in config:
         raise ValueError(f"Move the [{table}] table to [GDB.{table}]")
     settings = _require(gdb, table, dict)
-    keys = ("rom_elf", "reset_on_connect", "startup_retry_interval", *chip_keys)
+    startup_keys = ("startup_retry_interval", "startup_attempt_timeout")
+    keys = ("rom_elf", "reset_on_connect", *startup_keys, *chip_keys)
     for key in keys:
         if key in gdb:
             raise ValueError(f"Move {key!r} from [GDB] to [GDB.{table}]")
@@ -204,10 +205,11 @@ def _validate_esp32(
         _require(settings, "rom_elf", str)
     if "reset_on_connect" in settings:
         _require(settings, "reset_on_connect", bool)
-    if "startup_retry_interval" in settings:
-        interval = _require(settings, "startup_retry_interval", (int, float))
-        if not math.isfinite(interval) or interval <= 0:
-            raise ValueError(f"GDB.{table}.startup_retry_interval must be positive and finite")
+    for key in startup_keys:
+        if key in settings:
+            seconds = _require(settings, key, (int, float))
+            if not math.isfinite(seconds) or seconds <= 0:
+                raise ValueError(f"GDB.{table}.{key} must be positive and finite")
     if gdb["watchpoint_type"] != "(char*)":
         raise ValueError(f"{chip} watchpoint_type must be '(char*)'")
     return settings

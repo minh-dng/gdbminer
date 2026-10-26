@@ -338,8 +338,12 @@ class ESP32Instance[Trigger](HardwareInstance, ABC):
         Only a UART bridge resets the chip through EN. The USB-Serial/JTAG port resets it through
         the controller, which stayed connected in the recorded C3 runs; the retry still covers a
         target that is not yet ready for examination.
+
+        Each attempt has its own limit, `startup_attempt_timeout`. An attempt that opens the board
+        while it drops off USB can hang instead of exiting (#69), and must not use the whole window.
         """
         interval = self.chip_config.get("startup_retry_interval", 0.2)
+        attempt_timeout = self.chip_config.get("startup_attempt_timeout", 5)
         deadline = time.monotonic() + self.timeout
         # OpenOCD runs `-c` commands in order, so the marker follows `init` and the GDB listener.
         # `init` also returns when target examination fails (openocd-esp32, `src/openocd.c`,
@@ -361,14 +365,17 @@ class ESP32Instance[Trigger](HardwareInstance, ABC):
         while time.monotonic() < deadline:
             with tempfile.TemporaryFile() as output:
                 self.gdb_server = subprocess.Popen(command, stdout=output, stderr=subprocess.STDOUT)
-                while time.monotonic() < deadline:
+                attempt_deadline = min(deadline, time.monotonic() + attempt_timeout)
+                # Read once more after the last sleep: readiness can arrive just before the limit.
+                while True:
                     last_output = os.pread(output.fileno(), 1024 * 1024, 0).decode(errors="replace")
                     if marker in last_output and self.gdb_server.poll() is None:
                         logging.info("%s OpenOCD initialized: %s", self.CHIP, last_output.strip())
                         return
-                    if self.gdb_server.poll() is not None:
+                    remaining = attempt_deadline - time.monotonic()
+                    if self.gdb_server.poll() is not None or remaining <= 0:
                         break
-                    time.sleep(min(interval, max(0, deadline - time.monotonic())))
+                    time.sleep(min(interval, remaining))
                 self._stop_gdb_server()
                 del self.gdb_server  # __exit__ must not stop a failed attempt again.
                 logging.warning("%s OpenOCD startup retry: %s", self.CHIP, last_output.strip())

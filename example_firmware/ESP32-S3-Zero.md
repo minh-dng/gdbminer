@@ -232,6 +232,7 @@ minimum distance and other S3 settings live in `[GDB.esp32s3]`:
 | `GDB.esp32s3` | `rom_elf`                 | optional str, ROM symbol ELF matching the chip revision.                               |
 | `GDB.esp32s3` | `reset_on_connect`        | optional bool, must be `false` (the default); see below.                               |
 | `GDB.esp32s3` | `startup_retry_interval`  | optional positive finite seconds between OpenOCD start attempts, default `0.2`.        |
+| `GDB.esp32s3` | `startup_attempt_timeout` | optional positive finite seconds before a start attempt that has not reported readiness is stopped, default `5`. |
 | `GDB.esp32s3` | `startup_delay`           | optional non-negative finite seconds from the serial reset to OpenOCD's start, default `3`. |
 | `GDB.esp32s3` | `usb_reset_command`       | optional str, command run between attach attempts; empty attaches once. May contain `{adapter_serial}`. |
 
