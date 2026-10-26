@@ -108,6 +108,7 @@ All configurations require these fields unless marked optional:
 | `GDB` | `watchpoint_count` | positive int, bytes watched per tracing pass. |
 | `GDB` | `timeout` | positive finite int or float, GDB response timeout in seconds. |
 | `GDB` | `ignore_functions_regex` | optional str, skip-function regex; defaults to `""`. |
+| `GDB` | `language` | optional str, GDB source language (`set language`), e.g. `"c"`; defaults to GDB's automatic choice. Set `"c"` for Rust firmware, whose frames otherwise parse the C casts of `watchpoint_type` as Rust. |
 | `LOGS` | `log_level` | str, [Python logging level][logging-levels]. |
 
 Breakpoint locations can be symbols, source locations or quoted hexadecimal addresses.

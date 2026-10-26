@@ -43,6 +43,11 @@ class SUTInstance:
         self.send_gdb_command(f"-file-exec-and-symbols {self.elf_file}")
         logging.info(f"GDB loaded symbols from {self.elf_file=} successfully")
 
+        # GDB follows the language of the current frame; its Rust parser rejects the C casts of the
+        # watchpoint expressions.
+        if language := self.config["GDB"].get("language"):
+            self.send_gdb_command(f"-gdb-set language {language}")
+
     def set_temporary_breakpoint(self, breakpoint_address) -> str | None:
         # -t for a temporary breakpoint.
         # -h for a hardware breakpoint
