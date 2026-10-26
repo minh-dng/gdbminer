@@ -44,6 +44,9 @@ gdb_port = 3333
 ignore_functions_regex = "^((?!json|parser|Peekable|Chars|validations).)*$"
 # Rust frames switch GDB to its Rust parser, which rejects the C casts of the watchpoint expressions.
 language = "c"
+# The ESP32-S3 GDB 17.1 aborts when it prints the argument of a Rust function it stopped at the
+# entry of (is_whitespace); the arguments are left out of the trace.
+frame_arguments = "none"
 watchpoint_type = "(char*)"
 # One data breakpoint (DBREAK0), as a contiguous one-byte window over the input.
 watchpoint_count = 1

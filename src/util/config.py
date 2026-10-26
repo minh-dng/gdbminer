@@ -41,7 +41,7 @@ def _validate_config(config: Config) -> None:
     logging.NullHandler(level=config["LOGS"]["log_level"])
 
     gdb = config["GDB"]
-    for key in ("exitpoint", "ignore_functions_regex", "language"):
+    for key in ("exitpoint", "ignore_functions_regex", "language", "frame_arguments"):
         if key in gdb:
             _require(gdb, key, str)
     if _require(gdb, "watchpoint_count", int) <= 0:

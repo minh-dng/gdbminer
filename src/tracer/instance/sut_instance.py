@@ -47,6 +47,8 @@ class SUTInstance:
         # watchpoint expressions.
         if language := self.config["GDB"].get("language"):
             self.send_gdb_command(f"-gdb-set language {language}")
+        if frame_arguments := self.config["GDB"].get("frame_arguments"):
+            self.send_gdb_command(f"-gdb-set print frame-arguments {frame_arguments}")
 
     def set_temporary_breakpoint(self, breakpoint_address) -> str | None:
         # -t for a temporary breakpoint.
