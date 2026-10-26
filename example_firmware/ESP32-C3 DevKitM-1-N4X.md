@@ -337,6 +337,7 @@ for one. C3 settings live in `[GDB.esp32c3]`:
 | `GDB.esp32c3` | `reset_on_connect` | optional bool, reset after attach; defaults to `true`. |
 | `GDB.esp32c3` | `breakpoint_always_inserted` | optional bool, defaults to `false`. |
 | `GDB.esp32c3` | `startup_retry_interval` | optional positive finite seconds, default `0.2`. |
+| `GDB.esp32c3` | `startup_attempt_timeout` | optional positive finite seconds, default `5`. |
 | `Connection` | `dtr` | optional bool, defaults to `false`. |
 | `Connection` | `rts` | optional bool, defaults to `true`. |
 | `Connection` | `reset_pulse` | optional bool, defaults to `true`. |
@@ -352,8 +353,11 @@ marker. `init` can return after examination fails; the state check makes that at
 of accepting a GDB connection against an unexamined target. It retries exited startup
 attempts at `startup_retry_interval` until `GDB.timeout` expires; GDB attaches only after
 successful initialization. Timeout or initialization failure closes the serial worker and
-terminates/reaps only the OpenOCD/GDB processes owned by that instance. A stalled OpenOCD
-is terminated at the deadline, with a five-second termination grace before forced kill.
+terminates/reaps only the OpenOCD/GDB processes owned by that instance. An attempt that neither
+exits nor reports readiness within `startup_attempt_timeout` (or by the `GDB.timeout` deadline)
+is terminated, with a five-second termination grace before forced kill, and the next attempt
+starts. A good start takes about 0.4 s. On 2026-10-22 an attempt that opened the C3 while the EN
+reset dropped it from USB never exited and used the whole window (#69).
 This replaces the inherited fixed post-spawn sleep, not the STM32 startup path.
 
 The serial timing settings apply to both ESP32 channels. `reset_pulse_sec` holds RTS asserted
