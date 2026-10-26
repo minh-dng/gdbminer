@@ -507,7 +507,7 @@ temporary entry breakpoint fires. This lets CGI reach its parser before reservin
 | `esp32-c3_cgidecode` | nothing                                                                                       | 8 (slots 0-7)                                     |
 | `esp32-c3_xml`       | list never fires                                                                              | 7 (slots 1-7); the exit breakpoint takes one slot |
 | `esp32-c3_calc`      | nothing                                                                                       | 8 (slots 0-7)                                     |
-| `esp32-c3_jsonrs`    | every function whose name lacks `json`, `parser`, `Peekable`, `Chars` or `validations`       | 6 (slots 2-7); slots 0-1 stay free                |
+| `esp32-c3_jsonrs`    | every function whose name lacks `json`, `parser`, `peekable`, `core::str::iter`, `core::str::validations` | 6 (slots 2-7); slots 0-1 stay free                |
 
 Calc keeps ROM number-conversion reads visible. Its
 [target README](esp32-c3_calc/README.md) documents the debugger unwind metadata and smoke checks.

@@ -61,11 +61,13 @@ The expected ELF is `build-2/esp32-c3_jsonrs.ino.elf` for two cables and
 ## Tracing
 
 Tracing starts at `jsonrs_parse` and watches the global `buf`. `ignore_functions_regex` extends the
-desktop rule (skip every function whose name lacks `json`) by three names: `parser`, `Peekable` and
-`Chars`/`validations`. The C3 backend drops reads that happen inside a function skipped with
-`finish`, and tinyjson reads the input only through `Peekable<Chars>::peek/next` and
-`core::str::validations::next_code_point`, none of which contain `json`. The wrapper `parser` stays
-traced so that returning from `jsonrs_parse` reaches the expected caller. Everything else is skipped.
+desktop rule (skip every function whose name lacks `json`) by three groups: `parser`, `peekable`
+and `core::str::(iter|validations)`. The backends drop reads that happen inside a function skipped
+with `finish`, and tinyjson reads the input only through `Peekable::peek/next`, `Chars::next` and
+`next_code_point`. GDB names these `core::iter::adapters::peekable::{impl#5}::peek`,
+`core::str::iter::{impl#0}::next` and `core::str::validations::next_code_point`, so the type name
+`Chars` is not a reliable match. The wrapper `parser` stays traced so that returning from
+`jsonrs_parse` reaches the expected caller. Everything else is skipped.
 As in the C3 json target, six watchpoints use slots 2-7 and slots 0-1 stay free for `finish`.
 
 The traced code differs from the desktop in one respect: objects are `BTreeMap`s here and

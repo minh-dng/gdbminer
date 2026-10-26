@@ -38,10 +38,11 @@ gdb_port = 3333
 
 # The desktop jsonrs rule (skip every function whose name lacks "json") with three additions.
 # The hardware backends drop reads that happen inside a skipped function, and tinyjson reads the
-# input only through Peekable<Chars>::peek/next and core::str::validations::next_code_point, so
+# input only through core::iter::adapters::peekable (peek, next), core::str::iter (Chars::next) and
+# core::str::validations (next_code_point), none of whose names contain "json", so
 # those stay traced. The wrapper `parser` stays traced so that returning from jsonrs_parse reaches
 # the expected caller. Everything else (malloc, fmt, the Arduino runtime) is skipped with finish.
-ignore_functions_regex = "^((?!json|parser|Peekable|Chars|validations).)*$"
+ignore_functions_regex = "^((?!json|parser|peekable|core::str::(iter|validations)).)*$"
 # Rust frames switch GDB to its Rust parser, which rejects the C casts of the watchpoint expressions.
 language = "c"
 # The ESP32-S3 GDB 17.1 aborts when it prints the argument of a Rust function it stopped at the
