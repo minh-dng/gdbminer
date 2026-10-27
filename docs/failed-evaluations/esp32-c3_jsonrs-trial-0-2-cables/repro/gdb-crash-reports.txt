@@ -1,0 +1,109 @@
+macOS crash reports of riscv32-esp-elf-gdb-no-python (GDB 17.1_20260402), 2026-10-27.
+Summary of ~/Library/Logs/DiagnosticReports/*.ips: launch time, exception, top frames of the
+crashed thread. GDB has no symbols, so its own frames show as '?'.
+
+riscv32-esp-elf-gdb-no-python-2026-10-27-060536.ips
+  launched 2026-10-27 06:03:49.7182 +1100
+  EXC_BAD_ACCESS SIGBUS KERN_PROTECTION_FAILURE at 0x000000016b2a4000
+  Bad access in stack guard region for thread 1 but crash was associated with thread 0 - possible stray access?
+    libsystem_kernel.dylib             __pthread_kill
+    libsystem_pthread.dylib            pthread_kill
+    libsystem_c.dylib                  raise
+    riscv32-esp-elf-gdb-no-python      ?
+    libsystem_platform.dylib           _sigtramp
+    libUTF8.dylib                      _citrus_UTF8_stdenc_mbtocsn
+    libiconv_std.dylib                 mbtocsx
+    libiconv_std.dylib                 _citrus_iconv_std_iconv_convert
+    libiconv.2.dylib                   __bsd_iconv
+    riscv32-esp-elf-gdb-no-python      ?
+
+riscv32-esp-elf-gdb-no-python-2026-10-27-060913.ips
+  launched 2026-10-27 06:07:27.1205 +1100
+  EXC_BAD_ACCESS SIGBUS KERN_PROTECTION_FAILURE at 0x000000016db38000
+  Bad access in stack guard region for thread 1 but crash was associated with thread 0 - possible stray access?
+    libsystem_kernel.dylib             __pthread_kill
+    libsystem_pthread.dylib            pthread_kill
+    libsystem_c.dylib                  raise
+    riscv32-esp-elf-gdb-no-python      ?
+    libsystem_platform.dylib           _sigtramp
+    libUTF8.dylib                      _citrus_UTF8_stdenc_mbtocsn
+    libiconv_std.dylib                 mbtocsx
+    libiconv_std.dylib                 _citrus_iconv_std_iconv_convert
+    libiconv.2.dylib                   __bsd_iconv
+    riscv32-esp-elf-gdb-no-python      ?
+
+riscv32-esp-elf-gdb-no-python-2026-10-27-061250.ips
+  launched 2026-10-27 06:11:03.8336 +1100
+  EXC_BAD_ACCESS SIGBUS KERN_PROTECTION_FAILURE at 0x000000016cf7c000
+  Bad access in stack guard region for thread 1 but crash was associated with thread 0 - possible stray access?
+    libsystem_kernel.dylib             __pthread_kill
+    libsystem_pthread.dylib            pthread_kill
+    libsystem_c.dylib                  raise
+    riscv32-esp-elf-gdb-no-python      ?
+    libsystem_platform.dylib           _sigtramp
+    libUTF8.dylib                      _citrus_UTF8_stdenc_mbtocsn
+    libiconv_std.dylib                 mbtocsx
+    libiconv_std.dylib                 _citrus_iconv_std_iconv_convert
+    libiconv.2.dylib                   __bsd_iconv
+    riscv32-esp-elf-gdb-no-python      ?
+
+riscv32-esp-elf-gdb-no-python-2026-10-27-061627.ips
+  launched 2026-10-27 06:14:41.0586 +1100
+  EXC_BAD_ACCESS SIGBUS KERN_PROTECTION_FAILURE at 0x000000016bbcc000
+  Bad access in stack guard region for thread 1 but crash was associated with thread 0 - possible stray access?
+    libsystem_kernel.dylib             __pthread_kill
+    libsystem_pthread.dylib            pthread_kill
+    libsystem_c.dylib                  raise
+    riscv32-esp-elf-gdb-no-python      ?
+    libsystem_platform.dylib           _sigtramp
+    libUTF8.dylib                      _citrus_UTF8_stdenc_mbtocsn
+    libiconv_std.dylib                 mbtocsx
+    libiconv_std.dylib                 _citrus_iconv_std_iconv_convert
+    libiconv.2.dylib                   __bsd_iconv
+    riscv32-esp-elf-gdb-no-python      ?
+
+riscv32-esp-elf-gdb-no-python-2026-10-27-121413.ips
+  launched 2026-10-27 12:12:23.3291 +1100
+  EXC_BAD_ACCESS SIGBUS KERN_PROTECTION_FAILURE at 0x000000016d1f4000
+  Bad access in stack guard region for thread 1 but crash was associated with thread 0 - possible stray access?
+    libsystem_kernel.dylib             __pthread_kill
+    libsystem_pthread.dylib            pthread_kill
+    libsystem_c.dylib                  raise
+    riscv32-esp-elf-gdb-no-python      ?
+    libsystem_platform.dylib           _sigtramp
+    libUTF8.dylib                      _citrus_UTF8_stdenc_mbtocsn
+    libiconv_std.dylib                 mbtocsx
+    libiconv_std.dylib                 _citrus_iconv_std_iconv_convert
+    libiconv.2.dylib                   __bsd_iconv
+    riscv32-esp-elf-gdb-no-python      ?
+
+riscv32-esp-elf-gdb-no-python-2026-10-27-122145.000.ips
+  launched 2026-10-27 12:21:42.8084 +1100
+  EXC_BAD_ACCESS SIGBUS KERN_PROTECTION_FAILURE at 0x000000016b340000
+  Bad access in stack guard region for thread 1 but crash was associated with thread 0 - possible stray access?
+    libsystem_kernel.dylib             __pthread_kill
+    libsystem_pthread.dylib            pthread_kill
+    libsystem_c.dylib                  raise
+    riscv32-esp-elf-gdb-no-python      ?
+    libsystem_platform.dylib           _sigtramp
+    libUTF8.dylib                      _citrus_UTF8_stdenc_mbtocsn
+    libiconv_std.dylib                 mbtocsx
+    libiconv_std.dylib                 _citrus_iconv_std_iconv_convert
+    libiconv.2.dylib                   __bsd_iconv
+    riscv32-esp-elf-gdb-no-python      ?
+
+riscv32-esp-elf-gdb-no-python-2026-10-27-122217.000.ips
+  launched 2026-10-27 12:22:15.5515 +1100
+  EXC_BAD_ACCESS SIGBUS KERN_PROTECTION_FAILURE at 0x000000016f774000
+  Bad access in stack guard region for thread 1 but crash was associated with thread 0 - possible stray access?
+    libsystem_kernel.dylib             __pthread_kill
+    libsystem_pthread.dylib            pthread_kill
+    libsystem_c.dylib                  raise
+    riscv32-esp-elf-gdb-no-python      ?
+    libsystem_platform.dylib           _sigtramp
+    libUTF8.dylib                      _citrus_UTF8_stdenc_mbtocsn
+    libiconv_std.dylib                 mbtocsx
+    libiconv_std.dylib                 _citrus_iconv_std_iconv_convert
+    libiconv.2.dylib                   __bsd_iconv
+    riscv32-esp-elf-gdb-no-python      ?
+

@@ -1,0 +1,24 @@
+# Excerpt of the DEBUG trace.log of the repro run (2026-10-27 12:12, seed.11.in only, configuration
+# of the failing run with log_level = "DEBUG"). The full log (27 MB) was not kept. These are the
+# last records before the hang, copied verbatim: the stack request at the call to String::push, the
+# step, OpenOCD's report that the core halted at String::push, and then nothing from GDB.
+2026-10-27 12:14:12,357 [DEBUG gdb_tracer.py:249 trace_input_slice()] Stacktrace {'stack': [{'level': '0', 'addr': '0x42011ebc', 'func': 'lib::json::JsonParser<core::str::iter::Chars>::parse_string<core::str::iter::Chars>', 'file': 'example_firmware/esp32-c3_jsonrs/rust/../../../example_programs/jsonrs/json.rs', 'fullname': '/Users/minh/.t3/worktrees/gdbminer/feat-esp32-c3-jsonrs-c3/example_programs/jsonrs/json.rs', 'line': '1009', 'arch': 'riscv:rv32'}, ...]}
+2026-10-27 12:14:12,357 [DEBUG IoManager.py:260 write()] writing: 14649-exec-step-instruction
+2026-10-27 12:14:12,357 [DEBUG IoManager.py:219 _get_responses_list()] {'message': 'running',
+ 'payload': None,
+ 'stream': 'stdout',
+ 'token': 14649,
+ 'type': 'result'}
+2026-10-27 12:14:12,358 [DEBUG IoManager.py:219 _get_responses_list()] {'message': 'running',
+ 'payload': {'thread-id': 'all'},
+ 'stream': 'stdout',
+ 'token': None,
+ 'type': 'notify'}
+2026-10-27 12:14:12,372 [DEBUG IoManager.py:219 _get_responses_list()] {'message': None,
+ 'payload': '[esp32c3] Target halted, PC=0x4200963A, debug_reason=00000004\n',
+ 'stream': 'stdout',
+ 'type': 'target'}
+# No *stopped record follows. macOS wrote riscv32-esp-elf-gdb-no-python-2026-10-27-121413.ips
+# (see gdb-crash-reports.txt). hang-snapshot.txt, taken at 12:14:19, lists no GDB process.
+2026-10-27 12:15:12,413 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+TimeoutError: C3 stop timeout: pc=0x42011ebc
