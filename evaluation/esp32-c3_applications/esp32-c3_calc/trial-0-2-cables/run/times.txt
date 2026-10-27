@@ -1,0 +1,15 @@
+# flash/trace rows: 26-27 October rerun; mine/eval rows: 22-23 October, using earlier traces.
+# Methods completed at 22:10:02 on 22 October: 154455 queries, saved to method_trees.json.
+# OpenOCD hung as loops started; mining failed at about 22:10:37 (issue #69).
+# At 00:18 on 23 October, a separate helper loaded the saved methods and restarted loops.
+# It skipped methods, ran loops/grammar/tokens, and restored 154455 in the total query count.
+# This was a manual restart between phases, not a built-in resume or a mid-step checkpoint.
+# The new process lost the query cache; its contribution to extra queries is unverified.
+# evaluation.json mining.duration = 27018.2 s methods + 15658.0 s resumed work = 42676.2 s.
+# That excludes the failed loop-start timeout and the wait before resume.
+# Rows below are invocation wall times; mine includes its failed startup tail.
+flash exit=0 seconds=17
+trace exit=0 seconds=99241
+mine exit=1 seconds=27055
+mine-resume-1 exit=0 seconds=15658
+eval exit=0 seconds=34
