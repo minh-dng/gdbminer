@@ -1,0 +1,29 @@
+2026-10-27 06:06:37 [jsonrs-2-cables] trace.py exit 1
+    |     self._interrupt()
+    |   File "/Users/minh/.t3/worktrees/gdbminer/feat-esp32-c3-jsonrs-c3/src/tracer/instance/esp32_instance.py", line 314, in _interrupt
+    |     self._wait_stop()
+    |   File "/Users/minh/.t3/worktrees/gdbminer/feat-esp32-c3-jsonrs-c3/src/tracer/instance/esp32_instance.py", line 202, in _wait_stop
+    |     raise TimeoutError(f"{self.CHIP} stop timeout: pc={self._pc}")
+    | TimeoutError: C3 stop timeout: pc=0x42011ebc
+2026-10-27 06:10:14 [jsonrs-2-cables] resume 1: trace.py exit 1
+    |     self._interrupt()
+    |   File "/Users/minh/.t3/worktrees/gdbminer/feat-esp32-c3-jsonrs-c3/src/tracer/instance/esp32_instance.py", line 314, in _interrupt
+    |     self._wait_stop()
+    |   File "/Users/minh/.t3/worktrees/gdbminer/feat-esp32-c3-jsonrs-c3/src/tracer/instance/esp32_instance.py", line 202, in _wait_stop
+    |     raise TimeoutError(f"{self.CHIP} stop timeout: pc={self._pc}")
+    | TimeoutError: C3 stop timeout: pc=0x42011ebc
+2026-10-27 06:13:51 [jsonrs-2-cables] resume 2: trace.py exit 1
+    |     self._interrupt()
+    |   File "/Users/minh/.t3/worktrees/gdbminer/feat-esp32-c3-jsonrs-c3/src/tracer/instance/esp32_instance.py", line 314, in _interrupt
+    |     self._wait_stop()
+    |   File "/Users/minh/.t3/worktrees/gdbminer/feat-esp32-c3-jsonrs-c3/src/tracer/instance/esp32_instance.py", line 202, in _wait_stop
+    |     raise TimeoutError(f"{self.CHIP} stop timeout: pc={self._pc}")
+    | TimeoutError: C3 stop timeout: pc=0x42011ebc
+2026-10-27 06:17:29 [jsonrs-2-cables] resume 3: trace.py exit 1
+    |     self._interrupt()
+    |   File "/Users/minh/.t3/worktrees/gdbminer/feat-esp32-c3-jsonrs-c3/src/tracer/instance/esp32_instance.py", line 314, in _interrupt
+    |     self._wait_stop()
+    |   File "/Users/minh/.t3/worktrees/gdbminer/feat-esp32-c3-jsonrs-c3/src/tracer/instance/esp32_instance.py", line 202, in _wait_stop
+    |     raise TimeoutError(f"{self.CHIP} stop timeout: pc={self._pc}")
+    | TimeoutError: C3 stop timeout: pc=0x42011ebc
+2026-10-27 06:17:29 [jsonrs-2-cables] giving up after 3 resumes; missing: seed.1.in seed.10.in seed.11.in seed.12.in seed.13.in seed.14.in seed.16.in seed.17.in seed.18.in seed.19.in seed.2.in seed.20.in seed.3.in seed.4.in seed.5.in seed.6.in seed.7.in seed.8.in 

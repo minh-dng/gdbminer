@@ -1,0 +1,28 @@
+0x42040b30 in esp_vApplicationIdleHook () at /home/runner/work/esp32-arduino-lib-builder/esp32-arduino-lib-builder/esp-idf/components/esp_system/freertos_hooks.c:45
+warning: 45	/home/runner/work/esp32-arduino-lib-builder/esp32-arduino-lib-builder/esp-idf/components/esp_system/freertos_hooks.c: No such file or directory
+Hardware assisted breakpoint 1 at 0x4200963a: file /Users/minh/.rustup/toolchains/stable-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/string.rs, line 1425.
+[esp32c3] Target halted, PC=0x4200963A, debug_reason=00000001
+
+Breakpoint 1, alloc::string::String::push (self=..., ch=...) at /Users/minh/.rustup/toolchains/stable-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/string.rs:1425
+1425	    pub fn push(&mut self, ch: char) {
+Warning: the current language does not match this frame.
+
+--- raw argument slots at entry ($sp+24 self, $sp+28 ch)
+0x3fca04f8:	0xa5a5a5a5	0x3fca075c
+--- self
+$1 = (struct alloc::string::String *) 0xa5a5a5a5
+--- ch as an integer
+$2 = 0x3fca075c
+--- ch as a character
+
+
+Fatal signal: Abort trap: 6
+----- Backtrace -----
+---------------------
+A fatal error internal to GDB has been detected, further
+debugging is not possible.  GDB will now terminate.
+
+This is a bug, please report it.  For instructions, see:
+<https://www.gnu.org/software/gdb/bugs/>.
+
+gdb exit=138

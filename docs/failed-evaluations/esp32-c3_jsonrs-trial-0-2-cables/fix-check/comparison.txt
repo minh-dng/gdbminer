@@ -1,0 +1,18 @@
+== C3 seed 9
+reference: seed.9.in.trace sha256=0cf33956aa894a5bfdfa81b932e06c917f48bf4906b5fbd8268326ca96681067 entries=1128 hits=2
+new: seed.9.in.trace sha256=92632ad83af4d001d142d838b7543962f9fd52a2c7003cffc43f2ab3f51d2e83 entries=1128 hits=2
+field function_args: differs in 428 of 1128 entries
+result: identical apart from function_args
+== C3 seed 15
+reference: seed.15.in.trace sha256=54a4529143c97031c18d2a79cd24d6d54d36f0798aae8c605a126db6bb847f21 entries=1725 hits=6
+new: seed.15.in.trace sha256=1f1b7ea59a4de4ef0bd0120ec36ed4bfce04afffa79cbc38b9ac5099250b19a1 entries=1725 hits=6
+field function_args: differs in 625 of 1725 entries
+result: identical apart from function_args
+== S3 seed 9
+reference: seed.9.in.trace sha256=bc3a3fc97a5a0f75404c6a9d4447809c4f80d1fe2e2c3113f17b9719164f5b78 entries=1232 hits=2
+new: seed.9.in.trace sha256=bc3a3fc97a5a0f75404c6a9d4447809c4f80d1fe2e2c3113f17b9719164f5b78 entries=1232 hits=2
+result: byte-identical
+== S3 seed 15
+reference: seed.15.in.trace sha256=5ba185dfcd9ec19d171765137520f4c93cd37d7aeb34497fcba4174018d575ea entries=1981 hits=6
+new: seed.15.in.trace sha256=5ba185dfcd9ec19d171765137520f4c93cd37d7aeb34497fcba4174018d575ea entries=1981 hits=6
+result: byte-identical

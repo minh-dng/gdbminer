@@ -1,0 +1,62 @@
+# (2) USB cable option. Build with CDCOnBoot=default into build-2/.
+# GDBMiner configuration for ESP32-C3-DevKitM-1 jsonrs adapter.
+# Extension of the embedded evaluation: the desktop Rust parser (tinyjson) and its corpus.
+[BASIC]
+# The corpora named by the desktop jsonrs configuration (the json directories), unchanged.
+seed_directory = "/Users/minh/.t3/worktrees/gdbminer/feat-esp32-c3-jsonrs-c3/example_programs/json/seeds"
+output_directory = "./output/c3-eval-trial-0/jsonrs-2-cables/"
+binary_file = "./example_firmware/esp32-c3_jsonrs/build-2/esp32-c3_jsonrs.ino.elf"
+eval_directory = "./example_programs/json/eval"
+
+[Connection]
+input_channel = "esp32-uart"
+port = "/dev/cu.usbserial-110"
+baud_rate = 9600
+rts = true
+reset_pulse = true
+
+[GDB]
+gdb_path = "~/Library/Arduino15/packages/esp32/tools/riscv32-esp-elf-gdb/17.1_20260402/bin/riscv32-esp-elf-gdb"
+instance = "esp32c3"
+# Requires the separate USB-JTAG link; the DevKitM-1 Micro-USB port is UART-only.
+# 40 MHz is the USB-JTAG base clock used in the recorded runs.
+# ESP_FLASH_SIZE 0: every breakpoint is a hardware breakpoint, so one that finds no free trigger
+# fails instead of being written into flash. OpenOCD then also skips its reset at GDB attach.
+gdb_server_path = '''~/.espressif/openocd-esp32/bin/openocd
+  -c "set ESP_RTOS none"
+  -c "set ESP_FLASH_SIZE 0"
+  -f board/esp32c3-builtin.cfg
+  -c "gdb port {gdb_port}"
+  -c "telnet port {telnet_port}"
+  -c "tcl port {tcl_port}"
+  -c "adapter serial {adapter_serial}"
+  -c "adapter speed 40000"'''
+gdb_port = 3333
+
+# The desktop jsonrs rule (skip every function whose name lacks "json") with three additions.
+# The hardware backends drop reads that happen inside a skipped function, and tinyjson reads the
+# input only through core::iter::adapters::peekable (peek, next), core::str::iter (Chars::next) and
+# core::str::validations (next_code_point), none of whose names contain "json", so
+# those stay traced. The wrapper `parser` stays traced so that returning from jsonrs_parse reaches
+# the expected caller. Everything else (malloc, fmt, the Arduino runtime) is skipped with finish.
+ignore_functions_regex = "^((?!json|parser|peekable|core::str::(iter|validations)).)*$"
+# Rust frames switch GDB to its Rust parser, which rejects the C casts of the watchpoint expressions.
+language = "c"
+watchpoint_type = "(char*)"
+watchpoint_count = 6
+timeout = 30
+entrypoint = "jsonrs_parse"
+input_buffer = "buf"
+
+[GDB.esp32c3]
+# Symbols for code already in mask ROM, loaded alongside firmware symbols, not flashed.
+# Match the chip revision: the recorded v1.1 board uses esp32c3_rev101_rom.elf.
+rom_elf = "~/.espressif/tools/esp-rom-elfs/20241011/esp32c3_rev101_rom.elf"
+# GDB finish needs slots 0-1 for its return and C++ exception-hook breakpoints.
+hardware_trigger_slot = 2
+# Restart the firmware after GDB attaches: OpenOCD's target examination can corrupt register a0
+# of a core that is still booting.
+reset_on_connect = true
+
+[LOGS]
+log_level = "INFO"
