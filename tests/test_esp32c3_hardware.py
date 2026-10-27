@@ -271,6 +271,22 @@ class TestHardwareContract:
         with pytest.raises(TimeoutError):
             instance._command("-test")
 
+    # The last stop is read before GDB exits, or GDB writes it after an empty read and then exits,
+    # so only the read after `poll()` reports the exit finds it.
+    @pytest.mark.parametrize("reads_before_stop", [0, 1])
+    def test_dead_gdb_is_reported_once_its_records_are_drained(self, reads_before_stop):
+        instance = ESP32C3Instance(configuration(), "unused")
+        instance.timeout = 5  # Long enough that a wait to the timeout would fail the match.
+        instance.gdb_controller = Mock()
+        instance.gdb_controller.gdb_process.poll.return_value = -signal.SIGBUS
+        stop = self.stop("0x4200963a")
+        # A dead GDB's pipe yields its last records, then nothing.
+        records = iter([*[[]] * reads_before_stop, [stop]])
+        instance.gdb_controller.get_gdb_response.side_effect = lambda **_: next(records, [])
+        assert instance._wait_stop() == stop
+        with pytest.raises(RuntimeError, match=r"C3 GDB exited \(SIGBUS\)"):
+            instance._wait_stop()
+
     @pytest.mark.parametrize("count, start", [(0, 0), (9, 0), (8, 1), (1, -1)])
     def test_invalid_slot_budget_is_rejected(self, count, start):
         config = configuration()
