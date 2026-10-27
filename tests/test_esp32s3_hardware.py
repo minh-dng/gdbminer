@@ -312,10 +312,10 @@ class TestWatchpoints:
         numbers = iter(["2", "3"])
 
         def command(text):
+            if text == "-data-evaluate-expression $bpnum":
+                return {"payload": {"value": next(numbers)}}, ""
             if text.startswith("-data-evaluate-expression"):
-                return {"payload": {"value": hex(next(addresses))}}, ""
-            if text.startswith("-break-watch"):
-                return {"payload": {"hw-rwpt": {"number": next(numbers)}}}, ""
+                return {"payload": {"value": f"{next(addresses):#x} <buf>"}}, ""
             return {"payload": {}}, ""
 
         instance._command = Mock(side_effect=command)
@@ -329,6 +329,12 @@ class TestWatchpoints:
         assert instance.set_watchpoint_and_get_id("&buf[0]", "(char*)") == "2"
         assert instance.set_watchpoint_and_get_id("&buf[4]", "(char*)") == "3"
         assert [(wp.index, wp.slot) for wp in instance._triggers.values()] == [(0, 0), (1, 1)]
+        # The byte is watched by location, so a local such as `data` neither scopes it nor is
+        # watched itself; no C cast, so the commands also parse in a Rust frame.
+        instance._command.assert_any_call('-data-evaluate-expression "&buf[4]"')
+        instance._command.assert_any_call(
+            '-interpreter-exec console "rwatch -location *(char*)(&buf[4])"'
+        )
 
     def test_entry_on_the_other_core_is_rejected(self):
         with pytest.raises(RuntimeError, match="expected core 0"):

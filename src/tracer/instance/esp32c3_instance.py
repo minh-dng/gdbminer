@@ -1,7 +1,6 @@
 # ESP32-C3 hardware read observation through stock Espressif OpenOCD.
 # SPDX-License-Identifier: AGPL-3.0
 
-import json
 import logging
 import re
 from dataclasses import dataclass
@@ -163,17 +162,9 @@ class ESP32C3Instance(ESP32Instance[_ReadTrigger]):
             raise RuntimeError(
                 "Allocate C3 triggers within the configured budget at a halted entry"
             )
-        if watchpoint_type != "(char*)":
-            raise ValueError("C3 currently supports byte watchpoint expressions only")
-        # GDB resolves the configured expression (e.g. `&buf[3]`) to the byte address that the
-        # trigger compares against.
-        result, _ = self._command(
-            f"-data-evaluate-expression {json.dumps('(unsigned int)(' + address + ')')}"
-        )
-        payload = self._payload(result)
-        if "value" not in payload:
-            raise RuntimeError(f"C3 address evaluation returned no value: {result}")
-        watch_address = int(payload["value"], 0)
+        # GDB resolves the configured expression (e.g. `&buf[3]`) to the address that the trigger
+        # compares loads against; the trigger does not depend on `watchpoint_type`.
+        watch_address = self._address(address)
         offset = len(self._triggers)
         slot = self.trigger_slot + offset
         states, dcsr = self._read_registers([slot])

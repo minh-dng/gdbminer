@@ -210,8 +210,6 @@ def _validate_esp32(
             seconds = _require(settings, key, (int, float))
             if not math.isfinite(seconds) or seconds <= 0:
                 raise ValueError(f"GDB.{table}.{key} must be positive and finite")
-    if gdb["watchpoint_type"] != "(char*)":
-        raise ValueError(f"{chip} watchpoint_type must be '(char*)'")
     return settings
 
 

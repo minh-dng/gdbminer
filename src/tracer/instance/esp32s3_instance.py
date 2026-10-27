@@ -160,21 +160,12 @@ class ESP32S3Instance(ESP32Instance[_DataBreak]):
     def set_watchpoint_and_get_id(self, address, watchpoint_type) -> str:
         if not self._halted or len(self._triggers) >= self.watchpoint_count:
             raise RuntimeError("Set S3 watchpoints within the budget at the halted entry")
-        if watchpoint_type != "(char*)":
-            raise ValueError("S3 supports byte watchpoint expressions only")
         if not self._triggers:
             # `ESP_ONLYCPU 1` exposes core 0 only; the parser must run there (`LoopCore=0`).
             prid = self._registers("prid")["prid"]
             if prid != PRO_CPU_PRID:
                 raise RuntimeError(f"S3 entry stop on core PRID {prid:#x}, expected core 0")
-        expression = f"*{watchpoint_type}({address})"
-        result, _ = self._command(
-            f"-data-evaluate-expression {json.dumps('(unsigned int)&' + expression)}"
-        )
-        payload = self._payload(result)
-        if "value" not in payload:
-            raise RuntimeError(f"S3 address evaluation returned no value: {result}")
-        watch_address = int(payload["value"], 0)
+        watch_address = self._address(address)
         # One halt names one slot: two watched bytes read by one load would lose a read. Checked
         # here whatever window the caller chose.
         for wp in self._triggers.values():
@@ -183,9 +174,16 @@ class ESP32S3Instance(ESP32Instance[_DataBreak]):
                     f"S3 watchpoints {wp.address:#x} and {watch_address:#x} are closer than "
                     f"{WATCH_MIN_DISTANCE} bytes; set GDB.esp32s3.watchpoint_min_distance"
                 )
-        # With `breakpoint always-inserted`, OpenOCD writes the DBREAK pair now.
-        result, _ = self._command(f"-break-watch -r {json.dumps(expression)}")
-        number = cast(dict[str, Any], self._payload(result))["hw-rwpt"]["number"]
+        # `-location` watches the memory the expression names once evaluated. Without it, GDB would
+        # delete the watchpoint when the frame of a local such as `data` returns, and would also
+        # watch `data` itself. MI's -break-watch has no such option. The type of the expression
+        # sets the watched size; a type wider than a byte arms a wider data breakpoint, which the
+        # slot check below rejects. With `breakpoint always-inserted`, OpenOCD writes the DBREAK
+        # pair now.
+        command = f"rwatch -location *{watchpoint_type}({address})"
+        self._command(f"-interpreter-exec console {json.dumps(command)}")
+        result, _ = self._command("-data-evaluate-expression $bpnum")
+        number = self._payload(result).get("value", "")
         state = self._debug_state()
         used = {wp.slot for wp in self._triggers.values()}
         slots = [

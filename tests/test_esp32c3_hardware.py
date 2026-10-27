@@ -464,7 +464,7 @@ class TestHardwareContract:
                 if len(reserved) == 8:
                     raise RuntimeError("No slot for the entry breakpoint")
                 return {"payload": {"bkpt": {"number": "1"}}}, ""
-            return {"payload": {"value": "256"}}, ""
+            return {"payload": {"value": "0x100 <buf>"}}, ""
 
         instance._monitor = Mock(side_effect=monitor)
         instance._command = Mock(side_effect=command)
@@ -529,13 +529,29 @@ class TestHardwareContract:
     def test_active_foreign_slot_is_not_overwritten(self):
         instance = ESP32C3Instance(configuration(), "unused")
         instance._halted = True
-        instance._command = Mock(return_value=({"payload": {"value": "256"}}, ""))
+        instance._command = Mock(return_value=({"payload": {"value": "0x100 <buf>"}}, ""))
         instance._read_registers = Mock(return_value=({0: (4, 0x200)}, 0))
         instance._monitor = Mock()
         with pytest.raises(RuntimeError):
             instance.set_watchpoint_and_get_id("&buf[0]", "(char*)")
         instance._monitor.assert_not_called()
         assert instance._triggers == {}
+
+    # GDB prints the pointer, in C with the string or a type prefix, and an address literal as an
+    # integer. The expression has no C cast, which would not parse in a Rust frame.
+    @pytest.mark.parametrize(
+        "value", ["0x100 <buf>", '0x100 <buf> "[1]"', "(uint8_t *) 0x100 <buf>", "256"]
+    )
+    def test_watch_address_is_read_from_the_uncast_expression(self, value):
+        instance = ESP32C3Instance(configuration(), "unused")
+        instance._halted = True
+        instance._command = Mock(return_value=({"payload": {"value": value}}, ""))
+        instance._read_registers = Mock(return_value=({0: (0, 0)}, 0))
+        instance._monitor = Mock()
+        instance._set_triggers = Mock()
+        instance.set_watchpoint_and_get_id("&data[0]", "")
+        instance._command.assert_called_once_with('-data-evaluate-expression "&data[0]"')
+        instance._monitor.assert_called_with("reg tselect 0; reg tdata1 0; reg tdata2 0x100")
 
     def test_batched_registers_check_each_selected_slot(self):
         instance = self.hardware(2)
