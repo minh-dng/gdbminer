@@ -4,6 +4,7 @@
 import json
 import logging
 import os
+import re
 import signal
 import subprocess
 import tempfile
@@ -124,6 +125,19 @@ class ESP32Instance[Trigger](HardwareInstance, ABC):
         if not isinstance(payload, dict):
             raise TypeError(f"Expected a {self.CHIP} MI dictionary payload: {response}")
         return payload
+
+    def _address(self, expression: str) -> int:
+        """Evaluate an address expression such as `&buf[3]`.
+
+        It is not cast to an integer, because a C cast does not parse in a Rust frame. GDB prints
+        the pointer as `0x3fc900a3 <buf+3>`, in C with a `(type *) ` prefix for non-char pointers
+        and the string after char pointers; an address literal prints as an integer.
+        """
+        result, _ = self._command(f"-data-evaluate-expression {json.dumps(expression)}")
+        value = self._payload(result).get("value", "")
+        if not (number := re.match(r"(?:\([^)]*\) )?(0x[0-9a-fA-F]+|\d+)\b", value)):
+            raise RuntimeError(f"{self.CHIP} cannot read an address from {expression} = {value}")
+        return int(number[1], 0)
 
     def _read_responses(self) -> list[GDBResponse]:
         """Read GDB's pending records; raise once GDB has exited and they are drained.

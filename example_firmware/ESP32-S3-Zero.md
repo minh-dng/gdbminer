@@ -254,8 +254,10 @@ Serial settings live in `[Connection]`:
 | `write_gap_sec` | optional positive finite seconds between 64-byte writes, default `0.002`. |
 
 The USB channel rejects `baud_rate`. The loader also rejects unknown or misplaced S3 keys, ARM DWT
-settings, more than two watchpoints, two watchpoints without the minimum distance,
-`reset_on_connect = true` and a non-byte `watchpoint_type`.
+settings, more than two watchpoints, two watchpoints without the minimum distance and
+`reset_on_connect = true`. A `watchpoint_type` wider than a byte fails when the watchpoint is armed.
+The backend sets each watchpoint with `rwatch -location` on the watched byte, without a C cast, so
+the expression also parses in Rust frames and may name a local such as the entry argument `data`.
 
 ### Debug register values
 

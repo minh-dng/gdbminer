@@ -326,6 +326,9 @@ unexpected breakpoint numbers still fail closed.
 
 Shared debugger settings, including `watchpoint_count` and `watchpoint_type`, stay in `[GDB]`;
 see the [shared configuration reference](../README.md#writing-up-configuration-tomls).
+The C3 does not use `watchpoint_type`: each trigger matches loads from one address, whatever the
+type. The backend resolves the watch expression (`&buf[3]`) to that address without a cast, so it
+also parses in Rust frames.
 Set `instance = "esp32c3"` from the [`GDBInstance` enum][gdb-instance] and `input_channel` from
 the [`InputChannel` enum][input-channel]: `"esp32-uart"` for two cables, `"esp32-usb-serial-jtag"`
 for one. C3 settings live in `[GDB.esp32c3]`:

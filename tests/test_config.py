@@ -46,7 +46,6 @@ def test_config():
         (stm32, "stm32", "dwt_watchpoint_workaround", ("false", "true", 0, 1)),
         (stm32, "Connection", "input_channel", ("SERIAL", "usb")),
         (c3, "GDB", "watchpoint_count", (9,)),
-        (c3, "GDB", "watchpoint_type", ("(uint16_t*)",)),
         (c3, "esp32c3", "hardware_trigger_slot", (True, "2", 2.0, -1, 3)),
         (c3, "esp32c3", "rom_elf", (123, False)),
         (c3, "esp32c3", "reset_on_connect", ("false", 0, 1)),
@@ -427,7 +426,6 @@ def test_esp32s3_settings():
             ("esp32s3", "watchpoint_min_distance", value)
             for value in (False, True, 0, -1, "4", 4.0, 3)
         ],
-        ("GDB", "watchpoint_type", "(uint16_t*)"),
         ("esp32s3", "startup_delay", -1),
         ("esp32s3", "startup_delay", float("inf")),
         ("esp32s3", "startup_delay", "3"),

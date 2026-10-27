@@ -113,6 +113,9 @@ All configurations require these fields unless marked optional:
 Breakpoint locations can be symbols, source locations or quoted hexadecimal addresses.
 Commands accept arguments; quote command paths containing spaces inside the TOML str.
 TOML literal strings preserve regex backslashes.
+`watchpoint_type = ""` adds no cast, as the desktop Rust targets do: GDB's Rust parser, used in
+Rust frames, rejects C casts. The ESP32 backends evaluate the watch address without a cast. The
+ESP32-C3 does not use `watchpoint_type`, because each trigger matches loads from one address.
 
 [gdb-instance]: src/tracer/instance/sut_instance.py
 [input-channel]: src/tracer/connection/sut_connection.py
