@@ -1,0 +1,9 @@
+date: 2026-10-22 00:56:51 UTC
+ELF sha256: 47e7c92373f1d4574f55ead9e1aa96a9a9943a12a927eef1aa77112ba5b1844c
+board: adapter serial A0:F2:62:01:70:28, GDB port 3345, serial device /dev/cu.usbmodem111201 (1-cable)
+gdb: GNU gdb (esp-gdb) 17.1_20260402
+openocd: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+python: Python 3.12.14
+libraries:
+not recorded for this run
+
