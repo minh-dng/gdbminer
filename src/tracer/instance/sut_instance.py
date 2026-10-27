@@ -43,10 +43,6 @@ class SUTInstance:
         self.send_gdb_command(f"-file-exec-and-symbols {self.elf_file}")
         logging.info(f"GDB loaded symbols from {self.elf_file=} successfully")
 
-        # GDB follows the language of the current frame; its Rust parser rejects the C casts of the
-        # watchpoint expressions.
-        if language := self.config["GDB"].get("language"):
-            self.send_gdb_command(f"-gdb-set language {language}")
         if frame_arguments := self.config["GDB"].get("frame_arguments"):
             self.send_gdb_command(f"-gdb-set print frame-arguments {frame_arguments}")
 
