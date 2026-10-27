@@ -108,6 +108,7 @@ All configurations require these fields unless marked optional:
 | `GDB` | `watchpoint_count` | positive int, bytes watched per tracing pass. |
 | `GDB` | `timeout` | positive finite int or float, GDB response timeout in seconds. |
 | `GDB` | `ignore_functions_regex` | optional str, skip-function regex; defaults to `""`. |
+| `GDB` | `frame_arguments` | optional str, GDB's `print frame-arguments` (`all`, `scalars`, `none`, `presence`); defaults to GDB's `scalars`. `"none"` leaves `function_args` empty. Set it where GDB aborts while printing a frame's arguments. |
 | `LOGS` | `log_level` | str, [Python logging level][logging-levels]. |
 
 Breakpoint locations can be symbols, source locations or quoted hexadecimal addresses.
