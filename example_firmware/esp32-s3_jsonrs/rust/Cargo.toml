@@ -1,0 +1,17 @@
+[package]
+name = "jsonrs"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[lib]
+path = "lib.rs"
+crate-type = ["staticlib"]
+
+[profile.dev]
+opt-level = 0
+debug = true
+panic = "abort"
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ["cfg(jsonrs_firmware)"] }
