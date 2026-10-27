@@ -43,17 +43,18 @@ gdb_port = 3333
 # those stay traced. The wrapper `parser` stays traced so that returning from jsonrs_parse reaches
 # the expected caller. Everything else (malloc, fmt, the Arduino runtime) is skipped with finish.
 ignore_functions_regex = "^((?!json|parser|peekable|core::str::(iter|validations)).)*$"
-# Rust frames switch GDB to its Rust parser, which rejects the C casts of the watchpoint expressions.
-language = "c"
 # The ESP32-S3 GDB 17.1 aborts when it prints the argument of a Rust function it stopped at the
 # entry of (is_whitespace); the arguments are left out of the trace.
 frame_arguments = "none"
-watchpoint_type = "(char*)"
+# As on the desktop: no cast and the entry function's argument, so the watch expression
+# (`&data[3]`) parses in the Rust frame. The C++ global `buf` that `data` points to is not
+# visible there.
+watchpoint_type = ""
 # One data breakpoint (DBREAK0), as a contiguous one-byte window over the input.
 watchpoint_count = 1
 timeout = 30
 entrypoint = "jsonrs_parse"
-input_buffer = "buf"
+input_buffer = "data"
 
 [GDB.esp32s3]
 # Symbols for code already in mask ROM, loaded alongside firmware symbols, not flashed.

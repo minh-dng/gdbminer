@@ -37,4 +37,5 @@ The expected ELF is `build/esp32-s3_jsonrs.ino.elf`.
 
 Both configurations follow `esp32-s3_json`, with the entry point `jsonrs_parse` and the C3 target's
 [extended `ignore_functions_regex`](../esp32-c3_jsonrs/README.md#tracing). Each `finish` takes one
-instruction breakpoint. `GDB.language = "c"` is needed for the watchpoint expressions.
+instruction breakpoint. As in the C3 target, the watch expression is the desktop's `&data[3]`
+(`input_buffer = "data"`, `watchpoint_type = ""`), which parses in the Rust frame.

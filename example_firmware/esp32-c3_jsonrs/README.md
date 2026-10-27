@@ -3,7 +3,8 @@
 This target runs the paper's desktop Rust parser, [`json.rs`](../../example_programs/jsonrs/json.rs)
 (tinyjson 2.5.1), with the corpora that the desktop jsonrs configuration names (`example_programs/json/{seeds,eval}`). It uses the same serial
 protocol as the other C3 targets; see the [C3 setup README](../ESP32-C3%20DevKitM-1-N4X.md). The
-firmware has not been built or run on hardware yet.
+firmware has been built and traced on a C3-DevKitM-1, but no trial has completed yet; trial 0
+stopped at seed 11 (see the [post-mortem][postmortem]).
 
 ## How the parser gets onto the board
 
@@ -60,32 +61,41 @@ The expected ELF is `build-2/esp32-c3_jsonrs.ino.elf` for two cables and
 
 ## Tracing
 
-Tracing starts at `jsonrs_parse` and watches the global `buf`. `ignore_functions_regex` extends the
-desktop rule (skip every function whose name lacks `json`) by three groups: `parser`, `peekable`
-and `core::str::(iter|validations)`. The backends drop reads that happen inside a function skipped
-with `finish`, and tinyjson reads the input only through `Peekable::peek/next`, `Chars::next` and
-`next_code_point`. GDB names these `core::iter::adapters::peekable::{impl#5}::peek`,
-`core::str::iter::{impl#0}::next` and `core::str::validations::next_code_point`, so the type name
-`Chars` is not a reliable match. The wrapper `parser` stays traced so that returning from
-`jsonrs_parse` reaches the expected caller. Everything else is skipped.
+Tracing starts at `jsonrs_parse` and watches its argument `data`, which points to the global `buf`.
+`ignore_functions_regex` extends the desktop rule (skip every function whose name lacks `json`) by
+three groups: `parser`, `peekable` and `core::str::(iter|validations)`. The backends drop reads that
+happen inside a function skipped with `finish`, and tinyjson reads the input only through
+`Peekable::peek/next`, `Chars::next` and `next_code_point`. GDB names these
+`core::iter::adapters::peekable::{impl#5}::peek`, `core::str::iter::{impl#0}::next` and
+`core::str::validations::next_code_point`, so the type name `Chars` is not a reliable match. The
+wrapper `parser` stays traced so that returning from `jsonrs_parse` reaches the expected caller.
+Everything else is skipped.
 As in the C3 json target, six watchpoints use slots 2-7 and slots 0-1 stay free for `finish`.
 
 The traced code differs from the desktop in one respect: objects are `BTreeMap`s here and
 `HashMap`s there, so the `json`-named generic instantiations traced for objects differ. Accepted
 inputs do not, but the trace shape, and possibly the mined grammar, may.
 
-`GDB.language = "c"` is needed because GDB switches to its Rust parser inside Rust frames, and that
-parser rejects the C casts of the watchpoint expressions.
+The watch expression is the desktop's: `input_buffer = "data"` and `watchpoint_type = ""` give
+`&data[3]`, which GDB's Rust parser accepts in the Rust frame. A C cast would not parse there, and
+the C++ global `buf` is not visible from it.
+
+`GDB.frame_arguments = "none"` is needed because the C3 GDB 17.1 dies when it prints the `char`
+argument of `String::push` at its first instruction, where the argument's stack slot still holds
+a stale value. `function_args` is therefore empty in the traces, as for the S3 target. See the
+[trial 0 post-mortem][postmortem].
+
+[postmortem]: ../../docs/failed-evaluations/esp32-c3_jsonrs-trial-0-2-cables/README.md
 
 ## Open points
 
-Not checked yet, because no C3 was attached (the matching [S3 target](../esp32-s3_jsonrs/README.md)
-was built and smoke-tested):
+Trial 0 showed that the library links and that `finish` returns from skipped functions into Rust
+frames: seeds 15 and 9 were traced in full. Not checked yet:
 
-- That the library links: which `compiler_builtins` members the linker takes from `libjsonrs.a`
-  instead of `libgcc`, ROM or newlib (grep the map for `libjsonrs.a(compiler_builtins`).
+- Which `compiler_builtins` members the linker takes from `libjsonrs.a` instead of `libgcc`, ROM
+  or newlib (grep the map for `libjsonrs.a(compiler_builtins`).
 - The stack size: the parser is recursive, and the wrapper uses the 32 KiB loop-task stack of the
   calc target. The nesting depth that overflows it is not measured; an overflow or any other panic
   aborts the firmware, which the host sees as a restart and not as a rejection.
-- That `finish` works out of Rust frames on the C3.
-- Whether the serial oracle agrees with the desktop `jsonrs` on the corpus.
+- Whether the serial oracle agrees with the desktop `jsonrs` on the corpus. Five seeds sent without
+  a debugger were all accepted, as the desktop accepts them; the full corpus is not checked.
