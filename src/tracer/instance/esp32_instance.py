@@ -126,13 +126,33 @@ class ESP32Instance[Trigger](HardwareInstance, ABC):
         return payload
 
     def _read_responses(self) -> list[GDBResponse]:
-        # pygdbmi is untyped; keep the assertion at the parser boundary.
-        return cast(
-            list[GDBResponse],
-            self.gdb_controller.get_gdb_response(
-                timeout_sec=self._POLL_SEC, raise_error_on_timeout=False
-            ),
-        )
+        """Read GDB's pending records; raise once GDB has exited and they are drained.
+
+        pygdbmi returns nothing from a dead GDB, so the waits would otherwise run to `timeout` and
+        report the crash as a stop timeout. The C3 GDB 17.1 dies, for example, when it prints a
+        `char` argument whose stack slot is not yet written.
+        """
+
+        def read() -> list[GDBResponse]:
+            # pygdbmi is untyped; keep the assertion at the parser boundary.
+            return cast(
+                list[GDBResponse],
+                self.gdb_controller.get_gdb_response(
+                    timeout_sec=self._POLL_SEC, raise_error_on_timeout=False
+                ),
+            )
+
+        responses = read()
+        process = self.gdb_controller.gdb_process
+        if responses or process is None or (status := process.poll()) is None:
+            return responses
+        # GDB can write records after the empty read and then exit. Once it has exited, all it wrote
+        # is in the pipe, so only a read that starts after the exit proves that nothing is left.
+        if responses := read():
+            return responses
+        # Popen reports death by a signal as the negative signal number.
+        cause = signal.Signals(-status).name if status < 0 else f"status {status}"
+        raise RuntimeError(f"{self.CHIP} GDB exited ({cause}); pc={self._pc}")
 
     def _command(self, command: str) -> tuple[GDBResponse, str]:
         """Run one bounded MI transaction, preserving other results and events."""
