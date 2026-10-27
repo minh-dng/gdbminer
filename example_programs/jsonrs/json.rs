@@ -2041,11 +2041,16 @@ fn untyped_example(data: &str) -> String {
 }
 
 
+// The firmware build (example_firmware/esp32-c3_jsonrs) has no std and supplies its own entry point.
+#[cfg(not(jsonrs_firmware))]
 use std::env;
+#[cfg(not(jsonrs_firmware))]
 use std::fs;
+#[cfg(not(jsonrs_firmware))]
 use std::io::{Read};
 
 
+#[cfg(not(jsonrs_firmware))]
 fn main() {
     let args: Vec<String> = env::args().collect();
 
