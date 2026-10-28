@@ -352,7 +352,7 @@ def test_openocd_console_ports():
             (("--telnet-port", "4445", "--tcl-port", "6667"), "4445", "6667"),
         ):
             config = load_config(path)
-            _override(config, "--adapter-serial", "AA:BB", *flags)
+            _override(config, "--port", "/dev/test", "--adapter-serial", "AA:BB", *flags)
             instance = GDBTracer.open_sut_instance(config)
             assert isinstance(instance, HardwareInstance)
             command = instance.gdb_server_path_with_args
