@@ -287,6 +287,11 @@ Board-specific wiring, configuration, build and run instructions are in the
 [stm32-setup]: example_firmware/STM32%20B-L4S5I-IOT01A.md
 [c3-setup]: example_firmware/ESP32-C3%20DevKitM-1-N4X.md
 
+## ESP32-C3 mJS target
+
+The parse-only [mJS target](example_firmware/esp32-c3_mjs/README.md) extends the paper's
+Linux benchmark to the C3. Its README covers preparation, build and qualification limits.
+
 ## SVGPP
 
 Install dependencies
