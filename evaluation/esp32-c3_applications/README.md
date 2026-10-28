@@ -12,7 +12,7 @@ esp32-c3_<target>/trial-<n>-<setup>/
 └── run/                 # provenance: configuration, build, flash and stage logs, times.txt
 ```
 
-`<target>` is `cgidecode`, `arduinojson`, `libyxml` or `calc`. `<setup>` is `1-cable`
+`<target>` is `cgidecode`, `arduinojson`, `libyxml`, `calc` or `jsonrs`. `<setup>` is `1-cable`
 (USB-Serial/JTAG, one cable) or `2-cables` (UART bridge next to the JTAG cable).
 
 The `calc` trial-0 folders hold 20 reused traces per setup, captured at `1baa5162` and mined on
@@ -29,6 +29,13 @@ not its unavailable initial flash. Both `build.log` files are from later runs on
 is available. The `flash` and `trace` rows in calc `times.txt` are from the 24-27 October
 reruns; the mining/evaluation rows are from 22-23 October. `evaluation.json` retains the
 original capture's completed-seed timings. The rerun rows describe different trace inputs.
+
+The `jsonrs` trial-0 folders hold one complete run per setup (flash, trace, mine and evaluate) on
+28 October 2026: the desktop Rust parser (tinyjson) with the corpus of `example_programs/json`,
+using six hardware watchpoints. Their `run/state.txt` has no Git lines and the `openocd:` line holds
+a Python traceback instead of the version; the OpenOCD version is in `run/eval.log`. The
+`run/*.log`, `run/configuration.toml` and `run/build.options.json` files keep the absolute paths of
+the machine that ran them.
 
 ## evaluation.json
 
