@@ -180,6 +180,9 @@ Choose the watchpoint count for your hardware. Only the selected MCU's settings 
 and read. Board-specific fields and setup instructions live in the
 [firmware guides](example_firmware/README.md).
 
+`GDB.esp32c3.memory_regions` optionally lists `"LOW HIGH ro|rw"` regions. When set, GDB
+refuses reads outside those regions, protecting the C3 from unmapped argument reads.
+
 ## Generate inputs from a golden grammar
 
 To evaluate GDBMiner, we generate inputs using a grammar. For instance, create 1000 inputs for evaluation:

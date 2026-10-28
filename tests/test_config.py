@@ -49,6 +49,18 @@ def test_config():
         (c3, "esp32c3", "hardware_trigger_slot", (True, "2", 2.0, -1, 3)),
         (c3, "esp32c3", "rom_elf", (123, False)),
         (c3, "esp32c3", "reset_on_connect", ("false", 0, 1)),
+        (
+            c3,
+            "esp32c3",
+            "memory_regions",
+            (
+                "0x100 0x200 ro",
+                [False],
+                ["0x200 0x100 ro"],
+                ["0x100 0x200 rx"],
+                ["0x100 0x100000000 rw"],
+            ),
+        ),
         (c3, "esp32c3", "reset_on_conect", (False,)),
         (c3, "esp32c3", "breakpoint_always_inserted", ("true", 0, 1)),
         *[
@@ -158,6 +170,7 @@ def test_config():
         "hardware_trigger_slot",
         "reset_on_connect",
         "breakpoint_always_inserted",
+        "memory_regions",
     ):
         config = deepcopy(c3)
         config["GDB"][key] = config["GDB"]["esp32c3"].pop(key, False)
