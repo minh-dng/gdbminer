@@ -31,6 +31,7 @@ Each target includes firmware and TOML files in `configuration/`: `configuration
 setups, and `configuration.1-watchpoint.toml` and `configuration.2-watchpoints.toml` for the S3
 options. The JSON, CGI and XML ports use the corresponding STM32 parser libraries, acceptance
 rules, seeds and evaluation corpora. The C3 calc target uses the desktop calc parser and corpus.
+The C3 mJS target uses a pinned upstream parser with the desktop mJS corpus.
 Build and validation notes are documented in each target's README.
 
 | Parser                           | STM32 reference              | ESP32-C3 port                | ESP32-S3 port                |
@@ -39,6 +40,7 @@ Build and validation notes are documented in each target's README.
 | CGI (`percent_encode`)           | [stm32_cgidecode][st-cgi]    | [esp32-c3_cgidecode][c3-cgi] | [esp32-s3_cgidecode][s3-cgi] |
 | XML (`LibYxml`)                  | [stm32_libyxml][st-xml]      | [esp32-c3_xml][c3-xml]       | [esp32-s3_xml][s3-xml]       |
 | Calc (desktop recursive descent) | —                            | [esp32-c3_calc][c3-calc]     | —                            |
+| mJS (parse only)                 | —                            | [esp32-c3_mjs][c3-mjs]       | —                            |
 
 ## Build and flash
 
@@ -119,6 +121,7 @@ Before running:
 [c3-cgi]: esp32-c3_cgidecode/README.md
 [c3-xml]: esp32-c3_xml/README.md
 [c3-calc]: esp32-c3_calc/README.md
+[c3-mjs]: esp32-c3_mjs/README.md
 [s3-board]: https://docs.waveshare.com/ESP32-S3-zero
 [s3-setup]: ESP32-S3-Zero.md
 [s3-json]: esp32-s3_json/README.md

@@ -180,6 +180,9 @@ Choose the watchpoint count for your hardware. Only the selected MCU's settings 
 and read. Board-specific fields and setup instructions live in the
 [firmware guides](example_firmware/README.md).
 
+`GDB.esp32c3.memory_regions` optionally lists `"LOW HIGH ro|rw"` regions. When set, GDB
+refuses reads outside those regions, protecting the C3 from unmapped argument reads.
+
 ## Generate inputs from a golden grammar
 
 To evaluate GDBMiner, we generate inputs using a grammar. For instance, create 1000 inputs for evaluation:
@@ -283,6 +286,11 @@ Board-specific wiring, configuration, build and run instructions are in the
 
 [stm32-setup]: example_firmware/STM32%20B-L4S5I-IOT01A.md
 [c3-setup]: example_firmware/ESP32-C3%20DevKitM-1-N4X.md
+
+## ESP32-C3 mJS target
+
+The parse-only [mJS target](example_firmware/esp32-c3_mjs/README.md) extends the paper's
+Linux benchmark to the C3. Its README covers preparation, build and qualification limits.
 
 ## SVGPP
 

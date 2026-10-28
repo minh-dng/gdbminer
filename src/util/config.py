@@ -15,6 +15,17 @@ TELNET_PORT_PLACEHOLDER = "{telnet_port}"
 TCL_PORT_PLACEHOLDER = "{tcl_port}"
 
 
+def memory_region(text: Any) -> tuple[int, int, str]:
+    """Parse one GDB `mem` region, "LOW HIGH MODE" with MODE ro or rw."""
+    fields = text.split() if type(text) is str else []
+    if len(fields) != 3 or fields[2] not in ("ro", "rw"):
+        raise ValueError(f"GDB.esp32c3.memory_regions entry must be 'LOW HIGH ro|rw': {text!r}")
+    low, high = int(fields[0], 0), int(fields[1], 0)
+    if not 0 <= low < high < 2**32:
+        raise ValueError(f"GDB.esp32c3.memory_regions entry needs 0 <= LOW < HIGH: {text!r}")
+    return low, high, fields[2]
+
+
 def _require(table: Config, key: str, expected: type | tuple[type, ...]) -> Any:
     """Require a config key to have a specific type, raising a TypeError if it does not."""
 
@@ -112,11 +123,14 @@ def _validate_config(config: Config) -> None:
             config,
             "ESP32-C3",
             "esp32c3",
-            ("hardware_trigger_slot", "breakpoint_always_inserted"),
+            ("hardware_trigger_slot", "breakpoint_always_inserted", "memory_regions"),
             "RISC-V triggers",
         )
         if "breakpoint_always_inserted" in c3:
             _require(c3, "breakpoint_always_inserted", bool)
+        if "memory_regions" in c3:
+            for region in _require(c3, "memory_regions", list):
+                memory_region(region)
         slot = _require(c3, "hardware_trigger_slot", int)
         if slot < 0 or slot + gdb["watchpoint_count"] > HARDWARE_TRIGGER_COUNT:
             raise ValueError(

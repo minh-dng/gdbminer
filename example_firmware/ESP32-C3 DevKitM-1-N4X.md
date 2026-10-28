@@ -339,6 +339,7 @@ for one. C3 settings live in `[GDB.esp32c3]`:
 | `GDB.esp32c3` | `hardware_trigger_slot` | int, first read-trigger slot, in 0-7. |
 | `GDB.esp32c3` | `reset_on_connect` | optional bool, reset after attach; defaults to `true`. |
 | `GDB.esp32c3` | `breakpoint_always_inserted` | optional bool, defaults to `false`. |
+| `GDB.esp32c3` | `memory_regions` | optional list of `"LOW HIGH ro\|rw"` regions. |
 | `GDB.esp32c3` | `startup_retry_interval` | optional positive finite seconds, default `0.2`. |
 | `GDB.esp32c3` | `startup_attempt_timeout` | optional positive finite seconds, default `5`. |
 | `Connection` | `dtr` | optional bool, defaults to `false`. |

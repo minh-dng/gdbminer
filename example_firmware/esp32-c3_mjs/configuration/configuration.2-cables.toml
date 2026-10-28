@@ -1,0 +1,59 @@
+# (2) USB cable option. Build with CDCOnBoot=default into build-2/.
+# See README for nesting limits and hardware qualification requirements.
+# These host/device paths follow the existing C3 UART setup.
+[BASIC]
+seed_directory = "./example_programs/mjs/seeds"
+output_directory = "./output/esp32-c3_mjs/"
+binary_file = "./example_firmware/esp32-c3_mjs/build-2/esp32-c3_mjs.ino.elf"
+eval_directory = "./example_programs/mjs/eval"
+
+[Connection]
+input_channel = "esp32-uart"
+port = "/dev/cu.usbserial-110"
+baud_rate = 9600
+rts = true
+reset_pulse = true
+
+[GDB]
+gdb_path = "~/Library/Arduino15/packages/esp32/tools/riscv32-esp-elf-gdb/17.1_20260402/bin/riscv32-esp-elf-gdb"
+instance = "esp32c3"
+gdb_server_path = '''~/.espressif/openocd-esp32/bin/openocd
+  -c "set ESP_RTOS none"
+  -c "set ESP_FLASH_SIZE 0"
+  -c "gdb port {gdb_port}"
+  -c "tcl port {tcl_port}"
+  -c "telnet port {telnet_port}"
+  -f board/esp32c3-builtin.cfg
+  -c "adapter serial {adapter_serial}"
+  -c "adapter speed 40000"'''
+gdb_port = 3333
+# Keep mJS parser/lexer helpers visible; skip libc, including reentrant allocators.
+# C3 finish retires skipped reads without recording them. Verify a smoke trace.
+# Buffer growth uses ROM floating-point helpers with unreliable mid-function unwinding.
+ignore_functions_regex = "^(_?(malloc|calloc|realloc|free)(_r)?|memset|memcpy|memmove|strlen|strncmp|cmimid_ctype_b_loc|__floatunsidf|__muldf3|__fixunsdfsi)$"
+watchpoint_type = "(char*)"
+watchpoint_count = 6
+timeout = 30
+entrypoint = "mjs_parse"
+input_buffer = "buf"
+
+[GDB.esp32c3]
+rom_elf = "~/.espressif/tools/esp-rom-elfs/20241011/esp32c3_rev101_rom.elf"
+# Slots 0-1 remain available for GDB finish; input triggers occupy 2-7.
+hardware_trigger_slot = 2
+reset_on_connect = true
+# GDB reads only the C3's memory (ESP-IDF soc.h for esp32c3): DROM, DRAM, ROM data, ROM code,
+# IRAM, IROM, RTC. OpenOCD's map marks 0x42047000-0xffffffff readable; GDB then printed a stale
+# char * argument at longtok entry by reading 0xa5a5a5a5, which wedged the system bus.
+memory_regions = [
+  "0x3C000000 0x3C800000 ro",
+  "0x3FC80000 0x3FCE0000 rw",
+  "0x3FF00000 0x3FF20000 ro",
+  "0x40000000 0x40060000 ro",
+  "0x4037C000 0x403E0000 rw",
+  "0x42000000 0x42800000 ro",
+  "0x50000000 0x50002000 rw",
+]
+
+[LOGS]
+log_level = "INFO"

@@ -6,29 +6,42 @@
 
 set -euo pipefail
 
+if [ "$#" -gt 1 ] || { [ "$#" -eq 1 ] && [ "$1" != "--mjs-source-only" ]; }; then
+	echo "Usage: $0 [--mjs-source-only]" >&2
+	exit 2
+fi
+
+# Match the desktop benchmark pinned in Dockerfile, including its parse-only modification.
+mimid_commit="9c96909783ba99035372f78d6c52003f7f42b1ec"
+
 tmpdir=""
 cleanup() {
-    if [ -n "$tmpdir" ]; then
-        rm -rf "$tmpdir"
-    fi
+	if [ -n "$tmpdir" ]; then
+		rm -rf "$tmpdir"
+	fi
 }
 trap cleanup EXIT
 
 if [ -d /mimid/Cmimid/examples ]; then
-    mimid_repo=/mimid
+	mimid_repo=/mimid
 else
-    tmpdir="$(mktemp -d)"
-    mimid_repo="$tmpdir/mimid_repo"
-    git clone --depth=1 --single-branch https://github.com/vrthra/mimid.git "$mimid_repo"
+	tmpdir="$(mktemp -d)"
+	mimid_repo="$tmpdir/mimid_repo"
+	git clone --depth=1 --single-branch https://github.com/vrthra/mimid.git "$mimid_repo"
+	git -C "$mimid_repo" fetch --depth=1 origin "$mimid_commit"
+	git -C "$mimid_repo" checkout --detach "$mimid_commit"
 fi
 
 cp "$mimid_repo"/Cmimid/examples/mjs.h "$mimid_repo"/Cmimid/examples/mjs.c "$mimid_repo"/Cmimid/examples/mjs_extra.h ./example_programs/mjs/
-cd ./example_programs/mjs/ && clang -g -O0 -o  mjs mjs.c && cd ../../
+if [ "${1:-}" = "--mjs-source-only" ]; then
+	exit 0
+fi
+cd ./example_programs/mjs/ && clang -g -O0 -o mjs mjs.c && cd ../../
 
 cp "$mimid_repo"/Cmimid/examples/tiny.c ./example_programs/tinyc/
-cd ./example_programs/tinyc/ && clang -g -O0 -o  tinyc tiny.c && cd ../../
+cd ./example_programs/tinyc/ && clang -g -O0 -o tinyc tiny.c && cd ../../
 
-cd ./example_programs/calc && wget -O rdp.c https://raw.githubusercontent.com/fbuihuu/parser/c895ba68a5d420f081a44fdc66ba1314ebec509a/rdp.c && patch rdp.c < ./calc.diff && mv rdp.c calc.c && clang -g -O0 -o calc calc.c && cd ../../
+cd ./example_programs/calc && wget -O rdp.c https://raw.githubusercontent.com/fbuihuu/parser/c895ba68a5d420f081a44fdc66ba1314ebec509a/rdp.c && patch rdp.c <./calc.diff && mv rdp.c calc.c && clang -g -O0 -o calc calc.c && cd ../../
 
 # Rebuild checked-in benchmark binaries for the container architecture.
 clang++ -std=c++17 -g -O0 -D_GLIBCXX_DEBUG -o example_programs/calccpp/calccpp example_programs/calccpp/calc.cpp

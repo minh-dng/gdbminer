@@ -1,6 +1,7 @@
 # ESP32-C3 hardware read observation through stock Espressif OpenOCD.
 # SPDX-License-Identifier: AGPL-3.0
 
+import json
 import logging
 import re
 from dataclasses import dataclass
@@ -8,6 +9,7 @@ from pathlib import Path
 from typing import override
 
 from util import Config
+from util.config import memory_region
 
 from .esp32_instance import ESP32Instance
 from .esp32c3_debug import (
@@ -77,6 +79,36 @@ class ESP32C3Instance(ESP32Instance[_ReadTrigger]):
     GDB does not know these triggers, so `delete_breakpoint` tells them apart from GDB breakpoint
     numbers.
     """
+
+    @override
+    def init_gdb_controller(self):
+        super().init_gdb_controller()
+        if regions := self.chip_config.get("memory_regions", []):
+            self._define_memory_regions(regions)
+
+    def _define_memory_regions(self, regions: list[str]) -> None:
+        """Restrict GDB's reads to the configured memory before it connects.
+
+        OpenOCD's memory map marks 0x42047000-0xffffffff readable. At a function's
+        first instruction, a char * argument still holds stale stack data, and GDB
+        dereferences it to print the stop frame. The C3 system bus never answers a
+        read of an unmapped address, so OpenOCD times out and resets the hart.
+        User regions defined before the connection replace the target's map, and GDB
+        refuses reads outside them (mem inaccessible-by-default).
+        """
+        self._command('-interpreter-exec console "set mem inaccessible-by-default on"')
+        for region in regions:
+            self._command(f"-interpreter-exec console {json.dumps('mem ' + region)}")
+        # GDB only prints a message for an overlapping region, so check what it holds.
+        _, text = self._command('-interpreter-exec console "info mem"')
+        active = [
+            (int(low, 16), int(high, 16), mode)
+            for low, high, mode in re.findall(r"\d+\s+y\s+(0x[0-9a-f]+) (0x[0-9a-f]+) (\w+)", text)
+        ]
+        if "Using user-defined memory regions." not in text or active != sorted(
+            memory_region(region) for region in regions
+        ):
+            raise RuntimeError(f"GDB did not install the C3 memory regions: {text}")
 
     def __init__(self, config: Config, input_file: Path | str) -> None:
         super().__init__(config, input_file)

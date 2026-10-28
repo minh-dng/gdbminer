@@ -61,7 +61,10 @@ def build_control_flow_graphs_from_traces(
             previous_node = addr
             prev_stack_len = stack_len
 
-    return nx.DiGraph(edge_trace), function_entries, function_scopes
+    cfg = nx.DiGraph(edge_trace)
+    # Single-instruction calls and return sites may have no observed edges.
+    cfg.add_nodes_from(addr for scope in function_scopes.values() for addr in scope)
+    return cfg, function_entries, function_scopes
 
 
 def pre_dominator_graph[T](G: nx.DiGraph[T], entry_point: T) -> nx.DiGraph[T]:
