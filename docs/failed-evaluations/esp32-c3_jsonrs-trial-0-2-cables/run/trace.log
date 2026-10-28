@@ -1,0 +1,242 @@
+2026-10-27 06:00:32,159 [WARNING config.py:229 _log_override()] Connection.port: '/dev/cu.usbserial-110' overridden by --port = '/dev/cu.usbserial-11130'
+2026-10-27 06:00:32,159 [INFO config.py:231 _log_override()] GDB.gdb_port = 3333 from --gdb-port (same as the configuration)
+2026-10-27 06:00:32,159 [INFO config.py:319 apply_overrides()] GDB.gdb_server_path: {gdb_port} -> 3333
+2026-10-27 06:00:32,159 [INFO config.py:319 apply_overrides()] GDB.gdb_server_path: {adapter_serial} -> A0:F2:62:01:70:28
+2026-10-27 06:00:32,159 [INFO config.py:319 apply_overrides()] GDB.gdb_server_path: {telnet_port} -> disabled
+2026-10-27 06:00:32,159 [INFO config.py:319 apply_overrides()] GDB.gdb_server_path: {tcl_port} -> disabled
+2026-10-27 06:00:32,159 [INFO config.py:322 apply_overrides()] GDB server command: ~/.espressif/openocd-esp32/bin/openocd
+  -c "set ESP_RTOS none"
+  -c "set ESP_FLASH_SIZE 0"
+  -f board/esp32c3-builtin.cfg
+  -c "gdb port 3333"
+  -c "telnet port disabled"
+  -c "tcl port disabled"
+  -c "adapter serial A0:F2:62:01:70:28"
+  -c "adapter speed 40000"
+2026-10-27 06:00:32,159 [INFO trace.py:73 main()] Start generating trace for /Users/minh/.t3/worktrees/gdbminer/feat-esp32-c3-jsonrs-c3/example_programs/json/seeds/seed.15.in
+2026-10-27 06:00:32,159 [INFO gdb_tracer.py:156 trace_input()] Seed length: 6
+2026-10-27 06:00:32,462 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-27 06:00:32,462 [WARNING esp32_instance.py:381 _start_gdb_server()] C3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_PIPE'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+
+Error: [esp32c3] Unsupported DTM version: -1
+Error: [esp32c3] Could not identify target type.
+2026-10-27 06:00:32,875 [INFO esp32_instance.py:373 _start_gdb_server()] C3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (A0:F2:62:01:70:28)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32c3.tap0 tap/device found: 0x00005c25 (mfg: 0x612 (Espressif Systems), part: 0x0005, ver: 0x0)
+Info : [esp32c3] datacount=2 progbufsize=16
+Info : [esp32c3] Examined RISC-V core
+Info : [esp32c3]  XLEN=32, misa=0x40101104
+Info : [esp32c3] Chip revision v1.1
+Info : [esp32c3] Examination succeed
+Info : [esp32c3] starting gdb server on 3333
+Info : Listening on port 3333 for gdb connections
+GDBMINER_C3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+2026-10-27 06:00:32,878 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-27 06:00:32,878 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-c3_jsonrs/build-2/esp32-c3_jsonrs.ino.elf' successfully
+2026-10-27 06:00:34,960 [INFO esp32c3_instance.py:205 set_watchpoint_and_get_id()] C3 owns slot 2 at 0x3fc900a0 (window offset 0)
+2026-10-27 06:00:34,968 [INFO esp32c3_instance.py:205 set_watchpoint_and_get_id()] C3 owns slot 3 at 0x3fc900a1 (window offset 1)
+2026-10-27 06:00:34,976 [INFO esp32c3_instance.py:205 set_watchpoint_and_get_id()] C3 owns slot 4 at 0x3fc900a2 (window offset 2)
+2026-10-27 06:00:34,985 [INFO esp32c3_instance.py:205 set_watchpoint_and_get_id()] C3 owns slot 5 at 0x3fc900a3 (window offset 3)
+2026-10-27 06:00:34,993 [INFO esp32c3_instance.py:205 set_watchpoint_and_get_id()] C3 owns slot 6 at 0x3fc900a4 (window offset 4)
+2026-10-27 06:00:35,001 [INFO esp32c3_instance.py:205 set_watchpoint_and_get_id()] C3 owns slot 7 at 0x3fc900a5 (window offset 5)
+2026-10-27 06:00:43,775 [INFO esp32c3_instance.py:271 _step()] C3 hardware read pc=0x42008d2c address=0x3fc900a0 slot=2 offset=0
+2026-10-27 06:00:43,822 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 0 
+2026-10-27 06:00:55,732 [INFO esp32c3_instance.py:271 _step()] C3 hardware read pc=0x42008d2c address=0x3fc900a1 slot=3 offset=1
+2026-10-27 06:00:55,781 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 1 
+2026-10-27 06:01:24,710 [INFO esp32c3_instance.py:271 _step()] C3 hardware read pc=0x42008d2c address=0x3fc900a2 slot=4 offset=2
+2026-10-27 06:01:24,760 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 2 
+2026-10-27 06:01:38,024 [INFO esp32c3_instance.py:271 _step()] C3 hardware read pc=0x42008d2c address=0x3fc900a3 slot=5 offset=3
+2026-10-27 06:01:38,075 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 3 
+2026-10-27 06:01:51,485 [INFO esp32c3_instance.py:271 _step()] C3 hardware read pc=0x42008d2c address=0x3fc900a4 slot=6 offset=4
+2026-10-27 06:01:51,537 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 4 
+2026-10-27 06:02:04,907 [INFO esp32c3_instance.py:271 _step()] C3 hardware read pc=0x42008d2c address=0x3fc900a5 slot=7 offset=5
+2026-10-27 06:02:04,957 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 5 
+2026-10-27 06:02:37,710 [INFO esp32c3_instance.py:375 _release_slot()] C3 released slot 2
+2026-10-27 06:02:37,719 [INFO esp32c3_instance.py:375 _release_slot()] C3 released slot 3
+2026-10-27 06:02:37,729 [INFO esp32c3_instance.py:375 _release_slot()] C3 released slot 4
+2026-10-27 06:02:37,738 [INFO esp32c3_instance.py:375 _release_slot()] C3 released slot 5
+2026-10-27 06:02:37,747 [INFO esp32c3_instance.py:375 _release_slot()] C3 released slot 6
+2026-10-27 06:02:37,756 [INFO esp32c3_instance.py:375 _release_slot()] C3 released slot 7
+2026-10-27 06:02:37,806 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-27 06:02:37,821 [INFO trace.py:80 main()] Write trace of seed.15.in to output/c3-eval-trial-0/jsonrs-2-cables/trial-0/seed.15.in.trace
+2026-10-27 06:02:37,821 [INFO trace.py:73 main()] Start generating trace for /Users/minh/.t3/worktrees/gdbminer/feat-esp32-c3-jsonrs-c3/example_programs/json/seeds/seed.9.in
+2026-10-27 06:02:37,821 [INFO gdb_tracer.py:156 trace_input()] Seed length: 2
+2026-10-27 06:02:38,145 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-27 06:02:38,145 [WARNING esp32_instance.py:381 _start_gdb_server()] C3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_PIPE'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+
+Error: [esp32c3] Unsupported DTM version: -1
+Error: [esp32c3] Could not identify target type.
+2026-10-27 06:02:38,549 [INFO esp32_instance.py:373 _start_gdb_server()] C3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (A0:F2:62:01:70:28)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32c3.tap0 tap/device found: 0x00005c25 (mfg: 0x612 (Espressif Systems), part: 0x0005, ver: 0x0)
+Info : [esp32c3] datacount=2 progbufsize=16
+Info : [esp32c3] Examined RISC-V core
+Info : [esp32c3]  XLEN=32, misa=0x40101104
+Info : [esp32c3] Chip revision v1.1
+Info : [esp32c3] Examination succeed
+Info : [esp32c3] starting gdb server on 3333
+Info : Listening on port 3333 for gdb connections
+GDBMINER_C3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+2026-10-27 06:02:38,551 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-27 06:02:38,551 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-c3_jsonrs/build-2/esp32-c3_jsonrs.ino.elf' successfully
+2026-10-27 06:02:40,622 [INFO esp32c3_instance.py:205 set_watchpoint_and_get_id()] C3 owns slot 2 at 0x3fc900a0 (window offset 0)
+2026-10-27 06:02:40,631 [INFO esp32c3_instance.py:205 set_watchpoint_and_get_id()] C3 owns slot 3 at 0x3fc900a1 (window offset 1)
+2026-10-27 06:02:48,385 [INFO esp32c3_instance.py:271 _step()] C3 hardware read pc=0x42008d2c address=0x3fc900a0 slot=2 offset=0
+2026-10-27 06:02:48,425 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 0 
+2026-10-27 06:03:08,343 [INFO esp32c3_instance.py:271 _step()] C3 hardware read pc=0x42008d2c address=0x3fc900a1 slot=3 offset=1
+2026-10-27 06:03:08,383 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 1 
+2026-10-27 06:03:48,890 [INFO esp32c3_instance.py:375 _release_slot()] C3 released slot 2
+2026-10-27 06:03:48,900 [INFO esp32c3_instance.py:375 _release_slot()] C3 released slot 3
+2026-10-27 06:03:48,948 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-27 06:03:48,958 [INFO trace.py:80 main()] Write trace of seed.9.in to output/c3-eval-trial-0/jsonrs-2-cables/trial-0/seed.9.in.trace
+2026-10-27 06:03:48,959 [INFO trace.py:73 main()] Start generating trace for /Users/minh/.t3/worktrees/gdbminer/feat-esp32-c3-jsonrs-c3/example_programs/json/seeds/seed.11.in
+2026-10-27 06:03:48,959 [INFO gdb_tracer.py:156 trace_input()] Seed length: 28
+2026-10-27 06:03:49,297 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-27 06:03:49,297 [WARNING esp32_instance.py:381 _start_gdb_server()] C3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_PIPE'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+
+Error: [esp32c3] Unsupported DTM version: -1
+Error: [esp32c3] Could not identify target type.
+2026-10-27 06:03:49,717 [INFO esp32_instance.py:373 _start_gdb_server()] C3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (A0:F2:62:01:70:28)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32c3.tap0 tap/device found: 0x00005c25 (mfg: 0x612 (Espressif Systems), part: 0x0005, ver: 0x0)
+Info : [esp32c3] datacount=2 progbufsize=16
+Info : [esp32c3] Examined RISC-V core
+Info : [esp32c3]  XLEN=32, misa=0x40101104
+Info : [esp32c3] Chip revision v1.1
+Info : [esp32c3] Examination succeed
+Info : [esp32c3] starting gdb server on 3333
+Info : Listening on port 3333 for gdb connections
+GDBMINER_C3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+2026-10-27 06:03:49,719 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-27 06:03:49,719 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-c3_jsonrs/build-2/esp32-c3_jsonrs.ino.elf' successfully
+2026-10-27 06:03:51,765 [INFO esp32c3_instance.py:205 set_watchpoint_and_get_id()] C3 owns slot 2 at 0x3fc900a0 (window offset 0)
+2026-10-27 06:03:51,773 [INFO esp32c3_instance.py:205 set_watchpoint_and_get_id()] C3 owns slot 3 at 0x3fc900a1 (window offset 1)
+2026-10-27 06:03:51,782 [INFO esp32c3_instance.py:205 set_watchpoint_and_get_id()] C3 owns slot 4 at 0x3fc900a2 (window offset 2)
+2026-10-27 06:03:51,790 [INFO esp32c3_instance.py:205 set_watchpoint_and_get_id()] C3 owns slot 5 at 0x3fc900a3 (window offset 3)
+2026-10-27 06:03:51,798 [INFO esp32c3_instance.py:205 set_watchpoint_and_get_id()] C3 owns slot 6 at 0x3fc900a4 (window offset 4)
+2026-10-27 06:03:51,807 [INFO esp32c3_instance.py:205 set_watchpoint_and_get_id()] C3 owns slot 7 at 0x3fc900a5 (window offset 5)
+2026-10-27 06:04:00,723 [INFO esp32c3_instance.py:271 _step()] C3 hardware read pc=0x42008d2c address=0x3fc900a0 slot=2 offset=0
+2026-10-27 06:04:00,771 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 0 
+2026-10-27 06:04:12,967 [INFO esp32c3_instance.py:271 _step()] C3 hardware read pc=0x42008d2c address=0x3fc900a1 slot=3 offset=1
+2026-10-27 06:04:13,014 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 1 
+2026-10-27 06:04:37,151 [INFO esp32c3_instance.py:271 _step()] C3 hardware read pc=0x42008d2c address=0x3fc900a2 slot=4 offset=2
+2026-10-27 06:04:37,202 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 2 
+2026-10-27 06:04:50,036 [INFO esp32c3_instance.py:271 _step()] C3 hardware read pc=0x42008d2c address=0x3fc900a3 slot=5 offset=3
+2026-10-27 06:04:50,087 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 3 
+2026-10-27 06:05:23,834 [INFO esp32c3_instance.py:271 _step()] C3 hardware read pc=0x42008d2c address=0x3fc900a4 slot=6 offset=4
+2026-10-27 06:05:23,884 [INFO gdb_tracer.py:358 trace_input_slice()] Watchpoint triggered: 4 
+2026-10-27 06:06:35,766 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+Traceback (most recent call last):
+  File "/Users/minh/.t3/worktrees/gdbminer/feat-esp32-c3-jsonrs-c3/src/tracer/gdb_tracer.py", line 164, in trace_input
+    trace = self.trace_input_slice(instance, window)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/minh/.t3/worktrees/gdbminer/feat-esp32-c3-jsonrs-c3/src/tracer/gdb_tracer.py", line 297, in trace_input_slice
+    instance.step_instruction()
+  File "/Users/minh/.t3/worktrees/gdbminer/feat-esp32-c3-jsonrs-c3/src/tracer/instance/esp32c3_instance.py", line 210, in step_instruction
+    self._step(report=True)
+  File "/Users/minh/.t3/worktrees/gdbminer/feat-esp32-c3-jsonrs-c3/src/tracer/instance/esp32c3_instance.py", line 234, in _step
+    stop = self._step_stop()
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/minh/.t3/worktrees/gdbminer/feat-esp32-c3-jsonrs-c3/src/tracer/instance/esp32_instance.py", line 207, in _step_stop
+    stop = self._wait_stop()
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/minh/.t3/worktrees/gdbminer/feat-esp32-c3-jsonrs-c3/src/tracer/instance/esp32_instance.py", line 202, in _wait_stop
+    raise TimeoutError(f"{self.CHIP} stop timeout: pc={self._pc}")
+TimeoutError: C3 stop timeout: pc=0x42011ebc
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/minh/.t3/worktrees/gdbminer/feat-esp32-c3-jsonrs-c3/src/tracer/trace.py", line 87, in <module>
+    main()
+  File "/Users/minh/.t3/worktrees/gdbminer/feat-esp32-c3-jsonrs-c3/src/tracer/trace.py", line 74, in main
+    trace = generate_trace(filename, config)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/minh/.t3/worktrees/gdbminer/feat-esp32-c3-jsonrs-c3/src/tracer/trace.py", line 34, in generate_trace
+    trace = gdb_tracer.trace_input(filename)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/minh/.t3/worktrees/gdbminer/feat-esp32-c3-jsonrs-c3/src/tracer/gdb_tracer.py", line 163, in trace_input
+    with GDBTracer.open_sut_instance(self.config, filename) as instance:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/minh/.t3/worktrees/gdbminer/feat-esp32-c3-jsonrs-c3/src/tracer/instance/esp32_instance.py", line 434, in __exit__
+    self._interrupt()
+  File "/Users/minh/.t3/worktrees/gdbminer/feat-esp32-c3-jsonrs-c3/src/tracer/instance/esp32_instance.py", line 314, in _interrupt
+    self._wait_stop()
+  File "/Users/minh/.t3/worktrees/gdbminer/feat-esp32-c3-jsonrs-c3/src/tracer/instance/esp32_instance.py", line 202, in _wait_stop
+    raise TimeoutError(f"{self.CHIP} stop timeout: pc={self._pc}")
+TimeoutError: C3 stop timeout: pc=0x42011ebc

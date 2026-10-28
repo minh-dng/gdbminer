@@ -360,9 +360,14 @@ class ESP32S3Instance(ESP32Instance[_DataBreak]):
         # if the finished function has debug info (`finish_command_fsm::should_stop`); ROM routines
         # have symbols but no DWARF, so their return stop arrives unlabelled. The tracer accepts a
         # stop without a reason while a finish is pending, and checks an exit breakpoint's number.
+        # A finish out of a function that returns after one step can instead end with ICOUNT; GDB
+        # still names the return stop.
+        returned = cause & DebugCause.IB or (
+            reason == MIReason.FUNCTION_FINISHED and cause & DebugCause.IC
+        )
         if (
             reason not in {MIReason.FUNCTION_FINISHED, MIReason.BREAKPOINT_HIT, None}
-            or not cause & DebugCause.IB
+            or not returned
         ):
             raise RuntimeError(f"Unexpected S3 finish stop: debugcause={cause:#x}, {stop}")
         self._rearm(state)

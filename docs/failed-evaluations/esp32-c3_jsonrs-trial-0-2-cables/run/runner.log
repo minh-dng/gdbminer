@@ -1,0 +1,16 @@
+2026-10-27 05:58:42 runner start: jsonrs:2-cables (trial 0, adapter serial A0:F2:62:01:70:28, GDB port 3333)
+2026-10-27 05:59:44 jsonrs-2-cables: flashing build-2 (attempt 1)
+2026-10-27 06:00:32 jsonrs-2-cables: tracing (20 seeds)
+2026-10-27 06:06:37 FAIL trace.py exit 1
+2026-10-27 06:06:37 jsonrs-2-cables: resume 1, missing seed.1.in seed.10.in seed.11.in seed.12.in seed.13.in seed.14.in seed.16.in seed.17.in seed.18.in seed.19.in seed.2.in seed.20.in seed.3.in seed.4.in seed.5.in seed.6.in seed.7.in seed.8.in 
+2026-10-27 06:07:08 jsonrs-2-cables: flashing build-2 (attempt 1)
+2026-10-27 06:10:14 FAIL resume 1: trace.py exit 1
+2026-10-27 06:10:14 jsonrs-2-cables: resume 2, missing seed.1.in seed.10.in seed.11.in seed.12.in seed.13.in seed.14.in seed.16.in seed.17.in seed.18.in seed.19.in seed.2.in seed.20.in seed.3.in seed.4.in seed.5.in seed.6.in seed.7.in seed.8.in 
+2026-10-27 06:10:45 jsonrs-2-cables: flashing build-2 (attempt 1)
+2026-10-27 06:13:51 FAIL resume 2: trace.py exit 1
+2026-10-27 06:13:52 jsonrs-2-cables: resume 3, missing seed.1.in seed.10.in seed.11.in seed.12.in seed.13.in seed.14.in seed.16.in seed.17.in seed.18.in seed.19.in seed.2.in seed.20.in seed.3.in seed.4.in seed.5.in seed.6.in seed.7.in seed.8.in 
+2026-10-27 06:14:22 jsonrs-2-cables: flashing build-2 (attempt 1)
+2026-10-27 06:17:29 FAIL resume 3: trace.py exit 1
+2026-10-27 06:17:29 FAIL giving up after 3 resumes; missing: seed.1.in seed.10.in seed.11.in seed.12.in seed.13.in seed.14.in seed.16.in seed.17.in seed.18.in seed.19.in seed.2.in seed.20.in seed.3.in seed.4.in seed.5.in seed.6.in seed.7.in seed.8.in 
+2026-10-27 06:17:29 jsonrs:2-cables: stopped; later runs not started
+2026-10-27 06:17:29 runner exit (status=1)

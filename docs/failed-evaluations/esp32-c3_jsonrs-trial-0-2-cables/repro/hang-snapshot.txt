@@ -1,0 +1,5 @@
+# Process list at 12:14:19, 7 s after the step at the call to String::push (repro run).
+# Only OpenOCD runs; the tracer's GDB (riscv32-esp-elf-gdb-no-python) is gone.
+Tue Oct 27 12:14:19 AEDT 2026
+--- processes
+67164 67158 S          01:56   0.0 /Users/minh/.espressif/openocd-esp32/bin/openocd -c set ESP_RTOS none -c set ESP_FLASH_SIZE 0 -f board/esp32c3-builtin.cfg -c gdb port 3333 -c telnet port disabled -c tcl port disabled -c adapter serial A0:F2:62:01:70:28 -c adapter speed 40000 -c init; if {![[target current] was_examined]} {error "target examination failed"}; echo GDBMINER_C3_READY

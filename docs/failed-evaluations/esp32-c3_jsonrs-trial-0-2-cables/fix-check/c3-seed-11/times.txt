@@ -1,0 +1,4 @@
+start 2026-10-27 22:28:28 AEDT
+pid=7830
+window0-end 2026-10-27 22:41:53 AEDT
+exit=143

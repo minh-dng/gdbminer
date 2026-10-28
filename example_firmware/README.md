@@ -30,7 +30,8 @@ Each target includes firmware and TOML files in `configuration/`: `configuration
 `configuration.2-cables.toml` and `configuration.1-cable.toml` for the C3 two-cable and one-cable
 setups, and `configuration.1-watchpoint.toml` and `configuration.2-watchpoints.toml` for the S3
 options. The JSON, CGI and XML ports use the corresponding STM32 parser libraries, acceptance
-rules, seeds and evaluation corpora. The C3 calc target uses the desktop calc parser and corpus.
+rules, seeds and evaluation corpora. The calc (C3) and jsonrs (C3, S3) targets use the desktop
+parsers and corpora.
 Build and validation notes are documented in each target's README.
 
 | Parser                           | STM32 reference              | ESP32-C3 port                | ESP32-S3 port                |
@@ -39,6 +40,7 @@ Build and validation notes are documented in each target's README.
 | CGI (`percent_encode`)           | [stm32_cgidecode][st-cgi]    | [esp32-c3_cgidecode][c3-cgi] | [esp32-s3_cgidecode][s3-cgi] |
 | XML (`LibYxml`)                  | [stm32_libyxml][st-xml]      | [esp32-c3_xml][c3-xml]       | [esp32-s3_xml][s3-xml]       |
 | Calc (desktop recursive descent) | —                            | [esp32-c3_calc][c3-calc]     | —                            |
+| JSON (desktop Rust, `tinyjson`)  | —                            | [esp32-c3_jsonrs][c3-jsonrs] | [esp32-s3_jsonrs][s3-jsonrs] |
 
 ## Build and flash
 
@@ -88,6 +90,36 @@ The S3 has two data breakpoints per core, separate from its two instruction brea
 watchpoint leaves the second to the firmware's stack guard; two watchpoints need about half the
 runs. Two require `watchpoint_min_distance = 4`.
 
+### Rust parsers (jsonrs)
+
+Arduino builds C and C++ only, so the `jsonrs` targets build the Rust parser as a static library
+and link it into the sketch. Each target has a `rust/lib.rs`, a `#![no_std]` crate that includes the
+desktop [`json.rs`](../example_programs/jsonrs/json.rs) and replaces the parts of `std` it needs
+(`HashMap` becomes `BTreeMap`; allocation goes to `memalign`). The arch decides the
+toolchain:
+
+| Board     | Core    | Rust target                 | Toolchain                                                     |
+| --------- | ------- | --------------------------- | ------------------------------------------------------------- |
+| ESP32-C3  | RISC-V  | `riscv32imc-unknown-none-elf` | Mainline `rustup`; `rustup target add` once                 |
+| ESP32-S3  | Xtensa  | `xtensa-esp32s3-none-elf`   | Espressif's Rust fork, installed with `espup`; see below      |
+
+Mainline Rust has no Xtensa backend, so the S3 needs Espressif's fork of the compiler (a `+esp`
+toolchain) and an LLVM with Xtensa support. Install both once with [`espup`][espup], which puts the
+toolchain under `rustup`'s home and the LLVM under `~/.espup/`:
+
+```sh
+cargo install espup --locked        # or download a release binary
+espup install --targets esp32s3
+rustc +esp --print target-list | grep xtensa-esp32s3-none-elf
+```
+
+`espup` also writes an `export-esp.sh` with environment variables for the ESP-IDF `std` targets;
+the `none-elf` build used here does not need them. The fork ships no prebuilt `core` for the `none`
+targets, so the S3 target builds `core` and `alloc` from source with Cargo's `build-std`; its
+`rust/.cargo/config.toml` sets this and the `jsonrs_firmware` cfg. Each target's README gives the
+build command and the Arduino `build.extra_libs` property that links the library. The Rust build
+must run before `arduino-cli compile`.
+
 ## Running GDBMiner on the firmware
 
 Follow the root README's [trace and mine workflow](../README.md#run-local) and
@@ -119,8 +151,11 @@ Before running:
 [c3-cgi]: esp32-c3_cgidecode/README.md
 [c3-xml]: esp32-c3_xml/README.md
 [c3-calc]: esp32-c3_calc/README.md
+[c3-jsonrs]: esp32-c3_jsonrs/README.md
+[s3-jsonrs]: esp32-s3_jsonrs/README.md
 [s3-board]: https://docs.waveshare.com/ESP32-S3-zero
 [s3-setup]: ESP32-S3-Zero.md
 [s3-json]: esp32-s3_json/README.md
 [s3-cgi]: esp32-s3_cgidecode/README.md
 [s3-xml]: esp32-s3_xml/README.md
+[espup]: https://github.com/esp-rs/espup

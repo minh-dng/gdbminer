@@ -268,6 +268,12 @@ class TestFinish:
         instance = self.finish(response, state(IB))
         assert instance._pending == [response]
 
+    def test_finish_that_returns_after_one_step_is_passed_on(self):
+        # The return stop ends with ICOUNT instead of IBREAK; GDB still names it.
+        response = stop(PC, "function-finished")
+        instance = self.finish(response, state(IC))
+        assert instance._pending == [response]
+
     def test_read_inside_a_skipped_function_is_not_recorded(self):
         # GDB stepped over the load with its watchpoints removed; it inserts them at the next
         # resume, so the adapter must not re-insert them.
@@ -279,7 +285,6 @@ class TestFinish:
     @pytest.mark.parametrize(
         "reason, cause",
         [
-            ("function-finished", IC),
             ("read-watchpoint-trigger", DB),
             ("signal-received", DebugCause.DI),
             (None, IC),

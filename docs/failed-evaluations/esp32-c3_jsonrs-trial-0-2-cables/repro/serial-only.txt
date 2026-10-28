@@ -1,0 +1,10 @@
+# Serial only, no debugger attached (2026-10-27 12:09). scripts/serial_check.py resets the chip
+# through RTS, then sends each seed. result 0x00 = accepted. The 'after' column is the wait for
+# the next 200 bytes (3 s timeout), not the parse time. No boot text between answers: no restart.
+boot bytes: 20 tail: b'Lt\xf7bQ\xddn\x18\x02R\x84`\x89M\xfb"jVRA'
+seed.15.in   len=  6 result=b'\x00' after 3.00s next=b'A'
+seed.9.in    len=  2 result=b'\x00' after 3.01s next=b'A'
+seed.11.in   len= 28 result=b'\x00' after 3.00s next=b'A'
+seed.19.in   len= 13 result=b'\x00' after 3.00s next=b'A'
+seed.20.in   len=  4 result=b'\x00' after 3.01s next=b'A'
+seed.11.in   len= 28 result=b'\x00' after 3.01s next=b'A'

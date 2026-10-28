@@ -1,0 +1,8 @@
+# Mainline Rust has no Xtensa target and no prebuilt core for it: use the Espressif toolchain
+# (`rustup toolchain list` shows `esp` after `espup install`) and build core and alloc from source.
+[build]
+target = "xtensa-esp32s3-none-elf"
+rustflags = ["--cfg", "jsonrs_firmware"]
+
+[unstable]
+build-std = ["core", "alloc"]

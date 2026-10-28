@@ -1,0 +1,2 @@
+ M example_firmware/esp32-c3_jsonrs/configuration/configuration.1-cable.toml
+ M example_firmware/esp32-c3_jsonrs/configuration/configuration.2-cables.toml

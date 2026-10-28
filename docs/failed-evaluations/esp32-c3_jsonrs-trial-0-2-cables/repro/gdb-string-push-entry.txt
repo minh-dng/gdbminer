@@ -1,0 +1,33 @@
+0x40382ae4 in cpu_utility_ll_wait_mode () at /home/runner/work/esp32-arduino-lib-builder/esp32-arduino-lib-builder/esp-idf/components/hal/esp32c3/include/hal/cpu_utility_ll.h:25
+warning: 25	/home/runner/work/esp32-arduino-lib-builder/esp32-arduino-lib-builder/esp-idf/components/hal/esp32c3/include/hal/cpu_utility_ll.h: No such file or directory
+Hardware assisted breakpoint 1 at 0x4200963a: file /Users/minh/.rustup/toolchains/stable-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/string.rs, line 1425.
+[esp32c3] Target halted, PC=0x4200963A, debug_reason=00000001
+
+Breakpoint 1, alloc::string::String::push (self=..., ch=...) at /Users/minh/.rustup/toolchains/stable-aarch64-apple-darwin/lib/rustlib/src/rust/library/alloc/src/string.rs:1425
+1425	    pub fn push(&mut self, ch: char) {
+Warning: the current language does not match this frame.
+
+--- stopped at String::push entry (frame-arguments none)
+pc             0x4200963a	0x4200963a <alloc::string::String::push>
+sp             0x3fca04e0	0x3fca04e0
+a0             0x3fca0580	1070204288
+a1             0x4a	74
+--- DWARF locations of the arguments
+Scope for *0x4200963a:
+Symbol self is a variable at frame base reg $sp offset 0+24, length 4.
+Symbol ch is a variable at frame base reg $sp offset 0+28, length 4.
+--- the stack slots those locations name, not yet written at entry
+0x3fca04e8:	0xa5a5a5a5	0xa5a5a5a5	0xa5a5a5a5	0xa5a5a5a5
+--- now print the arguments as the default (scalars) stop record does
+
+
+Fatal signal: Abort trap: 6
+----- Backtrace -----
+---------------------
+A fatal error internal to GDB has been detected, further
+debugging is not possible.  GDB will now terminate.
+
+This is a bug, please report it.  For instructions, see:
+<https://www.gnu.org/software/gdb/bugs/>.
+
+gdb exit=138
