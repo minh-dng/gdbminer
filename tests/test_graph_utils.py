@@ -1,6 +1,8 @@
 """Inline debug frames may change depth by more than one instruction to instruction."""
 
-from miner.graph_utils import build_control_flow_graphs_from_traces
+import unittest
+
+from miner.graph_utils import all_natural_loops, build_control_flow_graphs_from_traces
 
 
 def test_return_pops_observed_scopes_by_depth_not_number_of_debug_frames():
@@ -25,3 +27,30 @@ def test_return_pops_observed_scopes_by_depth_not_number_of_debug_frames():
         "child": {"child", "child-return"},
         "grandchild": {"grandchild"},
     }
+
+
+class GraphStackTest(unittest.TestCase):
+    def test_single_instruction_callee_remains_in_graph_without_changing_edges(self):
+        trace = [
+            {"address": address, "stack": stack, "function_name": name}
+            for address, stack, name in [
+                ("caller-entry", ["outer-return"], "parser"),
+                ("call-site", ["outer-return"], "parser"),
+                ("callee-entry", ["call-return", "outer-return"], "helper"),
+                ("caller-resumed", ["outer-return"], "parser"),
+            ]
+        ]
+        cfg, functions, scopes = build_control_flow_graphs_from_traces([trace])
+
+        self.assertEqual(
+            set(cfg.edges),
+            {
+                ("0", "outer-return"),
+                ("caller-entry", "call-site"),
+                ("call-site", "call-return"),
+            },
+        )
+        self.assertTrue(set().union(*scopes.values()).issubset(cfg.nodes))
+        self.assertTrue(set(functions).issubset(cfg.nodes))
+        self.assertEqual(cfg.degree("callee-entry"), 0)
+        self.assertEqual(all_natural_loops(cfg, "callee-entry"), {})
