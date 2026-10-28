@@ -88,19 +88,109 @@ the C++ global `buf` is not visible from it.
 `GDB.frame_arguments = "none"` is needed because the C3 GDB 17.1 dies when it prints the `char`
 argument of `String::push` at its first instruction, where the argument's stack slot still holds
 a stale value. `function_args` is therefore empty in the traces, as for the S3 target. See the
-[trial 0 post-mortem][postmortem].
+[trial 0 post-mortem][postmortem]. Trial 0 traced seeds 15 and 9 in full, so `finish` returns from
+skipped functions into Rust frames.
 
 [postmortem]: ../../docs/failed-evaluations/esp32-c3_jsonrs-trial-0-2-cables/README.md
 
-## Open points
+## Runtime routines
 
-Trial 0 showed that the library links and that `finish` returns from skipped functions into Rust
-frames: seeds 15 and 9 were traced in full. Not checked yet:
+`libjsonrs.a` contains Rust's `compiler_builtins`, which defines `memcpy`, `memset`, `strlen`, the
+soft-float helpers and the 64-bit division that newlib, libgcc and the ROM also provide. None of
+its code reaches the firmware. In both C3 maps (`build-1`, `build-2`) the linker pulls 46
+`compiler_builtins` members, some for references from the Arduino core (`strlen` and
+`__floatsidf` for `Print.cpp`, `memcpy` for `WString.cpp`), but every symbol they define is weak.
+The strong definitions win: `memcpy`, `memmove` and `memcmp` from newlib in IRAM, and `memset`,
+`strlen` and the libgcc helpers from the ROM addresses in `esp32c3.rom.libc.ld` and
+`esp32c3.rom.libgcc.ld`. `--gc-sections` then discards all `compiler_builtins` code sections; the
+ELF has no `compiler_builtins` symbol. To check a new build:
 
-- Which `compiler_builtins` members the linker takes from `libjsonrs.a` instead of `libgcc`, ROM
-  or newlib (grep the map for `libjsonrs.a(compiler_builtins`).
-- The stack size: the parser is recursive, and the wrapper uses the 32 KiB loop-task stack of the
-  calc target. The nesting depth that overflows it is not measured; an overflow or any other panic
-  aborts the firmware, which the host sees as a restart and not as a rejection.
-- Whether the serial oracle agrees with the desktop `jsonrs` on the corpus. Five seeds sent without
-  a debugger were all accepted, as the desktop accepts them; the full corpus is not checked.
+```sh
+ELF=example_firmware/esp32-c3_jsonrs/build-2/esp32-c3_jsonrs.ino.elf
+riscv32-esp-elf-nm -C $ELF | grep -c compiler_builtins  # 0
+riscv32-esp-elf-nm $ELF | grep -w -e memcpy -e __adddf3  # IRAM (0x403...) and ROM (0x400...)
+```
+
+## Stack depth
+
+The parser recurses once per nesting level: `parse_any` calls `parse_array` or `parse_object`,
+which call `parse_any` for each element. `stringify` and the drop of the parsed value recurse as
+well, with smaller frames. At `opt-level = 0` the frames in the ELF are (from each function's
+`addi sp,sp,-N`):
+
+| Frames | Bytes |
+| --- | ---: |
+| Loop task to the first `parse_any` (`vPortTaskWrapper`, `loopTask`, `loop`, `parser`, `jsonrs_parse`, `from_str`, `parse`, `parse_any`) | 768 |
+| One array level (`parse_array` + `parse_any`) | 960 |
+| One object level (`parse_object` + `parse_any`) | 1,216 |
+| Innermost value, deepest direct-call path (`parse_number` into `core`'s float parser) | up to 2,672 |
+| Interrupt frame saved on the task stack | 128 |
+
+With the 32 KiB loop-task stack, 30 nested arrays or 23 nested objects fit on every direct-call
+path, and the frames alone exceed the stack at 34 arrays or 27 objects. Indirect calls (`core::fmt`
+in error messages) are not in this bound. The S3 build of the same library overflows its 32 KiB
+loop-task stack between 29 and 30 nested arrays and between 23 and 24 nested objects (measured, see
+the [S3 target](../esp32-s3_jsonrs/README.md#stack-depth)). The C3 depth has not been measured on
+the board; this command finds it without a debugger:
+
+```sh
+uv run scripts/esp32_jsonrs_oracle.py depth --kind array \
+  --config example_firmware/esp32-c3_jsonrs/configuration/configuration.2-cables.toml --port PORT
+```
+
+An overflow trips the hardware stack guard (`CONFIG_ESP_SYSTEM_HW_STACK_GUARD`), and the panic
+handler restarts the chip (`CONFIG_ESP_SYSTEM_PANIC_PRINT_REBOOT`). The host does not see a
+rejection: `ESP32SerialConnection.send_input` sends the input again after the restart and raises
+after the second one, which stops the run. With a debugger attached, `CONFIG_ESP_DEBUG_OCDAWARE`
+makes the panic handler halt the chip instead; how the tracer reports that stop is not tested. The
+desktop does not overflow at this depth: built for
+the host, `json.rs` accepts 1,023 nested arrays, the deepest nesting that fits in 2,048 bytes.
+Every corpus input nests at most two levels deep (`example_programs/json` and
+`example_programs/jsonrs`), so only generated inputs can reach the limit.
+
+## Oracle check
+
+`scripts/esp32_jsonrs_oracle.py corpus` compares, input by input, the desktop verdict (exit status
+0 of `json.rs` built for the host) with the firmware's result byte. The firmware side is either the
+host model in [`host/model.c`](host/model.c), which links `rust/lib.rs` built for the host behind
+the length check of `loop()` and the UTF-8 check of `parser()`, or a board without a debugger,
+through the tracer's own serial exchange. Results of 2026-10-29, with rustc 1.97.1 on macOS:
+
+| Firmware side | Seeds accepted | Eval accepted | Inputs that differ |
+| --- | ---: | ---: | ---: |
+| Host model | 20 of 20 | 993 of 1,000 | 0 |
+| S3 board (same `lib.rs`, Xtensa build) | 20 of 20 | 993 of 1,000 | 0 |
+| C3 board | not run | not run | |
+
+The seven rejected eval inputs are numbers that overflow to infinity, such as `-5e+690`;
+`stringify` cannot print them, so the desktop panics and the firmware answers `0xff`. The model
+also agrees on the `example_programs/jsonrs` corpora (20 and 1,000 inputs, all accepted). Inputs
+of more than 2,048 bytes are a known difference: the firmware rejects them unread, the desktop
+parses them. The corpora have none (the longest is 67 bytes).
+
+The host model checks the library and the wrapper logic, not the C3 build: it runs on a 64-bit
+host with a hardware FPU and an 8 MiB stack, where the C3 uses 32-bit `usize`, the ROM's
+soft-float routines and the 32 KiB loop-task stack. Five
+seeds sent to the C3 without a debugger were accepted, as on the desktop. Build the host binaries
+and run the checks from the repository root:
+
+```sh
+B=example_firmware/esp32-c3_jsonrs/build/host
+mkdir -p $B
+rustc -g -C opt-level=0 -o $B/jsonrs example_programs/jsonrs/json.rs
+rustc --edition 2021 --crate-type staticlib -g -C opt-level=0 -C panic=abort --cfg jsonrs_firmware \
+  -o $B/libjsonrs.a example_firmware/esp32-c3_jsonrs/rust/lib.rs
+cc -o $B/model example_firmware/esp32-c3_jsonrs/host/model.c $B/libjsonrs.a
+
+uv run scripts/esp32_jsonrs_oracle.py corpus --desktop $B/jsonrs --model $B/model \
+  example_programs/json/seeds example_programs/json/eval
+uv run scripts/esp32_jsonrs_oracle.py corpus --desktop $B/jsonrs \
+  --config example_firmware/esp32-c3_jsonrs/configuration/configuration.2-cables.toml --port PORT \
+  example_programs/json/seeds example_programs/json/eval
+```
+
+The desktop build drops `-C target-feature=+crt-static` of the paper's Linux build, which macOS
+does not support; the parser code is the same. The model's library needs `-C panic=abort`, as the
+board builds have: rustc rejects unwinding panics in a `no_std` crate. `model.c` supplies the
+`memalign` that the allocator calls and the unwinding personality that the host's prebuilt `alloc`
+refers to.
