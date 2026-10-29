@@ -16,6 +16,8 @@ dependencies = [
     "networkx>=3.0",
     "pygdbmi>=0.11.0.0",
     "pyserial>=3.5",
+    "questionary>=2.1.1",
+    "typer>=0.27.3",
 ]
 
 [project.optional-dependencies]
@@ -59,7 +61,7 @@ ignore = [
 ]
 
 [tool.basedpyright]
-include = ["src", "analyze_experiments.py"]
+include = ["src", "analyze_experiments.py", "scripts/eval_runner"]
 # Vendored Cmimid baseline — not first-party, kept out of the gate.
 exclude = ["src/cmimid"]
 pythonVersion = "3.12"
@@ -73,3 +75,5 @@ dev = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# `scripts.eval_runner` is imported from the repository root.
+pythonpath = ["."]
