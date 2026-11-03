@@ -33,9 +33,9 @@ original capture's completed-seed timings. The rerun rows describe different tra
 The `calc` trial-1 to trial-4 folders hold full runs (flash, trace, mine and evaluate) with 20
 traces each, unlike trial-0: `trial-1-1-cable`, `trial-1-2-cables`, `trial-2-1-cable`,
 `trial-3-1-cable` and `trial-4-1-cable`. Trials 3 and 4 have one cable only, because precision,
-recall and F1 were the same for one and two cables in trial-0 and trial-1. There is no
-`trial-2-2-cables`: its trace-only, resumed attempts were never mined and are not published.
-Precision, recall and F1 are 1.0 in all five; the times come from `evaluation.json`:
+recall and F1 were the same for one and two cables in trial-0 and trial-1. Precision, recall and
+F1 are 1.0 in all five; the times come from `evaluation.json`. `trial-2-2-cables` is not a full
+run and is described below.
 
 | Folder | Run (AEDT, from `run/state.txt` and the logs) | Inputs | Tracing | Mining |
 | --- | --- | --- | --- | --- |
@@ -57,12 +57,21 @@ trial-0 two cables); the full hashes are in `run/state.txt`.
 for trial-2. `src/` is identical in the two commits. They descend from `05aa19f9` and do not
 include the ESP32 tracer fixes that were merged on 27 October. The `git status:` line of
 `run/state.txt` refers to a `git-status.txt` that is not published; it lists the changed paths
-(5, 14, 4, 17 and 18 for trial-1 one cable, trial-1 two cables, trial-2, trial-3 and trial-4).
+(5 and 14 for trial-1 with one and two cables, 4 and 5 for trial-2 with one and two cables, 17
+for trial-3 and 18 for trial-4).
 
-Provenance gaps of the trial-1 to trial-4 folders:
+`trial-2-2-cables` holds the 20 traces of the trial-2 two-cable run of 26-27 October 2026 (AEDT).
+Tracing finished (`trace exit=0`, 99,241 s in `run/times.txt`, the flash and trace rows that the
+trial-0 two-cable `times.txt` calls the rerun), but the runner skipped mining and evaluation, so
+the folder has no `evaluation.json`, grammar, `trace.json`, `mine.log` or `eval.log`. It is not
+mined yet: [#83](https://github.com/minh-dng/gdbminer/issues/83). Its `run/state.txt` records
+`e2965d7b` and the ELF `b6b5b107...`. `runner.log` is not published.
 
-- `run/build.log` exists only in `trial-2-1-cable`, and it is a copy of the trial-0 one-cable
-  build log. The other four folders have none; their ELF hashes are in `run/state.txt`.
+Provenance gaps of the trial-1 to trial-4 folders (`trial-2-2-cables` has no mining data):
+
+- `run/build.log` exists only in `trial-2-1-cable` and `trial-2-2-cables`; each is a copy of the
+  trial-0 build log of the same setup. The other four folders have none; their ELF hashes are in
+  `run/state.txt`.
 - The `openocd:` line in `run/state.txt` holds a Python traceback instead of the version. The
   OpenOCD version (`v0.12.0-esp32-20260831`) is in `run/eval.log`.
 - The precision-query count is not recorded here either. `precision_recall.py` uses
