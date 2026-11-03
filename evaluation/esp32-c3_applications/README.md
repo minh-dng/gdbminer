@@ -30,6 +30,53 @@ is available. The `flash` and `trace` rows in calc `times.txt` are from the 24-2
 reruns; the mining/evaluation rows are from 22-23 October. `evaluation.json` retains the
 original capture's completed-seed timings. The rerun rows describe different trace inputs.
 
+The `calc` trial-1 to trial-4 folders hold full runs (flash, trace, mine and evaluate) with 20
+traces each, unlike trial-0: `trial-1-1-cable`, `trial-1-2-cables`, `trial-2-1-cable`,
+`trial-3-1-cable` and `trial-4-1-cable`. Trials 3 and 4 have one cable only, because precision,
+recall and F1 were the same for one and two cables in trial-0 and trial-1. There is no
+`trial-2-2-cables`: its trace-only, resumed attempts were never mined and are not published.
+Precision, recall and F1 are 1.0 in all five; the times come from `evaluation.json`:
+
+| Folder | Run (AEDT, from `run/state.txt` and the logs) | Inputs | Tracing | Mining |
+| --- | --- | --- | --- | --- |
+| `trial-1-1-cable` | 29-30 October 2026 | 196,733 | 26.2 h | 2.15 h |
+| `trial-1-2-cables` | 30 October - 1 November 2026 | 196,746 | 28.1 h | 9.81 h |
+| `trial-2-1-cable` | traced 24-25 October, mined 1 November 2026 | 196,745 | 26.4 h | 2.11 h |
+| `trial-3-1-cable` | 1-2 November 2026 | 196,743 | 25.7 h | 2.10 h |
+| `trial-4-1-cable` | 2-3 November 2026 | 196,756 | 25.7 h | 2.11 h |
+
+Trial-2 one cable is split: `run/times.txt` has two flash rows, and its tracing (24 October, 14 s
+flash and 94,964 s trace, the same values as the rerun rows of the trial-0 one-cable
+`times.txt`) and its mining (1 November) are a week apart. Its `run/state.txt` was written at
+the start of tracing and was not updated for mining. The one-cable folders use the same ELF
+(`47e7c923...`, as in trial-0 one cable) and the two-cable folder another one (`b6b5b107...`, as in
+trial-0 two cables); the full hashes are in `run/state.txt`.
+
+`run/state.txt` records the code as Git HEAD `cb5f33e3` of the branch
+`docs/esp32-evaluation-trial-2` for trial-1, trial-3 and trial-4, and `e2965d7b` of the same branch
+for trial-2. `src/` is identical in the two commits. They descend from `05aa19f9` and do not
+include the ESP32 tracer fixes that were merged on 27 October. The `git status:` line of
+`run/state.txt` refers to a `git-status.txt` that is not published; it lists the changed paths
+(5, 14, 4, 17 and 18 for trial-1 one cable, trial-1 two cables, trial-2, trial-3 and trial-4).
+
+Provenance gaps of the trial-1 to trial-4 folders:
+
+- `run/build.log` exists only in `trial-2-1-cable`, and it is a copy of the trial-0 one-cable
+  build log. The other four folders have none; their ELF hashes are in `run/state.txt`.
+- The `openocd:` line in `run/state.txt` holds a Python traceback instead of the version. The
+  OpenOCD version (`v0.12.0-esp32-20260831`) is in `run/eval.log`.
+- The precision-query count is not recorded here either. `precision_recall.py` uses
+  `PRECISION_SET_SIZE` (default 1,000, the variable is not recorded in the run), and
+  `evaluation.json` has no field for it; `no_tested_inputs` is the miner's request count. The
+  precision of 1.0 is therefore as provisional as in trial-0.
+- Mining time varies a lot. `trial-1-2-cables` needed 9.81 h for 196,746 requests (5.6 requests per
+  second), the one-cable runs about 2.1 h for about 196,700 (25.4 to 26.0 requests per second).
+  Trial-0 with two cables took 11.85 h, including the resume described in PR #70. The method and
+  loop counts (154,455 and 42,164) are the same in all five trials; only the tokens step differs
+  (114 to 137).
+- The `run/*.log`, `run/configuration.toml` and `run/build.options.json` files keep the absolute
+  paths of the machine that ran them.
+
 The `jsonrs` trial-0 folders hold one complete run per setup (flash, trace, mine and evaluate) on
 28 October 2026: the desktop Rust parser (tinyjson) with the corpus of `example_programs/json`,
 using six hardware watchpoints. Their `run/state.txt` has no Git lines and the `openocd:` line holds
