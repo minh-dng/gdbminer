@@ -93,6 +93,61 @@ a Python traceback instead of the version; the OpenOCD version is in `run/eval.l
 `run/*.log`, `run/configuration.toml` and `run/build.options.json` files keep the absolute paths of
 the machine that ran them.
 
+The `cgidecode` trial-2 to trial-4, `arduinojson` trial-2 to trial-4 and `jsonrs` trial-1 to
+trial-4 folders hold full runs (flash, trace, mine and evaluate) with 20 traces each, run on 3 and
+4 November 2026. `cgidecode` and `jsonrs` have one cable only from trial-2 on, and `arduinojson`
+in trial-4, after the first comparison of the two setups. The values come from `evaluation.json`;
+the start is the date line of `run/state.txt`.
+
+| Folder | Start (AEDT) | Inputs | Tracing (min) | Mining (s) | Precision | Recall | F1 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `cgidecode/trial-2-1-cable` | 3 Nov 22:21 | 2,187 | 8.2 | 7 | 0.985 | 0.971 | 0.9779 |
+| `cgidecode/trial-3-1-cable` | 4 Nov 01:31 | 2,185 | 8.0 | 7 | 0.973 | 0.971 | 0.9720 |
+| `cgidecode/trial-4-1-cable` | 4 Nov 01:42 | 2,186 | 8.0 | 7 | 0.974 | 0.971 | 0.9725 |
+| `arduinojson/trial-2-1-cable` | 3 Nov 22:32 | 4,062 | 35.4 | 42 | 0.980 | 0.977 | 0.9785 |
+| `arduinojson/trial-2-2-cables` | 3 Nov 23:11 | 4,070 | 39.9 | 224 | 0.881 | 0.977 | 0.9265 |
+| `arduinojson/trial-3-1-cable` | 3 Nov 23:58 | 4,182 | 35.6 | 38 | 0.967 | 0.977 | 0.9720 |
+| `arduinojson/trial-3-2-cables` | 4 Nov 00:38 | 3,965 | 39.1 | 611 | 0.965 | 0.977 | 0.9710 |
+| `arduinojson/trial-4-1-cable` | 4 Nov 07:45 | 3,770 | 36.0 | 12 | 0.984 | 0.977 | 0.9805 |
+| `jsonrs/trial-1-1-cable` | 4 Nov 01:53 | 7,074 | 162.9 | 99 | 1.000 | 0.608 | 0.7562 |
+| `jsonrs/trial-1-2-cables` | 4 Nov 04:40 | 7,063 | 176.5 | 303 | 1.000 | 0.608 | 0.7562 |
+| `jsonrs/trial-2-1-cable` | 4 Nov 08:25 | 7,168 | 162.6 | 99 | 1.000 | 0.608 | 0.7562 |
+| `jsonrs/trial-3-1-cable` | 4 Nov 11:12 | 7,068 | 162.6 | 99 | 1.000 | 0.608 | 0.7562 |
+| `jsonrs/trial-4-1-cable` | 4 Nov 14:00 | 7,164 | 164.3 | 102 | 1.000 | 0.608 | 0.7562 |
+
+`1-cable` is `build-1` (`CDCOnBoot=cdc`) and `2-cables` is `build-2` (`CDCOnBoot=default`, UART
+bridge). They are different ELFs, so the traces differ in code addresses between the setups. Within
+a target, the folders of one setup share one ELF (`run/state.txt`): one cable `45608463...`
+(`cgidecode`), `5d4d5e05...` (`arduinojson`) and `5c802a35...` (`jsonrs`); two cables `442463dc...`
+(`arduinojson`) and `50b72ec1...` (`jsonrs`).
+
+Recall is the same for one and two cables in every target. `jsonrs` has precision 1.0 in both
+setups. `arduinojson` precision swings between runs in both setups, and the sign of the gap flips:
+two cables are higher in trial-0 and trial-1 (0.997 and 0.998 against 0.894 and 0.851), one cable
+is higher in trial-2 (0.980 against 0.881) and the two are close in trial-3 (0.967 and 0.965). The
+cause is not explained and is under separate investigation, so the two setups are not shown to be
+equal for `arduinojson`.
+
+Provenance gaps of these folders:
+
+- `run/state.txt` records Git HEAD `cb5f33e3` of `docs/esp32-evaluation-trial-2` for `cgidecode`
+  and `arduinojson`, and `5964ed1b` of `docs/jsonrs-open-points` for `jsonrs`. The `git status:`
+  line points to a `git-status.txt` that is not published (19 to 26 changed paths for `cgidecode`
+  and `arduinojson`, 1 for `jsonrs`).
+- The `openocd:` line in `run/state.txt` holds a Python traceback instead of the version. The
+  OpenOCD version (`v0.12.0-esp32-20260831`) is in `run/eval.log`.
+- The precision-query count is not recorded (`PRECISION_SET_SIZE`, default 1,000). For `cgidecode`
+  and `arduinojson`, `eval.log` has `1000 * (1 - precision)` `Generated non accepting input` lines
+  in every folder, which fits a 1,000-input set.
+- The three two-cable folders log 39 to 46 recoverable `OpenOCD startup retry` lines
+  (`LIBUSB_ERROR_PIPE`); the one-cable folders log none. `jsonrs/trial-4-1-cable` has one
+  `LIBUSB_ERROR_IO` line.
+- Every folder has a `run/build.log`. The five `jsonrs` logs are byte-identical to the trial-0 log
+  of the same setup. The `cgidecode` and `arduinojson` logs differ from their trial-1 logs and are
+  identical across the trials of one setup and target.
+- Absolute paths of the machine that ran them are kept in the `run/*.log`,
+  `run/configuration.toml` and `run/build.options.json` files.
+
 ## evaluation.json
 
 | Field | Unit | Meaning |
