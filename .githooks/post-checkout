@@ -1,7 +1,18 @@
 #!/bin/sh
 set -eu
 
-source_root=$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")
+common_dir=$(git rev-parse --path-format=absolute --git-common-dir)
+
+# Only set defaults on a new linked worktree, preserving existing sparse choices.
+if [ "$1" = 0000000000000000000000000000000000000000 ] &&
+	[ "$3" = 1 ] &&
+	[ "$(git rev-parse --absolute-git-dir)" != "$common_dir" ] &&
+	[ "$(git config --bool core.sparseCheckout || :)" != true ]; then
+	# shortcut: Git writes the corpus first; use --no-checkout when peak disk use matters.
+	git sparse-checkout set --no-cone --no-sparse-index '/*' '!/evaluation/linux_applications/'
+fi
+
+source_root=$(dirname "$common_dir")
 source="$source_root/docs/DOCKER.local.md"
 destination="$(git rev-parse --show-toplevel)/docs/DOCKER.local.md"
 
