@@ -51,16 +51,42 @@ grammar-quality thresholds remain outside these checks.
 
 ## Git worktrees
 
-To copy your local Docker notes into new worktrees, create `docs/DOCKER.local.md` in the primary
-worktree and install the repository hook once from the repository root:
+Enable the repository's Git hook once from the repository root:
 
 ```sh
 git config --local core.hooksPath .githooks
 ```
 
-The hook copies the file only when it is missing, so it will not overwrite local changes. It runs
-for normal `git worktree add` commands; with `--no-checkout`, it runs when the worktree is
-checked out later.
+For a normal `git worktree add`, the hook excludes `evaluation/linux_applications/` from the new
+linked worktree using sparse checkout. Git-based worktree tools, including T3 and Worktrunk, use
+the same hook unless they disable Git hooks. The primary checkout and existing sparse selections
+are preserved. Switching branches does not reapply the default. These files remain tracked in
+the shared Git repository, and `git status` does not report them as deletions. Restore the full
+checkout in a worktree when needed:
+
+```sh
+git sparse-checkout disable
+```
+
+Git writes the working files before `post-checkout` runs, then sparse checkout removes the Linux
+corpus from that worktree. This is not a copy-on-write checkout: disk use temporarily includes the
+full corpus, and the shared Git object database is unchanged. To avoid writing the corpus at all,
+create the worktree without checking out files, configure its sparse selection, then populate it:
+
+```sh
+git worktree add --no-checkout -b my-branch ../gdbminer-my-work
+git -C ../gdbminer-my-work sparse-checkout set --no-cone --no-sparse-index \
+  '/*' '!/evaluation/linux_applications/'
+git -C ../gdbminer-my-work read-tree -mu HEAD
+```
+
+The exclusion requires non-cone mode, which Git 2.56 deprecates but still supports. Commands that
+read the omitted corpus need it restored first. The hook affects future worktrees; it does not
+change existing ones.
+
+The same hook also copies `docs/DOCKER.local.md` from the primary worktree if that file exists.
+It copies only when the destination is missing, preserving local changes. For `--no-checkout`,
+copy the notes manually or perform a later checkout to trigger this part of the hook.
 
 ## Writing up configuration TOMLs
 
