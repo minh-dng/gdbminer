@@ -1,0 +1,361 @@
+2026-10-30 06:50:19,133 [WARNING config.py:227 _log_override()] Connection.port: '/dev/cu.usbmodem2101' overridden by --port = '/dev/cu.usbmodem101'
+2026-10-30 06:50:19,133 [WARNING config.py:227 _log_override()] GDB.gdb_port: 3333 overridden by --gdb-port = 3335
+2026-10-30 06:50:19,133 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {gdb_port} -> 3335
+2026-10-30 06:50:19,133 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {adapter_serial} -> E8:06:90:95:F2:70
+2026-10-30 06:50:19,133 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {telnet_port} -> disabled
+2026-10-30 06:50:19,133 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {tcl_port} -> disabled
+2026-10-30 06:50:19,133 [INFO config.py:320 apply_overrides()] GDB server command: ~/.espressif/openocd-esp32/bin/openocd
+  -c "set ESP_RTOS none"
+  -c "set ESP_ONLYCPU 1"
+  -c "set ESP_FLASH_SIZE 0"
+  -f board/esp32s3-builtin.cfg
+  -c "gdb port 3335"
+  -c "telnet port disabled"
+  -c "tcl port disabled"
+  -c "adapter serial E8:06:90:95:F2:70"
+  -c "adapter speed 40000"
+2026-10-30 06:50:19,133 [INFO config.py:330 apply_overrides()] GDB.esp32s3.usb_reset_command: {adapter_serial} -> E8:06:90:95:F2:70
+2026-10-30 06:50:19,179 [INFO tree_builder.py:62 __init__()] Functions: cJSON_Parse cJSON_ParseWithOpts cJSON_ParseWithLengthOpts memcpy cJSON_New_Item skip_utf8_bom strncmp buffer_skip_whitespace parse_value parse_string parse_array parse_number get_decimal_point strtod __getreent xTaskGetCurrentTaskHandle xPortSetInterruptMaskFromISR xt_utils_get_core_id vPortClearInterruptMaskFromISR _xtos_set_intlevel __get_global_locale __gedf2 __ledf2 __fixdfsi parse_object
+2026-10-30 06:50:19,179 [INFO tree_builder.py:63 __init__()] Using original Mimid algo: False
+2026-10-30 06:50:19,404 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_arduinojson/seeds/seed.1.in 0/20
+2026-10-30 06:50:19,405 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_arduinojson/seeds/seed.10.in 1/20
+2026-10-30 06:50:19,405 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_arduinojson/seeds/seed.11.in 2/20
+2026-10-30 06:50:19,406 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_arduinojson/seeds/seed.12.in 3/20
+2026-10-30 06:50:19,407 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_arduinojson/seeds/seed.13.in 4/20
+2026-10-30 06:50:19,407 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_arduinojson/seeds/seed.14.in 5/20
+2026-10-30 06:50:19,407 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_arduinojson/seeds/seed.15.in 6/20
+2026-10-30 06:50:19,407 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_arduinojson/seeds/seed.16.in 7/20
+2026-10-30 06:50:19,407 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_arduinojson/seeds/seed.17.in 8/20
+2026-10-30 06:50:19,407 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_arduinojson/seeds/seed.18.in 9/20
+2026-10-30 06:50:19,407 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_arduinojson/seeds/seed.19.in 10/20
+2026-10-30 06:50:19,408 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_arduinojson/seeds/seed.2.in 11/20
+2026-10-30 06:50:19,408 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_arduinojson/seeds/seed.20.in 12/20
+2026-10-30 06:50:19,408 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_arduinojson/seeds/seed.3.in 13/20
+2026-10-30 06:50:19,408 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_arduinojson/seeds/seed.4.in 14/20
+2026-10-30 06:50:19,408 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_arduinojson/seeds/seed.5.in 15/20
+2026-10-30 06:50:19,408 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_arduinojson/seeds/seed.6.in 16/20
+2026-10-30 06:50:19,408 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_arduinojson/seeds/seed.7.in 17/20
+2026-10-30 06:50:19,408 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_arduinojson/seeds/seed.8.in 18/20
+2026-10-30 06:50:19,408 [INFO method_generalizer.py:98 generalize_method_trees()] progress: /Users/minh/.t3/worktrees/gdbminer/t3-8fb1f618/example_firmware/stm32_arduinojson/seeds/seed.9.in 19/20
+2026-10-30 06:50:22,748 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:F2:70)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3335
+Info : Listening on port 3335 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-30 06:50:22,751 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-30 06:50:22,751 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_json/build/esp32-s3_json.ino.elf' successfully
+2026-10-30 06:50:23,141 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <cJSON_Parse> 0/25
+2026-10-30 06:50:23,141 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 20 from 20 nodes for pattern recognition
+2026-10-30 06:50:23,685 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <cJSON_ParseWithOpts> 1/25
+2026-10-30 06:50:23,685 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 20 from 20 nodes for pattern recognition
+2026-10-30 06:50:23,799 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <cJSON_ParseWithLengthOpts> 2/25
+2026-10-30 06:50:23,799 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 20 from 20 nodes for pattern recognition
+2026-10-30 06:50:23,910 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <parse_value> 3/25
+2026-10-30 06:50:23,910 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 28 from 28 nodes for pattern recognition
+2026-10-30 06:50:24,622 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <parse_string> 4/25
+2026-10-30 06:50:24,622 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 7 from 7 nodes for pattern recognition
+2026-10-30 06:50:24,644 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <parse_string_94a0> 5/25
+2026-10-30 06:50:24,644 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 7 from 7 nodes for pattern recognition
+2026-10-30 06:50:24,665 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <parse_string_f400> 6/25
+2026-10-30 06:50:24,665 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 7 from 7 nodes for pattern recognition
+2026-10-30 06:50:24,721 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <parse_string_94a2> 7/25
+2026-10-30 06:50:24,721 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 2 from 2 nodes for pattern recognition
+2026-10-30 06:50:24,722 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <parse_array> 8/25
+2026-10-30 06:50:24,722 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 6 from 6 nodes for pattern recognition
+2026-10-30 06:50:24,734 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <parse_array_94a0> 9/25
+2026-10-30 06:50:24,734 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 6 from 6 nodes for pattern recognition
+2026-10-30 06:50:24,755 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <parse_number> 10/25
+2026-10-30 06:50:24,755 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 6 from 6 nodes for pattern recognition
+2026-10-30 06:50:24,768 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <parse_number_25a0> 11/25
+2026-10-30 06:50:24,768 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 27 from 27 nodes for pattern recognition
+2026-10-30 06:50:25,412 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <buffer_skip_whitespace> 12/25
+2026-10-30 06:50:25,412 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 25 from 25 nodes for pattern recognition
+2026-10-30 06:50:25,835 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <buffer_skip_whitespace_e870> 13/25
+2026-10-30 06:50:25,835 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 36 from 36 nodes for pattern recognition
+2026-10-30 06:50:26,357 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <parse_array_a7c1> 14/25
+2026-10-30 06:50:26,357 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 3 from 3 nodes for pattern recognition
+2026-10-30 06:50:26,358 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <parse_array_fb81> 15/25
+2026-10-30 06:50:26,358 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 1 from 1 nodes for pattern recognition
+2026-10-30 06:50:26,360 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <parse_array_fb82> 16/25
+2026-10-30 06:50:26,360 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 1 from 1 nodes for pattern recognition
+2026-10-30 06:50:26,362 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <strncmp> 17/25
+2026-10-30 06:50:26,362 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 8 from 8 nodes for pattern recognition
+2026-10-30 06:50:26,385 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <strncmp_57f0> 18/25
+2026-10-30 06:50:26,385 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 35 from 35 nodes for pattern recognition
+2026-10-30 06:50:26,999 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <parse_object> 19/25
+2026-10-30 06:50:26,999 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 4 from 4 nodes for pattern recognition
+2026-10-30 06:50:27,004 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <parse_object_94a0> 20/25
+2026-10-30 06:50:27,004 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 4 from 4 nodes for pattern recognition
+2026-10-30 06:50:27,014 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <parse_object_98d4> 21/25
+2026-10-30 06:50:27,014 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 1 from 1 nodes for pattern recognition
+2026-10-30 06:50:27,016 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <parse_object_98d3> 22/25
+2026-10-30 06:50:27,016 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 1 from 1 nodes for pattern recognition
+2026-10-30 06:50:27,018 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <parse_object_9601> 23/25
+2026-10-30 06:50:27,018 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 1 from 1 nodes for pattern recognition
+2026-10-30 06:50:27,020 [INFO method_generalizer.py:109 generalize_method_trees()] compat: <parse_object_94a2> 24/25
+2026-10-30 06:50:27,020 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 1 from 1 nodes for pattern recognition
+2026-10-30 06:50:27,028 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-30 06:50:27,028 [INFO method_generalizer.py:117 generalize_method_trees()] Used 1378 requests to generalize methods
+2026-10-30 06:50:27,028 [INFO method_generalizer.py:120 generalize_method_trees()] update: <cJSON_Parse> 0/25
+2026-10-30 06:50:27,028 [INFO method_generalizer.py:120 generalize_method_trees()] update: <cJSON_ParseWithOpts> 1/25
+2026-10-30 06:50:27,028 [INFO method_generalizer.py:120 generalize_method_trees()] update: <cJSON_ParseWithLengthOpts> 2/25
+2026-10-30 06:50:27,028 [INFO method_generalizer.py:120 generalize_method_trees()] update: <parse_value> 3/25
+2026-10-30 06:50:27,029 [INFO method_generalizer.py:120 generalize_method_trees()] update: <parse_string> 4/25
+2026-10-30 06:50:27,029 [INFO method_generalizer.py:120 generalize_method_trees()] update: <parse_string_94a0> 5/25
+2026-10-30 06:50:27,029 [INFO method_generalizer.py:120 generalize_method_trees()] update: <parse_string_f400> 6/25
+2026-10-30 06:50:27,029 [INFO method_generalizer.py:120 generalize_method_trees()] update: <parse_string_94a2> 7/25
+2026-10-30 06:50:27,029 [INFO method_generalizer.py:120 generalize_method_trees()] update: <parse_array> 8/25
+2026-10-30 06:50:27,029 [INFO method_generalizer.py:120 generalize_method_trees()] update: <parse_array_94a0> 9/25
+2026-10-30 06:50:27,029 [INFO method_generalizer.py:120 generalize_method_trees()] update: <parse_number> 10/25
+2026-10-30 06:50:27,029 [INFO method_generalizer.py:120 generalize_method_trees()] update: <parse_number_25a0> 11/25
+2026-10-30 06:50:27,029 [INFO method_generalizer.py:120 generalize_method_trees()] update: <buffer_skip_whitespace> 12/25
+2026-10-30 06:50:27,029 [INFO method_generalizer.py:120 generalize_method_trees()] update: <buffer_skip_whitespace_e870> 13/25
+2026-10-30 06:50:27,029 [INFO method_generalizer.py:120 generalize_method_trees()] update: <parse_array_a7c1> 14/25
+2026-10-30 06:50:27,029 [INFO method_generalizer.py:120 generalize_method_trees()] update: <parse_array_fb81> 15/25
+2026-10-30 06:50:27,029 [INFO method_generalizer.py:120 generalize_method_trees()] update: <parse_array_fb82> 16/25
+2026-10-30 06:50:27,029 [INFO method_generalizer.py:120 generalize_method_trees()] update: <strncmp> 17/25
+2026-10-30 06:50:27,029 [INFO method_generalizer.py:120 generalize_method_trees()] update: <strncmp_57f0> 18/25
+2026-10-30 06:50:27,029 [INFO method_generalizer.py:120 generalize_method_trees()] update: <parse_object> 19/25
+2026-10-30 06:50:27,029 [INFO method_generalizer.py:120 generalize_method_trees()] update: <parse_object_94a0> 20/25
+2026-10-30 06:50:27,029 [INFO method_generalizer.py:120 generalize_method_trees()] update: <parse_object_98d4> 21/25
+2026-10-30 06:50:27,029 [INFO method_generalizer.py:120 generalize_method_trees()] update: <parse_object_98d3> 22/25
+2026-10-30 06:50:27,029 [INFO method_generalizer.py:120 generalize_method_trees()] update: <parse_object_9601> 23/25
+2026-10-30 06:50:27,030 [INFO method_generalizer.py:120 generalize_method_trees()] update: <parse_object_94a2> 24/25
+2026-10-30 06:50:30,381 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:F2:70)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3335
+Info : Listening on port 3335 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-30 06:50:30,383 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-30 06:50:30,383 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_json/build/esp32-s3_json.ino.elf' successfully
+2026-10-30 06:50:30,718 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_3,0 ?#["-1"]> 0/40
+2026-10-30 06:50:30,718 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 26 from 26 nodes for pattern recognition
+2026-10-30 06:50:31,010 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_4,1 ?#["-1", "-1"]> 1/40
+2026-10-30 06:50:31,010 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 23 from 23 nodes for pattern recognition
+2026-10-30 06:50:31,242 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_5,0 ?#["-1", "-1", "-1"]> 2/40
+2026-10-30 06:50:31,242 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 18 from 18 nodes for pattern recognition
+2026-10-30 06:50:31,409 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_6,1 ?#["-1", "-1", "-1", "-1"]> 3/40
+2026-10-30 06:50:31,409 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 15 from 15 nodes for pattern recognition
+2026-10-30 06:50:31,520 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_7,0 ?#["-1", "-1", "-1", "-1", "-1"]> 4/40
+2026-10-30 06:50:31,520 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 15 from 15 nodes for pattern recognition
+2026-10-30 06:50:31,629 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_8,1 ?#["-1", "-1", "-1", "-1", "-1", "-1"]> 5/40
+2026-10-30 06:50:31,629 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 13 from 13 nodes for pattern recognition
+2026-10-30 06:50:31,718 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_9,0 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 6/40
+2026-10-30 06:50:31,718 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 3 from 3 nodes for pattern recognition
+2026-10-30 06:50:31,721 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_string.0:while_11,0 ?#[]> 7/40
+2026-10-30 06:50:31,721 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 7 from 7 nodes for pattern recognition
+2026-10-30 06:50:32,181 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_9,1 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 8/40
+2026-10-30 06:50:32,181 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 10 from 10 nodes for pattern recognition
+2026-10-30 06:50:32,235 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_12,0 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 9/40
+2026-10-30 06:50:32,235 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 8 from 8 nodes for pattern recognition
+2026-10-30 06:50:32,271 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_13,1 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 10/40
+2026-10-30 06:50:32,271 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 5 from 5 nodes for pattern recognition
+2026-10-30 06:50:32,285 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_14,0 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 11/40
+2026-10-30 06:50:32,285 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 4 from 4 nodes for pattern recognition
+2026-10-30 06:50:32,294 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_array.0:if_15,1 ?#["-1"]> 12/40
+2026-10-30 06:50:32,294 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 3 from 3 nodes for pattern recognition
+2026-10-30 06:50:32,301 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_array.0:while_16,0 ?#["-1"]> 13/40
+2026-10-30 06:50:32,301 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 5 from 5 nodes for pattern recognition
+2026-10-30 06:50:32,332 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_12,1 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 14/40
+2026-10-30 06:50:32,332 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 2 from 2 nodes for pattern recognition
+2026-10-30 06:50:32,334 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_number.0:while_18,0 ?#[]> 15/40
+2026-10-30 06:50:32,334 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 27 from 27 nodes for pattern recognition
+2026-10-30 06:50:33,111 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <buffer_skip_whitespace-.0:while_2,0 ?#[]> 16/40
+2026-10-30 06:50:33,111 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 33 from 33 nodes for pattern recognition
+2026-10-30 06:50:33,642 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_13,0 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 17/40
+2026-10-30 06:50:33,642 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 3 from 3 nodes for pattern recognition
+2026-10-30 06:50:33,645 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <strncmp.0:while_1,0 ?#[]> 18/40
+2026-10-30 06:50:33,645 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 35 from 35 nodes for pattern recognition
+2026-10-30 06:50:34,337 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_14,1 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 19/40
+2026-10-30 06:50:34,337 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 1 from 1 nodes for pattern recognition
+2026-10-30 06:50:34,338 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_object.0:if_28,1 ?#["-1"]> 20/40
+2026-10-30 06:50:34,338 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 1 from 1 nodes for pattern recognition
+2026-10-30 06:50:34,339 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_object.0:while_29,0 ?#["-1"]> 21/40
+2026-10-30 06:50:34,339 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 3 from 3 nodes for pattern recognition
+2026-10-30 06:50:34,358 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <buffer_skip_whitespace.1:while_2,0 ?#[]> 22/40
+2026-10-30 06:50:34,358 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 3 from 3 nodes for pattern recognition
+2026-10-30 06:50:34,359 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_5,1 ?#["-1", "-1", "-1"]> 23/40
+2026-10-30 06:50:34,359 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 5 from 5 nodes for pattern recognition
+2026-10-30 06:50:34,362 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_7,0 ?#["-1", "-1", "-1", "-1"]> 24/40
+2026-10-30 06:50:34,362 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 5 from 5 nodes for pattern recognition
+2026-10-30 06:50:34,365 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_8,1 ?#["-1", "-1", "-1", "-1", "-1"]> 25/40
+2026-10-30 06:50:34,365 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 5 from 5 nodes for pattern recognition
+2026-10-30 06:50:34,368 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_9,1 ?#["-1", "-1", "-1", "-1", "-1", "-1"]> 26/40
+2026-10-30 06:50:34,368 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 4 from 4 nodes for pattern recognition
+2026-10-30 06:50:34,370 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_12,0 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 27/40
+2026-10-30 06:50:34,370 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 4 from 4 nodes for pattern recognition
+2026-10-30 06:50:34,372 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_13,1 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 28/40
+2026-10-30 06:50:34,372 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 3 from 3 nodes for pattern recognition
+2026-10-30 06:50:34,372 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_14,0 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 29/40
+2026-10-30 06:50:34,372 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 2 from 2 nodes for pattern recognition
+2026-10-30 06:50:34,373 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_3,1 ?#["-1"]> 30/40
+2026-10-30 06:50:34,373 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 2 from 2 nodes for pattern recognition
+2026-10-30 06:50:34,373 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_5,1 ?#["-1", "-1"]> 31/40
+2026-10-30 06:50:34,373 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 2 from 2 nodes for pattern recognition
+2026-10-30 06:50:34,373 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_7,1 ?#["-1", "-1", "-1"]> 32/40
+2026-10-30 06:50:34,373 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 2 from 2 nodes for pattern recognition
+2026-10-30 06:50:34,373 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_9,1 ?#["-1", "-1", "-1", "-1"]> 33/40
+2026-10-30 06:50:34,373 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 2 from 2 nodes for pattern recognition
+2026-10-30 06:50:34,373 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_12,0 ?#["-1", "-1", "-1", "-1", "-1"]> 34/40
+2026-10-30 06:50:34,373 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 2 from 2 nodes for pattern recognition
+2026-10-30 06:50:34,373 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_13,1 ?#["-1", "-1", "-1", "-1", "-1", "-1"]> 35/40
+2026-10-30 06:50:34,373 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 2 from 2 nodes for pattern recognition
+2026-10-30 06:50:34,373 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_14,1 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 36/40
+2026-10-30 06:50:34,373 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 2 from 2 nodes for pattern recognition
+2026-10-30 06:50:34,374 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_13,0 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 37/40
+2026-10-30 06:50:34,374 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 1 from 1 nodes for pattern recognition
+2026-10-30 06:50:34,374 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_14,1 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 38/40
+2026-10-30 06:50:34,374 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 1 from 1 nodes for pattern recognition
+2026-10-30 06:50:34,375 [INFO loop_generalizer.py:101 generalize_loop_trees()] compat: <parse_value.0:if_9,0 ?#["-1", "-1", "-1", "-1", "-1", "-1"]> 39/40
+2026-10-30 06:50:34,375 [INFO active_learning_utils.py:94 identify_compatibility_patterns()] Sample 1 from 1 nodes for pattern recognition
+2026-10-30 06:50:34,382 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-30 06:50:34,382 [INFO loop_generalizer.py:107 generalize_loop_trees()] Used 1071 requests to generalize loops
+2026-10-30 06:50:34,382 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_3,0 ?#["-1"]> 0/40
+2026-10-30 06:50:34,382 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_4,1 ?#["-1", "-1"]> 1/40
+2026-10-30 06:50:34,382 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_5,0 ?#["-1", "-1", "-1"]> 2/40
+2026-10-30 06:50:34,382 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_6,1 ?#["-1", "-1", "-1", "-1"]> 3/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_7,0 ?#["-1", "-1", "-1", "-1", "-1"]> 4/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_8,1 ?#["-1", "-1", "-1", "-1", "-1", "-1"]> 5/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_9,0 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 6/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_string.0:while_11,0 ?#[]> 7/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_9,1 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 8/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_12,0 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 9/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_13,1 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 10/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_14,0 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 11/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_array.0:if_15,1 ?#["-1"]> 12/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_array.0:while_16,0 ?#["-1"]> 13/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_12,1 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 14/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_number.0:while_18,0 ?#[]> 15/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <buffer_skip_whitespace-.0:while_2,0 ?#[]> 16/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_13,0 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 17/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <strncmp.0:while_1,0 ?#[]> 18/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_14,1 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 19/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_object.0:if_28,1 ?#["-1"]> 20/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_object.0:while_29,0 ?#["-1"]> 21/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <buffer_skip_whitespace.1:while_2,0 ?#[]> 22/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_5,1 ?#["-1", "-1", "-1"]> 23/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_7,0 ?#["-1", "-1", "-1", "-1"]> 24/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_8,1 ?#["-1", "-1", "-1", "-1", "-1"]> 25/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_9,1 ?#["-1", "-1", "-1", "-1", "-1", "-1"]> 26/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_12,0 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 27/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_13,1 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 28/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_14,0 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 29/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_3,1 ?#["-1"]> 30/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_5,1 ?#["-1", "-1"]> 31/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_7,1 ?#["-1", "-1", "-1"]> 32/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_9,1 ?#["-1", "-1", "-1", "-1"]> 33/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_12,0 ?#["-1", "-1", "-1", "-1", "-1"]> 34/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_13,1 ?#["-1", "-1", "-1", "-1", "-1", "-1"]> 35/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_14,1 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 36/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_13,0 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 37/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_14,1 ?#["-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1"]> 38/40
+2026-10-30 06:50:34,383 [INFO loop_generalizer.py:112 generalize_loop_trees()] update: <parse_value.0:if_9,0 ?#["-1", "-1", "-1", "-1", "-1", "-1"]> 39/40
+2026-10-30 06:50:34,397 [INFO token_generalizer.py:267 generalize_tokens_in_grammar()] Generalize 57 tokens
+2026-10-30 06:50:37,738 [INFO esp32_instance.py:367 _start_gdb_server()] S3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+1
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (E8:06:90:95:F2:70)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: auto0.tap tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 5 -expected-id 0x120034e5"
+Info : [esp32s3] Examination succeed
+Info : [esp32s3] starting gdb server on 3335
+Info : Listening on port 3335 for gdb connections
+GDBMINER_S3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+Info : [esp32s3] Debug controller was reset.
+Info : [esp32s3] Core was reset.
+2026-10-30 06:50:37,740 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-10-30 06:50:37,740 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-s3_json/build/esp32-s3_json.ino.elf' successfully
+2026-10-30 06:50:38,495 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__WHITESPACE__]
+2026-10-30 06:50:38,519 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__WHITESPACE__]
+2026-10-30 06:50:38,544 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__WHITESPACE__]
+2026-10-30 06:50:38,558 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__WHITESPACE__]
+2026-10-30 06:50:38,739 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM_PUNCT__]
+2026-10-30 06:50:38,795 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM_PUNCT__]
+2026-10-30 06:50:38,849 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_ALPHANUM_PUNCT__]
+2026-10-30 06:50:38,919 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__DIGIT__]
+2026-10-30 06:50:38,933 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__DIGIT__]
+2026-10-30 06:50:39,096 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-30 06:50:39,237 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-30 06:50:39,366 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-30 06:50:39,493 [INFO token_generalizer.py:214 generalize_single_token()] Exhausted limit for key:<parse_number_25a0-.9-1>, rule:0, token:0, char:	
+2026-10-30 06:50:39,493 [INFO token_generalizer.py:284 generalize_tokens_in_grammar()] Blacklisted: [('<parse_number_25a0-.9-1>', 0, 0, '\t')]
+2026-10-30 06:50:39,614 [INFO token_generalizer.py:214 generalize_single_token()] Exhausted limit for key:<parse_number_25a0-.9-2>, rule:0, token:0, char:
+
+2026-10-30 06:50:39,614 [INFO token_generalizer.py:284 generalize_tokens_in_grammar()] Blacklisted: [('<parse_number_25a0-.9-2>', 0, 0, '\n')]
+2026-10-30 06:50:39,732 [INFO token_generalizer.py:214 generalize_single_token()] Exhausted limit for key:<parse_number_25a0-.9-3>, rule:0, token:0, char:
+2026-10-30 06:50:39,732 [INFO token_generalizer.py:284 generalize_tokens_in_grammar()] Blacklisted: [('<parse_number_25a0-.9-3>', 0, 0, '\r')]
+2026-10-30 06:50:39,851 [INFO token_generalizer.py:214 generalize_single_token()] Exhausted limit for key:<parse_number_25a0-.9-4>, rule:0, token:0, char: 
+2026-10-30 06:50:39,851 [INFO token_generalizer.py:284 generalize_tokens_in_grammar()] Blacklisted: [('<parse_number_25a0-.9-4>', 0, 0, ' ')]
+2026-10-30 06:50:39,865 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__DIGIT__]
+2026-10-30 06:50:39,880 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__DIGIT__]
+2026-10-30 06:50:39,896 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__DIGIT__]
+2026-10-30 06:50:39,910 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__DIGIT__]
+2026-10-30 06:50:39,924 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__DIGIT__]
+2026-10-30 06:50:40,050 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-30 06:50:40,063 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__DIGIT__]
+2026-10-30 06:50:40,077 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__DIGIT__]
+2026-10-30 06:50:40,186 [INFO token_generalizer.py:214 generalize_single_token()] Exhausted limit for key:<parse_number_25a0-.8-1>, rule:0, token:0, char:+
+2026-10-30 06:50:40,186 [INFO token_generalizer.py:284 generalize_tokens_in_grammar()] Blacklisted: [('<parse_number_25a0-.8-1>', 0, 0, '+')]
+2026-10-30 06:50:40,294 [INFO token_generalizer.py:214 generalize_single_token()] Exhausted limit for key:<parse_number_25a0-.7-1>, rule:0, token:0, char:e
+2026-10-30 06:50:40,294 [INFO token_generalizer.py:284 generalize_tokens_in_grammar()] Blacklisted: [('<parse_number_25a0-.7-1>', 0, 0, 'e')]
+2026-10-30 06:50:40,452 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-30 06:50:54,204 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-30 06:50:54,350 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-30 06:50:56,654 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-30 06:50:57,873 [INFO token_generalizer.py:168 find_max_widened()] Found widened [__ASCII_PRINTABLE__]
+2026-10-30 06:50:58,006 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-10-30 06:50:58,006 [INFO token_generalizer.py:290 generalize_tokens_in_grammar()] Used 1899 requests to generalize tokens
+2026-10-30 06:50:58,012 [INFO mine.py:361 main()] Mining time: 38.879443883895874 seconds
