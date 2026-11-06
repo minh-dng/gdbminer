@@ -1,0 +1,14 @@
+date: 2026-10-25 01:54:09 AEDT
+git HEAD: 936e5458e473b4c7e6d80287354f4207b59d3f63 (feat/calc-esp32-s3-target)
+git status: 1 changed paths (see git-status.txt)
+ELF sha256: 85f024ef21abc1ca059c56b2b6ba0857015d5c381ce3a4259be77a046c40ce84
+board: E8:06:90:95:80:6C on /dev/cu.usbmodem3101, GDB port 3334
+gdb: GNU gdb (esp-gdb) 17.1_20260402
+openocd: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+python: Python 3.12.14
+libraries:
+Name           Installed Available   Location Description
+Arduino_JSON   0.2.0     0.2.2       user     [BETA] Process JSON in your Arduino s...
+LibYxml        1.0.2     -           user     -
+percent_encode 2.0.1     2.0.6       user     Convert between URL-unsafe string and...
+
