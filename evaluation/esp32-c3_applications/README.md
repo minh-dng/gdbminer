@@ -298,6 +298,113 @@ Provenance gaps of `libyxml/trial-2-2-cables` and `libyxml/trial-3-2-cables`:
 - The `run/*.log`, `run/configuration.toml` and `run/build.options.json` files keep the absolute
   paths of the machine that ran them.
 
+The `libyxml` `trial-2-1-cable`, `trial-3-1-cable` and `trial-4-1-cable` folders hold full runs
+(flash, trace, mine and evaluate) with 20 traces each, run one after the other on 4 and 5 November
+2026 with the one-cable setup (USB-Serial/JTAG, `CDCOnBoot=cdc`, 7 hardware watchpoints). The
+tables add `trial-0-1-cable` and `trial-1-1-cable` for comparison. The values come from
+`evaluation.json`, the logs in `run/` and `run/state.txt`. AEDT is local time; the two earlier
+folders record their start in UTC, converted here (UTC+11).
+
+| Folder | Precision | Recall | F1 | Inputs | Tracing (h) | Mining (s) | Eval (s) | Requests (methods / loops / tokens) | Throughput (requests/s) |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `libyxml/trial-0-1-cable` | 0.979 | 0.672 | 0.7970 | 100,673 | 6.46 | 400.2 | 10 | 18,908 / 81,175 / 590 | 251.6 |
+| `libyxml/trial-1-1-cable` | 0.979 | 0.672 | 0.7970 | 100,673 | 6.46 | 269.7 | 9 | 18,908 / 81,175 / 590 | 373.3 |
+| `libyxml/trial-2-1-cable` | 0.998 | 1.000 | 0.9990 | 100,726 | 6.30 | 243.8 | 121 | 18,908 / 81,175 / 643 | 413.2 |
+| `libyxml/trial-3-1-cable` | 0.999 | 1.000 | 0.9995 | 100,727 | 6.31 | 244.1 | 121 | 18,908 / 81,175 / 644 | 412.6 |
+| `libyxml/trial-4-1-cable` | 0.999 | 1.000 | 0.9995 | 100,727 | 6.31 | 249.9 | 122 | 18,908 / 81,175 / 644 | 403.1 |
+
+| Folder | Start (AEDT) | End (AEDT) | Git HEAD (`run/state.txt`) | ELF sha256 | `OpenOCD startup retry` |
+| --- | --- | --- | --- | --- | --- |
+| `libyxml/trial-0-1-cable` | 9 Oct 12:01 | 11 Oct 01:40 | `54b314c8` | `bb929a33...` | 0 |
+| `libyxml/trial-1-1-cable` | 12 Oct 09:09 | 12 Oct 15:44 | not recorded | `dbbc5554...` | 0 |
+| `libyxml/trial-2-1-cable` | 4 Nov 19:35 | 5 Nov 02:01 | `cb5f33e3` | `f05c3b41...` | 0 |
+| `libyxml/trial-3-1-cable` | 5 Nov 02:02 | 5 Nov 08:29 | `cb5f33e3` | `f05c3b41...` | 0 |
+| `libyxml/trial-4-1-cable` | 5 Nov 08:29 | 5 Nov 14:57 | `cb5f33e3` | `f05c3b41...` | 0 |
+
+The end is the last line of `run/eval.log`. In the three new folders every stage of `run/times.txt`
+exits with 0 (flash 10 to 11 s, trace 22,687 to 22,730 s, mine 246 to 252 s, eval 121 to 122 s).
+Each `Mining time` line of `run/mine.log` matches `mining.duration`, and the result line of
+`run/eval.log` matches `evaluation.json`. The 2, 1 and 1 `Generated non accepting input` lines of
+`eval.log` fit a 1,000-input set and precisions of 0.998, 0.999 and 0.999. `trial-0-1-cable` is
+not a single uninterrupted run: its `times.txt` has three flash rows and a `trace-resume-1` row for
+seeds 12, 13, 16 and 17, and its `trace.log` has 17 `Start generating trace` and 16 `Write trace
+of` lines. This is a property of that earlier folder and is not described further here.
+
+**The new folders ran from commit `cb5f33e3`, not from `main`.** `run/state.txt` records Git HEAD
+`cb5f33e3` (branch `docs/esp32-evaluation-trial-2`, commit of 27 October 2026) in all three. That
+commit is not an ancestor of `main`; it shares the merge base `05aa19f9` with it and carries seven
+documentation commits that `main` does not have. Every line of the `git-status.txt` files that the
+`git status:` line points to (28, 29 and 30 changed paths, not published) starts with `??`, so
+they list untracked paths only, namely result folders and `example_programs/calc/calc.c`; no
+tracked file was modified. The checks with `git merge-base --is-ancestor` give:
+
+| Commit | `54b314c8` (trial-0) | `cb5f33e3` (trial-2 to trial-4) | `main` |
+| --- | --- | --- | --- |
+| `7c2e798c` miner: preserve every partial omission of optional symbols | no | yes | yes |
+| `e6675aec` connection: stop when an input crashes the ESP32 firmware | no | yes | yes |
+| `94690b6c` firmware: skip the HWCDC flush in the json, cgidecode and xml wrappers | no | yes | yes |
+| `aad1dc4f` config: reset the ESP32-C3 after GDB attaches | no | yes | yes |
+| `c1753725` config: turn off OpenOCD flash support in the ESP32-C3 configurations | no | yes | yes |
+| `b3bcccc7` tracer: keep the target halted after GDB aborts an execution command | no | yes | yes |
+| `0e288191`, `12bdd858` tracer: limit each OpenOCD start attempt and read its output once more | no | no | yes |
+| `7a8f1526` tracer: report an exited ESP32 GDB instead of a stop timeout | no | no | yes |
+| `d1c5a129` firmware: set watchpoints without C casts, drop type checks | no | no | yes |
+| `87c16375` config: add the `GDB.frame_arguments` option | no | no | yes |
+
+`trial-1-1-cable` records no Git HEAD. `94690b6c` changes `example_firmware/esp32-c3_xml/main.ino`.
+The effect of the commits that `cb5f33e3` lacks is not assessed. `example_firmware/esp32-c3_xml`
+is the same in `cb5f33e3` and in `565f278a`, the HEAD of the two-cable `libyxml` folders above.
+
+Recall is 1.0 in the three new folders and 0.672 in the two earlier ones, and the grammars differ.
+After sorting the rule alternatives, `trial-0-1-cable` and `trial-1-1-cable` are equal (96
+nonterminals, 296 alternatives) and the three new folders are equal to each other (115 and 438);
+`trial-1-1-cable` and `trial-2-1-cable` differ in 101 nonterminals. `mined_g.json`,
+`method_trees.json` and `loop_trees.json` are byte-identical among the three new folders and among
+the two earlier ones, and differ between the two groups. The two-cable folders above show the same
+split: recall 0.672 for trial-0 and trial-1, 1.0 for trial-2 and trial-3. The files show these
+differences between the earlier and the new folders; the cause is not assessed, and no run changed
+one factor at a time:
+
+- Code: see the table above. The recorded HEADs differ, and `trial-1-1-cable` has none.
+- Configuration: `run/configuration.toml` of the new folders adds `set ESP_FLASH_SIZE 0` to the
+  OpenOCD arguments, drops the `-s` script directory and sets `reset_on_connect = true`, where
+  `trial-1-1-cable` has `false`. The seed directory is an absolute path. `run/seeds.sha256` is
+  identical in all five folders (the same seeds). The three new configurations differ only in
+  `output_directory`.
+- Firmware: the ELF is another one in each of the three groups (`trial-0-1-cable`,
+  `trial-1-1-cable`, the new folders), and the checkout and machine paths in
+  `run/build.options.json` differ (`/Users/dan173` in the earlier folders, `/Users/minh` in the new
+  ones).
+- Traces: the sequence of function names, arguments, watchpoint hits and stack depths of all 20
+  seeds equals that of `trial-1-1-cable`; the files differ in the code addresses. For
+  `trial-0-1-cable` the sequences of 3 seeds differ (for seed 1, the first difference is a
+  `yxml_pushstack` argument at record index 490). Among the new folders, 19 of 20 traces are
+  byte-identical in each pair with `trial-2-1-cable`; seed 12 in `trial-3-1-cable` and seed 3 in
+  `trial-4-1-cable` differ from `trial-2-1-cable`, again first at record index 490, a
+  `yxml_pushstack` argument (`0` against `1070145536`).
+- Mining: the methods and loops requests are equal in all five folders. The tokens step is 643 and
+  644 against 590. The evaluation took 121 to 122 s, against 9 and 10 s; this is not explained
+  either.
+
+Provenance gaps of `libyxml/trial-2-1-cable`, `trial-3-1-cable` and `trial-4-1-cable`:
+
+- `run/build.log` is byte-identical in the three folders (`cmp`). One firmware build served all
+  three trials; no build was made per trial. The ELF sha256 (`f05c3b41...`) is the same in the three
+  `run/state.txt` files, and `run/build.options.json` is identical. The build log differs from
+  those of `trial-0-1-cable` and `trial-1-1-cable`, which also differ from each other.
+- `run/state.txt` records Git HEAD `cb5f33e3` in all three, which is not on `main` (see above). Its
+  `git status:` line points to a `git-status.txt` that is not published.
+- The `openocd:` line in `run/state.txt` holds a Python traceback instead of the version. The
+  OpenOCD version (`v0.12.0-esp32-20260831`) is in `run/eval.log`.
+- The precision-query count is not recorded (`PRECISION_SET_SIZE`, default 1,000). Precision stays
+  provisional apart from the `eval.log` fit stated above.
+- The scan of `trace.log`, `mine.log`, `eval.log` and `flash.log` for `ERROR`, `Traceback`,
+  `Timeout`, `restart`, `abort`, `Stack canary`, `LIBUSB_ERROR` and `failed` finds nothing, and no
+  `OpenOCD startup retry` line exists. No `No suitable loop` warning appears in `mine.log`. Each
+  `trace.log` has 20 `Start generating trace` and 20 `Write trace of` lines.
+- The `run/*.log`, `run/configuration.toml` and `run/build.options.json` files keep the absolute
+  paths of the machine that ran them.
+
 ## evaluation.json
 
 | Field | Unit | Meaning |
