@@ -12,8 +12,9 @@ esp32-s3_<target>/trial-<n>-<setup>/
 └── run/                 # provenance: configuration, build, flash and stage logs, times.txt
 ```
 
-`<target>` is `cgidecode`, `arduinojson`, `libyxml` or `calc`. `<setup>` is `1-watchpoint` or
-`2-watchpoints` (hardware watchpoints used while tracing; `watchpoint_count` of the configuration).
+`<target>` is `cgidecode`, `arduinojson`, `libyxml`, `calc` or `jsonrs`. `<setup>` is
+`1-watchpoint` or `2-watchpoints` (hardware watchpoints used while tracing; `watchpoint_count` of
+the configuration).
 
 ## Trial-3 and trial-4 folders
 
@@ -208,6 +209,62 @@ Anomaly scan of the logs (`ERROR`, `Traceback`, `Timeout`, `restart`, `abort`, `
 - The method and loop requests (154,455 and 42,164) equal those of the C3 one-cable runs; the 126
   token requests are within their range (109 to 137). Throughput is 21.5 requests per second
   against 24.7 to 26.0 for the C3 one-cable runs; this is not explained.
+
+## Jsonrs trial-0 folder
+
+`jsonrs/trial-0-2-watchpoints` holds one complete run (flash, trace, mine and evaluate) of the
+desktop Rust parser (tinyjson 2.5.1) with the corpus of `example_programs/json`, using two hardware
+watchpoints (`watchpoint_count` 2, DBREAK0 and DBREAK1). There is no one-watchpoint `jsonrs` run.
+The run was not resumed: `run/times.txt` has one row per stage, all with exit code 0, and the folder
+has no `build.log`. The values come from `evaluation.json`, the logs in `run/` and `run/state.txt`;
+AEDT is local time.
+
+| Folder | Start (AEDT) | End (AEDT) | Inputs | Tracing (h) | Mining (s) | Eval (s) | Requests (methods / loops / tokens) | Throughput (requests/s) | Precision | Recall | F1 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `jsonrs/trial-0-2-watchpoints` | 28 Oct 09:38 | 29 Oct 05:36 | 7,073 | 19.89 | 141.8 | 9 | 5,975 / 857 / 241 | 49.9 | 1.000 | 0.608 | 0.7562 |
+
+Tracing is the sum of the 20 seed durations (71,619.5 s; `times.txt` has 71,622 s for the call).
+Tracing ended on 29 October 05:32, mining ran from 05:33 to 05:35 and evaluation from 05:36:22 to
+05:36:29. The `Mining time` line of `run/mine.log` (141.8 s) equals `mining.duration`, and the
+result line of `run/eval.log` equals `evaluation.json`. The board is `E8:06:90:95:F2:70` on
+`/dev/cu.usbmodem101` with GDB port 3335, and the ELF sha256 is
+`e4d636325e5c1b48d44d4d8894d761ef7724d1d6093b2f9f9190696655aa0eba`. The 20 seeds and the
+1,000-input evaluation corpus are those of `run/seeds.sha256` and `run/eval.sha256`.
+
+Compared with the ESP32-C3 `jsonrs` folders in `evaluation/esp32-c3_applications/`, which use six
+hardware watchpoints: precision 1.0 and recall 0.608 are the values of all seven C3 folders. The
+methods and loops requests (5,975 and 857) are equal; the tokens step is 241 against 231 to 336.
+After sorting the rule alternatives, the S3 grammar has 35 nonterminals and 157 alternatives, as
+each C3 grammar does, and its nonterminal names differ from theirs in 65 nonterminals. The cause
+of that difference is not assessed.
+
+Provenance gaps of this folder:
+
+- `run/state.txt` records Git HEAD `c569282d`, a detached HEAD with a clean tree (0 changed paths).
+  It is not on `main`: it descends from `1937b8ef`, which is on `main`, through three commits that
+  `main` does not have (the C3 and S3 `jsonrs` targets in an earlier form and a C3 post-mortem).
+  `git merge-base --is-ancestor` shows that it contains `7c2e798c`, `e6675aec`, `94690b6c`,
+  `aad1dc4f`, `0e288191`, `7a8f1526`, `d1c5a129`, `87c16375` and `1937b8ef`, and lacks the
+  commits that put the `jsonrs` targets on `main` (for example `e49bbb28`). Between that HEAD and
+  `main`, `src/`, the S3 `jsonrs` firmware sources and `example_programs/` do not differ; the
+  differences in the S3 `jsonrs` directory are its `README.md` and the `port` line of its two
+  configurations (`/dev/cu.usbmodem2101` against an empty string). The `git status:` line points
+  to a `git-status.txt` that is not published (it is empty).
+- The `openocd:` line in `run/state.txt` holds a Python traceback instead of the version. The
+  OpenOCD version (`v0.12.0-esp32-20260831`) is in `run/eval.log`.
+- The precision-query count is not recorded (`PRECISION_SET_SIZE`, default 1,000). `eval.log` has
+  no `Generated non accepting input` line, which fits precision 1.0 but does not show the count, so
+  the precision of 1.0 stays provisional.
+- There is no `run/build.log`: the source folder has none. The ELF is identified by the sha256
+  above and the build by `run/build.options.json`.
+- `trace.log` has 146 `OpenOCD startup retry` lines, 149 `LIBUSB_ERROR_IO` lines and two failed
+  first attach attempts (28 October 20:08 and 23:22; no second attempt failed). All 20 traces were
+  written (20 `Start generating trace for` and 20 `Write trace of` lines). `flash.log`,
+  `mine.log` and `eval.log` have no match for `ERROR`, `Traceback`, `Timeout`, `restart`, `abort`,
+  `Stack canary`, `LIBUSB_ERROR` or `failed` and no retry line. `mine.log` has no `No suitable loop`
+  warning.
+- Absolute paths of the machine that ran it are kept in the `run/*.log`, `run/configuration.toml`
+  (the seed directory) and `run/build.options.json` files.
 
 ## evaluation.json
 
