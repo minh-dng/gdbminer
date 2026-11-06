@@ -242,6 +242,7 @@ two earlier folders record their start in UTC, converted here (UTC+11).
 | `libyxml/trial-1-2-cables` | 0.986 | 0.672 | 0.7993 | 100,672 | 7.06 | 1.38 | 24 | 18,908 / 81,175 / 589 | 20.3 |
 | `libyxml/trial-2-2-cables` | 0.997 | 1.000 | 0.9985 | 100,727 | 6.87 | 1.33 | 135 | 18,908 / 81,175 / 644 | 21.0 |
 | `libyxml/trial-3-2-cables` | 0.995 | 1.000 | 0.9975 | 100,725 | 6.90 | 1.34 | 133 | 18,908 / 81,175 / 642 | 20.9 |
+| `libyxml/trial-4-2-cables` | 0.996 | 1.000 | 0.9980 | 100,725 | 7.06 | 1.27 | 143 | 18,908 / 81,175 / 642 | 22.0 |
 
 | Folder | Start (AEDT) | Git HEAD (`run/state.txt`) | ELF sha256 | `OpenOCD startup retry` (trace / mine / eval) |
 | --- | --- | --- | --- | --- |
@@ -249,6 +250,7 @@ two earlier folders record their start in UTC, converted here (UTC+11).
 | `libyxml/trial-1-2-cables` | 12 Oct 00:40 | not recorded | `48a5432e...` | 66 / 3 / 1 |
 | `libyxml/trial-2-2-cables` | 5 Nov 20:15 | `565f278a` | `70cd6bc5...` | 70 / 3 / 1 |
 | `libyxml/trial-3-2-cables` | 6 Nov 04:32 | `565f278a` | `70cd6bc5...` | 71 / 3 / 1 |
+| `libyxml/trial-4-2-cables` | 6 Nov 14:03 | `195ce687` | `70cd6bc5...` | 70 / 3 / 1 |
 
 `trial-2-2-cables` ran until 6 November 04:31 and `trial-3-2-cables` until 12:51 (last line of
 `run/eval.log`). Tracing took 24,739 s and 24,833 s, mining 4,786 s and 4,818 s, with 20 traces,
@@ -295,6 +297,42 @@ Provenance gaps of `libyxml/trial-2-2-cables` and `libyxml/trial-3-2-cables`:
   `trial-2-2-cables/run/trace.log`, `LIBUSB_ERROR_IO`. `flash.log` has none, and `mine.log` and
   `eval.log` have the same 3 and 1 as the earlier folders.
 - Other `libyxml` two-cable trial results are not part of these folders.
+- The `run/*.log`, `run/configuration.toml` and `run/build.options.json` files keep the absolute
+  paths of the machine that ran them.
+
+The `libyxml` `trial-4-2-cables` folder holds one more full run (flash, trace, mine and evaluate)
+with 20 traces and the two-cable setup. It started on 6 November 2026 at 14:03 AEDT and ended at
+22:27 (last line of `run/eval.log`); both tables above list it. Tracing took 25,409 s, mining
+4,586 s and the evaluation 143 s, with 100,725 mining requests, and every stage of `run/times.txt`
+exits with 0. Precision is 0.996 (4 `Generated non accepting input` lines in `run/eval.log`), recall
+1.000 and F1 0.9980.
+
+The result repeats `trial-3-2-cables`. The 20 traces, `trace.json`, `trees.json`,
+`method_trees.json`, `loop_trees.json` and `mined_g.json` are byte-identical to those of
+`trial-3-2-cables`; `parsing_g.json` differs in bytes but is equal after sorting the rule
+alternatives (115 nonterminals, 438 alternatives). Only the precision differs (0.996 against
+0.995), as do the mining and tracing times. This is a comparison of two trials, not a statement on
+other trials.
+
+Provenance gaps of `libyxml/trial-4-2-cables`:
+
+- `run/build.log` is byte-identical to that of `trial-2-2-cables` and `trial-3-2-cables` (`cmp`),
+  as are the ELF sha256 (`70cd6bc5...`) and the `run/seeds.sha256`. The `run/configuration.toml`
+  differs from that of `trial-3-2-cables` only in `output_directory`.
+- `run/state.txt` records Git HEAD `195ce687`, not `565f278a`. The two commits have the same
+  `src/` tree (`git diff 565f278a 195ce687 -- src` is empty). Its `git status:` line points to a
+  `git-status.txt` that is not published: the 5 changed paths are untracked result folders of
+  other trials.
+- The `openocd:` line in `run/state.txt` holds a Python traceback instead of the version. The
+  OpenOCD version (`v0.12.0-esp32-20260831`) is in `run/eval.log`.
+- The precision-query count is not recorded (`PRECISION_SET_SIZE`, default 1,000). The 4 rejected
+  inputs fit a 1,000-input set and the precision of 0.996.
+- The `OpenOCD startup retry` lines (table above) are recoverable: every stage ends with exit 0.
+  Each of the 70 trace retries reports `No device matches the serial string`, and 45 of them add a
+  `libusb_get_string_descriptor_ascii()` failure with `LIBUSB_ERROR_PIPE`; `mine.log` has 3 such
+  failures and `eval.log` 1. No `TimeoutError`, `Traceback`, `LIBUSB_ERROR_IO` or `No suitable loop`
+  line appears, `flash.log` has none, and `trace.log` has 20 `Start generating trace` and 20
+  `Write trace of` lines.
 - The `run/*.log`, `run/configuration.toml` and `run/build.options.json` files keep the absolute
   paths of the machine that ran them.
 
