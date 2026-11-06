@@ -148,6 +148,88 @@ Provenance gaps of these folders:
 - Absolute paths of the machine that ran them are kept in the `run/*.log`,
   `run/configuration.toml` and `run/build.options.json` files.
 
+The `cgidecode` `trial-2-2-cables`, `trial-3-2-cables` and `trial-4-2-cables` folders hold full
+runs (flash, trace, mine and evaluate) with 20 traces each, run one after the other on 5 November
+2026 with the two-cable setup. They are the two-cable counterparts of the one-cable `cgidecode`
+trial-2 to trial-4 folders listed above. The tables add `trial-0-2-cables` and `trial-1-2-cables`
+for comparison. The values come from `evaluation.json`, the logs in `run/` and `run/state.txt`.
+AEDT is local time; the two earlier folders record their start in UTC, converted here (UTC+11).
+
+| Folder | Precision | Recall | F1 | Inputs | Tracing (min) | Mining (s) | Eval (s) | Requests (methods / loops / tokens) | Throughput (requests/s) |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `cgidecode/trial-0-2-cables` | 0.980 | 0.971 | 0.9755 | 2,187 | 8.4 | 45.0 | 25 | 287 / 307 / 1,593 | 48.6 |
+| `cgidecode/trial-1-2-cables` | 0.986 | 0.971 | 0.9784 | 2,188 | 8.3 | 46.2 | 25 | 287 / 307 / 1,594 | 47.4 |
+| `cgidecode/trial-2-2-cables` | 0.984 | 0.971 | 0.9775 | 2,185 | 8.2 | 39.6 | 24 | 287 / 307 / 1,591 | 55.2 |
+| `cgidecode/trial-3-2-cables` | 0.975 | 0.971 | 0.9730 | 2,186 | 8.3 | 39.2 | 23 | 287 / 307 / 1,592 | 55.8 |
+| `cgidecode/trial-4-2-cables` | 0.980 | 0.971 | 0.9755 | 2,184 | 8.4 | 39.5 | 23 | 287 / 307 / 1,590 | 55.3 |
+
+| Folder | Start (AEDT) | End (AEDT) | Git HEAD (`run/state.txt`) | ELF sha256 | `OpenOCD startup retry` (trace / mine / eval) |
+| --- | --- | --- | --- | --- | --- |
+| `cgidecode/trial-0-2-cables` | 9 Oct 01:59 | 9 Oct 02:11 | `54b314c8` | `76f16c40...` | 22 / 3 / 1 |
+| `cgidecode/trial-1-2-cables` | 13 Oct 01:01 | 13 Oct 01:13 | not recorded | `7d0a15d4...` | 22 / 3 / 1 |
+| `cgidecode/trial-2-2-cables` | 5 Nov 19:14 | 5 Nov 19:26 | `565f278a` | `546addbb...` | 23 / 3 / 1 |
+| `cgidecode/trial-3-2-cables` | 5 Nov 19:27 | 5 Nov 19:38 | `565f278a` | `546addbb...` | 23 / 3 / 1 |
+| `cgidecode/trial-4-2-cables` | 5 Nov 19:39 | 5 Nov 19:51 | `565f278a` | `546addbb...` | 23 / 4 / 1 |
+
+The end is the last line of `run/eval.log`. Every stage of `run/times.txt` exits with 0 in the three
+new folders (flash 12 to 16 s, trace 497 to 503 s, mine 42 s, eval 23 to 24 s). Each `Mining time`
+line of `run/mine.log` matches `mining.duration`, and the result line of `run/eval.log` matches
+`evaluation.json`. Recall is 0.971 in all five two-cable folders and in the three one-cable folders.
+Precision is 0.975 to 0.986 across the five two-cable folders. The 16, 25 and 20 `Generated non
+accepting input` lines of `eval.log` fit a 1,000-input set and precisions of 0.984, 0.975 and 0.980.
+
+The three new folders differ from `trial-0-2-cables` and `trial-1-2-cables` in these recorded ways;
+no run changed one factor at a time, so the cause of any difference is not assessed:
+
+- Code: `565f278a` contains the tracer, miner and firmware fixes made after `54b314c8` (checked with
+  `git merge-base --is-ancestor`; for example `7c2e798c`, `e6675aec`, `d1c5a129`, `94690b6c`,
+  `aad1dc4f`, `c1753725` and `0e288191`), which `54b314c8` lacks. `trial-1-2-cables` records no
+  Git HEAD. `94690b6c` changes `example_firmware/esp32-c3_cgidecode/src/main.cpp`.
+- Configuration: `run/configuration.toml` of the new folders adds `set ESP_FLASH_SIZE 0` to the
+  OpenOCD arguments, drops the `-s` script directory, and sets `reset_on_connect = true` where
+  both earlier folders have `false`. The seed directory is an absolute path. `run/seeds.sha256` is
+  identical to that of `trial-1-2-cables` (the same seeds). The three new configurations differ only
+  in `output_directory`. `trial-0-2-cables` also differs from the others in the serial device, the
+  literal `adapter serial` and `gdb_server_address` where the others use `gdb_port` settings.
+- Firmware: the ELF is another one (three ELFs in the five folders). The checkout and machine paths
+  in `run/build.options.json` differ (`/Users/dan173` in `trial-1-2-cables`, `/Users/minh` in the
+  new folders).
+- Mining: 39.2 to 39.6 s and 55.2 to 55.8 requests per second, against 45.0 and 46.2 s and 48.6 and
+  47.4 requests per second. The methods and loops requests are the same in all five folders (287 and
+  307); the tokens step is 1,590 to 1,592 against 1,593 and 1,594.
+- Traces: for all 20 seeds, the sequence of function names, arguments, watchpoint hits and stack
+  depths equals that of `trial-1-2-cables` (and of `trial-0-2-cables`). The files differ in the code
+  addresses. The 20 traces of the three new folders are byte-identical to each other.
+- Grammars: after sorting the rule alternatives, every `parsing_g.json` has 11 nonterminals. The
+  alternatives number 179 in `trial-0-2-cables`, `trial-1-2-cables` and `trial-4-2-cables`, and 180
+  in `trial-2-2-cables` and `trial-3-2-cables`. `trial-0-2-cables` and `trial-1-2-cables` are equal,
+  as are `trial-2-2-cables` and `trial-3-2-cables`; `trial-4-2-cables` differs from them in one
+  nonterminal, and `trial-2-2-cables` from `trial-1-2-cables` in 8. The `mined_g.json`,
+  `method_trees.json` and `loop_trees.json` files are byte-identical among the three new folders and
+  among the two earlier ones, and differ between the two groups.
+
+Provenance gaps of `cgidecode/trial-2-2-cables`, `trial-3-2-cables` and `trial-4-2-cables`:
+
+- `run/build.log` is byte-identical in the three folders (`cmp`). One firmware build served all
+  three trials; no build was made per trial. The ELF sha256 (`546addbb...`) is the same in the three
+  `run/state.txt` files, and `run/build.options.json` is identical. The build log differs from
+  those of `trial-0-2-cables` and `trial-1-2-cables`, which also differ from each other.
+- `run/state.txt` records Git HEAD `565f278a` in all three. Its `git status:` line points to a
+  `git-status.txt` that is not published (0, 1 and 2 changed paths for trial-2, trial-3 and
+  trial-4).
+- The `openocd:` line in `run/state.txt` holds a Python traceback instead of the version. The
+  OpenOCD version (`v0.12.0-esp32-20260831`) is in `run/eval.log`.
+- The precision-query count is not recorded (`PRECISION_SET_SIZE`, default 1,000). Precision stays
+  provisional apart from the `eval.log` fit stated above.
+- The `OpenOCD startup retry` lines (table above) are recoverable: every stage ends with exit 0. The
+  logs show `libusb_get_string_descriptor_ascii()` failures with `LIBUSB_ERROR_PIPE` (trace 19, 17
+  and 12, mine 3, 2 and 2, eval 1, 0 and 1 for trial-2, trial-3 and trial-4) and no other error
+  pattern. `flash.log` has none. No `No suitable loop` warning appears in any of the five
+  `mine.log` files, and each `trace.log` has 20 `Start generating trace` and 20 `Write trace of`
+  lines.
+- The `run/*.log`, `run/configuration.toml` and `run/build.options.json` files keep the absolute
+  paths of the machine that ran them.
+
 The `libyxml` `trial-2-2-cables` and `trial-3-2-cables` folders hold full runs (flash, trace, mine
 and evaluate) with 20 traces each, run one after the other on 5 and 6 November 2026 with the
 two-cable setup. The tables add `trial-0-2-cables` and `trial-1-2-cables` for comparison. The
