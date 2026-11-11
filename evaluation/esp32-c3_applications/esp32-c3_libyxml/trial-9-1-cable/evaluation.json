@@ -1,0 +1,39 @@
+{
+  "precision": 0.996,
+  "recall": 1.0,
+  "f1": 0.9979959919839679,
+  "no_tested_inputs": 100727,
+  "watchpoint_count": 7,
+  "execution_duration": 23448.1,
+  "tracing": {
+    "duration": 23269.7,
+    "seeds": [
+      {"seed": "seed.1.in", "duration": 661.3},
+      {"seed": "seed.2.in", "duration": 61.2},
+      {"seed": "seed.3.in", "duration": 819.3},
+      {"seed": "seed.4.in", "duration": 1564.1},
+      {"seed": "seed.5.in", "duration": 209.9},
+      {"seed": "seed.6.in", "duration": 231.7},
+      {"seed": "seed.7.in", "duration": 61.2},
+      {"seed": "seed.8.in", "duration": 61.0},
+      {"seed": "seed.9.in", "duration": 210.2},
+      {"seed": "seed.10.in", "duration": 4043.4},
+      {"seed": "seed.11.in", "duration": 3630.2},
+      {"seed": "seed.12.in", "duration": 210.1},
+      {"seed": "seed.13.in", "duration": 1006.3},
+      {"seed": "seed.14.in", "duration": 1519.8},
+      {"seed": "seed.15.in", "duration": 234.4},
+      {"seed": "seed.16.in", "duration": 258.0},
+      {"seed": "seed.17.in", "duration": 2266.6},
+      {"seed": "seed.18.in", "duration": 3945.5},
+      {"seed": "seed.19.in", "duration": 281.5},
+      {"seed": "seed.20.in", "duration": 1994.0}
+    ]
+  },
+  "mining": {
+    "duration": 178.4,
+    "requests": {"methods": 18908, "loops": 81175, "tokens": 644, "total": 100727},
+    "throughput": 564.6
+  },
+  "evaluation_duration": 129
+}
