@@ -443,6 +443,168 @@ Provenance gaps of `libyxml/trial-2-1-cable`, `trial-3-1-cable` and `trial-4-1-c
 - The `run/*.log`, `run/configuration.toml` and `run/build.options.json` files keep the absolute
   paths of the machine that ran them.
 
+## Trials added on 10 to 15 November 2026
+
+These 24 folders hold full runs (flash, trace, mine and evaluate) with 20 traces each: `arduinojson`
+`trial-4-2-cables` and `trial-5` to `trial-9` in both setups, `cgidecode` `trial-5` to `trial-9` in
+both setups, and `calc` `trial-3-2-cables` to `trial-5-2-cables`. With them `arduinojson` and
+`cgidecode` have `trial-0` to `trial-9` in both setups. `calc` has two-cable `trial-0` to `trial-5`
+(`trial-2-2-cables` is not mined, see above) and one-cable `trial-0` to `trial-4`; a one-cable
+`calc` `trial-5` was not run. This update does not describe `jsonrs` or `libyxml` `trial-5` to
+`trial-9`. The values come from `evaluation.json`, the logs in `run/` and `run/state.txt`; AEDT is
+local time.
+
+One board ran them one after the other, never in parallel: `calc` `trial-3-2-cables` started on
+10 November at 09:04, the three `calc` runs took 37.2 to 37.5 h each, `arduinojson` started on
+15 November at 01:31 and `cgidecode` finished at about 11:39 on 15 November (end = start plus the
+stage seconds of `run/times.txt`). The order within `arduinojson` and `cgidecode` alternates
+between two cables and one cable, and every run flashes its own build first. Every stage of
+`run/times.txt` has `exit=0` once, so no stage needed a second attempt. No folder has `errors.log`,
+`resume-*` material or `runner.log`.
+
+### Results
+
+#### arduinojson
+
+| Folder | Start (AEDT) | Precision | Recall | F1 | Inputs | Tracing (min) | Mining (s) | Eval (s) | Throughput (requests/s) |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `trial-4-2-cables` | 15 Nov 01:31 | 0.979 | 0.977 | 0.9780 | 3,831 | 40.2 | 103.2 | 40 | 37.1 |
+| `trial-5-1-cable` | 15 Nov 02:16 | 0.979 | 0.977 | 0.9780 | 3,899 | 36.8 | 21.1 | 20 | 184.8 |
+| `trial-5-2-cables` | 15 Nov 02:57 | 0.981 | 0.977 | 0.9790 | 3,743 | 40.5 | 88.8 | 39 | 42.2 |
+| `trial-6-1-cable` | 15 Nov 03:42 | 0.976 | 0.977 | 0.9765 | 3,743 | 36.9 | 11.7 | 20 | 319.9 |
+| `trial-6-2-cables` | 15 Nov 04:23 | 0.969 | 0.977 | 0.9730 | 3,927 | 40.4 | 166.9 | 38 | 23.5 |
+| `trial-7-1-cable` | 15 Nov 05:10 | 0.971 | 0.977 | 0.9740 | 3,873 | 36.9 | 13.0 | 20 | 297.9 |
+| `trial-7-2-cables` | 15 Nov 05:50 | 0.975 | 0.977 | 0.9760 | 3,983 | 40.4 | 508.0 | 38 | 7.8 |
+| `trial-8-1-cable` | 15 Nov 06:42 | 0.983 | 0.977 | 0.9800 | 3,982 | 36.8 | 22.3 | 20 | 178.6 |
+| `trial-8-2-cables` | 15 Nov 07:23 | 0.969 | 0.977 | 0.9730 | 4,039 | 40.4 | 160.3 | 39 | 25.2 |
+| `trial-9-1-cable` | 15 Nov 08:09 | 0.969 | 0.977 | 0.9730 | 3,754 | 36.5 | 11.8 | 20 | 318.1 |
+| `trial-9-2-cables` | 15 Nov 08:49 | 0.988 | 0.977 | 0.9825 | 3,879 | 40.4 | 533.3 | 39 | 7.3 |
+
+#### cgidecode
+
+| Folder | Start (AEDT) | Precision | Recall | F1 | Inputs | Tracing (min) | Mining (s) | Eval (s) | Throughput (requests/s) |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `trial-5-1-cable` | 15 Nov 09:42 | 0.978 | 0.971 | 0.9745 | 2,185 | 8.2 | 7.1 | 6 | 307.7 |
+| `trial-5-2-cables` | 15 Nov 09:54 | 0.977 | 0.971 | 0.9740 | 2,186 | 8.5 | 40.4 | 23 | 54.1 |
+| `trial-6-1-cable` | 15 Nov 10:06 | 0.973 | 0.971 | 0.9720 | 2,183 | 8.2 | 7.1 | 6 | 307.5 |
+| `trial-6-2-cables` | 15 Nov 10:17 | 0.979 | 0.971 | 0.9750 | 2,188 | 8.5 | 40.5 | 23 | 54.0 |
+| `trial-7-1-cable` | 15 Nov 10:30 | 0.976 | 0.971 | 0.9735 | 2,188 | 8.2 | 7.1 | 6 | 308.2 |
+| `trial-7-2-cables` | 15 Nov 10:41 | 0.978 | 0.971 | 0.9745 | 2,188 | 8.6 | 40.5 | 24 | 54.0 |
+| `trial-8-1-cable` | 15 Nov 10:54 | 0.978 | 0.971 | 0.9745 | 2,186 | 8.1 | 7.1 | 6 | 307.9 |
+| `trial-8-2-cables` | 15 Nov 11:05 | 0.977 | 0.971 | 0.9740 | 2,187 | 8.5 | 40.5 | 23 | 54.0 |
+| `trial-9-1-cable` | 15 Nov 11:18 | 0.975 | 0.971 | 0.9730 | 2,187 | 8.2 | 7.2 | 6 | 303.8 |
+| `trial-9-2-cables` | 15 Nov 11:29 | 0.977 | 0.971 | 0.9740 | 2,187 | 8.5 | 40.4 | 23 | 54.1 |
+
+#### calc
+
+| Folder | Start (AEDT) | Precision | Recall | F1 | Inputs | Tracing (h) | Mining (h) | Eval (s) | Throughput (requests/s) |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `trial-3-2-cables` | 10 Nov 09:04 | 1.000 | 1.000 | 1.0000 | 196,735 | 27.6 | 9.67 | 37 | 5.7 |
+| `trial-4-2-cables` | 11 Nov 22:21 | 1.000 | 1.000 | 1.0000 | 196,755 | 27.9 | 9.67 | 37 | 5.7 |
+| `trial-5-2-cables` | 13 Nov 11:56 | 1.000 | 1.000 | 1.0000 | 196,750 | 27.8 | 9.68 | 38 | 5.6 |
+
+### Code, firmware and transport retries
+
+| Folder | Git HEAD | ELF sha256 | `OpenOCD startup retry` (trace / mine / eval) | Non-accepting inputs in `eval.log` |
+| --- | --- | --- | --- | --- |
+| `arduinojson/trial-4-2-cables` | `c8ea5336` | `aeb8b36b...` | 39 / 3 / 1 | 21 |
+| `arduinojson/trial-5-1-cable` | `c8ea5336` | `a0d1a192...` | 0 / 0 / 0 | 21 |
+| `arduinojson/trial-5-2-cables` | `c8ea5336` | `aeb8b36b...` | 37 / 3 / 1 | 19 |
+| `arduinojson/trial-6-1-cable` | `c8ea5336` | `a0d1a192...` | 0 / 0 / 0 | 24 |
+| `arduinojson/trial-6-2-cables` | `c8ea5336` | `aeb8b36b...` | 35 / 4 / 1 | 31 |
+| `arduinojson/trial-7-1-cable` | `c8ea5336` | `a0d1a192...` | 0 / 0 / 0 | 29 |
+| `arduinojson/trial-7-2-cables` | `c8ea5336` | `aeb8b36b...` | 36 / 4 / 1 | 25 |
+| `arduinojson/trial-8-1-cable` | `c8ea5336` | `a0d1a192...` | 0 / 0 / 0 | 17 |
+| `arduinojson/trial-8-2-cables` | `c8ea5336` | `aeb8b36b...` | 35 / 3 / 1 | 31 |
+| `arduinojson/trial-9-1-cable` | `c8ea5336` | `a0d1a192...` | 0 / 0 / 0 | 31 |
+| `arduinojson/trial-9-2-cables` | `c8ea5336` | `aeb8b36b...` | 40 / 3 / 1 | 12 |
+| `calc/trial-3-2-cables` | `8e27de88` | `6551a1e9...` | 194 / 3 / 1 | 0 |
+| `calc/trial-4-2-cables` | `8e27de88` | `6551a1e9...` | 192 / 3 / 1 | 0 |
+| `calc/trial-5-2-cables` | `8e27de88` | `6551a1e9...` | 193 / 3 / 1 | 0 |
+| `cgidecode/trial-5-1-cable` | `c8ea5336` | `43924ba6...` | 0 / 0 / 0 | 22 |
+| `cgidecode/trial-5-2-cables` | `c8ea5336` | `c0808667...` | 22 / 4 / 1 | 23 |
+| `cgidecode/trial-6-1-cable` | `c8ea5336` | `43924ba6...` | 0 / 0 / 0 | 27 |
+| `cgidecode/trial-6-2-cables` | `c8ea5336` | `c0808667...` | 23 / 3 / 1 | 21 |
+| `cgidecode/trial-7-1-cable` | `c8ea5336` | `43924ba6...` | 0 / 0 / 0 | 24 |
+| `cgidecode/trial-7-2-cables` | `c8ea5336` | `c0808667...` | 24 / 3 / 1 | 22 |
+| `cgidecode/trial-8-1-cable` | `c8ea5336` | `43924ba6...` | 0 / 0 / 0 | 22 |
+| `cgidecode/trial-8-2-cables` | `c8ea5336` | `c0808667...` | 24 / 3 / 1 | 23 |
+| `cgidecode/trial-9-1-cable` | `c8ea5336` | `43924ba6...` | 0 / 0 / 0 | 25 |
+| `cgidecode/trial-9-2-cables` | `c8ea5336` | `c0808667...` | 23 / 3 / 1 | 23 |
+
+### Reading the results
+
+- `arduinojson`: recall is 0.977 in every run from `trial-2` on (0.936 in `trial-0` and `trial-1`).
+  Precision is 0.969 to 0.988 in `trial-4` to `trial-9`. Mean precision of `trial-5` to `trial-9` is
+  0.9756 (one cable) and 0.9764 (two cables). Over `trial-2` to `trial-9` it is 0.9761 and 0.9634;
+  the lower two-cable value comes from `trial-2-2-cables` (0.881), the run whose cause is under
+  separate investigation. The new folders do not show an effect of the cable setup on precision.
+- `cgidecode`: recall is 0.971 in all new folders. Precision is 0.973 to 0.979; the mean of
+  `trial-5` to `trial-9` is 0.9760 (one cable) and 0.9776 (two cables).
+- `calc`: precision, recall and F1 are 1.0 in all three runs, as in every earlier `calc` trial.
+  Mining takes 9.67 to 9.68 h at 5.6 to 5.7 requests per second, against 9.81 h (5.6) in
+  `trial-1-2-cables`. The method and loop requests are the same as before (154,455 and 42,164); only
+  the tokens step differs (116, 136 and 131).
+- Precision fits the logs in all 21 `arduinojson` and `cgidecode` folders: the number of `Generated
+  non accepting input` lines in `eval.log` equals `1000 * (1 - precision)`, and the 3 `calc` folders
+  have none at precision 1.0. This fits a 1,000-input precision set; the set size is not recorded.
+- Every `Mining time` line of `run/mine.log` matches `mining.duration`, the 20 per-seed tracing
+  durations add up to `tracing.duration`, the three request types add up to the total, and the
+  result line of `run/eval.log` matches `evaluation.json`.
+- `arduinojson` mining time varies much more than the request counts. The methods and loops requests
+  are the same in all runs (1,213 and 736); the tokens step is 1,794 to 2,090. Two-cable mining
+  takes 88.8 to 533.3 s (7.3 to 42.2 requests per second; `trial-7-2-cables` and `trial-9-2-cables`
+  need 508.0 and 533.3 s), one-cable mining 11.7 to 22.3 s (178.6 to 319.9 requests per second). The
+  earlier folders on `main` span 12 to 611 s. The cause is not assessed.
+- Grammars, after sorting the rule alternatives: `calc` has one grammar (23 nonterminals, 49
+  alternatives) in all folders of a setup. `cgidecode` has two (11 nonterminals; 179 or 180
+  alternatives), `arduinojson` three (one cable) and four (two cables) with 82 to 84 nonterminals
+  and 360 to 364 alternatives, across `trial-2` to `trial-9`. The miner is unseeded, so the raw
+  bytes differ anyway. `mined_g.json` is byte-identical to that of the reference folder of the same
+  target and setup (`trial-4`, or `calc` `trial-1-2-cables`) in all 24 folders, and so are the 20
+  traces of every `calc` and `cgidecode` folder. Three `arduinojson` two-cable traces differ from
+  `trial-4-2-cables` (seed 1 in `trial-5`, seed 15 in `trial-6`, seed 6 in `trial-9`); the one-cable
+  traces do not differ. The cause is not assessed.
+
+### Provenance gaps
+
+- `run/state.txt` records Git HEAD `c8ea5336` for `arduinojson` and `cgidecode` and `8e27de88` for
+  `calc`. Both commits are on `main` and contain the tracer, miner and firmware fixes listed in the
+  table above (`0e288191`, `12bdd858`, `7a8f1526`, `d1c5a129`, `87c16375`; checked with `git
+  merge-base --is-ancestor`). `8e27de88..c8ea5336` changes no file outside `evaluation/`. The
+  earlier folders on `main` ran at `cb5f33e3` (one cable, not on `main`), `565f278a` (`cgidecode`
+  two cables) or earlier. The effect of the code difference is not assessed. In particular
+  `arduinojson` `trial-4-2-cables` and the one-cable `trial-4-1-cable` on `main` ran at different
+  commits, so they are not a matched pair.
+- The ELFs are new builds (`aeb8b36b...` and `a0d1a192...` for two and one cables of `arduinojson`,
+  `c0808667...` and `43924ba6...` for `cgidecode`, `6551a1e9...` for `calc`). Within a target and
+  setup the `run/build.log` files are byte-identical (`cmp`) and the ELF is the same in every
+  `run/state.txt`, so one build served all trials of the setup. They differ from the ELFs of the
+  earlier folders (for example `5d4d5e05...` for `arduinojson` and `45608463...` for `cgidecode`
+  with one cable), and the cause of the new hashes was not examined. `run/seeds.sha256`,
+  `run/eval.sha256` and `run/configuration.toml` equal those of the earlier trial of the same target
+  and setup (`trial-4`, or `calc` `trial-1-2-cables`) except for `seed_directory` and
+  `output_directory`.
+- Left out: `run/git-status.txt`, as in the earlier folders. The `git status:` line of
+  `run/state.txt` points to it and keeps the counts: 0 to 10 changed paths for `arduinojson`, 11 to
+  20 for `cgidecode` and 11 to 13 for `calc` (in the order of the trials). All entries are untracked
+  paths (`??`: result folders of other trials, and for `calc` also `example_programs/calc/calc.c`);
+  no tracked file was modified in the run checkout.
+- The `openocd:` line in `run/state.txt` holds a Python traceback instead of the version. The
+  OpenOCD version is in `run/eval.log`.
+- Two-cable runs log recoverable `OpenOCD startup retry` lines (table above), one-cable runs none.
+  Per seed that is about 2 (`arduinojson`), about 1 (`cgidecode`) and about 10 (`calc`);
+  `trial-1-2-cables` of `calc` has 196 on `main`. The logs show `LIBUSB_ERROR_PIPE` lines with the
+  retries, and one `LIBUSB_ERROR_IO` line in `arduinojson/trial-8-2-cables/run/trace.log`. No
+  `Timeout`, `Traceback` or `Stack canary` line occurs in any `trace.log`, `mine.log`, `eval.log` or
+  `flash.log`; `flash.log` has no retry. Each `trace.log` has 20 `Start generating trace` and 20
+  `Write trace of` lines. The `calc` miner logs 51 `No suitable loop` warnings in each run, as in
+  every earlier `calc` folder; `arduinojson` and `cgidecode` have none.
+- The precision-query count is not recorded (`PRECISION_SET_SIZE`, default 1,000), so precision
+  stays provisional apart from the `eval.log` fit stated above.
+- The `run/*.log`, `run/configuration.toml` and `run/build.options.json` files keep the absolute
+  paths of the machine that ran them.
+
 ## evaluation.json
 
 | Field | Unit | Meaning |

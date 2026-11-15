@@ -1,0 +1,4 @@
+flash exit=0 seconds=17
+trace exit=0 seconds=2417
+mine exit=0 seconds=105
+eval exit=0 seconds=40
