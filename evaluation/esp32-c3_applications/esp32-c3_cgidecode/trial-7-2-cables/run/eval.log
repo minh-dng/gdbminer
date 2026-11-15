@@ -1,0 +1,82 @@
+2026-11-15 10:53:26,836 [WARNING config.py:227 _log_override()] Connection.port: '/dev/cu.usbserial-110' overridden by --port = '/dev/cu.usbserial-11130'
+2026-11-15 10:53:26,837 [INFO config.py:229 _log_override()] GDB.gdb_port = 3333 from --gdb-port (same as the configuration)
+2026-11-15 10:53:26,837 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {gdb_port} -> 3333
+2026-11-15 10:53:26,837 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {adapter_serial} -> A0:F2:62:01:70:28
+2026-11-15 10:53:26,837 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {telnet_port} -> disabled
+2026-11-15 10:53:26,837 [INFO config.py:317 apply_overrides()] GDB.gdb_server_path: {tcl_port} -> disabled
+2026-11-15 10:53:26,837 [INFO config.py:320 apply_overrides()] GDB server command: ~/.espressif/openocd-esp32/bin/openocd
+  -c "set ESP_RTOS none"
+  -c "set ESP_FLASH_SIZE 0"
+  -f board/esp32c3-builtin.cfg
+  -c "gdb port 3333"
+  -c "telnet port disabled"
+  -c "tcl port disabled"
+  -c "adapter serial A0:F2:62:01:70:28"
+  -c "adapter speed 40000"
+2026-11-15 10:53:27,144 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-11-15 10:53:27,144 [WARNING esp32_instance.py:415 _start_gdb_server()] C3 OpenOCD startup retry: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Error: libusb_get_string_descriptor_ascii() failed with 'LIBUSB_ERROR_PIPE'
+Info : No device matches the serial string
+Error: esp_usb_jtag: could not find or open device!
+
+Error: [esp32c3] Unsupported DTM version: -1
+Error: [esp32c3] Could not identify target type.
+2026-11-15 10:53:27,565 [INFO esp32_instance.py:407 _start_gdb_server()] C3 OpenOCD initialized: Open On-Chip Debugger v0.12.0-esp32-20260831 (2026-08-31-22:12)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+none
+0
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+WARNING: ESP flash support is disabled!
+force hard breakpoints
+adapter speed: 40000 kHz
+Info : esp_usb_jtag: serial (A0:F2:62:01:70:28)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32c3.tap0 tap/device found: 0x00005c25 (mfg: 0x612 (Espressif Systems), part: 0x0005, ver: 0x0)
+Info : [esp32c3] datacount=2 progbufsize=16
+Info : [esp32c3] Examined RISC-V core
+Info : [esp32c3]  XLEN=32, misa=0x40101104
+Info : [esp32c3] Chip revision v1.1
+Info : [esp32c3] Examination succeed
+Info : [esp32c3] starting gdb server on 3333
+Info : Listening on port 3333 for gdb connections
+GDBMINER_C3_READY
+Info : tcl server disabled
+Info : telnet server disabled
+2026-11-15 10:53:27,570 [INFO sut_instance.py:41 init_gdb_controller()] GDB started
+2026-11-15 10:53:27,570 [INFO sut_instance.py:44 init_gdb_controller()] GDB loaded symbols from self.elf_file='./example_firmware/esp32-c3_cgidecode/build-2/esp32-c3_cgidecode.ino.elf' successfully
+2026-11-15 10:53:28,901 [INFO precision_recall.py:73 main()] Generated non accepting input: 'Vge4%HQ"f ax8_'
+2026-11-15 10:53:32,686 [INFO precision_recall.py:73 main()] Generated non accepting input: 'Q[S/%LCs'
+2026-11-15 10:53:32,977 [INFO precision_recall.py:73 main()] Generated non accepting input: '%j5P-L2KVt'
+2026-11-15 10:53:34,298 [INFO precision_recall.py:73 main()] Generated non accepting input: ']Zf%``#/(U'
+2026-11-15 10:53:36,665 [INFO precision_recall.py:73 main()] Generated non accepting input: '%\x0cCi'
+2026-11-15 10:53:36,726 [INFO precision_recall.py:73 main()] Generated non accepting input: '*amVjcbV%X_'
+2026-11-15 10:53:37,935 [INFO precision_recall.py:73 main()] Generated non accepting input: 'Oy\rJKN-AN%uE3'
+2026-11-15 10:53:38,179 [INFO precision_recall.py:73 main()] Generated non accepting input: '_Cff5;<c%c'
+2026-11-15 10:53:39,972 [INFO precision_recall.py:73 main()] Generated non accepting input: '%I+g>Fgt'
+2026-11-15 10:53:40,093 [INFO precision_recall.py:73 main()] Generated non accepting input: '_/6%<tk'
+2026-11-15 10:53:40,360 [INFO precision_recall.py:73 main()] Generated non accepting input: 'V+C2%CBZd'
+2026-11-15 10:53:40,821 [INFO precision_recall.py:73 main()] Generated non accepting input: 'h%x'
+2026-11-15 10:53:41,610 [INFO precision_recall.py:73 main()] Generated non accepting input: '%pz'
+2026-11-15 10:53:41,804 [INFO precision_recall.py:73 main()] Generated non accepting input: '\rhwwCE%IHSqn+Cx^R'
+2026-11-15 10:53:41,887 [INFO precision_recall.py:73 main()] Generated non accepting input: '%A{_xA'
+2026-11-15 10:53:42,590 [INFO precision_recall.py:73 main()] Generated non accepting input: '_%LEwn3j'
+2026-11-15 10:53:42,630 [INFO precision_recall.py:73 main()] Generated non accepting input: 'r\rQ%WcU8'
+2026-11-15 10:53:43,960 [INFO precision_recall.py:73 main()] Generated non accepting input: ';1%c'
+2026-11-15 10:53:44,167 [INFO precision_recall.py:73 main()] Generated non accepting input: 'v+%enYjEq_\n9PJ'
+2026-11-15 10:53:45,168 [INFO precision_recall.py:73 main()] Generated non accepting input: 'QI-b0Z%w9'
+2026-11-15 10:53:45,948 [INFO precision_recall.py:73 main()] Generated non accepting input: '\r%+A'
+2026-11-15 10:53:46,296 [INFO precision_recall.py:73 main()] Generated non accepting input: '%Nv#NZNW'
+2026-11-15 10:53:46,448 [INFO hardware_instance.py:98 _stop_gdb_server()] GDB Server terminated
+2026-11-15 10:53:48,066 [INFO precision_recall.py:104 main()] {'precision': 0.978, 'recall': 0.971, 'f1': 0.9744874294510005, 'no_tested_inputs': 2188}
