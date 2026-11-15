@@ -1,0 +1,14 @@
+date: 2026-11-15 21:42:49 AEDT
+git HEAD: c8ea5336d34280f7e534f17ad2405bd8044dc73e (HEAD)
+git status: 6 changed paths (see git-status.txt)
+ELF sha256: 553c65e55e91a4082e61b6e71c6d51d015c9a102e813aac04a9acf0f5f3bab2f
+board: E8:06:90:95:F2:70 on /dev/cu.usbmodem101, GDB port 3335
+gdb: GNU gdb (esp-gdb) 17.1_20260402
+openocd: Traceback (most recent call last):
+python: Python 3.12.14
+libraries:
+Name           Installed Available   Location Description
+Arduino_JSON   0.2.0     0.2.2       user     [BETA] Process JSON in your Arduino s...
+LibYxml        1.0.2     -           user     -
+percent_encode 2.0.1     2.0.6       user     Convert between URL-unsafe string and...
+
