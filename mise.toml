@@ -71,19 +71,19 @@ run = { task = "install:dev" }
 [tasks.lint]
 description = "ruff check (lint) — respects [tool.ruff] in pyproject.toml"
 # Uses mise-managed `ruff` so it works without a fully-synced .venv (pygraphviz needs graphviz headers).
-run = "ruff check src analyze_experiments.py"
+run = "ruff check src analyze_experiments.py scripts/eval_runner"
 
 [tasks."lint:fix"]
 description = "ruff check --fix"
-run = "ruff check --fix src analyze_experiments.py"
+run = "ruff check --fix src analyze_experiments.py scripts/eval_runner"
 
 [tasks.fmt]
 description = "ruff format (auto-fix formatting)"
-run = "ruff format src analyze_experiments.py"
+run = "ruff format src analyze_experiments.py scripts/eval_runner"
 
 [tasks."fmt:check"]
 description = "ruff format --check (CI-friendly)"
-run = "ruff format --check src analyze_experiments.py"
+run = "ruff format --check src analyze_experiments.py scripts/eval_runner"
 
 [tasks.typecheck]
 description = "basedpyright on src + analyze_experiments.py (mise-managed, no venv needed)"
