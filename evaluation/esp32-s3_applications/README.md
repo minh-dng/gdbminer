@@ -266,6 +266,228 @@ Provenance gaps of this folder:
 - Absolute paths of the machine that ran it are kept in the `run/*.log`, `run/configuration.toml`
   (the seed directory) and `run/build.options.json` files.
 
+## Trial-5 to trial-9 folders
+
+These nine folders hold full runs (flash, trace, mine and evaluate) with 20 traces each, using two
+hardware watchpoints: `arduinojson` `trial-5` to `trial-8` and `cgidecode` `trial-5` to `trial-9`.
+They were run on 15 and 16 November 2026. With them `cgidecode` has two-watchpoint `trial-0` to
+`trial-9`, and `arduinojson` has two-watchpoint `trial-0` to `trial-8`. The one-watchpoint folders
+of both targets end at `trial-4`. The values come from `evaluation.json`, the logs in `run/` and
+`run/state.txt`; AEDT is local time.
+
+The thesis testing campaign ended with these runs, so the gaps are deliberate and no run failed:
+`arduinojson` two-watchpoint `trial-9`, and one-watchpoint `trial-5` and later of both targets,
+were not run. For scope only: an S3 `calc` one-watchpoint run was started and stopped on purpose at
+13 of 20 traces when the campaign ended. It was not mined or exported and has no folder.
+
+Two boards ran the nine runs, one run at a time on each board and both boards in parallel. Every
+run flashed its own board first. The end is the last time stamp of `run/eval.log`.
+
+| Board (`run/state.txt`) | Runs in order (start, end) |
+| --- | --- |
+| `E8:06:90:95:F2:70`, `/dev/cu.usbmodem101`, GDB port 3335 | `cgidecode` `trial-5` (15 Nov 15:15, 15:59), `trial-7` (15:59, 16:44), `trial-9` (16:44, 17:28); `arduinojson` `trial-6` (17:28, 21:42), `trial-7` (21:42, 16 Nov 02:00) |
+| `E8:06:90:95:80:6C`, `/dev/cu.usbmodem3101`, GDB port 3334 | `cgidecode` `trial-6` (15 Nov 15:16, 16:00), `trial-8` (16:00, 16:44); `arduinojson` `trial-5` (16:45, 22:59), `trial-8` (23:00, 16 Nov 03:23) |
+
+Every stage of `run/times.txt` has `exit=0` once, with one exception: `arduinojson/trial-5` has two
+`mine` rows (see below). No folder has `errors.log`, `resume-*` material or `runner.log`.
+
+### Results
+
+All values come from `evaluation.json`. Recall is constant per target: 0.971 for `cgidecode`, and
+0.977 or 0.998 to 0.999 for `arduinojson`.
+
+| Folder | Start (AEDT) | Precision | Recall | F1 | Inputs | Tracing (h) | Mining (s) | Eval (s) | Requests (methods / loops / tokens) | Throughput (requests/s) |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `arduinojson/trial-5-2-watchpoints` | 15 Nov 16:45 | 0.901 | 0.977 | 0.9375 | 4,432 | 4.17 | 69.9 | 20 | 1,378 / 1,071 / 1,983 | 63.4 |
+| `arduinojson/trial-6-2-watchpoints` | 15 Nov 17:28 | 0.838 | 0.998 | 0.9110 | 4,251 | 4.17 | 34.9 | 22 | 1,378 / 1,071 / 1,802 | 121.8 |
+| `arduinojson/trial-7-2-watchpoints` | 15 Nov 21:42 | 0.857 | 0.999 | 0.9226 | 4,342 | 4.21 | 99.3 | 33 | 1,378 / 1,071 / 1,893 | 43.7 |
+| `arduinojson/trial-8-2-watchpoints` | 15 Nov 23:00 | 0.976 | 0.977 | 0.9765 | 3,991 | 4.32 | 24.6 | 23 | 1,378 / 1,071 / 1,542 | 162.2 |
+| `cgidecode/trial-5-2-watchpoints` | 15 Nov 15:15 | 0.976 | 0.971 | 0.9735 | 2,185 | 0.67 | 15.1 | 9 | 287 / 307 / 1,591 | 144.7 |
+| `cgidecode/trial-6-2-watchpoints` | 15 Nov 15:16 | 0.982 | 0.971 | 0.9765 | 2,183 | 0.68 | 15.0 | 9 | 287 / 307 / 1,589 | 145.5 |
+| `cgidecode/trial-7-2-watchpoints` | 15 Nov 15:59 | 0.983 | 0.971 | 0.9770 | 2,187 | 0.69 | 51.6 | 9 | 287 / 307 / 1,593 | 42.4 |
+| `cgidecode/trial-8-2-watchpoints` | 15 Nov 16:00 | 0.980 | 0.971 | 0.9755 | 2,186 | 0.69 | 15.0 | 9 | 287 / 307 / 1,592 | 145.7 |
+| `cgidecode/trial-9-2-watchpoints` | 15 Nov 16:44 | 0.975 | 0.971 | 0.9730 | 2,187 | 0.68 | 15.0 | 8 | 287 / 307 / 1,593 | 145.8 |
+
+Cross-checks, all nine folders: each `Mining time` line of the last `mine` call equals
+`mining.duration`; the 20 per-seed tracing durations add up to `tracing.duration`; the three request
+types add up to `no_tested_inputs`; the result line of `run/eval.log` equals `evaluation.json`; each
+`trace.log` has 20 `Start generating trace for` and 20 `Write trace of` lines; the number of
+`Generated non accepting input` lines in `eval.log` equals `1000 * (1 - precision)` (24, 18, 17, 20
+and 25 for `cgidecode`; 99, 162, 143 and 24 for `arduinojson`). The `cgidecode` mining time of
+`trial-7` (51.6 s against 15.0 to 15.1 s) includes one failed attach attempt in `run/mine.log` (see
+the retries below); the request counts are those of the other `cgidecode` runs.
+
+### Code, firmware and USB dropouts
+
+`OpenOCD startup retry` lines and `; USB reset` lines, counted per log. A failed first attach
+attempt (`S3 attach attempt 1 failed: S3 OpenOCD startup timed out after 30s`) shows as 73 or 74
+retry lines and one reset line. In every `trace.log` and `mine.log` the number of reset lines equals
+the number of failed first attempts, and no second attempt failed, so every dropout was recovered.
+`eval.log` and `flash.log` have no retry line.
+
+| Folder | Git HEAD | ELF sha256 | Board | Trace: retries / resets | Mine: retries / resets |
+| --- | --- | --- | --- | --- | --- |
+| `arduinojson/trial-5-2-watchpoints` | `c8ea5336` | `553c65e5...` | `80:6C` | 222 / 3 | 74 / 1 |
+| `arduinojson/trial-6-2-watchpoints` | `c8ea5336` | `553c65e5...` | `F2:70` | 296 / 4 | 0 / 0 |
+| `arduinojson/trial-7-2-watchpoints` | `c8ea5336` | `553c65e5...` | `F2:70` | 589 / 8 | 74 / 1 |
+| `arduinojson/trial-8-2-watchpoints` | `c8ea5336` | `553c65e5...` | `80:6C` | 369 / 5 | 0 / 0 |
+| `cgidecode/trial-5-2-watchpoints` | `c8ea5336` | `a6c7d080...` | `F2:70` | 147 / 2 | 0 / 0 |
+| `cgidecode/trial-6-2-watchpoints` | `c8ea5336` | `a6c7d080...` | `80:6C` | 221 / 3 | 0 / 0 |
+| `cgidecode/trial-7-2-watchpoints` | `c8ea5336` | `a6c7d080...` | `F2:70` | 222 / 3 | 74 / 1 |
+| `cgidecode/trial-8-2-watchpoints` | `c8ea5336` | `a6c7d080...` | `80:6C` | 221 / 3 | 0 / 0 |
+| `cgidecode/trial-9-2-watchpoints` | `c8ea5336` | `a6c7d080...` | `F2:70` | 148 / 2 | 0 / 0 |
+
+No `trace.log`, `mine.log`, `eval.log` or `flash.log` has a `TimeoutError`, `Traceback` or `Stack
+canary` line, and no `out.log` has a `TimeoutError` or `Traceback` line. The `LIBUSB_ERROR_IO`
+lines accompany the retries; `arduinojson/trial-6-2-watchpoints` also has three in `mine.log` and
+one in `eval.log` without a retry or a failed attach. The traces show no effect of the dropouts:
+the 20 seed traces of every folder are byte-identical to those of `trial-3-2-watchpoints`
+(`arduinojson`) and `trial-4-2-watchpoints` (`cgidecode`) on this branch.
+
+### First mining attempt of `arduinojson/trial-5-2-watchpoints`
+
+`run/times.txt` has two `mine` rows:
+
+```text
+flash exit=0 seconds=13
+trace exit=0 seconds=15015
+mine exit=143 seconds=7212
+mine exit=0 seconds=72
+eval exit=0 seconds=20
+```
+
+The first attempt ended with exit 143 (128 plus SIGTERM) after 7,212 s, which fits a runner limit
+of 2 h (7,200 s). The runner is not part of this repository. The second attempt, started at 22:57
+without any intervention, finished in 72 s (the miner's own timer: 69.9 s). The published
+`run/mine.log` holds only the second attempt. `out.log` is longer (9,684 lines) because it holds
+both attempts, so the first one is visible there:
+
+- Attempt 1 started at 20:57:10 (`out.log` line 7462), 32 s after the last trace was written. It
+  finished the methods step (1,378 requests, 20:57:18) and the loops step (1,071 requests,
+  20:57:25), the same counts as attempt 2, and began the tokens step. The last progress line is
+  `token_generalizer.py:168 find_max_widened()` at 20:57:31.999 (line 7815).
+- Then `out.log` has 237 lines `sut_connection.py:110 input_accepted()] Connection timeout!`, one
+  every 30.1 to 30.3 s, without a gap, from 20:58:03 (line 7816) to 22:56:42 (line 8052), and no
+  other line in between. The miner reported no progress for two hours.
+- The runner's `errors.log` (in the run checkout under `output/s3-eval-trial-5/`, not published)
+  keeps only the tail of the attempt: the last four warnings, then the warning of the Python
+  `resource_tracker` that follows the termination.
+
+```text
+2026-11-15 22:57:22 [b json-2-watchpoints] mine exit 143 (attempt 1)
+    | 2026-11-15 22:55:11,830 [WARNING sut_connection.py:110 input_accepted()] Connection timeout!
+    | 2026-11-15 22:55:42,028 [WARNING sut_connection.py:110 input_accepted()] Connection timeout!
+    | 2026-11-15 22:56:12,229 [WARNING sut_connection.py:110 input_accepted()] Connection timeout!
+    | 2026-11-15 22:56:42,417 [WARNING sut_connection.py:110 input_accepted()] Connection timeout!
+    | .../multiprocessing/resource_tracker.py:279: UserWarning: resource_tracker: There appear to be 9 leaked semaphore objects to clean up at shutdown
+```
+
+The cause of the stall is not known. No other published log has a `Connection timeout!` line, and
+the second attempt, started on the same board, ran without it. The published grammar and
+`evaluation.json` come from the second attempt. `execution_duration` (15,082.2 s) is tracing plus
+the mining time of that attempt; the 7,212 s of the first attempt are not counted, so the wall time
+of this run is longer (6.25 h, from 16:45 to 22:59).
+
+### Precision of `arduinojson`
+
+Precision is 0.838 to 0.976 in the four new `arduinojson` folders, and 0.847 to 0.982 in
+`trial-2` to `trial-4` on this branch. Recall is 0.977 or 0.998 to 0.999. The table lists all
+two-watchpoint `arduinojson` trials from `trial-2` on; `trial-0` and `trial-1` (precision 0.997 and
+0.992, recall 0.881) have other traces and a smaller grammar and are left out.
+
+| Trial | Precision | Recall | Inputs | Tokens requests | Delimiters widened in `parsing_g.json` |
+| --- | --- | --- | --- | --- | --- |
+| 2 | 0.981 | 0.977 | 4,031 | 1,582 | none |
+| 3 | 0.982 | 0.999 | 4,008 | 1,559 | `[` |
+| 4 | 0.847 | 0.999 | 4,348 | 1,899 | `}` and `[` |
+| 5 | 0.901 | 0.977 | 4,432 | 1,983 | `,` |
+| 6 | 0.838 | 0.998 | 4,251 | 1,802 | `:` |
+| 7 | 0.857 | 0.999 | 4,342 | 1,893 | `}` and `[` |
+| 8 | 0.976 | 0.977 | 3,991 | 1,542 | none |
+
+What the files show:
+
+- **Same input, other grammar.** The 20 seed traces, `mined_g.json`, `method_trees.json`,
+  `loop_trees.json` and `trees.json` of `trial-2` to `trial-8` are the same in both setups (the
+  JSON files differ only in the seed directory path). The methods and loops requests are 1,378 and
+  1,071 in every run. `mine.py` writes `mined_g.json` before the token step and `parsing_g.json`
+  after it. Only `parsing_g.json` differs, and only in the token step: sorted by alternatives it
+  gives five grammars in these seven runs (79 or 80 nonterminals, 353 or 355 alternatives;
+  `trial-2` and `trial-8` are equal, and so are `trial-4` and `trial-7`).
+- **The grammars differ in one widened token.** In every grammar one token of the seeds is widened
+  to `<__ASCII_PRINTABLE_s__>` (any run of printable ASCII) and used by the number rules. In
+  `trial-2` and `trial-8` that is all. In the other five runs the widened token also stands in for
+  a structural delimiter: the opening `[` of an array (rule `parse_array.0-0-c`), the closing `}` of
+  an object (`parse_object.0`), the `:` of an object member (`parse_object.0-3`) or the `,` between
+  members (`parse_object.0-9`). The table above lists which. The delimiter in each rule is read
+  from the grammars where it is not widened.
+- **Precision follows the widened delimiter.** Widening `}`, `:` or `,` goes with precision 0.838 to
+  0.901; widening `[` alone (`trial-3`) does not (0.982). The same holds in the one-watchpoint
+  folders on this branch: `trial-3` and `trial-4` widen no delimiter (0.981), `trial-2` widens `[`
+  and `,` (0.887, recall 0.999), and `trial-1` widens `}` (0.850, with the earlier grammar).
+- **Recall follows `[` and `:`.** Recall is 0.998 or 0.999 when `[` or `:` is widened (`trial-3`,
+  `trial-4`, `trial-6`, `trial-7`) and 0.977 when neither is (`trial-2`, `trial-5`, `trial-8`).
+- **The number of inputs is a symptom.** `trial-4` to `trial-7` (precision 0.838 to 0.901) have
+  4,251 to 4,432 inputs; `trial-2`, `trial-3` and `trial-8` (0.976 to 0.982) have 3,991 to 4,031.
+  The methods and loops requests are equal, so the difference is the tokens step (1,802 to 1,983
+  against 1,542 to 1,582 requests).
+- **Sampling noise is small.** The precision inputs are random draws from the grammar (1,000 per
+  run, see gaps), which gives a standard error of about 0.004 at 0.98 and 0.011 at 0.85. Runs with
+  the same grammar agree within that: `trial-4` and `trial-7` have 0.847 and 0.857; `trial-2`,
+  `trial-8` and the one-watchpoint `trial-3` and `trial-4` have 0.976 to 0.981.
+- **Not explained.** Why the token step widens different delimiters from the same inputs is not
+  established. The step calls the unseeded `random.choice` (twice in
+  `src/miner/token_generalizer.py`) to fill the rest of a tree before it asks the board whether a
+  replacement is accepted, which is one candidate. `src/miner` and `src/eval` do not differ between
+  `cb5f33e3` (`trial-3`, `trial-4`) and `c8ea5336` (`trial-5` to `trial-8`), so a code change does
+  not explain the spread. No file here tests the candidate. The USB dropouts do not explain it
+  either: the traces are identical, and the two folders with a failed attach in `mine.log`
+  (`trial-5`, `trial-7`) have precision 0.901 and 0.857, the two without (`trial-6`, `trial-8`)
+  0.838 and 0.976. Among these four runs the boards show no pattern (`80:6C`: 0.901 and 0.976,
+  `F2:70`: 0.838 and 0.857). A mean of precision over trials describes this pipeline with this
+  unseeded miner; it is not a property of the target or the board.
+
+### Reading the results for `cgidecode`
+
+Precision is 0.975 to 0.983 and recall is 0.971 in all five folders. Together with `trial-0` to
+`trial-4` the ten two-watchpoint folders have precision 0.975 to 0.983. After sorting the rule
+alternatives, `trial-2` to `trial-9` give two grammars (11 nonterminals, 179 alternatives, or 180 in
+`trial-5` and `trial-7`); `mined_g.json` is identical to that of `trial-4` in all five folders.
+
+### Provenance gaps
+
+- `run/state.txt` records Git HEAD `c8ea5336`, which is on `main`, for all nine folders. It contains
+  the tracer, miner and firmware fixes `0e288191`, `12bdd858`, `7a8f1526`, `d1c5a129`, `87c16375`
+  and `1937b8ef` (`git merge-base --is-ancestor`). Compared with `cb5f33e3`, the HEAD of
+  `trial-3` and `trial-4`, only five files differ in `src/`: `esp32_instance.py`,
+  `esp32c3_instance.py`, `esp32s3_instance.py`, `sut_instance.py` and `util/config.py`. `src/miner`,
+  `src/eval` and the `esp32-s3_json` and `esp32-s3_cgidecode` firmware sources do not differ. The
+  effect of the tracer changes on the results is not assessed.
+- The ELFs are new builds: `553c65e5...` for `arduinojson` and `a6c7d080...` for `cgidecode`.
+  One build per target served all its trials (the same ELF in every `run/state.txt`). They differ
+  from the ELFs of `trial-2` to `trial-4` (`5be11988...` and `010d8184...`); the cause was not
+  examined. `run/build.options.json` differs from that of `trial-4` only in the `sketchLocation`
+  path. `run/seeds.sha256`, `run/eval.sha256` and `run/configuration.toml` equal those of
+  `trial-4-2-watchpoints` except for `seed_directory` and `output_directory`.
+- There is no `run/build.log`: the source folders have none. The ELF is identified by the sha256 in
+  `run/state.txt` and the build by `run/build.options.json`.
+- Left out: `run/git-status.txt`, as in the earlier folders. The `git status:` line of
+  `run/state.txt` points to it and keeps the counts: 4, 5, 6 and 7 changed paths (`arduinojson`
+  `trial-5` to `trial-8`) and 0, 0, 1, 2 and 4 (`cgidecode` `trial-5` to `trial-9`). All entries are
+  untracked paths (`??`, result folders of other trials); no tracked file was modified.
+- The `openocd:` line in `run/state.txt` holds a Python traceback instead of the version. The
+  OpenOCD version (`v0.12.0-esp32-20260831`) is in `run/eval.log`.
+- The precision-query count is not recorded (`PRECISION_SET_SIZE`, default 1,000). The
+  `Generated non accepting input` count above fits 1,000 queries, which is the only evidence.
+- The nine folders differ from `trial-3` and `trial-4` in the board: those used
+  `E8:06:90:95:F2:70` only, these used both boards.
+- Absolute paths of the machine that ran them are kept in the `run/*.log`, `run/configuration.toml`
+  and `run/build.options.json` files, and in `out.log`.
+- In eight logs (`arduinojson/trial-5-2-watchpoints` to `trial-8-2-watchpoints`, `out.log` and
+  `run/mine.log`) a carriage return before a line feed was normalised to a line feed on commit: two
+  in `trial-5` `out.log` (one per mining attempt), one in each of the other seven. It is the
+  `\r` of a log line that prints a blacklisted token.
+
 ## evaluation.json
 
 | Field | Unit | Meaning |
