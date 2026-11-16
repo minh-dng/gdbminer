@@ -450,9 +450,9 @@ These 24 folders hold full runs (flash, trace, mine and evaluate) with 20 traces
 both setups, and `calc` `trial-3-2-cables` to `trial-5-2-cables`. With them `arduinojson` and
 `cgidecode` have `trial-0` to `trial-9` in both setups. `calc` has two-cable `trial-0` to `trial-5`
 (`trial-2-2-cables` is not mined, see above) and one-cable `trial-0` to `trial-4`; a one-cable
-`calc` `trial-5` was not run. This update does not describe `jsonrs` or `libyxml` `trial-5` to
-`trial-9`. The values come from `evaluation.json`, the logs in `run/` and `run/state.txt`; AEDT is
-local time.
+`calc` `trial-5` was not run. This update does not describe `libyxml` `trial-5` to `trial-9`;
+the `jsonrs` runs of 15 and 16 November follow in the next section. The values come from
+`evaluation.json`, the logs in `run/` and `run/state.txt`; AEDT is local time.
 
 One board ran them one after the other, never in parallel: `calc` `trial-3-2-cables` started on
 10 November at 09:04, the three `calc` runs took 37.2 to 37.5 h each, `arduinojson` started on
@@ -600,6 +600,152 @@ between two cables and one cable, and every run flashes its own build first. Eve
   `flash.log`; `flash.log` has no retry. Each `trace.log` has 20 `Start generating trace` and 20
   `Write trace of` lines. The `calc` miner logs 51 `No suitable loop` warnings in each run, as in
   every earlier `calc` folder; `arduinojson` and `cgidecode` have none.
+- The precision-query count is not recorded (`PRECISION_SET_SIZE`, default 1,000), so precision
+  stays provisional apart from the `eval.log` fit stated above.
+- The `run/*.log`, `run/configuration.toml` and `run/build.options.json` files keep the absolute
+  paths of the machine that ran them.
+
+## jsonrs trials added on 15 and 16 November 2026
+
+These five folders hold full runs (flash, trace, mine and evaluate) of `jsonrs` with 20 traces and
+six hardware watchpoints each: two-cable `trial-2-2-cables` and `trial-3-2-cables`, and one-cable
+`trial-5-1-cable`, `trial-6-1-cable` and `trial-7-1-cable`. With them `jsonrs` has one-cable
+`trial-0` to `trial-7` and two-cable `trial-0` to `trial-3`. The campaign ended there on purpose:
+one-cable `trial-8` and `trial-9` and two-cable `trial-4` to `trial-9` were not run. They are not
+missing results. This is the last ESP32-C3 update. The values come from `evaluation.json`, the logs
+in `run/` and `run/state.txt`; AEDT is local time.
+
+One board ran them one after the other, directly after the `cgidecode` runs of the update above:
+`trial-2-2-cables` started on 15 November at 11:41 and `trial-7-1-cable` finished evaluating at
+02:35 on 16 November. A two-cable run takes about 3.1 h and a one-cable run about 2.8 h (the start
+is the date line of `run/state.txt`). Every run flashes its own build first. Every stage of
+`run/times.txt` has `exit=0` once, so no stage needed a second attempt. No folder has `errors.log`,
+`resume-*` material or `runner.log`.
+
+### Results
+
+| Folder | Start (AEDT) | Precision | Recall | F1 | Inputs | Tracing (h) | Mining (s) | Eval (s) | Throughput (requests/s) |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `trial-2-2-cables` | 15 Nov 11:41 | 1.000 | 0.608 | 0.7562 | 7,168 | 3.01 | 309.6 | 26 | 23.2 |
+| `trial-3-2-cables` | 15 Nov 14:51 | 0.993 | 0.631 | 0.7717 | 7,268 | 3.02 | 284.9 | 25 | 25.5 |
+| `trial-5-1-cable` | 15 Nov 18:00 | 1.000 | 0.608 | 0.7562 | 7,164 | 2.78 | 103.1 | 5 | 69.5 |
+| `trial-6-1-cable` | 15 Nov 20:52 | 1.000 | 0.608 | 0.7562 | 7,166 | 2.79 | 102.0 | 5 | 70.3 |
+| `trial-7-1-cable` | 15 Nov 23:44 | 0.994 | 0.631 | 0.7720 | 7,083 | 2.78 | 98.2 | 5 | 72.1 |
+
+### Two F1 values: 0.7562 and 0.772
+
+Ten of the twelve `jsonrs` runs on the C3 (the seven on `main`, and `trial-2-2-cables`,
+`trial-5-1-cable` and `trial-6-1-cable` here) have precision 1.0, recall 0.608 and F1 0.7562. Two
+runs, `trial-3-2-cables` and `trial-7-1-cable`, have precision 0.993 and 0.994, recall 0.631 and F1
+0.7717 and 0.7720; there is one in each setup. The one S3 `jsonrs` run on `main`
+(`esp32-s3_applications/esp32-s3_jsonrs/trial-0-2-watchpoints`) has F1 0.7562. The folders were
+compared offline (`cmp`, `diff`, `shasum` and a script that sorts the rule alternatives); no board
+was used.
+
+What is the same in the two groups:
+
+- Within a setup the five new folders share the ELF sha256, the Git HEAD, `build.options.json`,
+  `build.log`, `seeds.sha256`, `eval.sha256` and `configuration.toml` (apart from the two directory
+  lines). `trial-3-2-cables` equals `trial-2-2-cables`, and `trial-7-1-cable` equals
+  `trial-5-1-cable` and `trial-6-1-cable`, in all of them.
+- The 20 `seed.N.in.trace` files are byte-identical in every `jsonrs` trial of a setup (eight
+  one-cable and four two-cable folders, including those on `main`). `trace.json` differs between
+  the earlier folders and these ones only by the checkout path in the `arg` fields.
+- `mined_g.json` is byte-identical in every run of a setup (the grammar before token
+  generalisation; `src/miner/mine.py` writes it first). The methods and loops requests are 5,975
+  and 857 in all twelve runs.
+- All twelve `mine.log` files say `Generalize 26 tokens` and show four `Found widened
+  [__ASCII_ALPHANUM_PUNCT__]` lines.
+
+What differs is the token step, and so `parsing_g.json`, which `mine.py` writes after it:
+
+- After sorting the rule alternatives, ten grammars are identical and the two grammars of
+  `trial-3-2-cables` and `trial-7-1-cable` are identical to each other. They have 37 nonterminals
+  and 169 alternatives, against 35 and 157. Three rules differ: the new `<__DIGIT__>` (the ten
+  digits), the new `<__DIGIT_s__>` (one or more of them) and
+  `<core__str__validations__next_code_point_core__slice__iter__Iter_u8___94a0.17-1>`, which is the
+  literal `0` in ten grammars and `<__DIGIT_s__>` in the two. `parse_number` reaches that rule.
+- The `mine.log` of those two runs has one more line, `Found widened [__DIGIT__]`. The other ten
+  logs have none.
+- The grammar with the digit run accepts more of the recall inputs (recall 0.608 to 0.631) and
+  generates inputs that the board rejects (precision 1.0 to 0.993 and 0.994). All 13 `Generated non
+  accepting input` lines of the two runs (7 and 6) are numbers with a three-digit exponent from
+  `e312` to `e945`, for example `8426e+777`. The other ten runs have no such line.
+- The tokens step used 251 requests in `trial-7-1-cable` and 436 in `trial-3-2-cables`, against 231
+  to 336 in the others. The request count therefore does not show which runs widened the token.
+
+What this does not explain: why the digit rule was widened in two runs and not in ten. The token
+generalizer draws the replacement characters with `random.choice` and builds its contexts with a
+fuzzer (`src/miner/token_generalizer.py`), and a search of `src/miner`, `src/tracer` and `src/eval`
+finds no seed call. No file in a run folder records the random draws, so a random outcome fits the
+files, but it was not reproduced, and no run was repeated. Nothing in the folders ties 0.772 to the
+cable setup, the build or the code: each setup has one 0.772 run, and the other new runs of that
+setup have 0.7562 with the same ELF, Git HEAD, build log and configuration. The two runs started
+at 14:51 and 23:44 and have 40 and 0 `OpenOCD startup retry` lines, as their neighbours do.
+
+### Code, firmware and transport retries
+
+| Folder | Git HEAD | ELF sha256 | `OpenOCD startup retry` (trace / mine / eval) | `LIBUSB_ERROR_PIPE` / `_IO` lines | Non-accepting inputs in `eval.log` |
+| --- | --- | --- | --- | --- | --- |
+| `trial-2-2-cables` | `c8ea5336` | `d34bd098...` | 42 / 3 / 1 | 31 / 1 | 0 |
+| `trial-3-2-cables` | `c8ea5336` | `d34bd098...` | 40 / 3 / 1 | 33 / 2 | 7 |
+| `trial-5-1-cable` | `c8ea5336` | `dd1f0f5c...` | 0 / 0 / 0 | 0 / 0 | 0 |
+| `trial-6-1-cable` | `c8ea5336` | `dd1f0f5c...` | 0 / 0 / 0 | 0 / 22 | 0 |
+| `trial-7-1-cable` | `c8ea5336` | `dd1f0f5c...` | 0 / 0 / 0 | 0 / 1 | 6 |
+
+The retry and `LIBUSB_ERROR` counts cover all `run/*.log` files. No `; USB reset` text occurs: that
+message belongs to the S3 tracer.
+
+### Reading the results
+
+- Precision fits the logs: the number of `Generated non accepting input` lines in `eval.log` equals
+  `1000 * (1 - precision)` in all five folders (7 and 6, otherwise none). This fits a 1,000-input
+  precision set; the set size is not recorded.
+- Every `Mining time` line of `run/mine.log` matches `mining.duration`, the 20 per-seed tracing
+  durations add up to `tracing.duration`, the three request types add up to the total, and the
+  result line of `run/eval.log` matches `evaluation.json`. Each `trace.log` has 20 `Start
+  generating trace` and 20 `Write trace of` lines.
+- Timing fits the earlier `jsonrs` folders: two cables take 285 to 310 s of mining at 23.2 to 25.5
+  requests per second (279 and 303 s on `main`), one cable 98 to 103 s at 69.5 to 72.1 (99 to 137 s
+  on `main`). Tracing takes 3.01 and 3.02 h with two cables and 2.78 to 2.79 h with one (2.94 and
+  3.05 h with two cables and 2.71 to 2.81 h with one on `main`).
+- The two-cable runs log 42 and 40 recoverable `OpenOCD startup retry` lines in `trace.log`, about
+  2 per seed, as the two on `main` (42 and 41). The one-cable runs log none. Every stage still
+  exits with 0.
+- `trial-6-1-cable` logs 22 `Error: libusb_get_string_descriptor_ascii() failed with
+  'LIBUSB_ERROR_IO'` lines in `trace.log`, but no retry. In each case OpenOCD goes on (`Device
+  found` follows), and it started 38 times in that log. `trial-7-1-cable` has one such line, as
+  `trial-4-1-cable` on `main`; `trial-5-1-cable` has none. The cause is not assessed.
+- No `Timeout`, `Traceback` or `Stack canary` line occurs in any `trace.log`, `mine.log`, `eval.log`
+  or `flash.log`, and `flash.log` has no retry. The miner logs no `No suitable loop` warning, as in
+  every earlier `jsonrs` folder.
+
+### Provenance gaps
+
+- `run/state.txt` records Git HEAD `c8ea5336` for all five folders (the merge commit of #94 on
+  `main`; it is contained in this branch). The earlier `jsonrs` folders ran at `5964ed1b` of
+  `docs/jsonrs-open-points`, which is not an ancestor of `c8ea5336`, or have no Git line
+  (`trial-0`). `git diff 5964ed1b c8ea5336` changes nothing under `src/`,
+  `example_firmware/esp32-c3_jsonrs/` or `example_programs/jsonrs/`. Outside `evaluation/` it
+  changes only the S3 calc firmware, documentation, `.githooks/post-checkout` and the
+  `evaluation-results-pr` skill. The tracer, miner, evaluator and `jsonrs` sources are therefore the
+  same in both commits.
+- The ELFs are new builds: `d34bd098...` (two cables) and `dd1f0f5c...` (one cable), against
+  `50b72ec1...` and `5c802a35...` in the earlier folders. Within a setup the five new
+  `run/build.log` files are byte-identical (`cmp`) and the ELF is the same in every `run/state.txt`,
+  so one build served all new trials of the setup. They differ from the earlier `build.log` files.
+  `run/build.options.json` shows that the build ran in another checkout
+  (`eval-c3-others-trials-5-9`, not `feat-esp32-c3-jsonrs-c3`) and lists `../../..` twice in
+  `additionalFiles` instead of once. The cause of the new hashes was not examined.
+  `run/seeds.sha256`, `run/eval.sha256` and `run/configuration.toml` equal those of the earlier
+  trial of the same setup (`trial-4-1-cable`, `trial-1-2-cables`) except for `seed_directory` and
+  `output_directory`.
+- Left out: `run/git-status.txt`, as in the earlier folders. The `git status:` line of
+  `run/state.txt` points to it and keeps the counts: 21, 22, 23, 24 and 25 changed paths in the
+  order of the trials. All entries are untracked (`??`: result folders of other trials); no tracked
+  file was modified in the run checkout.
+- The `openocd:` line in `run/state.txt` holds a Python traceback instead of the version. The
+  OpenOCD version (`v0.12.0-esp32-20260831`) is in `run/eval.log`.
 - The precision-query count is not recorded (`PRECISION_SET_SIZE`, default 1,000), so precision
   stays provisional apart from the `eval.log` fit stated above.
 - The `run/*.log`, `run/configuration.toml` and `run/build.options.json` files keep the absolute
